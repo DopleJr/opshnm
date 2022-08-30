@@ -1170,9 +1170,8 @@ class OssManualEdit extends OssManual
             $this->checker->PlaceHolder = RemoveHtml($this->checker->caption());
 
             // shift
-            $this->shift->setupEditAttributes();
             $this->shift->EditCustomAttributes = "";
-            $this->shift->EditValue = $this->shift->options(true);
+            $this->shift->EditValue = $this->shift->options(false);
             $this->shift->PlaceHolder = RemoveHtml($this->shift->caption());
 
             // Edit refer script
@@ -1313,7 +1312,7 @@ class OssManualEdit extends OssManual
             }
         }
         if ($this->shift->Required) {
-            if (!$this->shift->IsDetailKey && EmptyValue($this->shift->FormValue)) {
+            if ($this->shift->FormValue == "") {
                 $this->shift->addErrorMessage(str_replace("%s", $this->shift->caption(), $this->shift->RequiredErrorMessage));
             }
         }

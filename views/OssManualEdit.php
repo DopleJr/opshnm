@@ -201,38 +201,31 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->shift->Visible) { // shift ?>
     <div id="r_shift"<?= $Page->shift->rowAttributes() ?>>
-        <label id="elh_oss_manual_shift" for="x_shift" class="<?= $Page->LeftColumnClass ?>"><?= $Page->shift->caption() ?><?= $Page->shift->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_oss_manual_shift" class="<?= $Page->LeftColumnClass ?>"><?= $Page->shift->caption() ?><?= $Page->shift->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->shift->cellAttributes() ?>>
 <span id="el_oss_manual_shift">
-    <select
-        id="x_shift"
-        name="x_shift"
-        class="form-select ew-select<?= $Page->shift->isInvalidClass() ?>"
-        data-select2-id="foss_manualedit_x_shift"
-        data-table="oss_manual"
-        data-field="x_shift"
-        data-value-separator="<?= $Page->shift->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->shift->getPlaceHolder()) ?>"
-        <?= $Page->shift->editAttributes() ?>>
-        <?= $Page->shift->selectOptionListHtml("x_shift") ?>
-    </select>
-    <?= $Page->shift->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->shift->getErrorMessage() ?></div>
-<script>
-loadjs.ready("foss_manualedit", function() {
-    var options = { name: "x_shift", selectId: "foss_manualedit_x_shift" },
-        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
-    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
-    if (foss_manualedit.lists.shift.lookupOptions.length) {
-        options.data = { id: "x_shift", form: "foss_manualedit" };
-    } else {
-        options.ajax = { id: "x_shift", form: "foss_manualedit", limit: ew.LOOKUP_PAGE_SIZE };
-    }
-    options.minimumResultsForSearch = Infinity;
-    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.oss_manual.fields.shift.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<template id="tp_x_shift">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="oss_manual" data-field="x_shift" name="x_shift" id="x_shift"<?= $Page->shift->editAttributes() ?>>
+        <label class="form-check-label"></label>
+    </div>
+</template>
+<div id="dsl_x_shift" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_shift"
+    name="x_shift"
+    value="<?= HtmlEncode($Page->shift->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_shift"
+    data-bs-target="dsl_x_shift"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->shift->isInvalidClass() ?>"
+    data-table="oss_manual"
+    data-field="x_shift"
+    data-value-separator="<?= $Page->shift->displayValueSeparatorAttribute() ?>"
+    <?= $Page->shift->editAttributes() ?>></selection-list>
+<?= $Page->shift->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->shift->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

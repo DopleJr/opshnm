@@ -347,11 +347,9 @@ class OssManual extends DbTable
             false,
             false,
             'FORMATTED TEXT',
-            'SELECT'
+            'RADIO'
         );
         $this->shift->InputTextType = "text";
-        $this->shift->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->shift->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->shift->Lookup = new Lookup('shift', 'oss_manual', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
         $this->shift->OptionCount = 3;
         $this->Fields['shift'] = &$this->shift;
@@ -1401,9 +1399,8 @@ class OssManual extends DbTable
         $this->checker->PlaceHolder = RemoveHtml($this->checker->caption());
 
         // shift
-        $this->shift->setupEditAttributes();
         $this->shift->EditCustomAttributes = "";
-        $this->shift->EditValue = $this->shift->options(true);
+        $this->shift->EditValue = $this->shift->options(false);
         $this->shift->PlaceHolder = RemoveHtml($this->shift->caption());
 
         // Call Row Rendered event
