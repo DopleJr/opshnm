@@ -131,7 +131,10 @@ $USER_LEVEL_PRIVS = [["{82E0F641-A651-4BB1-8010-BEBF3749166D}audit staging","-2"
     ["{82E0F641-A651-4BB1-8010-BEBF3749166D}report_totes","1","367"],
     ["{82E0F641-A651-4BB1-8010-BEBF3749166D}box_result","-2","0"],
     ["{82E0F641-A651-4BB1-8010-BEBF3749166D}box_result","0","0"],
-    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}box_result","1","367"]];
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}box_result","1","367"],
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual","-2","0"],
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual","0","0"],
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual","1","367"]];
 // User level table info
 $USER_LEVEL_TABLES = [["audit staging","auditstaging","Audit Staging",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","auditstaginglist"],
     ["audittrail","audittrail","Logs",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","audittraillist"],
@@ -160,7 +163,7 @@ $USER_LEVEL_TABLES = [["audit staging","auditstaging","Audit Staging",true,"{82E
     ["monitor_staging_delivered","monitor_staging_delivered","Monitor Delivered",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","monitorstagingdeliveredlist"],
     ["On Staging","OnStaging","On Staging",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","onstaging"],
     ["Outbound","Outbound","Outbound",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","outbound"],
-    ["locations","locations","locations",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","locationslist"],
+    ["locations","locations","Locations",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","locationslist"],
     ["mb51","mb51","MB51",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","mb51list"],
     ["master_article2","master_article2","Master Article All",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","masterarticle2list"],
     ["finding_shortpick","finding_shortpick2","Data Finding Shortpick",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","findingshortpick2list"],
@@ -173,4 +176,5 @@ $USER_LEVEL_TABLES = [["audit staging","auditstaging","Audit Staging",true,"{82E
     ["job_control_copy1","job_control_copy1","Job Control Picking Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","jobcontrolcopy1list"],
     ["picking_pending","picking_pending","Picking Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","pickingpendinglist"],
     ["report_totes","report_totes","Report Totes",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","reporttoteslist"],
-    ["box_result","box_result","Box Result",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","boxresultlist"]];
+    ["box_result","box_result","Box Result",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","boxresultlist"],
+    ["oss_manual","oss_manual","Data OSS Manual",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","ossmanuallist"]];

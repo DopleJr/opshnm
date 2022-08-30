@@ -18,6 +18,7 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
+$sideMenu->addMenuItem(370, "mi_oss_manual", $MenuLanguage->MenuPhrase("370", "MenuText"), $MenuRelativePath . "ossmanuallist", -1, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(108, "mi_Dashboard2", $MenuLanguage->MenuPhrase("108", "MenuText"), $MenuRelativePath . "dashboard2", -1, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}Dashboard'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(62, "mci_KPI", $MenuLanguage->MenuPhrase("62", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
 $sideMenu->addMenuItem(63, "mi_monitor_kpi", $MenuLanguage->MenuPhrase("63", "MenuText"), $MenuRelativePath . "monitorkpilist", 62, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}monitor_kpi'), false, false, "", "", false, true);

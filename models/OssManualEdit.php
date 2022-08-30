@@ -10,7 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 /**
  * Page class
  */
-class JobControlEdit extends JobControl
+class OssManualEdit extends OssManual
 {
     use MessagesTrait;
 
@@ -21,10 +21,10 @@ class JobControlEdit extends JobControl
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'job_control';
+    public $TableName = 'oss_manual';
 
     // Page object name
-    public $PageObjName = "JobControlEdit";
+    public $PageObjName = "OssManualEdit";
 
     // View file path
     public $View = null;
@@ -34,14 +34,6 @@ class JobControlEdit extends JobControl
 
     // Rendering View
     public $RenderingView = false;
-
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
 
     // Page headings
     public $Heading = "";
@@ -155,14 +147,14 @@ class JobControlEdit extends JobControl
         // Parent constuctor
         parent::__construct();
 
-        // Table object (job_control)
-        if (!isset($GLOBALS["job_control"]) || get_class($GLOBALS["job_control"]) == PROJECT_NAMESPACE . "job_control") {
-            $GLOBALS["job_control"] = &$this;
+        // Table object (oss_manual)
+        if (!isset($GLOBALS["oss_manual"]) || get_class($GLOBALS["oss_manual"]) == PROJECT_NAMESPACE . "oss_manual") {
+            $GLOBALS["oss_manual"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job_control');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'oss_manual');
         }
 
         // Start timer
@@ -247,7 +239,7 @@ class JobControlEdit extends JobControl
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $tbl = Container("job_control");
+                $tbl = Container("oss_manual");
                 $doc = new $class($tbl);
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
@@ -292,7 +284,7 @@ class JobControlEdit extends JobControl
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "jobcontrolview") {
+                    if ($pageName == "ossmanualview") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -500,16 +492,17 @@ class JobControlEdit extends JobControl
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->job_category->setVisibility();
-        $this->aisle->setVisibility();
-        $this->user->setVisibility();
-        $this->status->setVisibility();
-        $this->date_created->setVisibility();
-        $this->date_updated->setVisibility();
-        $this->test->setVisibility();
-        $this->test2->setVisibility();
-        $this->test3->setVisibility();
-        $this->test4->setVisibility();
+        $this->date->setVisibility();
+        $this->shipment->setVisibility();
+        $this->pallet_no->setVisibility();
+        $this->sscc->setVisibility();
+        $this->idw->setVisibility();
+        $this->order_no->setVisibility();
+        $this->item_in_ctn->setVisibility();
+        $this->no_of_ctn->setVisibility();
+        $this->ctn_no->setVisibility();
+        $this->checker->setVisibility();
+        $this->shift->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -526,10 +519,7 @@ class JobControlEdit extends JobControl
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->job_category);
-        $this->setupLookupOptions($this->aisle);
-        $this->setupLookupOptions($this->user);
-        $this->setupLookupOptions($this->status);
+        $this->setupLookupOptions($this->shift);
 
         // Check modal
         if ($this->IsModal) {
@@ -622,13 +612,13 @@ class JobControlEdit extends JobControl
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("jobcontrollist"); // No matching record, return to list
+                        $this->terminate("ossmanuallist"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "jobcontrollist") {
+                if (GetPageName($returnUrl) == "ossmanuallist") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -705,105 +695,114 @@ class JobControlEdit extends JobControl
             $this->id->setFormValue($val);
         }
 
-        // Check field name 'job_category' first before field var 'x_job_category'
-        $val = $CurrentForm->hasValue("job_category") ? $CurrentForm->getValue("job_category") : $CurrentForm->getValue("x_job_category");
-        if (!$this->job_category->IsDetailKey) {
+        // Check field name 'date' first before field var 'x_date'
+        $val = $CurrentForm->hasValue("date") ? $CurrentForm->getValue("date") : $CurrentForm->getValue("x_date");
+        if (!$this->date->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->job_category->Visible = false; // Disable update for API request
+                $this->date->Visible = false; // Disable update for API request
             } else {
-                $this->job_category->setFormValue($val);
+                $this->date->setFormValue($val, true, $validate);
+            }
+            $this->date->CurrentValue = UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern());
+        }
+
+        // Check field name 'shipment' first before field var 'x_shipment'
+        $val = $CurrentForm->hasValue("shipment") ? $CurrentForm->getValue("shipment") : $CurrentForm->getValue("x_shipment");
+        if (!$this->shipment->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->shipment->Visible = false; // Disable update for API request
+            } else {
+                $this->shipment->setFormValue($val);
             }
         }
 
-        // Check field name 'aisle' first before field var 'x_aisle'
-        $val = $CurrentForm->hasValue("aisle") ? $CurrentForm->getValue("aisle") : $CurrentForm->getValue("x_aisle");
-        if (!$this->aisle->IsDetailKey) {
+        // Check field name 'pallet_no' first before field var 'x_pallet_no'
+        $val = $CurrentForm->hasValue("pallet_no") ? $CurrentForm->getValue("pallet_no") : $CurrentForm->getValue("x_pallet_no");
+        if (!$this->pallet_no->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->aisle->Visible = false; // Disable update for API request
+                $this->pallet_no->Visible = false; // Disable update for API request
             } else {
-                $this->aisle->setFormValue($val);
+                $this->pallet_no->setFormValue($val, true, $validate);
             }
         }
 
-        // Check field name 'user' first before field var 'x_user'
-        $val = $CurrentForm->hasValue("user") ? $CurrentForm->getValue("user") : $CurrentForm->getValue("x_user");
-        if (!$this->user->IsDetailKey) {
+        // Check field name 'sscc' first before field var 'x_sscc'
+        $val = $CurrentForm->hasValue("sscc") ? $CurrentForm->getValue("sscc") : $CurrentForm->getValue("x_sscc");
+        if (!$this->sscc->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->user->Visible = false; // Disable update for API request
+                $this->sscc->Visible = false; // Disable update for API request
             } else {
-                $this->user->setFormValue($val);
+                $this->sscc->setFormValue($val);
             }
         }
 
-        // Check field name 'status' first before field var 'x_status'
-        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
-        if (!$this->status->IsDetailKey) {
+        // Check field name 'idw' first before field var 'x_idw'
+        $val = $CurrentForm->hasValue("idw") ? $CurrentForm->getValue("idw") : $CurrentForm->getValue("x_idw");
+        if (!$this->idw->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->status->Visible = false; // Disable update for API request
+                $this->idw->Visible = false; // Disable update for API request
             } else {
-                $this->status->setFormValue($val);
+                $this->idw->setFormValue($val);
             }
         }
 
-        // Check field name 'date_created' first before field var 'x_date_created'
-        $val = $CurrentForm->hasValue("date_created") ? $CurrentForm->getValue("date_created") : $CurrentForm->getValue("x_date_created");
-        if (!$this->date_created->IsDetailKey) {
+        // Check field name 'order_no' first before field var 'x_order_no'
+        $val = $CurrentForm->hasValue("order_no") ? $CurrentForm->getValue("order_no") : $CurrentForm->getValue("x_order_no");
+        if (!$this->order_no->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->date_created->Visible = false; // Disable update for API request
+                $this->order_no->Visible = false; // Disable update for API request
             } else {
-                $this->date_created->setFormValue($val, true, $validate);
-            }
-            $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        }
-
-        // Check field name 'date_updated' first before field var 'x_date_updated'
-        $val = $CurrentForm->hasValue("date_updated") ? $CurrentForm->getValue("date_updated") : $CurrentForm->getValue("x_date_updated");
-        if (!$this->date_updated->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->date_updated->Visible = false; // Disable update for API request
-            } else {
-                $this->date_updated->setFormValue($val, true, $validate);
-            }
-            $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
-        }
-
-        // Check field name 'test' first before field var 'x_test'
-        $val = $CurrentForm->hasValue("test") ? $CurrentForm->getValue("test") : $CurrentForm->getValue("x_test");
-        if (!$this->test->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->test->Visible = false; // Disable update for API request
-            } else {
-                $this->test->setFormValue($val);
+                $this->order_no->setFormValue($val, true, $validate);
             }
         }
 
-        // Check field name 'test2' first before field var 'x_test2'
-        $val = $CurrentForm->hasValue("test2") ? $CurrentForm->getValue("test2") : $CurrentForm->getValue("x_test2");
-        if (!$this->test2->IsDetailKey) {
+        // Check field name 'item_in_ctn' first before field var 'x_item_in_ctn'
+        $val = $CurrentForm->hasValue("item_in_ctn") ? $CurrentForm->getValue("item_in_ctn") : $CurrentForm->getValue("x_item_in_ctn");
+        if (!$this->item_in_ctn->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->test2->Visible = false; // Disable update for API request
+                $this->item_in_ctn->Visible = false; // Disable update for API request
             } else {
-                $this->test2->setFormValue($val);
+                $this->item_in_ctn->setFormValue($val);
             }
         }
 
-        // Check field name 'test3' first before field var 'x_test3'
-        $val = $CurrentForm->hasValue("test3") ? $CurrentForm->getValue("test3") : $CurrentForm->getValue("x_test3");
-        if (!$this->test3->IsDetailKey) {
+        // Check field name 'no_of_ctn' first before field var 'x_no_of_ctn'
+        $val = $CurrentForm->hasValue("no_of_ctn") ? $CurrentForm->getValue("no_of_ctn") : $CurrentForm->getValue("x_no_of_ctn");
+        if (!$this->no_of_ctn->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->test3->Visible = false; // Disable update for API request
+                $this->no_of_ctn->Visible = false; // Disable update for API request
             } else {
-                $this->test3->setFormValue($val);
+                $this->no_of_ctn->setFormValue($val);
             }
         }
 
-        // Check field name 'test4' first before field var 'x_test4'
-        $val = $CurrentForm->hasValue("test4") ? $CurrentForm->getValue("test4") : $CurrentForm->getValue("x_test4");
-        if (!$this->test4->IsDetailKey) {
+        // Check field name 'ctn_no' first before field var 'x_ctn_no'
+        $val = $CurrentForm->hasValue("ctn_no") ? $CurrentForm->getValue("ctn_no") : $CurrentForm->getValue("x_ctn_no");
+        if (!$this->ctn_no->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->test4->Visible = false; // Disable update for API request
+                $this->ctn_no->Visible = false; // Disable update for API request
             } else {
-                $this->test4->setFormValue($val, true, $validate);
+                $this->ctn_no->setFormValue($val, true, $validate);
+            }
+        }
+
+        // Check field name 'checker' first before field var 'x_checker'
+        $val = $CurrentForm->hasValue("checker") ? $CurrentForm->getValue("checker") : $CurrentForm->getValue("x_checker");
+        if (!$this->checker->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checker->Visible = false; // Disable update for API request
+            } else {
+                $this->checker->setFormValue($val);
+            }
+        }
+
+        // Check field name 'shift' first before field var 'x_shift'
+        $val = $CurrentForm->hasValue("shift") ? $CurrentForm->getValue("shift") : $CurrentForm->getValue("x_shift");
+        if (!$this->shift->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->shift->Visible = false; // Disable update for API request
+            } else {
+                $this->shift->setFormValue($val);
             }
         }
     }
@@ -813,18 +812,18 @@ class JobControlEdit extends JobControl
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
-        $this->job_category->CurrentValue = $this->job_category->FormValue;
-        $this->aisle->CurrentValue = $this->aisle->FormValue;
-        $this->user->CurrentValue = $this->user->FormValue;
-        $this->status->CurrentValue = $this->status->FormValue;
-        $this->date_created->CurrentValue = $this->date_created->FormValue;
-        $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        $this->date_updated->CurrentValue = $this->date_updated->FormValue;
-        $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
-        $this->test->CurrentValue = $this->test->FormValue;
-        $this->test2->CurrentValue = $this->test2->FormValue;
-        $this->test3->CurrentValue = $this->test3->FormValue;
-        $this->test4->CurrentValue = $this->test4->FormValue;
+        $this->date->CurrentValue = $this->date->FormValue;
+        $this->date->CurrentValue = UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern());
+        $this->shipment->CurrentValue = $this->shipment->FormValue;
+        $this->pallet_no->CurrentValue = $this->pallet_no->FormValue;
+        $this->sscc->CurrentValue = $this->sscc->FormValue;
+        $this->idw->CurrentValue = $this->idw->FormValue;
+        $this->order_no->CurrentValue = $this->order_no->FormValue;
+        $this->item_in_ctn->CurrentValue = $this->item_in_ctn->FormValue;
+        $this->no_of_ctn->CurrentValue = $this->no_of_ctn->FormValue;
+        $this->ctn_no->CurrentValue = $this->ctn_no->FormValue;
+        $this->checker->CurrentValue = $this->checker->FormValue;
+        $this->shift->CurrentValue = $this->shift->FormValue;
     }
 
     /**
@@ -875,16 +874,17 @@ class JobControlEdit extends JobControl
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->job_category->setDbValue($row['job_category']);
-        $this->aisle->setDbValue($row['aisle']);
-        $this->user->setDbValue($row['user']);
-        $this->status->setDbValue($row['status']);
-        $this->date_created->setDbValue($row['date_created']);
-        $this->date_updated->setDbValue($row['date_updated']);
-        $this->test->setDbValue($row['test']);
-        $this->test2->setDbValue($row['test2']);
-        $this->test3->setDbValue($row['test3']);
-        $this->test4->setDbValue($row['test4']);
+        $this->date->setDbValue($row['date']);
+        $this->shipment->setDbValue($row['shipment']);
+        $this->pallet_no->setDbValue($row['pallet_no']);
+        $this->sscc->setDbValue($row['sscc']);
+        $this->idw->setDbValue($row['idw']);
+        $this->order_no->setDbValue($row['order_no']);
+        $this->item_in_ctn->setDbValue($row['item_in_ctn']);
+        $this->no_of_ctn->setDbValue($row['no_of_ctn']);
+        $this->ctn_no->setDbValue($row['ctn_no']);
+        $this->checker->setDbValue($row['checker']);
+        $this->shift->setDbValue($row['shift']);
     }
 
     // Return a row with default values
@@ -892,16 +892,17 @@ class JobControlEdit extends JobControl
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['job_category'] = $this->job_category->DefaultValue;
-        $row['aisle'] = $this->aisle->DefaultValue;
-        $row['user'] = $this->user->DefaultValue;
-        $row['status'] = $this->status->DefaultValue;
-        $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_updated'] = $this->date_updated->DefaultValue;
-        $row['test'] = $this->test->DefaultValue;
-        $row['test2'] = $this->test2->DefaultValue;
-        $row['test3'] = $this->test3->DefaultValue;
-        $row['test4'] = $this->test4->DefaultValue;
+        $row['date'] = $this->date->DefaultValue;
+        $row['shipment'] = $this->shipment->DefaultValue;
+        $row['pallet_no'] = $this->pallet_no->DefaultValue;
+        $row['sscc'] = $this->sscc->DefaultValue;
+        $row['idw'] = $this->idw->DefaultValue;
+        $row['order_no'] = $this->order_no->DefaultValue;
+        $row['item_in_ctn'] = $this->item_in_ctn->DefaultValue;
+        $row['no_of_ctn'] = $this->no_of_ctn->DefaultValue;
+        $row['ctn_no'] = $this->ctn_no->DefaultValue;
+        $row['checker'] = $this->checker->DefaultValue;
+        $row['shift'] = $this->shift->DefaultValue;
         return $row;
     }
 
@@ -936,315 +937,243 @@ class JobControlEdit extends JobControl
         // id
         $this->id->RowCssClass = "row";
 
-        // job_category
-        $this->job_category->RowCssClass = "row";
+        // date
+        $this->date->RowCssClass = "row";
 
-        // aisle
-        $this->aisle->RowCssClass = "row";
+        // shipment
+        $this->shipment->RowCssClass = "row";
 
-        // user
-        $this->user->RowCssClass = "row";
+        // pallet_no
+        $this->pallet_no->RowCssClass = "row";
 
-        // status
-        $this->status->RowCssClass = "row";
+        // sscc
+        $this->sscc->RowCssClass = "row";
 
-        // date_created
-        $this->date_created->RowCssClass = "row";
+        // idw
+        $this->idw->RowCssClass = "row";
 
-        // date_updated
-        $this->date_updated->RowCssClass = "row";
+        // order_no
+        $this->order_no->RowCssClass = "row";
 
-        // test
-        $this->test->RowCssClass = "row";
+        // item_in_ctn
+        $this->item_in_ctn->RowCssClass = "row";
 
-        // test2
-        $this->test2->RowCssClass = "row";
+        // no_of_ctn
+        $this->no_of_ctn->RowCssClass = "row";
 
-        // test3
-        $this->test3->RowCssClass = "row";
+        // ctn_no
+        $this->ctn_no->RowCssClass = "row";
 
-        // test4
-        $this->test4->RowCssClass = "row";
+        // checker
+        $this->checker->RowCssClass = "row";
+
+        // shift
+        $this->shift->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, $this->id->formatPattern());
             $this->id->ViewCustomAttributes = "";
 
-            // job_category
-            if (strval($this->job_category->CurrentValue) != "") {
-                $this->job_category->ViewValue = $this->job_category->optionCaption($this->job_category->CurrentValue);
+            // date
+            $this->date->ViewValue = $this->date->CurrentValue;
+            $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
+            $this->date->ViewCustomAttributes = "";
+
+            // shipment
+            $this->shipment->ViewValue = $this->shipment->CurrentValue;
+            $this->shipment->ViewCustomAttributes = "";
+
+            // pallet_no
+            $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
+            $this->pallet_no->ViewValue = FormatNumber($this->pallet_no->ViewValue, $this->pallet_no->formatPattern());
+            $this->pallet_no->ViewCustomAttributes = "";
+
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
+
+            // idw
+            $this->idw->ViewValue = $this->idw->CurrentValue;
+            $this->idw->ViewCustomAttributes = "";
+
+            // order_no
+            $this->order_no->ViewValue = $this->order_no->CurrentValue;
+            $this->order_no->ViewValue = FormatNumber($this->order_no->ViewValue, $this->order_no->formatPattern());
+            $this->order_no->ViewCustomAttributes = "";
+
+            // item_in_ctn
+            $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewCustomAttributes = "";
+
+            // no_of_ctn
+            $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewCustomAttributes = "";
+
+            // ctn_no
+            $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
+            $this->ctn_no->ViewCustomAttributes = "";
+
+            // checker
+            $this->checker->ViewValue = $this->checker->CurrentValue;
+            $this->checker->ViewCustomAttributes = "";
+
+            // shift
+            if (strval($this->shift->CurrentValue) != "") {
+                $this->shift->ViewValue = $this->shift->optionCaption($this->shift->CurrentValue);
             } else {
-                $this->job_category->ViewValue = null;
+                $this->shift->ViewValue = null;
             }
-            $this->job_category->ViewCustomAttributes = "";
-
-            // aisle
-            $curVal = strval($this->aisle->CurrentValue);
-            if ($curVal != "") {
-                $this->aisle->ViewValue = $this->aisle->lookupCacheOption($curVal);
-                if ($this->aisle->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`source_location`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $sqlWrk = $this->aisle->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->aisle->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->aisle->Lookup->renderViewRow($row);
-                            $this->aisle->ViewValue->add($this->aisle->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->aisle->ViewValue = $this->aisle->CurrentValue;
-                    }
-                }
-            } else {
-                $this->aisle->ViewValue = null;
-            }
-            $this->aisle->ViewCustomAttributes = "";
-
-            // user
-            $curVal = strval($this->user->CurrentValue);
-            if ($curVal != "") {
-                $this->user->ViewValue = $this->user->lookupCacheOption($curVal);
-                if ($this->user->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`username`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->user->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->user->Lookup->renderViewRow($rswrk[0]);
-                        $this->user->ViewValue = $this->user->displayValue($arwrk);
-                    } else {
-                        $this->user->ViewValue = $this->user->CurrentValue;
-                    }
-                }
-            } else {
-                $this->user->ViewValue = null;
-            }
-            $this->user->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
-
-            // date_created
-            $this->date_created->ViewValue = $this->date_created->CurrentValue;
-            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
-            $this->date_created->ViewCustomAttributes = "";
-
-            // date_updated
-            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
-            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
-            $this->date_updated->ViewCustomAttributes = "";
-
-            // test
-            $this->test->ViewValue = $this->test->CurrentValue;
-            $this->test->ViewCustomAttributes = "";
-
-            // test2
-            $this->test2->ViewValue = $this->test2->CurrentValue;
-            $this->test2->ViewCustomAttributes = "";
-
-            // test3
-            $this->test3->ViewValue = $this->test3->CurrentValue;
-            $this->test3->ViewCustomAttributes = "";
-
-            // test4
-            $this->test4->ViewValue = $this->test4->CurrentValue;
-            $this->test4->ViewCustomAttributes = "";
+            $this->shift->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
 
-            // job_category
-            $this->job_category->LinkCustomAttributes = "";
-            $this->job_category->HrefValue = "";
+            // date
+            $this->date->LinkCustomAttributes = "";
+            $this->date->HrefValue = "";
 
-            // aisle
-            $this->aisle->LinkCustomAttributes = "";
-            $this->aisle->HrefValue = "";
+            // shipment
+            $this->shipment->LinkCustomAttributes = "";
+            $this->shipment->HrefValue = "";
 
-            // user
-            $this->user->LinkCustomAttributes = "";
-            $this->user->HrefValue = "";
+            // pallet_no
+            $this->pallet_no->LinkCustomAttributes = "";
+            $this->pallet_no->HrefValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
+            // sscc
+            $this->sscc->LinkCustomAttributes = "";
+            $this->sscc->HrefValue = "";
 
-            // date_created
-            $this->date_created->LinkCustomAttributes = "";
-            $this->date_created->HrefValue = "";
+            // idw
+            $this->idw->LinkCustomAttributes = "";
+            $this->idw->HrefValue = "";
 
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
+            // order_no
+            $this->order_no->LinkCustomAttributes = "";
+            $this->order_no->HrefValue = "";
 
-            // test
-            $this->test->LinkCustomAttributes = "";
-            $this->test->HrefValue = "";
+            // item_in_ctn
+            $this->item_in_ctn->LinkCustomAttributes = "";
+            $this->item_in_ctn->HrefValue = "";
 
-            // test2
-            $this->test2->LinkCustomAttributes = "";
-            $this->test2->HrefValue = "";
+            // no_of_ctn
+            $this->no_of_ctn->LinkCustomAttributes = "";
+            $this->no_of_ctn->HrefValue = "";
 
-            // test3
-            $this->test3->LinkCustomAttributes = "";
-            $this->test3->HrefValue = "";
+            // ctn_no
+            $this->ctn_no->LinkCustomAttributes = "";
+            $this->ctn_no->HrefValue = "";
 
-            // test4
-            $this->test4->LinkCustomAttributes = "";
-            $this->test4->HrefValue = "";
+            // checker
+            $this->checker->LinkCustomAttributes = "";
+            $this->checker->HrefValue = "";
+
+            // shift
+            $this->shift->LinkCustomAttributes = "";
+            $this->shift->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
             $this->id->EditCustomAttributes = "";
             $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->EditValue = FormatNumber($this->id->EditValue, $this->id->formatPattern());
             $this->id->ViewCustomAttributes = "";
 
-            // job_category
-            $this->job_category->setupEditAttributes();
-            $this->job_category->EditCustomAttributes = "";
-            $this->job_category->EditValue = $this->job_category->options(true);
-            $this->job_category->PlaceHolder = RemoveHtml($this->job_category->caption());
+            // date
+            $this->date->setupEditAttributes();
+            $this->date->EditCustomAttributes = "";
+            $this->date->EditValue = HtmlEncode(FormatDateTime($this->date->CurrentValue, $this->date->formatPattern()));
+            $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
-            // aisle
-            $this->aisle->EditCustomAttributes = "";
-            $curVal = trim(strval($this->aisle->CurrentValue));
-            if ($curVal != "") {
-                $this->aisle->ViewValue = $this->aisle->lookupCacheOption($curVal);
-            } else {
-                $this->aisle->ViewValue = $this->aisle->Lookup !== null && is_array($this->aisle->lookupOptions()) ? $curVal : null;
+            // shipment
+            $this->shipment->setupEditAttributes();
+            $this->shipment->EditCustomAttributes = "";
+            if (!$this->shipment->Raw) {
+                $this->shipment->CurrentValue = HtmlDecode($this->shipment->CurrentValue);
             }
-            if ($this->aisle->ViewValue !== null) { // Load from cache
-                $this->aisle->EditValue = array_values($this->aisle->lookupOptions());
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`source_location`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                }
-                $sqlWrk = $this->aisle->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->aisle->EditValue = $arwrk;
+            $this->shipment->EditValue = HtmlEncode($this->shipment->CurrentValue);
+            $this->shipment->PlaceHolder = RemoveHtml($this->shipment->caption());
+
+            // pallet_no
+            $this->pallet_no->setupEditAttributes();
+            $this->pallet_no->EditCustomAttributes = "";
+            $this->pallet_no->EditValue = HtmlEncode($this->pallet_no->CurrentValue);
+            $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
+            if (strval($this->pallet_no->EditValue) != "" && is_numeric($this->pallet_no->EditValue)) {
+                $this->pallet_no->EditValue = FormatNumber($this->pallet_no->EditValue, null);
             }
-            $this->aisle->PlaceHolder = RemoveHtml($this->aisle->caption());
 
-            // user
-            $this->user->setupEditAttributes();
-            $this->user->EditCustomAttributes = "";
-            $curVal = trim(strval($this->user->CurrentValue));
-            if ($curVal != "") {
-                $this->user->ViewValue = $this->user->lookupCacheOption($curVal);
-            } else {
-                $this->user->ViewValue = $this->user->Lookup !== null && is_array($this->user->lookupOptions()) ? $curVal : null;
+            // sscc
+            $this->sscc->setupEditAttributes();
+            $this->sscc->EditCustomAttributes = "";
+            if (!$this->sscc->Raw) {
+                $this->sscc->CurrentValue = HtmlDecode($this->sscc->CurrentValue);
             }
-            if ($this->user->ViewValue !== null) { // Load from cache
-                $this->user->EditValue = array_values($this->user->lookupOptions());
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`username`" . SearchString("=", $this->user->CurrentValue, DATATYPE_STRING, "");
-                }
-                $sqlWrk = $this->user->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->user->EditValue = $arwrk;
+            $this->sscc->EditValue = HtmlEncode($this->sscc->CurrentValue);
+            $this->sscc->PlaceHolder = RemoveHtml($this->sscc->caption());
+
+            // idw
+            $this->idw->setupEditAttributes();
+            $this->idw->EditCustomAttributes = "";
+            if (!$this->idw->Raw) {
+                $this->idw->CurrentValue = HtmlDecode($this->idw->CurrentValue);
             }
-            $this->user->PlaceHolder = RemoveHtml($this->user->caption());
+            $this->idw->EditValue = HtmlEncode($this->idw->CurrentValue);
+            $this->idw->PlaceHolder = RemoveHtml($this->idw->caption());
 
-            // status
-            $this->status->setupEditAttributes();
-            $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(true);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
-            // date_created
-            $this->date_created->setupEditAttributes();
-            $this->date_created->EditCustomAttributes = "";
-            $this->date_created->EditValue = HtmlEncode(FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()));
-            $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
-
-            // date_updated
-            $this->date_updated->setupEditAttributes();
-            $this->date_updated->EditCustomAttributes = "";
-            $this->date_updated->EditValue = HtmlEncode(FormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern()));
-            $this->date_updated->PlaceHolder = RemoveHtml($this->date_updated->caption());
-
-            // test
-            $this->test->setupEditAttributes();
-            $this->test->EditCustomAttributes = "";
-            if (!$this->test->Raw) {
-                $this->test->CurrentValue = HtmlDecode($this->test->CurrentValue);
+            // order_no
+            $this->order_no->setupEditAttributes();
+            $this->order_no->EditCustomAttributes = "";
+            $this->order_no->EditValue = HtmlEncode($this->order_no->CurrentValue);
+            $this->order_no->PlaceHolder = RemoveHtml($this->order_no->caption());
+            if (strval($this->order_no->EditValue) != "" && is_numeric($this->order_no->EditValue)) {
+                $this->order_no->EditValue = FormatNumber($this->order_no->EditValue, null);
             }
-            $this->test->EditValue = HtmlEncode($this->test->CurrentValue);
-            $this->test->PlaceHolder = RemoveHtml($this->test->caption());
 
-            // test2
-            $this->test2->setupEditAttributes();
-            $this->test2->EditCustomAttributes = "";
-            if (!$this->test2->Raw) {
-                $this->test2->CurrentValue = HtmlDecode($this->test2->CurrentValue);
+            // item_in_ctn
+            $this->item_in_ctn->setupEditAttributes();
+            $this->item_in_ctn->EditCustomAttributes = "";
+            if (!$this->item_in_ctn->Raw) {
+                $this->item_in_ctn->CurrentValue = HtmlDecode($this->item_in_ctn->CurrentValue);
             }
-            $this->test2->EditValue = HtmlEncode($this->test2->CurrentValue);
-            $this->test2->PlaceHolder = RemoveHtml($this->test2->caption());
+            $this->item_in_ctn->EditValue = HtmlEncode($this->item_in_ctn->CurrentValue);
+            $this->item_in_ctn->PlaceHolder = RemoveHtml($this->item_in_ctn->caption());
 
-            // test3
-            $this->test3->setupEditAttributes();
-            $this->test3->EditCustomAttributes = "";
-            if (!$this->test3->Raw) {
-                $this->test3->CurrentValue = HtmlDecode($this->test3->CurrentValue);
+            // no_of_ctn
+            $this->no_of_ctn->setupEditAttributes();
+            $this->no_of_ctn->EditCustomAttributes = "";
+            if (!$this->no_of_ctn->Raw) {
+                $this->no_of_ctn->CurrentValue = HtmlDecode($this->no_of_ctn->CurrentValue);
             }
-            $this->test3->EditValue = HtmlEncode($this->test3->CurrentValue);
-            $this->test3->PlaceHolder = RemoveHtml($this->test3->caption());
+            $this->no_of_ctn->EditValue = HtmlEncode($this->no_of_ctn->CurrentValue);
+            $this->no_of_ctn->PlaceHolder = RemoveHtml($this->no_of_ctn->caption());
 
-            // test4
-            $this->test4->setupEditAttributes();
-            $this->test4->EditCustomAttributes = "";
-            if (!$this->test4->Raw) {
-                $this->test4->CurrentValue = HtmlDecode($this->test4->CurrentValue);
+            // ctn_no
+            $this->ctn_no->setupEditAttributes();
+            $this->ctn_no->EditCustomAttributes = "";
+            $this->ctn_no->EditValue = HtmlEncode($this->ctn_no->CurrentValue);
+            $this->ctn_no->PlaceHolder = RemoveHtml($this->ctn_no->caption());
+            if (strval($this->ctn_no->EditValue) != "" && is_numeric($this->ctn_no->EditValue)) {
+                $this->ctn_no->EditValue = FormatNumber($this->ctn_no->EditValue, null);
             }
-            $this->test4->EditValue = HtmlEncode($this->test4->CurrentValue);
-            $this->test4->PlaceHolder = RemoveHtml($this->test4->caption());
+
+            // checker
+            $this->checker->setupEditAttributes();
+            $this->checker->EditCustomAttributes = "";
+            if (!$this->checker->Raw) {
+                $this->checker->CurrentValue = HtmlDecode($this->checker->CurrentValue);
+            }
+            $this->checker->EditValue = HtmlEncode($this->checker->CurrentValue);
+            $this->checker->PlaceHolder = RemoveHtml($this->checker->caption());
+
+            // shift
+            $this->shift->setupEditAttributes();
+            $this->shift->EditCustomAttributes = "";
+            $this->shift->EditValue = $this->shift->options(true);
+            $this->shift->PlaceHolder = RemoveHtml($this->shift->caption());
 
             // Edit refer script
 
@@ -1252,45 +1181,49 @@ class JobControlEdit extends JobControl
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
 
-            // job_category
-            $this->job_category->LinkCustomAttributes = "";
-            $this->job_category->HrefValue = "";
+            // date
+            $this->date->LinkCustomAttributes = "";
+            $this->date->HrefValue = "";
 
-            // aisle
-            $this->aisle->LinkCustomAttributes = "";
-            $this->aisle->HrefValue = "";
+            // shipment
+            $this->shipment->LinkCustomAttributes = "";
+            $this->shipment->HrefValue = "";
 
-            // user
-            $this->user->LinkCustomAttributes = "";
-            $this->user->HrefValue = "";
+            // pallet_no
+            $this->pallet_no->LinkCustomAttributes = "";
+            $this->pallet_no->HrefValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
+            // sscc
+            $this->sscc->LinkCustomAttributes = "";
+            $this->sscc->HrefValue = "";
 
-            // date_created
-            $this->date_created->LinkCustomAttributes = "";
-            $this->date_created->HrefValue = "";
+            // idw
+            $this->idw->LinkCustomAttributes = "";
+            $this->idw->HrefValue = "";
 
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
+            // order_no
+            $this->order_no->LinkCustomAttributes = "";
+            $this->order_no->HrefValue = "";
 
-            // test
-            $this->test->LinkCustomAttributes = "";
-            $this->test->HrefValue = "";
+            // item_in_ctn
+            $this->item_in_ctn->LinkCustomAttributes = "";
+            $this->item_in_ctn->HrefValue = "";
 
-            // test2
-            $this->test2->LinkCustomAttributes = "";
-            $this->test2->HrefValue = "";
+            // no_of_ctn
+            $this->no_of_ctn->LinkCustomAttributes = "";
+            $this->no_of_ctn->HrefValue = "";
 
-            // test3
-            $this->test3->LinkCustomAttributes = "";
-            $this->test3->HrefValue = "";
+            // ctn_no
+            $this->ctn_no->LinkCustomAttributes = "";
+            $this->ctn_no->HrefValue = "";
 
-            // test4
-            $this->test4->LinkCustomAttributes = "";
-            $this->test4->HrefValue = "";
+            // checker
+            $this->checker->LinkCustomAttributes = "";
+            $this->checker->HrefValue = "";
+
+            // shift
+            $this->shift->LinkCustomAttributes = "";
+            $this->shift->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1317,64 +1250,72 @@ class JobControlEdit extends JobControl
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
-        if ($this->job_category->Required) {
-            if (!$this->job_category->IsDetailKey && EmptyValue($this->job_category->FormValue)) {
-                $this->job_category->addErrorMessage(str_replace("%s", $this->job_category->caption(), $this->job_category->RequiredErrorMessage));
+        if ($this->date->Required) {
+            if (!$this->date->IsDetailKey && EmptyValue($this->date->FormValue)) {
+                $this->date->addErrorMessage(str_replace("%s", $this->date->caption(), $this->date->RequiredErrorMessage));
             }
         }
-        if ($this->aisle->Required) {
-            if ($this->aisle->FormValue == "") {
-                $this->aisle->addErrorMessage(str_replace("%s", $this->aisle->caption(), $this->aisle->RequiredErrorMessage));
+        if (!CheckDate($this->date->FormValue, $this->date->formatPattern())) {
+            $this->date->addErrorMessage($this->date->getErrorMessage(false));
+        }
+        if ($this->shipment->Required) {
+            if (!$this->shipment->IsDetailKey && EmptyValue($this->shipment->FormValue)) {
+                $this->shipment->addErrorMessage(str_replace("%s", $this->shipment->caption(), $this->shipment->RequiredErrorMessage));
             }
         }
-        if ($this->user->Required) {
-            if (!$this->user->IsDetailKey && EmptyValue($this->user->FormValue)) {
-                $this->user->addErrorMessage(str_replace("%s", $this->user->caption(), $this->user->RequiredErrorMessage));
+        if ($this->pallet_no->Required) {
+            if (!$this->pallet_no->IsDetailKey && EmptyValue($this->pallet_no->FormValue)) {
+                $this->pallet_no->addErrorMessage(str_replace("%s", $this->pallet_no->caption(), $this->pallet_no->RequiredErrorMessage));
             }
         }
-        if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
-                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
+        if (!CheckInteger($this->pallet_no->FormValue)) {
+            $this->pallet_no->addErrorMessage($this->pallet_no->getErrorMessage(false));
+        }
+        if ($this->sscc->Required) {
+            if (!$this->sscc->IsDetailKey && EmptyValue($this->sscc->FormValue)) {
+                $this->sscc->addErrorMessage(str_replace("%s", $this->sscc->caption(), $this->sscc->RequiredErrorMessage));
             }
         }
-        if ($this->date_created->Required) {
-            if (!$this->date_created->IsDetailKey && EmptyValue($this->date_created->FormValue)) {
-                $this->date_created->addErrorMessage(str_replace("%s", $this->date_created->caption(), $this->date_created->RequiredErrorMessage));
+        if ($this->idw->Required) {
+            if (!$this->idw->IsDetailKey && EmptyValue($this->idw->FormValue)) {
+                $this->idw->addErrorMessage(str_replace("%s", $this->idw->caption(), $this->idw->RequiredErrorMessage));
             }
         }
-        if (!CheckDate($this->date_created->FormValue, $this->date_created->formatPattern())) {
-            $this->date_created->addErrorMessage($this->date_created->getErrorMessage(false));
-        }
-        if ($this->date_updated->Required) {
-            if (!$this->date_updated->IsDetailKey && EmptyValue($this->date_updated->FormValue)) {
-                $this->date_updated->addErrorMessage(str_replace("%s", $this->date_updated->caption(), $this->date_updated->RequiredErrorMessage));
+        if ($this->order_no->Required) {
+            if (!$this->order_no->IsDetailKey && EmptyValue($this->order_no->FormValue)) {
+                $this->order_no->addErrorMessage(str_replace("%s", $this->order_no->caption(), $this->order_no->RequiredErrorMessage));
             }
         }
-        if (!CheckDate($this->date_updated->FormValue, $this->date_updated->formatPattern())) {
-            $this->date_updated->addErrorMessage($this->date_updated->getErrorMessage(false));
+        if (!CheckInteger($this->order_no->FormValue)) {
+            $this->order_no->addErrorMessage($this->order_no->getErrorMessage(false));
         }
-        if ($this->test->Required) {
-            if (!$this->test->IsDetailKey && EmptyValue($this->test->FormValue)) {
-                $this->test->addErrorMessage(str_replace("%s", $this->test->caption(), $this->test->RequiredErrorMessage));
+        if ($this->item_in_ctn->Required) {
+            if (!$this->item_in_ctn->IsDetailKey && EmptyValue($this->item_in_ctn->FormValue)) {
+                $this->item_in_ctn->addErrorMessage(str_replace("%s", $this->item_in_ctn->caption(), $this->item_in_ctn->RequiredErrorMessage));
             }
         }
-        if ($this->test2->Required) {
-            if (!$this->test2->IsDetailKey && EmptyValue($this->test2->FormValue)) {
-                $this->test2->addErrorMessage(str_replace("%s", $this->test2->caption(), $this->test2->RequiredErrorMessage));
+        if ($this->no_of_ctn->Required) {
+            if (!$this->no_of_ctn->IsDetailKey && EmptyValue($this->no_of_ctn->FormValue)) {
+                $this->no_of_ctn->addErrorMessage(str_replace("%s", $this->no_of_ctn->caption(), $this->no_of_ctn->RequiredErrorMessage));
             }
         }
-        if ($this->test3->Required) {
-            if (!$this->test3->IsDetailKey && EmptyValue($this->test3->FormValue)) {
-                $this->test3->addErrorMessage(str_replace("%s", $this->test3->caption(), $this->test3->RequiredErrorMessage));
+        if ($this->ctn_no->Required) {
+            if (!$this->ctn_no->IsDetailKey && EmptyValue($this->ctn_no->FormValue)) {
+                $this->ctn_no->addErrorMessage(str_replace("%s", $this->ctn_no->caption(), $this->ctn_no->RequiredErrorMessage));
             }
         }
-        if ($this->test4->Required) {
-            if (!$this->test4->IsDetailKey && EmptyValue($this->test4->FormValue)) {
-                $this->test4->addErrorMessage(str_replace("%s", $this->test4->caption(), $this->test4->RequiredErrorMessage));
+        if (!CheckInteger($this->ctn_no->FormValue)) {
+            $this->ctn_no->addErrorMessage($this->ctn_no->getErrorMessage(false));
+        }
+        if ($this->checker->Required) {
+            if (!$this->checker->IsDetailKey && EmptyValue($this->checker->FormValue)) {
+                $this->checker->addErrorMessage(str_replace("%s", $this->checker->caption(), $this->checker->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->test4->FormValue)) {
-            $this->test4->addErrorMessage($this->test4->getErrorMessage(false));
+        if ($this->shift->Required) {
+            if (!$this->shift->IsDetailKey && EmptyValue($this->shift->FormValue)) {
+                $this->shift->addErrorMessage(str_replace("%s", $this->shift->caption(), $this->shift->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -1412,35 +1353,38 @@ class JobControlEdit extends JobControl
         // Set new row
         $rsnew = [];
 
-        // job_category
-        $this->job_category->setDbValueDef($rsnew, $this->job_category->CurrentValue, null, $this->job_category->ReadOnly);
+        // date
+        $this->date->setDbValueDef($rsnew, UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern()), null, $this->date->ReadOnly);
 
-        // aisle
-        $this->aisle->setDbValueDef($rsnew, $this->aisle->CurrentValue, null, $this->aisle->ReadOnly);
+        // shipment
+        $this->shipment->setDbValueDef($rsnew, $this->shipment->CurrentValue, null, $this->shipment->ReadOnly);
 
-        // user
-        $this->user->setDbValueDef($rsnew, $this->user->CurrentValue, null, $this->user->ReadOnly);
+        // pallet_no
+        $this->pallet_no->setDbValueDef($rsnew, $this->pallet_no->CurrentValue, null, $this->pallet_no->ReadOnly);
 
-        // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
+        // sscc
+        $this->sscc->setDbValueDef($rsnew, $this->sscc->CurrentValue, null, $this->sscc->ReadOnly);
 
-        // date_created
-        $this->date_created->setDbValueDef($rsnew, UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()), null, $this->date_created->ReadOnly);
+        // idw
+        $this->idw->setDbValueDef($rsnew, $this->idw->CurrentValue, null, $this->idw->ReadOnly);
 
-        // date_updated
-        $this->date_updated->setDbValueDef($rsnew, UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern()), null, $this->date_updated->ReadOnly);
+        // order_no
+        $this->order_no->setDbValueDef($rsnew, $this->order_no->CurrentValue, null, $this->order_no->ReadOnly);
 
-        // test
-        $this->test->setDbValueDef($rsnew, $this->test->CurrentValue, null, $this->test->ReadOnly);
+        // item_in_ctn
+        $this->item_in_ctn->setDbValueDef($rsnew, $this->item_in_ctn->CurrentValue, null, $this->item_in_ctn->ReadOnly);
 
-        // test2
-        $this->test2->setDbValueDef($rsnew, $this->test2->CurrentValue, null, $this->test2->ReadOnly);
+        // no_of_ctn
+        $this->no_of_ctn->setDbValueDef($rsnew, $this->no_of_ctn->CurrentValue, null, $this->no_of_ctn->ReadOnly);
 
-        // test3
-        $this->test3->setDbValueDef($rsnew, $this->test3->CurrentValue, null, $this->test3->ReadOnly);
+        // ctn_no
+        $this->ctn_no->setDbValueDef($rsnew, $this->ctn_no->CurrentValue, null, $this->ctn_no->ReadOnly);
 
-        // test4
-        $this->test4->setDbValueDef($rsnew, $this->test4->CurrentValue, null, $this->test4->ReadOnly);
+        // checker
+        $this->checker->setDbValueDef($rsnew, $this->checker->CurrentValue, null, $this->checker->ReadOnly);
+
+        // shift
+        $this->shift->setDbValueDef($rsnew, $this->shift->CurrentValue, null, $this->shift->ReadOnly);
 
         // Update current values
         $this->setCurrentValues($rsnew);
@@ -1491,7 +1435,7 @@ class JobControlEdit extends JobControl
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("/dashboard2");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("jobcontrollist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ossmanuallist"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }
@@ -1509,13 +1453,7 @@ class JobControlEdit extends JobControl
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_job_category":
-                    break;
-                case "x_aisle":
-                    break;
-                case "x_user":
-                    break;
-                case "x_status":
+                case "x_shift":
                     break;
                 default:
                     $lookupFilter = "";

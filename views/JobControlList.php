@@ -46,7 +46,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["status", [], fields.status.isInvalid],
         ["date_created", [], fields.date_created.isInvalid],
         ["date_updated", [], fields.date_updated.isInvalid],
-        ["test", [], fields.test.isInvalid]
+        ["test", [], fields.test.isInvalid],
+        ["test2", [], fields.test2.isInvalid],
+        ["test3", [], fields.test3.isInvalid],
+        ["test4", [], fields.test4.isInvalid]
     ]);
 
     // Validate form
@@ -477,6 +480,15 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->test->Visible) { // test ?>
         <th data-name="test" class="<?= $Page->test->headerCellClass() ?>"><div id="elh_job_control_test" class="job_control_test"><?= $Page->renderFieldHeader($Page->test) ?></div></th>
 <?php } ?>
+<?php if ($Page->test2->Visible) { // test2 ?>
+        <th data-name="test2" class="<?= $Page->test2->headerCellClass() ?>"><div id="elh_job_control_test2" class="job_control_test2"><?= $Page->renderFieldHeader($Page->test2) ?></div></th>
+<?php } ?>
+<?php if ($Page->test3->Visible) { // test3 ?>
+        <th data-name="test3" class="<?= $Page->test3->headerCellClass() ?>"><div id="elh_job_control_test3" class="job_control_test3"><?= $Page->renderFieldHeader($Page->test3) ?></div></th>
+<?php } ?>
+<?php if ($Page->test4->Visible) { // test4 ?>
+        <th data-name="test4" class="<?= $Page->test4->headerCellClass() ?>"><div id="elh_job_control_test4" class="job_control_test4"><?= $Page->renderFieldHeader($Page->test4) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -613,6 +625,37 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_job_control_test" class="el_job_control_test">
 <span<?= $Page->test->viewAttributes() ?>>
 <?= $Page->test->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->test2->Visible) { // test2 ?>
+        <td data-name="test2"<?= $Page->test2->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_test2" class="el_job_control_test2">
+<span<?= $Page->test2->viewAttributes() ?>>
+<?= $Page->test2->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->test3->Visible) { // test3 ?>
+        <td data-name="test3"<?= $Page->test3->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_test3" class="el_job_control_test3">
+<span<?= $Page->test3->viewAttributes() ?>>
+<?= $Page->test3->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->test4->Visible) { // test4 ?>
+        <td data-name="test4"<?= $Page->test4->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_test4" class="el_job_control_test4">
+<span<?= $Page->test4->viewAttributes() ?>>
+<?php if (!EmptyString($Page->test4->TooltipValue) && $Page->test4->linkAttributes() != "") { ?>
+<a<?= $Page->test4->linkAttributes() ?>><?= $Page->test4->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->test4->getViewValue() ?>
+<?php } ?>
+<span id="tt_job_control_x<?= $Page->RowCount ?>_test4" class="d-none">
+<?= $Page->test4->TooltipValue ?>
+</span></span>
 </span>
 </td>
     <?php } ?>

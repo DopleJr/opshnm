@@ -535,6 +535,23 @@ return function (App $app) {
         }
     );
 
+    // oss_manual
+    $app->map(["GET","POST","OPTIONS"], '/ossmanuallist[/{id}]', OssManualController::class . ':list')->add(PermissionMiddleware::class)->setName('ossmanuallist-oss_manual-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualadd[/{id}]', OssManualController::class . ':add')->add(PermissionMiddleware::class)->setName('ossmanualadd-oss_manual-add'); // add
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualview[/{id}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('ossmanualview-oss_manual-view'); // view
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualedit[/{id}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('ossmanualedit-oss_manual-edit'); // edit
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualdelete[/{id}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('ossmanualdelete-oss_manual-delete'); // delete
+    $app->group(
+        '/oss_manual',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', OssManualController::class . ':list')->add(PermissionMiddleware::class)->setName('oss_manual/list-oss_manual-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', OssManualController::class . ':add')->add(PermissionMiddleware::class)->setName('oss_manual/add-oss_manual-add-2'); // add
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('oss_manual/view-oss_manual-view-2'); // view
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('oss_manual/edit-oss_manual-edit-2'); // edit
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{id}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('oss_manual/delete-oss_manual-delete-2'); // delete
+        }
+    );
+
     // error
     $app->map(["GET","POST","OPTIONS"], '/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

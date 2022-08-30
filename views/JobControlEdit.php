@@ -27,7 +27,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
         ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null, ew.Validators.datetime(fields.date_updated.clientFormatPattern)], fields.date_updated.isInvalid],
-        ["test", [fields.test.visible && fields.test.required ? ew.Validators.required(fields.test.caption) : null], fields.test.isInvalid]
+        ["test", [fields.test.visible && fields.test.required ? ew.Validators.required(fields.test.caption) : null], fields.test.isInvalid],
+        ["test2", [fields.test2.visible && fields.test2.required ? ew.Validators.required(fields.test2.caption) : null], fields.test2.isInvalid],
+        ["test3", [fields.test3.visible && fields.test3.required ? ew.Validators.required(fields.test3.caption) : null], fields.test3.isInvalid],
+        ["test4", [fields.test4.visible && fields.test4.required ? ew.Validators.required(fields.test4.caption) : null, ew.Validators.integer], fields.test4.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -334,6 +337,42 @@ loadjs.ready(["fjob_controledit", "datetimepicker"], function () {
 <input type="<?= $Page->test->getInputTextType() ?>" name="x_test" id="x_test" data-table="job_control" data-field="x_test" value="<?= $Page->test->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test->getPlaceHolder()) ?>"<?= $Page->test->editAttributes() ?> aria-describedby="x_test_help">
 <?= $Page->test->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->test->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->test2->Visible) { // test2 ?>
+    <div id="r_test2"<?= $Page->test2->rowAttributes() ?>>
+        <label id="elh_job_control_test2" for="x_test2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test2->caption() ?><?= $Page->test2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test2->cellAttributes() ?>>
+<span id="el_job_control_test2">
+<input type="<?= $Page->test2->getInputTextType() ?>" name="x_test2" id="x_test2" data-table="job_control" data-field="x_test2" value="<?= $Page->test2->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test2->getPlaceHolder()) ?>"<?= $Page->test2->editAttributes() ?> aria-describedby="x_test2_help">
+<?= $Page->test2->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->test2->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->test3->Visible) { // test3 ?>
+    <div id="r_test3"<?= $Page->test3->rowAttributes() ?>>
+        <label id="elh_job_control_test3" for="x_test3" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test3->caption() ?><?= $Page->test3->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test3->cellAttributes() ?>>
+<span id="el_job_control_test3">
+<input type="<?= $Page->test3->getInputTextType() ?>" name="x_test3" id="x_test3" data-table="job_control" data-field="x_test3" value="<?= $Page->test3->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test3->getPlaceHolder()) ?>"<?= $Page->test3->editAttributes() ?> aria-describedby="x_test3_help">
+<?= $Page->test3->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->test3->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->test4->Visible) { // test4 ?>
+    <div id="r_test4"<?= $Page->test4->rowAttributes() ?>>
+        <label id="elh_job_control_test4" for="x_test4" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test4->caption() ?><?= $Page->test4->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test4->cellAttributes() ?>>
+<span id="el_job_control_test4">
+<input type="<?= $Page->test4->getInputTextType() ?>" name="x_test4" id="x_test4" data-table="job_control" data-field="x_test4" value="<?= $Page->test4->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test4->getPlaceHolder()) ?>"<?= $Page->test4->editAttributes() ?> aria-describedby="x_test4_help">
+<?= $Page->test4->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->test4->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

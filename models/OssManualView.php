@@ -10,7 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 /**
  * Page class
  */
-class JobControlView extends JobControl
+class OssManualView extends OssManual
 {
     use MessagesTrait;
 
@@ -21,10 +21,10 @@ class JobControlView extends JobControl
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'job_control';
+    public $TableName = 'oss_manual';
 
     // Page object name
-    public $PageObjName = "JobControlView";
+    public $PageObjName = "OssManualView";
 
     // View file path
     public $View = null;
@@ -51,14 +51,6 @@ class JobControlView extends JobControl
     public $GridEditUrl;
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
-
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
 
     // Page headings
     public $Heading = "";
@@ -172,9 +164,9 @@ class JobControlView extends JobControl
         // Parent constuctor
         parent::__construct();
 
-        // Table object (job_control)
-        if (!isset($GLOBALS["job_control"]) || get_class($GLOBALS["job_control"]) == PROJECT_NAMESPACE . "job_control") {
-            $GLOBALS["job_control"] = &$this;
+        // Table object (oss_manual)
+        if (!isset($GLOBALS["oss_manual"]) || get_class($GLOBALS["oss_manual"]) == PROJECT_NAMESPACE . "oss_manual") {
+            $GLOBALS["oss_manual"] = &$this;
         }
 
         // Set up record key
@@ -184,7 +176,7 @@ class JobControlView extends JobControl
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job_control');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'oss_manual');
         }
 
         // Start timer
@@ -282,7 +274,7 @@ class JobControlView extends JobControl
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $tbl = Container("job_control");
+                $tbl = Container("oss_manual");
                 $doc = new $class($tbl);
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
@@ -327,7 +319,7 @@ class JobControlView extends JobControl
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "jobcontrolview") {
+                    if ($pageName == "ossmanualview") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -529,16 +521,17 @@ class JobControlView extends JobControl
         $this->UseLayout = $this->UseLayout && ConvertToBool(Param("layout", true));
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->job_category->setVisibility();
-        $this->aisle->setVisibility();
-        $this->user->setVisibility();
-        $this->status->setVisibility();
-        $this->date_created->setVisibility();
-        $this->date_updated->setVisibility();
-        $this->test->setVisibility();
-        $this->test2->setVisibility();
-        $this->test3->setVisibility();
-        $this->test4->setVisibility();
+        $this->date->setVisibility();
+        $this->shipment->setVisibility();
+        $this->pallet_no->setVisibility();
+        $this->sscc->setVisibility();
+        $this->idw->setVisibility();
+        $this->order_no->setVisibility();
+        $this->item_in_ctn->setVisibility();
+        $this->no_of_ctn->setVisibility();
+        $this->ctn_no->setVisibility();
+        $this->checker->setVisibility();
+        $this->shift->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -555,10 +548,7 @@ class JobControlView extends JobControl
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->job_category);
-        $this->setupLookupOptions($this->aisle);
-        $this->setupLookupOptions($this->user);
-        $this->setupLookupOptions($this->status);
+        $this->setupLookupOptions($this->shift);
 
         // Check modal
         if ($this->IsModal) {
@@ -580,7 +570,7 @@ class JobControlView extends JobControl
                 $this->id->setQueryStringValue($keyValue);
                 $this->RecKey["id"] = $this->id->QueryStringValue;
             } elseif (!$loadCurrentRecord) {
-                $returnUrl = "jobcontrollist"; // Return to list
+                $returnUrl = "ossmanuallist"; // Return to list
             }
 
             // Get action
@@ -603,12 +593,12 @@ class JobControlView extends JobControl
                             if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                                 $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                             }
-                            $returnUrl = "jobcontrollist"; // No matching record, return to list
+                            $returnUrl = "ossmanuallist"; // No matching record, return to list
                         }
                     break;
             }
         } else {
-            $returnUrl = "jobcontrollist"; // Not page request, return to list
+            $returnUrl = "ossmanuallist"; // Not page request, return to list
         }
         if ($returnUrl != "") {
             $this->terminate($returnUrl);
@@ -696,7 +686,11 @@ class JobControlView extends JobControl
 
         // Delete
         $item = &$option->add("delete");
-        $item->Body = "<a data-ew-action=\"inline-delete\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
+        if ($this->IsModal) { // Handle as inline delete
+            $item->Body = "<a data-ew-action=\"inline-delete\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery(GetUrl($this->DeleteUrl), "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
+        } else {
+            $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
+        }
         $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
 
         // Set up action default
@@ -756,20 +750,18 @@ class JobControlView extends JobControl
 
         // Call Row Selected event
         $this->rowSelected($row);
-        if ($this->AuditTrailOnView) {
-            $this->writeAuditTrailOnView($row);
-        }
         $this->id->setDbValue($row['id']);
-        $this->job_category->setDbValue($row['job_category']);
-        $this->aisle->setDbValue($row['aisle']);
-        $this->user->setDbValue($row['user']);
-        $this->status->setDbValue($row['status']);
-        $this->date_created->setDbValue($row['date_created']);
-        $this->date_updated->setDbValue($row['date_updated']);
-        $this->test->setDbValue($row['test']);
-        $this->test2->setDbValue($row['test2']);
-        $this->test3->setDbValue($row['test3']);
-        $this->test4->setDbValue($row['test4']);
+        $this->date->setDbValue($row['date']);
+        $this->shipment->setDbValue($row['shipment']);
+        $this->pallet_no->setDbValue($row['pallet_no']);
+        $this->sscc->setDbValue($row['sscc']);
+        $this->idw->setDbValue($row['idw']);
+        $this->order_no->setDbValue($row['order_no']);
+        $this->item_in_ctn->setDbValue($row['item_in_ctn']);
+        $this->no_of_ctn->setDbValue($row['no_of_ctn']);
+        $this->ctn_no->setDbValue($row['ctn_no']);
+        $this->checker->setDbValue($row['checker']);
+        $this->shift->setDbValue($row['shift']);
     }
 
     // Return a row with default values
@@ -777,16 +769,17 @@ class JobControlView extends JobControl
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['job_category'] = $this->job_category->DefaultValue;
-        $row['aisle'] = $this->aisle->DefaultValue;
-        $row['user'] = $this->user->DefaultValue;
-        $row['status'] = $this->status->DefaultValue;
-        $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_updated'] = $this->date_updated->DefaultValue;
-        $row['test'] = $this->test->DefaultValue;
-        $row['test2'] = $this->test2->DefaultValue;
-        $row['test3'] = $this->test3->DefaultValue;
-        $row['test4'] = $this->test4->DefaultValue;
+        $row['date'] = $this->date->DefaultValue;
+        $row['shipment'] = $this->shipment->DefaultValue;
+        $row['pallet_no'] = $this->pallet_no->DefaultValue;
+        $row['sscc'] = $this->sscc->DefaultValue;
+        $row['idw'] = $this->idw->DefaultValue;
+        $row['order_no'] = $this->order_no->DefaultValue;
+        $row['item_in_ctn'] = $this->item_in_ctn->DefaultValue;
+        $row['no_of_ctn'] = $this->no_of_ctn->DefaultValue;
+        $row['ctn_no'] = $this->ctn_no->DefaultValue;
+        $row['checker'] = $this->checker->DefaultValue;
+        $row['shift'] = $this->shift->DefaultValue;
         return $row;
     }
 
@@ -810,197 +803,145 @@ class JobControlView extends JobControl
 
         // id
 
-        // job_category
+        // date
 
-        // aisle
+        // shipment
 
-        // user
+        // pallet_no
 
-        // status
+        // sscc
 
-        // date_created
+        // idw
 
-        // date_updated
+        // order_no
 
-        // test
+        // item_in_ctn
 
-        // test2
+        // no_of_ctn
 
-        // test3
+        // ctn_no
 
-        // test4
+        // checker
+
+        // shift
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, $this->id->formatPattern());
             $this->id->ViewCustomAttributes = "";
 
-            // job_category
-            if (strval($this->job_category->CurrentValue) != "") {
-                $this->job_category->ViewValue = $this->job_category->optionCaption($this->job_category->CurrentValue);
+            // date
+            $this->date->ViewValue = $this->date->CurrentValue;
+            $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
+            $this->date->ViewCustomAttributes = "";
+
+            // shipment
+            $this->shipment->ViewValue = $this->shipment->CurrentValue;
+            $this->shipment->ViewCustomAttributes = "";
+
+            // pallet_no
+            $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
+            $this->pallet_no->ViewValue = FormatNumber($this->pallet_no->ViewValue, $this->pallet_no->formatPattern());
+            $this->pallet_no->ViewCustomAttributes = "";
+
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
+
+            // idw
+            $this->idw->ViewValue = $this->idw->CurrentValue;
+            $this->idw->ViewCustomAttributes = "";
+
+            // order_no
+            $this->order_no->ViewValue = $this->order_no->CurrentValue;
+            $this->order_no->ViewValue = FormatNumber($this->order_no->ViewValue, $this->order_no->formatPattern());
+            $this->order_no->ViewCustomAttributes = "";
+
+            // item_in_ctn
+            $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewCustomAttributes = "";
+
+            // no_of_ctn
+            $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewCustomAttributes = "";
+
+            // ctn_no
+            $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
+            $this->ctn_no->ViewCustomAttributes = "";
+
+            // checker
+            $this->checker->ViewValue = $this->checker->CurrentValue;
+            $this->checker->ViewCustomAttributes = "";
+
+            // shift
+            if (strval($this->shift->CurrentValue) != "") {
+                $this->shift->ViewValue = $this->shift->optionCaption($this->shift->CurrentValue);
             } else {
-                $this->job_category->ViewValue = null;
+                $this->shift->ViewValue = null;
             }
-            $this->job_category->ViewCustomAttributes = "";
-
-            // aisle
-            $curVal = strval($this->aisle->CurrentValue);
-            if ($curVal != "") {
-                $this->aisle->ViewValue = $this->aisle->lookupCacheOption($curVal);
-                if ($this->aisle->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`source_location`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $sqlWrk = $this->aisle->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->aisle->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->aisle->Lookup->renderViewRow($row);
-                            $this->aisle->ViewValue->add($this->aisle->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->aisle->ViewValue = $this->aisle->CurrentValue;
-                    }
-                }
-            } else {
-                $this->aisle->ViewValue = null;
-            }
-            $this->aisle->ViewCustomAttributes = "";
-
-            // user
-            $curVal = strval($this->user->CurrentValue);
-            if ($curVal != "") {
-                $this->user->ViewValue = $this->user->lookupCacheOption($curVal);
-                if ($this->user->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`username`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->user->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->user->Lookup->renderViewRow($rswrk[0]);
-                        $this->user->ViewValue = $this->user->displayValue($arwrk);
-                    } else {
-                        $this->user->ViewValue = $this->user->CurrentValue;
-                    }
-                }
-            } else {
-                $this->user->ViewValue = null;
-            }
-            $this->user->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
-
-            // date_created
-            $this->date_created->ViewValue = $this->date_created->CurrentValue;
-            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
-            $this->date_created->ViewCustomAttributes = "";
-
-            // date_updated
-            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
-            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
-            $this->date_updated->ViewCustomAttributes = "";
-
-            // test
-            $this->test->ViewValue = $this->test->CurrentValue;
-            $this->test->ViewCustomAttributes = "";
-
-            // test2
-            $this->test2->ViewValue = $this->test2->CurrentValue;
-            $this->test2->ViewCustomAttributes = "";
-
-            // test3
-            $this->test3->ViewValue = $this->test3->CurrentValue;
-            $this->test3->ViewCustomAttributes = "";
-
-            // test4
-            $this->test4->ViewValue = $this->test4->CurrentValue;
-            $this->test4->ViewCustomAttributes = "";
+            $this->shift->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
             $this->id->TooltipValue = "";
 
-            // job_category
-            $this->job_category->LinkCustomAttributes = "";
-            $this->job_category->HrefValue = "";
-            $this->job_category->TooltipValue = "";
+            // date
+            $this->date->LinkCustomAttributes = "";
+            $this->date->HrefValue = "";
+            $this->date->TooltipValue = "";
 
-            // aisle
-            $this->aisle->LinkCustomAttributes = "";
-            $this->aisle->HrefValue = "";
-            $this->aisle->TooltipValue = "";
+            // shipment
+            $this->shipment->LinkCustomAttributes = "";
+            $this->shipment->HrefValue = "";
+            $this->shipment->TooltipValue = "";
 
-            // user
-            $this->user->LinkCustomAttributes = "";
-            $this->user->HrefValue = "";
-            $this->user->TooltipValue = "";
+            // pallet_no
+            $this->pallet_no->LinkCustomAttributes = "";
+            $this->pallet_no->HrefValue = "";
+            $this->pallet_no->TooltipValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
+            // sscc
+            $this->sscc->LinkCustomAttributes = "";
+            $this->sscc->HrefValue = "";
+            $this->sscc->TooltipValue = "";
 
-            // date_created
-            $this->date_created->LinkCustomAttributes = "";
-            $this->date_created->HrefValue = "";
-            $this->date_created->TooltipValue = "";
+            // idw
+            $this->idw->LinkCustomAttributes = "";
+            $this->idw->HrefValue = "";
+            $this->idw->TooltipValue = "";
 
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
-            $this->date_updated->TooltipValue = "";
+            // order_no
+            $this->order_no->LinkCustomAttributes = "";
+            $this->order_no->HrefValue = "";
+            $this->order_no->TooltipValue = "";
 
-            // test
-            $this->test->LinkCustomAttributes = "";
-            $this->test->HrefValue = "";
-            $this->test->TooltipValue = "";
+            // item_in_ctn
+            $this->item_in_ctn->LinkCustomAttributes = "";
+            $this->item_in_ctn->HrefValue = "";
+            $this->item_in_ctn->TooltipValue = "";
 
-            // test2
-            $this->test2->LinkCustomAttributes = "";
-            $this->test2->HrefValue = "";
-            $this->test2->TooltipValue = "";
+            // no_of_ctn
+            $this->no_of_ctn->LinkCustomAttributes = "";
+            $this->no_of_ctn->HrefValue = "";
+            $this->no_of_ctn->TooltipValue = "";
 
-            // test3
-            $this->test3->LinkCustomAttributes = "";
-            $this->test3->HrefValue = "";
-            $this->test3->TooltipValue = "";
+            // ctn_no
+            $this->ctn_no->LinkCustomAttributes = "";
+            $this->ctn_no->HrefValue = "";
+            $this->ctn_no->TooltipValue = "";
 
-            // test4
-            $this->test4->LinkCustomAttributes = "";
-            $this->test4->HrefValue = "";
-            if (!$this->isExport()) {
-                $this->test4->TooltipValue = $this->test4->ViewValue != "" ? $this->test4->ViewValue : $this->test4->CurrentValue;
-                $this->test4->TooltipWidth = 50;
-                if ($this->test4->HrefValue == "") {
-                    $this->test4->HrefValue = "javascript:void(0);";
-                }
-                $this->test4->LinkAttrs->appendClass("ew-tooltip-link");
-                $this->test4->LinkAttrs["data-tooltip-id"] = "tt_job_control_x_test4";
-                $this->test4->LinkAttrs["data-tooltip-width"] = $this->test4->TooltipWidth;
-                $this->test4->LinkAttrs["data-bs-placement"] = IsRTL() ? "left" : "right";
-            }
+            // checker
+            $this->checker->LinkCustomAttributes = "";
+            $this->checker->HrefValue = "";
+            $this->checker->TooltipValue = "";
+
+            // shift
+            $this->shift->LinkCustomAttributes = "";
+            $this->shift->HrefValue = "";
+            $this->shift->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1015,7 +956,7 @@ class JobControlView extends JobControl
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("/dashboard2");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("jobcontrollist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ossmanuallist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }
@@ -1033,13 +974,7 @@ class JobControlView extends JobControl
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_job_category":
-                    break;
-                case "x_aisle":
-                    break;
-                case "x_user":
-                    break;
-                case "x_status":
+                case "x_shift":
                     break;
                 default:
                     $lookupFilter = "";

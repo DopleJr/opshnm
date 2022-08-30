@@ -962,6 +962,9 @@
   <project>
     <phrase id="bodytitle" value="OPS HNM" />
     <phrase id="footertext" value="Copyright Gofur" />
+    <menu id="370">
+      <phrase id="menutext" value="Data OSS Manual" />
+    </menu>
     <menu id="222">
       <phrase id="menutext" value="On Staging" />
     </menu>
@@ -2081,7 +2084,7 @@
       </field>
     </table>
     <table id="locations">
-      <phrase id="tblcaption" value="locations" />
+      <phrase id="tblcaption" value="Locations" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2317,9 +2320,6 @@
       </field>
       <field id="test3">
         <phrase id="fldcaption" value="test 3" />
-      </field>
-      <field id="test4">
-        <phrase id="fldcaption" value="test 4" />
       </field>
     </table>
     <table id="shortpick_by_area">
@@ -2700,6 +2700,51 @@
       </field>
       <field id="total">
         <phrase id="fldcaption" value="Total" />
+      </field>
+    </table>
+    <table id="oss_manual">
+      <phrase id="tblcaption" value="Data OSS Manual" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="date">
+        <phrase id="fldcaption" value="Date" />
+      </field>
+      <field id="shipment">
+        <phrase id="fldcaption" value="Shipment" />
+      </field>
+      <field id="pallet_no">
+        <phrase id="fldcaption" value="Pallet No" />
+      </field>
+      <field id="sscc">
+        <phrase id="fldcaption" value="SSCC" />
+      </field>
+      <field id="idw">
+        <phrase id="fldcaption" value="IDW" />
+      </field>
+      <field id="order_no">
+        <phrase id="fldcaption" value="Order No" />
+      </field>
+      <field id="item_in_ctn">
+        <phrase id="fldcaption" value="Item In Ctn" />
+      </field>
+      <field id="no_of_ctn">
+        <phrase id="fldcaption" value="No Of Ctn" />
+      </field>
+      <field id="ctn_no">
+        <phrase id="fldcaption" value="Ctn No" />
+      </field>
+      <field id="checker">
+        <phrase id="fldcaption" value="Checker" />
+      </field>
+      <field id="shift">
+        <phrase id="fldcaption" value="Shift" />
+        <phrase id="fldtagvalue1" value="Shift 1" />
+        <phrase id="fldtagcaption1" value="Shift 1" />
+        <phrase id="fldtagvalue2" value="Shift 2" />
+        <phrase id="fldtagcaption2" value="Shift 2" />
+        <phrase id="fldtagvalue3" value="Shift 3" />
+        <phrase id="fldtagcaption3" value="Shift 3" />
       </field>
     </table>
   </project>

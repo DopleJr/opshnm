@@ -26,7 +26,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
         ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null, ew.Validators.datetime(fields.date_updated.clientFormatPattern)], fields.date_updated.isInvalid],
-        ["test", [fields.test.visible && fields.test.required ? ew.Validators.required(fields.test.caption) : null], fields.test.isInvalid]
+        ["test", [fields.test.visible && fields.test.required ? ew.Validators.required(fields.test.caption) : null], fields.test.isInvalid],
+        ["test2", [fields.test2.visible && fields.test2.required ? ew.Validators.required(fields.test2.caption) : null], fields.test2.isInvalid],
+        ["test3", [fields.test3.visible && fields.test3.required ? ew.Validators.required(fields.test3.caption) : null], fields.test3.isInvalid],
+        ["test4", [fields.test4.visible && fields.test4.required ? ew.Validators.required(fields.test4.caption) : null, ew.Validators.integer], fields.test4.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -64,12 +67,12 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<div class="ew-add-div d-none"><!-- page* -->
+<div class="ew-add-div"><!-- page* -->
 <?php if ($Page->job_category->Visible) { // job_category ?>
     <div id="r_job_category"<?= $Page->job_category->rowAttributes() ?>>
-        <label id="elh_job_control_job_category" for="x_job_category" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_job_category"><?= $Page->job_category->caption() ?><?= $Page->job_category->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_job_category" for="x_job_category" class="<?= $Page->LeftColumnClass ?>"><?= $Page->job_category->caption() ?><?= $Page->job_category->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->job_category->cellAttributes() ?>>
-<template id="tpx_job_control_job_category"><span id="el_job_control_job_category">
+<span id="el_job_control_job_category">
     <select
         id="x_job_category"
         name="x_job_category"
@@ -99,15 +102,15 @@ loadjs.ready("fjob_controladd", function() {
     ew.createSelect(options);
 });
 </script>
-</span></template>
+</span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->aisle->Visible) { // aisle ?>
     <div id="r_aisle"<?= $Page->aisle->rowAttributes() ?>>
-        <label id="elh_job_control_aisle" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_aisle"><?= $Page->aisle->caption() ?><?= $Page->aisle->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_aisle" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aisle->caption() ?><?= $Page->aisle->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->aisle->cellAttributes() ?>>
-<template id="tpx_job_control_aisle"><span id="el_job_control_aisle">
+<span id="el_job_control_aisle">
     <select
         id="x_aisle[]"
         name="x_aisle[]"
@@ -152,15 +155,15 @@ loadjs.ready("fjob_controladd", function() {
     ew.createSelect(options);
 });
 </script>
-</span></template>
+</span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
     <div id="r_user"<?= $Page->user->rowAttributes() ?>>
-        <label id="elh_job_control_user" for="x_user" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_user"><?= $Page->user->caption() ?><?= $Page->user->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_user" for="x_user" class="<?= $Page->LeftColumnClass ?>"><?= $Page->user->caption() ?><?= $Page->user->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->user->cellAttributes() ?>>
-<template id="tpx_job_control_user"><span id="el_job_control_user">
+<span id="el_job_control_user">
     <select
         id="x_user"
         name="x_user"
@@ -191,15 +194,15 @@ loadjs.ready("fjob_controladd", function() {
     ew.createSelect(options);
 });
 </script>
-</span></template>
+</span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <div id="r_status"<?= $Page->status->rowAttributes() ?>>
-        <label id="elh_job_control_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
-<template id="tpx_job_control_status"><span id="el_job_control_status">
+<span id="el_job_control_status">
     <select
         id="x_status"
         name="x_status"
@@ -229,15 +232,15 @@ loadjs.ready("fjob_controladd", function() {
     ew.createSelect(options);
 });
 </script>
-</span></template>
+</span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
     <div id="r_date_created"<?= $Page->date_created->rowAttributes() ?>>
-        <label id="elh_job_control_date_created" for="x_date_created" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_date_created"><?= $Page->date_created->caption() ?><?= $Page->date_created->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_date_created" for="x_date_created" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_created->caption() ?><?= $Page->date_created->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_created->cellAttributes() ?>>
-<template id="tpx_job_control_date_created"><span id="el_job_control_date_created">
+<span id="el_job_control_date_created">
 <input type="<?= $Page->date_created->getInputTextType() ?>" name="x_date_created" id="x_date_created" data-table="job_control" data-field="x_date_created" value="<?= $Page->date_created->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_created->getPlaceHolder()) ?>"<?= $Page->date_created->editAttributes() ?> aria-describedby="x_date_created_help">
 <?= $Page->date_created->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->date_created->getErrorMessage() ?></div>
@@ -269,15 +272,15 @@ loadjs.ready(["fjob_controladd", "datetimepicker"], function () {
 });
 </script>
 <?php } ?>
-</span></template>
+</span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
     <div id="r_date_updated"<?= $Page->date_updated->rowAttributes() ?>>
-        <label id="elh_job_control_date_updated" for="x_date_updated" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_date_updated"><?= $Page->date_updated->caption() ?><?= $Page->date_updated->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_date_updated" for="x_date_updated" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_updated->caption() ?><?= $Page->date_updated->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_updated->cellAttributes() ?>>
-<template id="tpx_job_control_date_updated"><span id="el_job_control_date_updated">
+<span id="el_job_control_date_updated">
 <input type="<?= $Page->date_updated->getInputTextType() ?>" name="x_date_updated" id="x_date_updated" data-table="job_control" data-field="x_date_updated" value="<?= $Page->date_updated->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_updated->getPlaceHolder()) ?>"<?= $Page->date_updated->editAttributes() ?> aria-describedby="x_date_updated_help">
 <?= $Page->date_updated->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->date_updated->getErrorMessage() ?></div>
@@ -309,53 +312,59 @@ loadjs.ready(["fjob_controladd", "datetimepicker"], function () {
 });
 </script>
 <?php } ?>
-</span></template>
+</span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->test->Visible) { // test ?>
     <div id="r_test"<?= $Page->test->rowAttributes() ?>>
-        <label id="elh_job_control_test" for="x_test" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_test"><?= $Page->test->caption() ?><?= $Page->test->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_job_control_test" for="x_test" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test->caption() ?><?= $Page->test->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test->cellAttributes() ?>>
-<template id="tpx_job_control_test"><span id="el_job_control_test">
+<span id="el_job_control_test">
 <input type="<?= $Page->test->getInputTextType() ?>" name="x_test" id="x_test" data-table="job_control" data-field="x_test" value="<?= $Page->test->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test->getPlaceHolder()) ?>"<?= $Page->test->editAttributes() ?> aria-describedby="x_test_help">
 <?= $Page->test->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->test->getErrorMessage() ?></div>
-</span></template>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->test2->Visible) { // test2 ?>
+    <div id="r_test2"<?= $Page->test2->rowAttributes() ?>>
+        <label id="elh_job_control_test2" for="x_test2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test2->caption() ?><?= $Page->test2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test2->cellAttributes() ?>>
+<span id="el_job_control_test2">
+<input type="<?= $Page->test2->getInputTextType() ?>" name="x_test2" id="x_test2" data-table="job_control" data-field="x_test2" value="<?= $Page->test2->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test2->getPlaceHolder()) ?>"<?= $Page->test2->editAttributes() ?> aria-describedby="x_test2_help">
+<?= $Page->test2->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->test2->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->test3->Visible) { // test3 ?>
+    <div id="r_test3"<?= $Page->test3->rowAttributes() ?>>
+        <label id="elh_job_control_test3" for="x_test3" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test3->caption() ?><?= $Page->test3->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test3->cellAttributes() ?>>
+<span id="el_job_control_test3">
+<input type="<?= $Page->test3->getInputTextType() ?>" name="x_test3" id="x_test3" data-table="job_control" data-field="x_test3" value="<?= $Page->test3->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test3->getPlaceHolder()) ?>"<?= $Page->test3->editAttributes() ?> aria-describedby="x_test3_help">
+<?= $Page->test3->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->test3->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->test4->Visible) { // test4 ?>
+    <div id="r_test4"<?= $Page->test4->rowAttributes() ?>>
+        <label id="elh_job_control_test4" for="x_test4" class="<?= $Page->LeftColumnClass ?>"><?= $Page->test4->caption() ?><?= $Page->test4->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->test4->cellAttributes() ?>>
+<span id="el_job_control_test4">
+<input type="<?= $Page->test4->getInputTextType() ?>" name="x_test4" id="x_test4" data-table="job_control" data-field="x_test4" value="<?= $Page->test4->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->test4->getPlaceHolder()) ?>"<?= $Page->test4->editAttributes() ?> aria-describedby="x_test4_help">
+<?= $Page->test4->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->test4->getErrorMessage() ?></div>
+</span>
 </div></div>
     </div>
 <?php } ?>
 </div><!-- /page* -->
-<div id="tpd_job_controladd" class="ew-custom-template"></div>
-<template id="tpm_job_controladd">
-<div id="ct_JobControlAdd"><body>
-    <div id="r_job_category" class="mb-3 row">
-        <label for="x_job_category" class="col-sm-2 col-form-label"><?= $Page->job_category->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_job_category"></slot></div>
-    </div>
-    <div id="r_aisle" class="mb-3 row">
-        <label for="x_aisle" class="col-sm-2 col-form-label"><?= $Page->aisle->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_aisle"></slot></div>
-    </div>
-    <div id="r_user" class="mb-3 row">
-        <label for="x_user" class="col-sm-2 col-form-label"><?= $Page->user->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_user"></slot></div>
-    </div>
-    <div id="r_status" class="mb-3 row">
-        <label for="x_status" class="col-sm-2 col-form-label"><?= $Page->status->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_status"></slot></div>
-    </div>
-    <div id="r_date_created" class="mb-3 row">
-        <label for="x_date_created" class="col-sm-2 col-form-label"><?= $Page->date_created->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_date_created"></slot></div>
-    </div>
-    <div id="r_date_updated" class="mb-3 row">
-        <label for="x_date_updated" class="col-sm-2 col-form-label"><?= $Page->date_updated->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_date_updated"></slot></div>
-    </div>
- </body>
-</div>
-</template>
 <?php if (!$Page->IsModal) { ?>
 <div class="row"><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
@@ -365,13 +374,6 @@ loadjs.ready(["fjob_controladd", "datetimepicker"], function () {
 </div><!-- /buttons .row -->
 <?php } ?>
 </form>
-<script class="ew-apply-template">
-loadjs.ready(ew.applyTemplateId, function() {
-    ew.templateData = { rows: <?= JsonEncode($Page->Rows) ?> };
-    ew.applyTemplate("tpd_job_controladd", "tpm_job_controladd", "job_controladd", "<?= $Page->CustomExport ?>", ew.templateData.rows[0]);
-    loadjs.done("customtemplate");
-});
-</script>
 <?php
 $Page->showPageFooter();
 echo GetDebugMessage();

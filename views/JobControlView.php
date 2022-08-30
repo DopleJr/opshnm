@@ -132,6 +132,46 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->test2->Visible) { // test2 ?>
+    <tr id="r_test2"<?= $Page->test2->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_test2"><?= $Page->test2->caption() ?></span></td>
+        <td data-name="test2"<?= $Page->test2->cellAttributes() ?>>
+<span id="el_job_control_test2">
+<span<?= $Page->test2->viewAttributes() ?>>
+<?= $Page->test2->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->test3->Visible) { // test3 ?>
+    <tr id="r_test3"<?= $Page->test3->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_test3"><?= $Page->test3->caption() ?></span></td>
+        <td data-name="test3"<?= $Page->test3->cellAttributes() ?>>
+<span id="el_job_control_test3">
+<span<?= $Page->test3->viewAttributes() ?>>
+<?= $Page->test3->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->test4->Visible) { // test4 ?>
+    <tr id="r_test4"<?= $Page->test4->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_test4"><?= $Page->test4->caption() ?></span></td>
+        <td data-name="test4"<?= $Page->test4->cellAttributes() ?>>
+<span id="el_job_control_test4">
+<span<?= $Page->test4->viewAttributes() ?>>
+<?php if (!EmptyString($Page->test4->TooltipValue) && $Page->test4->linkAttributes() != "") { ?>
+<a<?= $Page->test4->linkAttributes() ?>><?= $Page->test4->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->test4->getViewValue() ?>
+<?php } ?>
+<span id="tt_job_control_x_test4" class="d-none">
+<?= $Page->test4->TooltipValue ?>
+</span></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 <?php

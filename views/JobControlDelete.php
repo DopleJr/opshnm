@@ -68,6 +68,15 @@ $Page->showMessage();
 <?php if ($Page->test->Visible) { // test ?>
         <th class="<?= $Page->test->headerCellClass() ?>"><span id="elh_job_control_test" class="job_control_test"><?= $Page->test->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->test2->Visible) { // test2 ?>
+        <th class="<?= $Page->test2->headerCellClass() ?>"><span id="elh_job_control_test2" class="job_control_test2"><?= $Page->test2->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->test3->Visible) { // test3 ?>
+        <th class="<?= $Page->test3->headerCellClass() ?>"><span id="elh_job_control_test3" class="job_control_test3"><?= $Page->test3->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->test4->Visible) { // test4 ?>
+        <th class="<?= $Page->test4->headerCellClass() ?>"><span id="elh_job_control_test4" class="job_control_test4"><?= $Page->test4->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -150,6 +159,37 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_job_control_test" class="el_job_control_test">
 <span<?= $Page->test->viewAttributes() ?>>
 <?= $Page->test->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->test2->Visible) { // test2 ?>
+        <td<?= $Page->test2->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_test2" class="el_job_control_test2">
+<span<?= $Page->test2->viewAttributes() ?>>
+<?= $Page->test2->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->test3->Visible) { // test3 ?>
+        <td<?= $Page->test3->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_test3" class="el_job_control_test3">
+<span<?= $Page->test3->viewAttributes() ?>>
+<?= $Page->test3->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->test4->Visible) { // test4 ?>
+        <td<?= $Page->test4->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_test4" class="el_job_control_test4">
+<span<?= $Page->test4->viewAttributes() ?>>
+<?php if (!EmptyString($Page->test4->TooltipValue) && $Page->test4->linkAttributes() != "") { ?>
+<a<?= $Page->test4->linkAttributes() ?>><?= $Page->test4->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->test4->getViewValue() ?>
+<?php } ?>
+<span id="tt_job_control_x_test4" class="d-none">
+<?= $Page->test4->TooltipValue ?>
+</span></span>
 </span>
 </td>
 <?php } ?>

@@ -93,6 +93,7 @@ return [
     "picking_pending" => \DI\create(PickingPending::class),
     "report_totes" => \DI\create(ReportTotes::class),
     "box_result" => \DI\create(BoxResult::class),
+    "oss_manual" => \DI\create(OssManual::class),
 
     // User table
     "usertable" => \DI\get("user"),
