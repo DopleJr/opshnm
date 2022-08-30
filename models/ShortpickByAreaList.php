@@ -613,7 +613,6 @@ class ShortpickByAreaList extends ShortpickByArea
         // Setup export options
         $this->setupExportOptions();
         $this->area->setVisibility();
-        $this->total_shortpick->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -941,7 +940,6 @@ class ShortpickByAreaList extends ShortpickByArea
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->area->AdvancedSearch->toJson(), ","); // Field area
-        $filterList = Concat($filterList, $this->total_shortpick->AdvancedSearch->toJson(), ","); // Field total_shortpick
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -989,14 +987,6 @@ class ShortpickByAreaList extends ShortpickByArea
         $this->area->AdvancedSearch->SearchValue2 = @$filter["y_area"];
         $this->area->AdvancedSearch->SearchOperator2 = @$filter["w_area"];
         $this->area->AdvancedSearch->save();
-
-        // Field total_shortpick
-        $this->total_shortpick->AdvancedSearch->SearchValue = @$filter["x_total_shortpick"];
-        $this->total_shortpick->AdvancedSearch->SearchOperator = @$filter["z_total_shortpick"];
-        $this->total_shortpick->AdvancedSearch->SearchCondition = @$filter["v_total_shortpick"];
-        $this->total_shortpick->AdvancedSearch->SearchValue2 = @$filter["y_total_shortpick"];
-        $this->total_shortpick->AdvancedSearch->SearchOperator2 = @$filter["w_total_shortpick"];
-        $this->total_shortpick->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1010,7 +1000,6 @@ class ShortpickByAreaList extends ShortpickByArea
             return "";
         }
         $this->buildSearchSql($where, $this->area, $default, true); // area
-        $this->buildSearchSql($where, $this->total_shortpick, $default, true); // total_shortpick
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1018,7 +1007,6 @@ class ShortpickByAreaList extends ShortpickByArea
         }
         if (!$default && $this->Command == "search") {
             $this->area->AdvancedSearch->save(); // area
-            $this->total_shortpick->AdvancedSearch->save(); // total_shortpick
         }
         return $where;
     }
@@ -1126,9 +1114,6 @@ class ShortpickByAreaList extends ShortpickByArea
         if ($this->area->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->total_shortpick->AdvancedSearch->issetSession()) {
-            return true;
-        }
         return false;
     }
 
@@ -1162,7 +1147,6 @@ class ShortpickByAreaList extends ShortpickByArea
     protected function resetAdvancedSearchParms()
     {
         $this->area->AdvancedSearch->unsetSession();
-        $this->total_shortpick->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1175,7 +1159,6 @@ class ShortpickByAreaList extends ShortpickByArea
 
         // Restore advanced search values
         $this->area->AdvancedSearch->load();
-        $this->total_shortpick->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1194,7 +1177,6 @@ class ShortpickByAreaList extends ShortpickByArea
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->area); // area
-            $this->updateSort($this->total_shortpick); // total_shortpick
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1220,7 +1202,6 @@ class ShortpickByAreaList extends ShortpickByArea
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->area->setSort("");
-                $this->total_shortpick->setSort("");
             }
 
             // Reset start position
@@ -1357,7 +1338,6 @@ class ShortpickByAreaList extends ShortpickByArea
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
             $option->add("area", $this->createColumnOption("area"));
-            $option->add("total_shortpick", $this->createColumnOption("total_shortpick"));
         }
 
         // Set up options default
@@ -1547,14 +1527,6 @@ class ShortpickByAreaList extends ShortpickByArea
                 $this->Command = "search";
             }
         }
-
-        // total_shortpick
-        if ($this->total_shortpick->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->total_shortpick->AdvancedSearch->SearchValue != "" || $this->total_shortpick->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
         return $hasValue;
     }
 
@@ -1644,7 +1616,6 @@ class ShortpickByAreaList extends ShortpickByArea
         // Call Row Selected event
         $this->rowSelected($row);
         $this->area->setDbValue($row['area']);
-        $this->total_shortpick->setDbValue($row['total_shortpick']);
     }
 
     // Return a row with default values
@@ -1652,7 +1623,6 @@ class ShortpickByAreaList extends ShortpickByArea
     {
         $row = [];
         $row['area'] = $this->area->DefaultValue;
-        $row['total_shortpick'] = $this->total_shortpick->DefaultValue;
         return $row;
     }
 
@@ -1684,19 +1654,11 @@ class ShortpickByAreaList extends ShortpickByArea
         // area
         $this->area->CellCssStyle = "white-space: nowrap;";
 
-        // total_shortpick
-        $this->total_shortpick->CellCssStyle = "white-space: nowrap;";
-
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // area
             $this->area->ViewValue = $this->area->CurrentValue;
             $this->area->ViewCustomAttributes = "";
-
-            // total_shortpick
-            $this->total_shortpick->ViewValue = $this->total_shortpick->CurrentValue;
-            $this->total_shortpick->ViewValue = FormatNumber($this->total_shortpick->ViewValue, $this->total_shortpick->formatPattern());
-            $this->total_shortpick->ViewCustomAttributes = "";
 
             // area
             $this->area->LinkCustomAttributes = "";
@@ -1710,11 +1672,6 @@ class ShortpickByAreaList extends ShortpickByArea
                 $this->area->HrefValue = "";
             }
             $this->area->TooltipValue = "";
-
-            // total_shortpick
-            $this->total_shortpick->LinkCustomAttributes = "";
-            $this->total_shortpick->HrefValue = "";
-            $this->total_shortpick->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // area
             if ($this->area->UseFilter && !EmptyValue($this->area->AdvancedSearch->SearchValue)) {
@@ -1722,14 +1679,6 @@ class ShortpickByAreaList extends ShortpickByArea
                     $this->area->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->area->AdvancedSearch->SearchValue);
                 }
                 $this->area->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->area->AdvancedSearch->SearchValue);
-            }
-
-            // total_shortpick
-            if ($this->total_shortpick->UseFilter && !EmptyValue($this->total_shortpick->AdvancedSearch->SearchValue)) {
-                if (is_array($this->total_shortpick->AdvancedSearch->SearchValue)) {
-                    $this->total_shortpick->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->total_shortpick->AdvancedSearch->SearchValue);
-                }
-                $this->total_shortpick->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->total_shortpick->AdvancedSearch->SearchValue);
             }
         }
 
@@ -1763,7 +1712,6 @@ class ShortpickByAreaList extends ShortpickByArea
     public function loadAdvancedSearch()
     {
         $this->area->AdvancedSearch->load();
-        $this->total_shortpick->AdvancedSearch->load();
     }
 
     // Get export HTML tag

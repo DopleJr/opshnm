@@ -2327,9 +2327,6 @@
       <field id="area">
         <phrase id="fldcaption" value="Area" />
       </field>
-      <field id="total_shortpick">
-        <phrase id="fldcaption" value="Total Shortpick" />
-      </field>
     </table>
     <table id="findingshortpick">
       <phrase id="tblcaption" value="Finding Shortpick" />

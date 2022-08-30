@@ -32,7 +32,6 @@ class ShortpickByArea extends DbTable
 
     // Fields
     public $area;
-    public $total_shortpick;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -94,31 +93,6 @@ class ShortpickByArea extends DbTable
         $this->area->UseFilter = true; // Table header filter
         $this->area->Lookup = new Lookup('area', 'shortpick_by_area', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['area'] = &$this->area;
-
-        // total_shortpick
-        $this->total_shortpick = new DbField(
-            'shortpick_by_area',
-            'shortpick_by_area',
-            'x_total_shortpick',
-            'total_shortpick',
-            '`total_shortpick`',
-            '`total_shortpick`',
-            131,
-            33,
-            -1,
-            false,
-            '`total_shortpick`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->total_shortpick->InputTextType = "text";
-        $this->total_shortpick->UseFilter = true; // Table header filter
-        $this->total_shortpick->Lookup = new Lookup('total_shortpick', 'shortpick_by_area', true, 'total_shortpick', ["total_shortpick","","",""], [], [], [], [], [], [], '', '', "");
-        $this->total_shortpick->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
-        $this->Fields['total_shortpick'] = &$this->total_shortpick;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -545,7 +519,6 @@ class ShortpickByArea extends DbTable
             return;
         }
         $this->area->DbValue = $row['area'];
-        $this->total_shortpick->DbValue = $row['total_shortpick'];
     }
 
     // Delete uploaded files
@@ -819,7 +792,6 @@ class ShortpickByArea extends DbTable
             return;
         }
         $this->area->setDbValue($row['area']);
-        $this->total_shortpick->setDbValue($row['total_shortpick']);
     }
 
     // Render list row values
@@ -835,17 +807,9 @@ class ShortpickByArea extends DbTable
         // area
         $this->area->CellCssStyle = "white-space: nowrap;";
 
-        // total_shortpick
-        $this->total_shortpick->CellCssStyle = "white-space: nowrap;";
-
         // area
         $this->area->ViewValue = $this->area->CurrentValue;
         $this->area->ViewCustomAttributes = "";
-
-        // total_shortpick
-        $this->total_shortpick->ViewValue = $this->total_shortpick->CurrentValue;
-        $this->total_shortpick->ViewValue = FormatNumber($this->total_shortpick->ViewValue, $this->total_shortpick->formatPattern());
-        $this->total_shortpick->ViewCustomAttributes = "";
 
         // area
         $this->area->LinkCustomAttributes = "";
@@ -859,11 +823,6 @@ class ShortpickByArea extends DbTable
             $this->area->HrefValue = "";
         }
         $this->area->TooltipValue = "";
-
-        // total_shortpick
-        $this->total_shortpick->LinkCustomAttributes = "";
-        $this->total_shortpick->HrefValue = "";
-        $this->total_shortpick->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -888,15 +847,6 @@ class ShortpickByArea extends DbTable
         }
         $this->area->EditValue = $this->area->CurrentValue;
         $this->area->PlaceHolder = RemoveHtml($this->area->caption());
-
-        // total_shortpick
-        $this->total_shortpick->setupEditAttributes();
-        $this->total_shortpick->EditCustomAttributes = "";
-        $this->total_shortpick->EditValue = $this->total_shortpick->CurrentValue;
-        $this->total_shortpick->PlaceHolder = RemoveHtml($this->total_shortpick->caption());
-        if (strval($this->total_shortpick->EditValue) != "" && is_numeric($this->total_shortpick->EditValue)) {
-            $this->total_shortpick->EditValue = FormatNumber($this->total_shortpick->EditValue, null);
-        }
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -927,10 +877,8 @@ class ShortpickByArea extends DbTable
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->area);
-                    $doc->exportCaption($this->total_shortpick);
                 } else {
                     $doc->exportCaption($this->area);
-                    $doc->exportCaption($this->total_shortpick);
                 }
                 $doc->endExportRow();
             }
@@ -961,10 +909,8 @@ class ShortpickByArea extends DbTable
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->area);
-                        $doc->exportField($this->total_shortpick);
                     } else {
                         $doc->exportField($this->area);
-                        $doc->exportField($this->total_shortpick);
                     }
                     $doc->endExportRow($rowCnt);
                 }

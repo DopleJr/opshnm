@@ -21,7 +21,6 @@ loadjs.ready(["wrapper", "head"], function () {
 
     // Dynamic selection lists
     fshortpick_by_arealist.lists.area = <?= $Page->area->toClientList($Page) ?>;
-    fshortpick_by_arealist.lists.total_shortpick = <?= $Page->total_shortpick->toClientList($Page) ?>;
     loadjs.done("fshortpick_by_arealist");
 });
 var fshortpick_by_areasrch, currentSearchForm, currentAdvancedSearchForm;
@@ -34,8 +33,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     fshortpick_by_areasrch.addFields([
-        ["area", [], fields.area.isInvalid],
-        ["total_shortpick", [], fields.total_shortpick.isInvalid]
+        ["area", [], fields.area.isInvalid]
     ]);
 
     // Validate form
@@ -67,7 +65,6 @@ loadjs.ready(["wrapper", "head"], function () {
 
     // Dynamic selection lists
     fshortpick_by_areasrch.lists.area = <?= $Page->area->toClientList($Page) ?>;
-    fshortpick_by_areasrch.lists.total_shortpick = <?= $Page->total_shortpick->toClientList($Page) ?>;
 
     // Filters
     fshortpick_by_areasrch.filterList = <?= $Page->getFilterList() ?>;
@@ -150,43 +147,6 @@ if (!$Page->area->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
-<?php if ($Page->total_shortpick->Visible) { // total_shortpick ?>
-<?php
-if (!$Page->total_shortpick->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_total_shortpick" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->total_shortpick->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_total_shortpick"
-            name="x_total_shortpick[]"
-            class="form-control ew-select<?= $Page->total_shortpick->isInvalidClass() ?>"
-            data-select2-id="fshortpick_by_areasrch_x_total_shortpick"
-            data-table="shortpick_by_area"
-            data-field="x_total_shortpick"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->total_shortpick->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->total_shortpick->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->total_shortpick->getPlaceHolder()) ?>"
-            <?= $Page->total_shortpick->editAttributes() ?>>
-            <?= $Page->total_shortpick->selectOptionListHtml("x_total_shortpick", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->total_shortpick->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fshortpick_by_areasrch", function() {
-            var options = {
-                name: "x_total_shortpick",
-                selectId: "fshortpick_by_areasrch_x_total_shortpick",
-                ajax: { id: "x_total_shortpick", form: "fshortpick_by_areasrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.shortpick_by_area.fields.total_shortpick.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
 </div><!-- /.row -->
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
@@ -254,9 +214,6 @@ $Page->ListOptions->render("header", "left");
 ?>
 <?php if ($Page->area->Visible) { // area ?>
         <th data-name="area" class="<?= $Page->area->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_shortpick_by_area_area" class="shortpick_by_area_area"><?= $Page->renderFieldHeader($Page->area) ?></div></th>
-<?php } ?>
-<?php if ($Page->total_shortpick->Visible) { // total_shortpick ?>
-        <th data-name="total_shortpick" class="<?= $Page->total_shortpick->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_shortpick_by_area_total_shortpick" class="shortpick_by_area_total_shortpick"><?= $Page->renderFieldHeader($Page->total_shortpick) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -343,14 +300,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->area->getViewValue() ?>
 <?php } ?>
 </span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->total_shortpick->Visible) { // total_shortpick ?>
-        <td data-name="total_shortpick"<?= $Page->total_shortpick->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_shortpick_by_area_total_shortpick" class="el_shortpick_by_area_total_shortpick">
-<span<?= $Page->total_shortpick->viewAttributes() ?>>
-<?= $Page->total_shortpick->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
