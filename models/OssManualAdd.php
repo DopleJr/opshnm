@@ -600,7 +600,7 @@ class OssManualAdd extends OssManual
                     if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
-                    $returnUrl = $this->getReturnUrl();
+                    $returnUrl = $this->GetAddUrl();
                     if (GetPageName($returnUrl) == "ossmanuallist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                     } elseif (GetPageName($returnUrl) == "ossmanualview") {
@@ -666,8 +666,16 @@ class OssManualAdd extends OssManual
     {
         $this->date->DefaultValue = CurrentDate();
         $this->date->OldValue = $this->date->DefaultValue;
+        $this->shipment->DefaultValue = GetShipment();
+        $this->shipment->OldValue = $this->shipment->DefaultValue;
+        $this->pallet_no->DefaultValue = GetPallet();
+        $this->pallet_no->OldValue = $this->pallet_no->DefaultValue;
+        $this->order_no->DefaultValue = GetOrder();
+        $this->order_no->OldValue = $this->order_no->DefaultValue;
         $this->checker->DefaultValue = CurrentUserName();
         $this->checker->OldValue = $this->checker->DefaultValue;
+        $this->shift->DefaultValue = GetShift();
+        $this->shift->OldValue = $this->shift->DefaultValue;
     }
 
     // Load form values
@@ -704,7 +712,7 @@ class OssManualAdd extends OssManual
             if (IsApi() && $val === null) {
                 $this->pallet_no->Visible = false; // Disable update for API request
             } else {
-                $this->pallet_no->setFormValue($val, true, $validate);
+                $this->pallet_no->setFormValue($val);
             }
         }
 
@@ -971,7 +979,6 @@ class OssManualAdd extends OssManual
 
             // pallet_no
             $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
-            $this->pallet_no->ViewValue = FormatNumber($this->pallet_no->ViewValue, $this->pallet_no->formatPattern());
             $this->pallet_no->ViewCustomAttributes = "";
 
             // sscc
@@ -984,7 +991,6 @@ class OssManualAdd extends OssManual
 
             // order_no
             $this->order_no->ViewValue = $this->order_no->CurrentValue;
-            $this->order_no->ViewValue = FormatNumber($this->order_no->ViewValue, $this->order_no->formatPattern());
             $this->order_no->ViewCustomAttributes = "";
 
             // item_in_ctn
@@ -997,7 +1003,6 @@ class OssManualAdd extends OssManual
 
             // ctn_no
             $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
-            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
             $this->ctn_no->ViewCustomAttributes = "";
 
             // checker
@@ -1077,7 +1082,7 @@ class OssManualAdd extends OssManual
             $this->pallet_no->EditValue = HtmlEncode($this->pallet_no->CurrentValue);
             $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
             if (strval($this->pallet_no->EditValue) != "" && is_numeric($this->pallet_no->EditValue)) {
-                $this->pallet_no->EditValue = FormatNumber($this->pallet_no->EditValue, null);
+                $this->pallet_no->EditValue = $this->pallet_no->EditValue;
             }
 
             // sscc
@@ -1104,7 +1109,7 @@ class OssManualAdd extends OssManual
             $this->order_no->EditValue = HtmlEncode($this->order_no->CurrentValue);
             $this->order_no->PlaceHolder = RemoveHtml($this->order_no->caption());
             if (strval($this->order_no->EditValue) != "" && is_numeric($this->order_no->EditValue)) {
-                $this->order_no->EditValue = FormatNumber($this->order_no->EditValue, null);
+                $this->order_no->EditValue = $this->order_no->EditValue;
             }
 
             // item_in_ctn
@@ -1131,7 +1136,7 @@ class OssManualAdd extends OssManual
             $this->ctn_no->EditValue = HtmlEncode($this->ctn_no->CurrentValue);
             $this->ctn_no->PlaceHolder = RemoveHtml($this->ctn_no->caption());
             if (strval($this->ctn_no->EditValue) != "" && is_numeric($this->ctn_no->EditValue)) {
-                $this->ctn_no->EditValue = FormatNumber($this->ctn_no->EditValue, null);
+                $this->ctn_no->EditValue = $this->ctn_no->EditValue;
             }
 
             // checker
@@ -1236,9 +1241,6 @@ class OssManualAdd extends OssManual
             if (!$this->pallet_no->IsDetailKey && EmptyValue($this->pallet_no->FormValue)) {
                 $this->pallet_no->addErrorMessage(str_replace("%s", $this->pallet_no->caption(), $this->pallet_no->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->pallet_no->FormValue)) {
-            $this->pallet_no->addErrorMessage($this->pallet_no->getErrorMessage(false));
         }
         if ($this->sscc->Required) {
             if (!$this->sscc->IsDetailKey && EmptyValue($this->sscc->FormValue)) {

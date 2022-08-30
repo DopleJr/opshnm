@@ -149,6 +149,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->shipment->InputTextType = "text";
+        $this->shipment->Required = true; // Required field
         $this->Fields['shipment'] = &$this->shipment;
 
         // pallet_no
@@ -171,7 +172,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->pallet_no->InputTextType = "text";
-        $this->pallet_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->pallet_no->Required = true; // Required field
         $this->Fields['pallet_no'] = &$this->pallet_no;
 
         // sscc
@@ -194,6 +195,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->sscc->InputTextType = "number";
+        $this->sscc->Required = true; // Required field
         $this->Fields['sscc'] = &$this->sscc;
 
         // idw
@@ -216,6 +218,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->idw->InputTextType = "text";
+        $this->idw->Required = true; // Required field
         $this->Fields['idw'] = &$this->idw;
 
         // order_no
@@ -238,6 +241,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->order_no->InputTextType = "number";
+        $this->order_no->Required = true; // Required field
         $this->order_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['order_no'] = &$this->order_no;
 
@@ -261,6 +265,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->item_in_ctn->InputTextType = "number";
+        $this->item_in_ctn->Required = true; // Required field
         $this->Fields['item_in_ctn'] = &$this->item_in_ctn;
 
         // no_of_ctn
@@ -283,6 +288,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->no_of_ctn->InputTextType = "number";
+        $this->no_of_ctn->Required = true; // Required field
         $this->Fields['no_of_ctn'] = &$this->no_of_ctn;
 
         // ctn_no
@@ -305,6 +311,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->ctn_no->InputTextType = "number";
+        $this->ctn_no->Required = true; // Required field
         $this->ctn_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['ctn_no'] = &$this->ctn_no;
 
@@ -328,6 +335,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->checker->InputTextType = "text";
+        $this->checker->Required = true; // Required field
         $this->Fields['checker'] = &$this->checker;
 
         // shift
@@ -1189,7 +1197,6 @@ class OssManual extends DbTable
 
         // pallet_no
         $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
-        $this->pallet_no->ViewValue = FormatNumber($this->pallet_no->ViewValue, $this->pallet_no->formatPattern());
         $this->pallet_no->ViewCustomAttributes = "";
 
         // sscc
@@ -1202,7 +1209,6 @@ class OssManual extends DbTable
 
         // order_no
         $this->order_no->ViewValue = $this->order_no->CurrentValue;
-        $this->order_no->ViewValue = FormatNumber($this->order_no->ViewValue, $this->order_no->formatPattern());
         $this->order_no->ViewCustomAttributes = "";
 
         // item_in_ctn
@@ -1215,7 +1221,6 @@ class OssManual extends DbTable
 
         // ctn_no
         $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
-        $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
         $this->ctn_no->ViewCustomAttributes = "";
 
         // checker
@@ -1332,7 +1337,7 @@ class OssManual extends DbTable
         $this->pallet_no->EditValue = $this->pallet_no->CurrentValue;
         $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
         if (strval($this->pallet_no->EditValue) != "" && is_numeric($this->pallet_no->EditValue)) {
-            $this->pallet_no->EditValue = FormatNumber($this->pallet_no->EditValue, null);
+            $this->pallet_no->EditValue = $this->pallet_no->EditValue;
         }
 
         // sscc
@@ -1359,7 +1364,7 @@ class OssManual extends DbTable
         $this->order_no->EditValue = $this->order_no->CurrentValue;
         $this->order_no->PlaceHolder = RemoveHtml($this->order_no->caption());
         if (strval($this->order_no->EditValue) != "" && is_numeric($this->order_no->EditValue)) {
-            $this->order_no->EditValue = FormatNumber($this->order_no->EditValue, null);
+            $this->order_no->EditValue = $this->order_no->EditValue;
         }
 
         // item_in_ctn
@@ -1386,7 +1391,7 @@ class OssManual extends DbTable
         $this->ctn_no->EditValue = $this->ctn_no->CurrentValue;
         $this->ctn_no->PlaceHolder = RemoveHtml($this->ctn_no->caption());
         if (strval($this->ctn_no->EditValue) != "" && is_numeric($this->ctn_no->EditValue)) {
-            $this->ctn_no->EditValue = FormatNumber($this->ctn_no->EditValue, null);
+            $this->ctn_no->EditValue = $this->ctn_no->EditValue;
         }
 
         // checker

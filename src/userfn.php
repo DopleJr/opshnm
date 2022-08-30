@@ -283,7 +283,26 @@ function GetBoxType()
 	return ExecuteScalar("SELECT `box_type` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation time` DESC ");
 }
 
-//function GetPickShortpick()
-//{
-//return ExecuteScalar("SELECT sum(`pick_quantity`) FROM finding_shortpick WHERE `article` = ('$_article') ");
-//}
+function GetShipment()
+{
+	$_checker = CurrentUserName();
+return ExecuteScalar("SELECT `shipment` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+}
+
+function GetPallet()
+{
+	$_checker = CurrentUserName();
+return ExecuteScalar("SELECT `pallet_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+}
+
+function GetShift()
+{
+	$_checker = CurrentUserName();
+return ExecuteScalar("SELECT `shift` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+}
+
+function GetOrder()
+{
+	$_checker = CurrentUserName();
+return ExecuteScalar("SELECT `order_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+}

@@ -1808,7 +1808,6 @@ class OssManualList extends OssManual
 
             // pallet_no
             $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
-            $this->pallet_no->ViewValue = FormatNumber($this->pallet_no->ViewValue, $this->pallet_no->formatPattern());
             $this->pallet_no->ViewCustomAttributes = "";
 
             // sscc
@@ -1821,7 +1820,6 @@ class OssManualList extends OssManual
 
             // order_no
             $this->order_no->ViewValue = $this->order_no->CurrentValue;
-            $this->order_no->ViewValue = FormatNumber($this->order_no->ViewValue, $this->order_no->formatPattern());
             $this->order_no->ViewCustomAttributes = "";
 
             // item_in_ctn
@@ -1834,7 +1832,6 @@ class OssManualList extends OssManual
 
             // ctn_no
             $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
-            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
             $this->ctn_no->ViewCustomAttributes = "";
 
             // checker
