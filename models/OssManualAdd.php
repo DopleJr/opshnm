@@ -138,6 +138,9 @@ class OssManualAdd extends OssManual
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -222,18 +225,25 @@ class OssManualAdd extends OssManual
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -249,6 +259,11 @@ class OssManualAdd extends OssManual
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -387,9 +402,6 @@ class OssManualAdd extends OssManual
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -654,6 +666,8 @@ class OssManualAdd extends OssManual
     {
         $this->date->DefaultValue = CurrentDate();
         $this->date->OldValue = $this->date->DefaultValue;
+        $this->checker->DefaultValue = CurrentUserName();
+        $this->checker->OldValue = $this->checker->DefaultValue;
     }
 
     // Load form values
@@ -1044,13 +1058,13 @@ class OssManualAdd extends OssManual
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // date
             $this->date->setupEditAttributes();
-            $this->date->EditCustomAttributes = "";
+            $this->date->EditCustomAttributes = 'disabled';
             $this->date->EditValue = HtmlEncode(FormatDateTime($this->date->CurrentValue, $this->date->formatPattern()));
             $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
             // shipment
             $this->shipment->setupEditAttributes();
-            $this->shipment->EditCustomAttributes = "";
+            $this->shipment->EditCustomAttributes = 'autofocus';
             if (!$this->shipment->Raw) {
                 $this->shipment->CurrentValue = HtmlDecode($this->shipment->CurrentValue);
             }
@@ -1188,6 +1202,11 @@ class OssManualAdd extends OssManual
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 

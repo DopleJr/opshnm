@@ -33,7 +33,7 @@ $Page->showMessage();
 ?>
 <!-- Dashboard Container -->
 <div id="ew-dashboard" class="container-fluid ew-dashboard">
-<script>
+<style>
 element.style {
     display: flex !important;
     box-sizing: border-box;
@@ -43,7 +43,7 @@ element.style {
     flex: 0 0 auto !important;
     width: 50%;
 }
-</script>
+</style>
 <div class="row">
     <div class="col-md-3 grid-margin stretch-card">
         <div class="card border-0 border-radius-2 bg-success">

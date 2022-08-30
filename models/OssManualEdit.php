@@ -1084,13 +1084,13 @@ class OssManualEdit extends OssManual
 
             // date
             $this->date->setupEditAttributes();
-            $this->date->EditCustomAttributes = "";
+            $this->date->EditCustomAttributes = 'disabled';
             $this->date->EditValue = HtmlEncode(FormatDateTime($this->date->CurrentValue, $this->date->formatPattern()));
             $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
             // shipment
             $this->shipment->setupEditAttributes();
-            $this->shipment->EditCustomAttributes = "";
+            $this->shipment->EditCustomAttributes = 'autofocus';
             if (!$this->shipment->Raw) {
                 $this->shipment->CurrentValue = HtmlDecode($this->shipment->CurrentValue);
             }
