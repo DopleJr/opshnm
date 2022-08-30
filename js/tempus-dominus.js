@@ -3904,6 +3904,30 @@ var tempusDominus = (function ($, core, luxon) {
         version
     };
 
+    // this obviously requires the FA 6 libraries to be loaded
+    const faFiveIcons = {
+        type: 'icons',
+        time: 'fas fa-clock',
+        date: 'fas fa-calendar',
+        up: 'fas fa-arrow-up',
+        down: 'fas fa-arrow-down',
+        previous: 'fas fa-chevron-left',
+        next: 'fas fa-chevron-right',
+        today: 'fas fa-calendar-check',
+        clear: 'fas fa-trash',
+        close: 'fas fa-times',
+    };
+    // noinspection JSUnusedGlobalSymbols
+    const load = (_, __, tdFactory) => {
+        tdFactory.DefaultOptions.display.icons = faFiveIcons;
+    };
+
+    var fa_five = {
+        __proto__: null,
+        faFiveIcons: faFiveIcons,
+        load: load
+    };
+
     var luxon_parse = (option, tdClasses, tdFactory) => {
         tdClasses.Dates.prototype.setFromInput = function (value, index) {
             if (this.optionsStore.options.meta.format) {
@@ -3942,7 +3966,7 @@ var tempusDominus = (function ($, core, luxon) {
     //window.tempusDominus.Namespace.Events
 
     tempusDominus.extend(luxon_parse); //***
-    // tempusDominus.extend(fa_five); //*** for v2022 only
+    tempusDominus.extend(fa_five); //*** for v2022 only
 
     /*!
       * Tempus Dominus v6.0.0 (https://getdatepicker.com/)
