@@ -1,0 +1,11 @@
+{
+    "name": "opsmezzanineupload",
+    "version": "18.12.6",
+    "description": "opsmezzanineupload",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "private": true,
+    "dependencies": {},
+    "engines": {
+        "node": ">=16"
+    }
+}
