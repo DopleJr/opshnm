@@ -1752,3 +1752,4 @@
 [2022-08-30T17:43:31.720799+07:00] log.DEBUG: SELECT COUNT(*) FROM `oss_manual` {"params":[],"types":[],"executionMS":0.0003581047058105469} []
 [2022-08-30T17:43:31.721576+07:00] log.DEBUG: SELECT * FROM `oss_manual` LIMIT 20 {"params":[],"types":[],"executionMS":0.00014710426330566406} []
 [2022-08-30T17:43:33.506750+07:00] log.DEBUG: SET time_zone = '+07:00' {"params":[],"types":[],"executionMS":0.0001621246337890625} []
+[2022-08-30T17:45:59.193047+07:00] log.DEBUG: SET time_zone = '+07:00' {"params":[],"types":[],"executionMS":0.00013899803161621094} []
