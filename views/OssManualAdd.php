@@ -57,6 +57,11 @@ loadjs.ready("head", function () {
     $(".ew-breadcrumbs").hide();// atribut text
     $("#x_shipment").focus();
     $("#x_checker").attr('readonly', true);
+    $("#x_shipment").attr('readonly', true);
+    $("#x_pallet_no").attr('readonly', true);
+    $("#x_idw").attr('readonly', true);
+    $("#x_checker").attr('readonly', true);
+    $("#x_order_no").attr('readonly', true);
     });
 });
 </script>
@@ -91,7 +96,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_shipment" for="x_shipment" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_shipment"><?= $Page->shipment->caption() ?><?= $Page->shipment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->shipment->cellAttributes() ?>>
 <template id="tpx_oss_manual_shipment"><span id="el_oss_manual_shipment">
-<input type="<?= $Page->shipment->getInputTextType() ?>" name="x_shipment" id="x_shipment" data-table="oss_manual" data-field="x_shipment" value="<?= $Page->shipment->EditValue ?>" size="10" maxlength="255" placeholder="<?= HtmlEncode($Page->shipment->getPlaceHolder()) ?>"<?= $Page->shipment->editAttributes() ?> aria-describedby="x_shipment_help">
+<input type="<?= $Page->shipment->getInputTextType() ?>" name="x_shipment" id="x_shipment" data-table="oss_manual" data-field="x_shipment" value="<?= $Page->shipment->EditValue ?>" size="20" maxlength="255" placeholder="<?= HtmlEncode($Page->shipment->getPlaceHolder()) ?>"<?= $Page->shipment->editAttributes() ?> aria-describedby="x_shipment_help">
 <?= $Page->shipment->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->shipment->getErrorMessage() ?></div>
 </span></template>
@@ -103,7 +108,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_pallet_no" for="x_pallet_no" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_pallet_no"><?= $Page->pallet_no->caption() ?><?= $Page->pallet_no->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->pallet_no->cellAttributes() ?>>
 <template id="tpx_oss_manual_pallet_no"><span id="el_oss_manual_pallet_no">
-<input type="<?= $Page->pallet_no->getInputTextType() ?>" name="x_pallet_no" id="x_pallet_no" data-table="oss_manual" data-field="x_pallet_no" value="<?= $Page->pallet_no->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->pallet_no->getPlaceHolder()) ?>"<?= $Page->pallet_no->editAttributes() ?> aria-describedby="x_pallet_no_help">
+<input type="<?= $Page->pallet_no->getInputTextType() ?>" name="x_pallet_no" id="x_pallet_no" data-table="oss_manual" data-field="x_pallet_no" value="<?= $Page->pallet_no->EditValue ?>" size="20" maxlength="255" placeholder="<?= HtmlEncode($Page->pallet_no->getPlaceHolder()) ?>"<?= $Page->pallet_no->editAttributes() ?> aria-describedby="x_pallet_no_help">
 <?= $Page->pallet_no->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->pallet_no->getErrorMessage() ?></div>
 </span></template>
@@ -115,7 +120,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_sscc" for="x_sscc" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_sscc"><?= $Page->sscc->caption() ?><?= $Page->sscc->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->sscc->cellAttributes() ?>>
 <template id="tpx_oss_manual_sscc"><span id="el_oss_manual_sscc">
-<input type="<?= $Page->sscc->getInputTextType() ?>" name="x_sscc" id="x_sscc" data-table="oss_manual" data-field="x_sscc" value="<?= $Page->sscc->EditValue ?>" size="20" maxlength="255" placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"<?= $Page->sscc->editAttributes() ?> aria-describedby="x_sscc_help">
+<input type="<?= $Page->sscc->getInputTextType() ?>" name="x_sscc" id="x_sscc" data-table="oss_manual" data-field="x_sscc" value="<?= $Page->sscc->EditValue ?>" size="50" maxlength="255" placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"<?= $Page->sscc->editAttributes() ?> aria-describedby="x_sscc_help">
 <?= $Page->sscc->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->sscc->getErrorMessage() ?></div>
 </span></template>
@@ -127,7 +132,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_idw" for="x_idw" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_idw"><?= $Page->idw->caption() ?><?= $Page->idw->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->idw->cellAttributes() ?>>
 <template id="tpx_oss_manual_idw"><span id="el_oss_manual_idw">
-<input type="<?= $Page->idw->getInputTextType() ?>" name="x_idw" id="x_idw" data-table="oss_manual" data-field="x_idw" value="<?= $Page->idw->EditValue ?>" size="3" maxlength="255" placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"<?= $Page->idw->editAttributes() ?> aria-describedby="x_idw_help">
+<input type="<?= $Page->idw->getInputTextType() ?>" name="x_idw" id="x_idw" data-table="oss_manual" data-field="x_idw" value="<?= $Page->idw->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"<?= $Page->idw->editAttributes() ?> aria-describedby="x_idw_help">
 <?= $Page->idw->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->idw->getErrorMessage() ?></div>
 </span></template>
@@ -139,7 +144,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_order_no" for="x_order_no" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_order_no"><?= $Page->order_no->caption() ?><?= $Page->order_no->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->order_no->cellAttributes() ?>>
 <template id="tpx_oss_manual_order_no"><span id="el_oss_manual_order_no">
-<input type="<?= $Page->order_no->getInputTextType() ?>" name="x_order_no" id="x_order_no" data-table="oss_manual" data-field="x_order_no" value="<?= $Page->order_no->EditValue ?>" size="6" maxlength="6" placeholder="<?= HtmlEncode($Page->order_no->getPlaceHolder()) ?>"<?= $Page->order_no->editAttributes() ?> aria-describedby="x_order_no_help">
+<input type="<?= $Page->order_no->getInputTextType() ?>" name="x_order_no" id="x_order_no" data-table="oss_manual" data-field="x_order_no" value="<?= $Page->order_no->EditValue ?>" size="30" maxlength="6" placeholder="<?= HtmlEncode($Page->order_no->getPlaceHolder()) ?>"<?= $Page->order_no->editAttributes() ?> aria-describedby="x_order_no_help">
 <?= $Page->order_no->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->order_no->getErrorMessage() ?></div>
 </span></template>
@@ -282,55 +287,73 @@ $Page->showMessage();
         box-sizing: border-box;
         margin-bottom: 10px;
     }
+    .col {
+    	-ms-flex: 1 0 0%;
+    	flex: 1 0 0%;
+    	width: 250px !important;
+    }
+}
 </style>
-	<div id="r_id" class="mb-3 row" hidden>
-        <label for="x_id" class="col-sm-2 col-form-label"><?= $Page->id->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_id"></slot></div>
+<div id="r_id" class="mb-3 row" hidden>
+    <label for="x_id" class="col-sm-3 col-form-label"><?= $Page->id->caption() ?></label>
+    <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_id"></slot></div>
+</div>
+<div id="r_date" class="mb-3 row">
+    <label for="x_date" class="col-sm-3 col-form-label"><?= $Page->date->caption() ?></label>
+    <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_date"></slot></div>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-start">
+        <div id="r_shipment" class="col">
+            <label for="x_shipment" class="col-sm-5 col-form-label"><?= $Page->shipment->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_shipment"></slot></div>
+        </div>
+        <div id="r_pallet_no" class="col">
+            <label for="x_pallet_no" class="col-sm-5 col-form-label"><?= $Page->pallet_no->caption() ?></label>
+            <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_pallet_no"></slot></div>
+        </div>
     </div>
-    <div id="r_date" class="mb-3 row">
-        <label for="x_date" class="col-sm-2 col-form-label"><?= $Page->date->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_date"></slot></div>
+    <div class="row justify-content-start">
+        <div id="r_idw" class="col">
+            <label for="x_idw" class="col-sm-2 col-form-label"><?= $Page->idw->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_idw"></slot></div>
+        </div>
+        <div id="r_order_no" class="col">
+            <label for="x_order_no" class="col-sm-2 col-form-label"><?= $Page->order_no->caption() ?></label>
+            <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_order_no"></slot></div>
+        </div>
     </div>
-    <div id="r_shipment" class="mb-3 row">
-        <label for="x_shipment" class="col-sm-2 col-form-label"><?= $Page->shipment->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_shipment"></slot></div>
+    <div class="row justify-content-start">
+        <div id="r_sscc" class="col">
+            <label for="x_sscc" class="col-sm-2 col-form-label"><?= $Page->sscc->caption() ?></label>
+            <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_sscc"></slot></div>
+        </div>
     </div>
-    <div id="r_pallet_no" class="mb-3 row">
-        <label for="x_pallet_no" class="col-sm-2 col-form-label"><?= $Page->pallet_no->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_pallet_no"></slot></div>
+    <div class="row justify-content-start">
+        <div id="r_item_in_ctn" class="col">
+            <label for="x_item_in_ctn" class="col-sm-2 col-form-label">In Ctn</label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_item_in_ctn"></slot></div>
+        </div>
+        <div id="r_no_of_ctn" class="col">
+            <label for="x_no_of_ctn" class="col-sm-2 col-form-label">Of Ctn</label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_no_of_ctn"></slot></div>
+        </div>
+        <div id="r_ctn_no" class="col">
+            <label for="x_ctn_no" class="col-sm-2 col-form-label"><?= $Page->ctn_no->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_ctn_no"></slot></div>
+        </div>
     </div>
-    <div id="r_sscc" class="mb-3 row">
-        <label for="x_sscc" class="col-sm-2 col-form-label"><?= $Page->sscc->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_sscc"></slot></div>
+    <div class="row justify-content-start">
+        <div id="r_checker" class="col">
+            <label for="x_checker" class="col-sm-2 col-form-label"><?= $Page->checker->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_checker"></slot></div>
+        </div>
+        <div id="r_shift" class="col">
+            <label for="x_shift" class="col-sm-2 col-form-label"><?= $Page->shift->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_shift"></slot></div>
+        </div>
     </div>
-    <div id="r_idw" class="mb-3 row">
-        <label for="x_idw" class="col-sm-2 col-form-label"><?= $Page->idw->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_idw"></slot></div>
-    </div>
-    <div id="r_order_no" class="mb-3 row">
-        <label for="x_order_no" class="col-sm-2 col-form-label"><?= $Page->order_no->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_order_no"></slot></div>
-    </div>
-    <div id="r_item_in_ctn" class="mb-3 row">
-        <label for="x_item_in_ctn" class="col-sm-2 col-form-label"><?= $Page->item_in_ctn->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_item_in_ctn"></slot></div>
-    </div>
-    <div id="r_no_of_ctn" class="mb-3 row">
-        <label for="x_no_of_ctn" class="col-sm-2 col-form-label"><?= $Page->no_of_ctn->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_no_of_ctn"></slot></div>
-    </div>
-    <div id="r_ctn_no" class="mb-3 row">
-        <label for="x_ctn_no" class="col-sm-2 col-form-label"><?= $Page->ctn_no->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_ctn_no"></slot></div>
-    </div>
-    <div id="r_checker" class="mb-3 row" >
-        <label for="x_checker" class="col-sm-2 col-form-label"><?= $Page->checker->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_checker"></slot></div>
-    </div>
-    <div id="r_shift" class="mb-3 row" >
-        <label for="x_shift" class="col-sm-2 col-form-label"><?= $Page->shift->caption() ?></label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_shift"></slot></div>
-    </div>
+</div>
 </div>
 </template>
 <?php if (!$Page->IsModal) { ?>

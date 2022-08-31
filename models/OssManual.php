@@ -148,7 +148,7 @@ class OssManual extends DbTable
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->shipment->InputTextType = "text";
+        $this->shipment->InputTextType = "number";
         $this->shipment->Required = true; // Required field
         $this->Fields['shipment'] = &$this->shipment;
 
@@ -194,7 +194,7 @@ class OssManual extends DbTable
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->sscc->InputTextType = "number";
+        $this->sscc->InputTextType = "text";
         $this->sscc->Required = true; // Required field
         $this->Fields['sscc'] = &$this->sscc;
 

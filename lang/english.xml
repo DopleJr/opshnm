@@ -962,6 +962,9 @@
   <project>
     <phrase id="bodytitle" value="OPS HNM" />
     <phrase id="footertext" value="Copyright Gofur" />
+    <menu id="423">
+      <phrase id="menutext" value="Input Oss Manual" />
+    </menu>
     <menu id="370">
       <phrase id="menutext" value="Data OSS Manual" />
     </menu>
