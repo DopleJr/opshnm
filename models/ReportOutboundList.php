@@ -986,8 +986,6 @@ class ReportOutboundList extends ReportOutbound
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->Week->AdvancedSearch->toJson(), ","); // Field Week
-        $filterList = Concat($filterList, $this->box_id->AdvancedSearch->toJson(), ","); // Field box_id
         $filterList = Concat($filterList, $this->date_delivery->AdvancedSearch->toJson(), ","); // Field date_delivery
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1028,22 +1026,6 @@ class ReportOutboundList extends ReportOutbound
         }
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
-
-        // Field Week
-        $this->Week->AdvancedSearch->SearchValue = @$filter["x_Week"];
-        $this->Week->AdvancedSearch->SearchOperator = @$filter["z_Week"];
-        $this->Week->AdvancedSearch->SearchCondition = @$filter["v_Week"];
-        $this->Week->AdvancedSearch->SearchValue2 = @$filter["y_Week"];
-        $this->Week->AdvancedSearch->SearchOperator2 = @$filter["w_Week"];
-        $this->Week->AdvancedSearch->save();
-
-        // Field box_id
-        $this->box_id->AdvancedSearch->SearchValue = @$filter["x_box_id"];
-        $this->box_id->AdvancedSearch->SearchOperator = @$filter["z_box_id"];
-        $this->box_id->AdvancedSearch->SearchCondition = @$filter["v_box_id"];
-        $this->box_id->AdvancedSearch->SearchValue2 = @$filter["y_box_id"];
-        $this->box_id->AdvancedSearch->SearchOperator2 = @$filter["w_box_id"];
-        $this->box_id->AdvancedSearch->save();
 
         // Field date_delivery
         $this->date_delivery->AdvancedSearch->SearchValue = @$filter["x_date_delivery"];
@@ -1092,8 +1074,6 @@ class ReportOutboundList extends ReportOutbound
             $this->Command = "search";
         }
         if (!$default && $this->Command == "search") {
-            $this->Week->AdvancedSearch->save(); // Week
-            $this->box_id->AdvancedSearch->save(); // box_id
             $this->date_delivery->AdvancedSearch->save(); // date_delivery
         }
         return $where;
@@ -2611,6 +2591,10 @@ class ReportOutboundList extends ReportOutbound
                 }
                 $this->date_created->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_created->AdvancedSearch->SearchValue);
             }
+            $this->date_created->setupEditAttributes();
+            $this->date_created->EditCustomAttributes = "";
+            $this->date_created->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date_created->AdvancedSearch->SearchValue2, $this->date_created->formatPattern()), $this->date_created->formatPattern()));
+            $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
 
             // date_updated
             if ($this->date_updated->UseFilter && !EmptyValue($this->date_updated->AdvancedSearch->SearchValue)) {
@@ -2984,8 +2968,6 @@ class ReportOutboundList extends ReportOutbound
     // Load advanced search
     public function loadAdvancedSearch()
     {
-        $this->Week->AdvancedSearch->load();
-        $this->box_id->AdvancedSearch->load();
         $this->date_delivery->AdvancedSearch->load();
     }
 

@@ -983,9 +983,6 @@ class StagingList extends Staging
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->week->AdvancedSearch->toJson(), ","); // Field week
-        $filterList = Concat($filterList, $this->aging->AdvancedSearch->toJson(), ","); // Field aging
-        $filterList = Concat($filterList, $this->box_id->AdvancedSearch->toJson(), ","); // Field box_id
         $filterList = Concat($filterList, $this->picking_date->AdvancedSearch->toJson(), ","); // Field picking_date
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1027,30 +1024,6 @@ class StagingList extends Staging
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field week
-        $this->week->AdvancedSearch->SearchValue = @$filter["x_week"];
-        $this->week->AdvancedSearch->SearchOperator = @$filter["z_week"];
-        $this->week->AdvancedSearch->SearchCondition = @$filter["v_week"];
-        $this->week->AdvancedSearch->SearchValue2 = @$filter["y_week"];
-        $this->week->AdvancedSearch->SearchOperator2 = @$filter["w_week"];
-        $this->week->AdvancedSearch->save();
-
-        // Field aging
-        $this->aging->AdvancedSearch->SearchValue = @$filter["x_aging"];
-        $this->aging->AdvancedSearch->SearchOperator = @$filter["z_aging"];
-        $this->aging->AdvancedSearch->SearchCondition = @$filter["v_aging"];
-        $this->aging->AdvancedSearch->SearchValue2 = @$filter["y_aging"];
-        $this->aging->AdvancedSearch->SearchOperator2 = @$filter["w_aging"];
-        $this->aging->AdvancedSearch->save();
-
-        // Field box_id
-        $this->box_id->AdvancedSearch->SearchValue = @$filter["x_box_id"];
-        $this->box_id->AdvancedSearch->SearchOperator = @$filter["z_box_id"];
-        $this->box_id->AdvancedSearch->SearchCondition = @$filter["v_box_id"];
-        $this->box_id->AdvancedSearch->SearchValue2 = @$filter["y_box_id"];
-        $this->box_id->AdvancedSearch->SearchOperator2 = @$filter["w_box_id"];
-        $this->box_id->AdvancedSearch->save();
-
         // Field picking_date
         $this->picking_date->AdvancedSearch->SearchValue = @$filter["x_picking_date"];
         $this->picking_date->AdvancedSearch->SearchOperator = @$filter["z_picking_date"];
@@ -1090,9 +1063,6 @@ class StagingList extends Staging
             $this->Command = "search";
         }
         if (!$default && $this->Command == "search") {
-            $this->week->AdvancedSearch->save(); // week
-            $this->aging->AdvancedSearch->save(); // aging
-            $this->box_id->AdvancedSearch->save(); // box_id
             $this->picking_date->AdvancedSearch->save(); // picking_date
         }
         return $where;
@@ -2705,9 +2675,6 @@ class StagingList extends Staging
     // Load advanced search
     public function loadAdvancedSearch()
     {
-        $this->week->AdvancedSearch->load();
-        $this->aging->AdvancedSearch->load();
-        $this->box_id->AdvancedSearch->load();
         $this->picking_date->AdvancedSearch->load();
     }
 

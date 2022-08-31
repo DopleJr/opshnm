@@ -24,9 +24,6 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     fstagingsearch.addFields([
-        ["week", [], fields.week.isInvalid],
-        ["aging", [ew.Validators.integer], fields.aging.isInvalid],
-        ["box_id", [], fields.box_id.isInvalid],
         ["picking_date", [ew.Validators.datetime(fields.picking_date.clientFormatPattern)], fields.picking_date.isInvalid],
         ["y_picking_date", [ew.Validators.between], false]
     ]);
@@ -80,60 +77,6 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="search">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <div class="ew-search-div"><!-- page* -->
-<?php if ($Page->week->Visible) { // week ?>
-    <div id="r_week"<?= $Page->week->rowAttributes() ?>>
-        <label for="x_week" class="<?= $Page->LeftColumnClass ?>"><span id="elh_staging_week"><?= $Page->week->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_week" id="z_week" value="LIKE">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>">
-            <div<?= $Page->week->cellAttributes() ?>>
-            <span id="el_staging_week" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->week->getInputTextType() ?>" name="x_week" id="x_week" data-table="staging" data-field="x_week" value="<?= $Page->week->EditValue ?>" size="30" maxlength="2" placeholder="<?= HtmlEncode($Page->week->getPlaceHolder()) ?>"<?= $Page->week->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->week->getErrorMessage(false) ?></div>
-</span>
-            </div>
-        </div>
-    </div>
-<?php } ?>
-<?php if ($Page->aging->Visible) { // aging ?>
-    <div id="r_aging"<?= $Page->aging->rowAttributes() ?>>
-        <label for="x_aging" class="<?= $Page->LeftColumnClass ?>"><span id="elh_staging_aging"><?= $Page->aging->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("=") ?>
-<input type="hidden" name="z_aging" id="z_aging" value="=">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>">
-            <div<?= $Page->aging->cellAttributes() ?>>
-            <span id="el_staging_aging" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->aging->getInputTextType() ?>" name="x_aging" id="x_aging" data-table="staging" data-field="x_aging" value="<?= $Page->aging->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->aging->getPlaceHolder()) ?>"<?= $Page->aging->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->aging->getErrorMessage(false) ?></div>
-</span>
-            </div>
-        </div>
-    </div>
-<?php } ?>
-<?php if ($Page->box_id->Visible) { // box_id ?>
-    <div id="r_box_id"<?= $Page->box_id->rowAttributes() ?>>
-        <label for="x_box_id" class="<?= $Page->LeftColumnClass ?>"><span id="elh_staging_box_id"><?= $Page->box_id->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_box_id" id="z_box_id" value="LIKE">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>">
-            <div<?= $Page->box_id->cellAttributes() ?>>
-            <span id="el_staging_box_id" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->box_id->getInputTextType() ?>" name="x_box_id" id="x_box_id" data-table="staging" data-field="x_box_id" value="<?= $Page->box_id->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->box_id->getPlaceHolder()) ?>"<?= $Page->box_id->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->box_id->getErrorMessage(false) ?></div>
-</span>
-            </div>
-        </div>
-    </div>
-<?php } ?>
 <?php if ($Page->picking_date->Visible) { // picking_date ?>
     <div id="r_picking_date"<?= $Page->picking_date->rowAttributes() ?>>
         <label for="x_picking_date" class="<?= $Page->LeftColumnClass ?>"><span id="elh_staging_picking_date"><?= $Page->picking_date->caption() ?></span>

@@ -74,6 +74,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["admin", [], fields.admin.isInvalid],
         ["remarks_box", [], fields.remarks_box.isInvalid],
         ["date_created", [], fields.date_created.isInvalid],
+        ["y_date_created", [ew.Validators.between], false],
         ["date_updated", [], fields.date_updated.isInvalid]
     ]);
 

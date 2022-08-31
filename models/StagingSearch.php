@@ -481,11 +481,11 @@ class StagingSearch extends Staging
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->week->setVisibility();
-        $this->aging->setVisibility();
+        $this->week->Visible = false;
+        $this->aging->Visible = false;
         $this->store_name->Visible = false;
         $this->store_code->Visible = false;
-        $this->box_id->setVisibility();
+        $this->box_id->Visible = false;
         $this->type->Visible = false;
         $this->concept->Visible = false;
         $this->quantity->Visible = false;
@@ -578,9 +578,6 @@ class StagingSearch extends Staging
     protected function buildAdvancedSearch()
     {
         $srchUrl = "";
-        $this->buildSearchUrl($srchUrl, $this->week); // week
-        $this->buildSearchUrl($srchUrl, $this->aging); // aging
-        $this->buildSearchUrl($srchUrl, $this->box_id); // box_id
         $this->buildSearchUrl($srchUrl, $this->picking_date); // picking_date
         if ($srchUrl != "") {
             $srchUrl .= "&";
@@ -864,50 +861,11 @@ class StagingSearch extends Staging
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
 
-            // week
-            $this->week->LinkCustomAttributes = "";
-            $this->week->HrefValue = "";
-            $this->week->TooltipValue = "";
-
-            // aging
-            $this->aging->LinkCustomAttributes = "";
-            $this->aging->HrefValue = "";
-            $this->aging->TooltipValue = "";
-
-            // box_id
-            $this->box_id->LinkCustomAttributes = "";
-            $this->box_id->HrefValue = "";
-            $this->box_id->TooltipValue = "";
-
             // picking_date
             $this->picking_date->LinkCustomAttributes = "";
             $this->picking_date->HrefValue = "";
             $this->picking_date->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // week
-            $this->week->setupEditAttributes();
-            $this->week->EditCustomAttributes = 'readonly';
-            if (!$this->week->Raw) {
-                $this->week->AdvancedSearch->SearchValue = HtmlDecode($this->week->AdvancedSearch->SearchValue);
-            }
-            $this->week->EditValue = HtmlEncode($this->week->AdvancedSearch->SearchValue);
-            $this->week->PlaceHolder = RemoveHtml($this->week->caption());
-
-            // aging
-            $this->aging->setupEditAttributes();
-            $this->aging->EditCustomAttributes = 'readonly';
-            $this->aging->EditValue = HtmlEncode($this->aging->AdvancedSearch->SearchValue);
-            $this->aging->PlaceHolder = RemoveHtml($this->aging->caption());
-
-            // box_id
-            $this->box_id->setupEditAttributes();
-            $this->box_id->EditCustomAttributes = "";
-            if (!$this->box_id->Raw) {
-                $this->box_id->AdvancedSearch->SearchValue = HtmlDecode($this->box_id->AdvancedSearch->SearchValue);
-            }
-            $this->box_id->EditValue = HtmlEncode($this->box_id->AdvancedSearch->SearchValue);
-            $this->box_id->PlaceHolder = RemoveHtml($this->box_id->caption());
-
             // picking_date
             $this->picking_date->setupEditAttributes();
             $this->picking_date->EditCustomAttributes = 'readonly';
@@ -935,9 +893,6 @@ class StagingSearch extends Staging
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if (!CheckInteger($this->aging->AdvancedSearch->SearchValue)) {
-            $this->aging->addErrorMessage($this->aging->getErrorMessage(false));
-        }
         if (!CheckDate($this->picking_date->AdvancedSearch->SearchValue, $this->picking_date->formatPattern())) {
             $this->picking_date->addErrorMessage($this->picking_date->getErrorMessage(false));
         }
@@ -960,9 +915,6 @@ class StagingSearch extends Staging
     // Load advanced search
     public function loadAdvancedSearch()
     {
-        $this->week->AdvancedSearch->load();
-        $this->aging->AdvancedSearch->load();
-        $this->box_id->AdvancedSearch->load();
         $this->picking_date->AdvancedSearch->load();
     }
 

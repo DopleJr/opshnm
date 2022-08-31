@@ -24,8 +24,6 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     freport_outboundsearch.addFields([
-        ["Week", [], fields.Week.isInvalid],
-        ["box_id", [], fields.box_id.isInvalid],
         ["date_delivery", [ew.Validators.datetime(fields.date_delivery.clientFormatPattern)], fields.date_delivery.isInvalid],
         ["y_date_delivery", [ew.Validators.between], false]
     ]);
@@ -79,42 +77,6 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="search">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <div class="ew-search-div"><!-- page* -->
-<?php if ($Page->Week->Visible) { // Week ?>
-    <div id="r_Week"<?= $Page->Week->rowAttributes() ?>>
-        <label for="x_Week" class="<?= $Page->LeftColumnClass ?>"><span id="elh_report_outbound_Week"><?= $Page->Week->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("=") ?>
-<input type="hidden" name="z_Week" id="z_Week" value="=">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>">
-            <div<?= $Page->Week->cellAttributes() ?>>
-            <span id="el_report_outbound_Week" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->Week->getInputTextType() ?>" name="x_Week" id="x_Week" data-table="report_outbound" data-field="x_Week" value="<?= $Page->Week->EditValue ?>" size="30" maxlength="2" placeholder="<?= HtmlEncode($Page->Week->getPlaceHolder()) ?>"<?= $Page->Week->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->Week->getErrorMessage(false) ?></div>
-</span>
-            </div>
-        </div>
-    </div>
-<?php } ?>
-<?php if ($Page->box_id->Visible) { // box_id ?>
-    <div id="r_box_id"<?= $Page->box_id->rowAttributes() ?>>
-        <label for="x_box_id" class="<?= $Page->LeftColumnClass ?>"><span id="elh_report_outbound_box_id"><?= $Page->box_id->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_box_id" id="z_box_id" value="LIKE">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>">
-            <div<?= $Page->box_id->cellAttributes() ?>>
-            <span id="el_report_outbound_box_id" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->box_id->getInputTextType() ?>" name="x_box_id" id="x_box_id" data-table="report_outbound" data-field="x_box_id" value="<?= $Page->box_id->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->box_id->getPlaceHolder()) ?>"<?= $Page->box_id->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->box_id->getErrorMessage(false) ?></div>
-</span>
-            </div>
-        </div>
-    </div>
-<?php } ?>
 <?php if ($Page->date_delivery->Visible) { // date_delivery ?>
     <div id="r_date_delivery"<?= $Page->date_delivery->rowAttributes() ?>>
         <label for="x_date_delivery" class="<?= $Page->LeftColumnClass ?>"><span id="elh_report_outbound_date_delivery"><?= $Page->date_delivery->caption() ?></span>

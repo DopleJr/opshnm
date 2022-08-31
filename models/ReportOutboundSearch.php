@@ -481,8 +481,8 @@ class ReportOutboundSearch extends ReportOutbound
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->Week->setVisibility();
-        $this->box_id->setVisibility();
+        $this->Week->Visible = false;
+        $this->box_id->Visible = false;
         $this->date_delivery->setVisibility();
         $this->box_type->Visible = false;
         $this->check_by->Visible = false;
@@ -584,8 +584,6 @@ class ReportOutboundSearch extends ReportOutbound
     protected function buildAdvancedSearch()
     {
         $srchUrl = "";
-        $this->buildSearchUrl($srchUrl, $this->Week); // Week
-        $this->buildSearchUrl($srchUrl, $this->box_id); // box_id
         $this->buildSearchUrl($srchUrl, $this->date_delivery); // date_delivery
         if ($srchUrl != "") {
             $srchUrl .= "&";
@@ -951,39 +949,11 @@ class ReportOutboundSearch extends ReportOutbound
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
 
-            // Week
-            $this->Week->LinkCustomAttributes = "";
-            $this->Week->HrefValue = "";
-            $this->Week->TooltipValue = "";
-
-            // box_id
-            $this->box_id->LinkCustomAttributes = "";
-            $this->box_id->HrefValue = "";
-            $this->box_id->TooltipValue = "";
-
             // date_delivery
             $this->date_delivery->LinkCustomAttributes = "";
             $this->date_delivery->HrefValue = "";
             $this->date_delivery->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // Week
-            $this->Week->setupEditAttributes();
-            $this->Week->EditCustomAttributes = "";
-            if (!$this->Week->Raw) {
-                $this->Week->AdvancedSearch->SearchValue = HtmlDecode($this->Week->AdvancedSearch->SearchValue);
-            }
-            $this->Week->EditValue = HtmlEncode($this->Week->AdvancedSearch->SearchValue);
-            $this->Week->PlaceHolder = RemoveHtml($this->Week->caption());
-
-            // box_id
-            $this->box_id->setupEditAttributes();
-            $this->box_id->EditCustomAttributes = "";
-            if (!$this->box_id->Raw) {
-                $this->box_id->AdvancedSearch->SearchValue = HtmlDecode($this->box_id->AdvancedSearch->SearchValue);
-            }
-            $this->box_id->EditValue = HtmlEncode($this->box_id->AdvancedSearch->SearchValue);
-            $this->box_id->PlaceHolder = RemoveHtml($this->box_id->caption());
-
             // date_delivery
             $this->date_delivery->setupEditAttributes();
             $this->date_delivery->EditCustomAttributes = "";
@@ -1033,8 +1003,6 @@ class ReportOutboundSearch extends ReportOutbound
     // Load advanced search
     public function loadAdvancedSearch()
     {
-        $this->Week->AdvancedSearch->load();
-        $this->box_id->AdvancedSearch->load();
         $this->date_delivery->AdvancedSearch->load();
     }
 
