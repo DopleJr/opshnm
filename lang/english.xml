@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/8/30">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/8/31">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -2317,9 +2317,6 @@
       </field>
       <field id="test2">
         <phrase id="fldcaption" value="test 2" />
-      </field>
-      <field id="test3">
-        <phrase id="fldcaption" value="test 3" />
       </field>
     </table>
     <table id="shortpick_by_area">

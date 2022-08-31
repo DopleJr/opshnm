@@ -306,3 +306,9 @@ function GetOrder()
 	$_checker = CurrentUserName();
 return ExecuteScalar("SELECT `order_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
 }
+
+function GetIdw()
+{
+	$_checker = CurrentUserName();
+return ExecuteScalar("SELECT `idw` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+}

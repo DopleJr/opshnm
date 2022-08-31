@@ -160,8 +160,8 @@ class OssManual extends DbTable
             'pallet_no',
             '`pallet_no`',
             '`pallet_no`',
-            3,
-            11,
+            200,
+            255,
             -1,
             false,
             '`pallet_no`',
@@ -217,8 +217,9 @@ class OssManual extends DbTable
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->idw->InputTextType = "text";
+        $this->idw->InputTextType = "number";
         $this->idw->Required = true; // Required field
+        $this->idw->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['idw'] = &$this->idw;
 
         // order_no
@@ -1334,11 +1335,11 @@ class OssManual extends DbTable
         // pallet_no
         $this->pallet_no->setupEditAttributes();
         $this->pallet_no->EditCustomAttributes = "";
+        if (!$this->pallet_no->Raw) {
+            $this->pallet_no->CurrentValue = HtmlDecode($this->pallet_no->CurrentValue);
+        }
         $this->pallet_no->EditValue = $this->pallet_no->CurrentValue;
         $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
-        if (strval($this->pallet_no->EditValue) != "" && is_numeric($this->pallet_no->EditValue)) {
-            $this->pallet_no->EditValue = $this->pallet_no->EditValue;
-        }
 
         // sscc
         $this->sscc->setupEditAttributes();

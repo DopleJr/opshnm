@@ -48,7 +48,6 @@ class JobControl extends DbTable
     public $date_updated;
     public $test;
     public $test2;
-    public $test3;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -312,28 +311,6 @@ class JobControl extends DbTable
         );
         $this->test2->InputTextType = "text";
         $this->Fields['test2'] = &$this->test2;
-
-        // test3
-        $this->test3 = new DbField(
-            'job_control',
-            'job_control',
-            'x_test3',
-            'test3',
-            '`test3`',
-            '`test3`',
-            200,
-            255,
-            -1,
-            false,
-            '`test3`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->test3->InputTextType = "text";
-        $this->Fields['test3'] = &$this->test3;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -788,7 +765,6 @@ class JobControl extends DbTable
         $this->date_updated->DbValue = $row['date_updated'];
         $this->test->DbValue = $row['test'];
         $this->test2->DbValue = $row['test2'];
-        $this->test3->DbValue = $row['test3'];
     }
 
     // Delete uploaded files
@@ -1116,7 +1092,6 @@ class JobControl extends DbTable
         $this->date_updated->setDbValue($row['date_updated']);
         $this->test->setDbValue($row['test']);
         $this->test2->setDbValue($row['test2']);
-        $this->test3->setDbValue($row['test3']);
     }
 
     // Render list row values
@@ -1152,8 +1127,6 @@ class JobControl extends DbTable
         // test
 
         // test2
-
-        // test3
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1252,10 +1225,6 @@ class JobControl extends DbTable
         $this->test2->ViewValue = $this->test2->CurrentValue;
         $this->test2->ViewCustomAttributes = "";
 
-        // test3
-        $this->test3->ViewValue = $this->test3->CurrentValue;
-        $this->test3->ViewCustomAttributes = "";
-
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
@@ -1300,11 +1269,6 @@ class JobControl extends DbTable
         $this->test2->LinkCustomAttributes = "";
         $this->test2->HrefValue = "";
         $this->test2->TooltipValue = "";
-
-        // test3
-        $this->test3->LinkCustomAttributes = "";
-        $this->test3->HrefValue = "";
-        $this->test3->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1417,15 +1381,6 @@ class JobControl extends DbTable
         $this->test2->EditValue = $this->test2->CurrentValue;
         $this->test2->PlaceHolder = RemoveHtml($this->test2->caption());
 
-        // test3
-        $this->test3->setupEditAttributes();
-        $this->test3->EditCustomAttributes = "";
-        if (!$this->test3->Raw) {
-            $this->test3->CurrentValue = HtmlDecode($this->test3->CurrentValue);
-        }
-        $this->test3->EditValue = $this->test3->CurrentValue;
-        $this->test3->PlaceHolder = RemoveHtml($this->test3->caption());
-
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1463,7 +1418,6 @@ class JobControl extends DbTable
                     $doc->exportCaption($this->date_updated);
                     $doc->exportCaption($this->test);
                     $doc->exportCaption($this->test2);
-                    $doc->exportCaption($this->test3);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->job_category);
@@ -1474,7 +1428,6 @@ class JobControl extends DbTable
                     $doc->exportCaption($this->date_updated);
                     $doc->exportCaption($this->test);
                     $doc->exportCaption($this->test2);
-                    $doc->exportCaption($this->test3);
                 }
                 $doc->endExportRow();
             }
@@ -1513,7 +1466,6 @@ class JobControl extends DbTable
                         $doc->exportField($this->date_updated);
                         $doc->exportField($this->test);
                         $doc->exportField($this->test2);
-                        $doc->exportField($this->test3);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->job_category);
@@ -1524,7 +1476,6 @@ class JobControl extends DbTable
                         $doc->exportField($this->date_updated);
                         $doc->exportField($this->test);
                         $doc->exportField($this->test2);
-                        $doc->exportField($this->test3);
                     }
                     $doc->endExportRow($rowCnt);
                 }

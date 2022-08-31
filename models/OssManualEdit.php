@@ -742,7 +742,7 @@ class OssManualEdit extends OssManual
             if (IsApi() && $val === null) {
                 $this->idw->Visible = false; // Disable update for API request
             } else {
-                $this->idw->setFormValue($val);
+                $this->idw->setFormValue($val, true, $validate);
             }
         }
 
@@ -1097,11 +1097,11 @@ class OssManualEdit extends OssManual
             // pallet_no
             $this->pallet_no->setupEditAttributes();
             $this->pallet_no->EditCustomAttributes = "";
+            if (!$this->pallet_no->Raw) {
+                $this->pallet_no->CurrentValue = HtmlDecode($this->pallet_no->CurrentValue);
+            }
             $this->pallet_no->EditValue = HtmlEncode($this->pallet_no->CurrentValue);
             $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
-            if (strval($this->pallet_no->EditValue) != "" && is_numeric($this->pallet_no->EditValue)) {
-                $this->pallet_no->EditValue = $this->pallet_no->EditValue;
-            }
 
             // sscc
             $this->sscc->setupEditAttributes();
@@ -1273,6 +1273,9 @@ class OssManualEdit extends OssManual
             if (!$this->idw->IsDetailKey && EmptyValue($this->idw->FormValue)) {
                 $this->idw->addErrorMessage(str_replace("%s", $this->idw->caption(), $this->idw->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idw->FormValue)) {
+            $this->idw->addErrorMessage($this->idw->getErrorMessage(false));
         }
         if ($this->order_no->Required) {
             if (!$this->order_no->IsDetailKey && EmptyValue($this->order_no->FormValue)) {
