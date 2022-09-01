@@ -504,6 +504,8 @@ class JobControlCopy1Add extends JobControlCopy1
         $this->area->setVisibility();
         $this->aisle->setVisibility();
         $this->user->setVisibility();
+        $this->target_qty->setVisibility();
+        $this->picked_qty->setVisibility();
         $this->status->setVisibility();
         $this->date_created->setVisibility();
         $this->date_updated->setVisibility();
@@ -730,6 +732,26 @@ class JobControlCopy1Add extends JobControlCopy1
             }
         }
 
+        // Check field name 'target_qty' first before field var 'x_target_qty'
+        $val = $CurrentForm->hasValue("target_qty") ? $CurrentForm->getValue("target_qty") : $CurrentForm->getValue("x_target_qty");
+        if (!$this->target_qty->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->target_qty->Visible = false; // Disable update for API request
+            } else {
+                $this->target_qty->setFormValue($val);
+            }
+        }
+
+        // Check field name 'picked_qty' first before field var 'x_picked_qty'
+        $val = $CurrentForm->hasValue("picked_qty") ? $CurrentForm->getValue("picked_qty") : $CurrentForm->getValue("x_picked_qty");
+        if (!$this->picked_qty->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->picked_qty->Visible = false; // Disable update for API request
+            } else {
+                $this->picked_qty->setFormValue($val);
+            }
+        }
+
         // Check field name 'status' first before field var 'x_status'
         $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
         if (!$this->status->IsDetailKey) {
@@ -776,6 +798,8 @@ class JobControlCopy1Add extends JobControlCopy1
         $this->area->CurrentValue = $this->area->FormValue;
         $this->aisle->CurrentValue = $this->aisle->FormValue;
         $this->user->CurrentValue = $this->user->FormValue;
+        $this->target_qty->CurrentValue = $this->target_qty->FormValue;
+        $this->picked_qty->CurrentValue = $this->picked_qty->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->date_created->CurrentValue = $this->date_created->FormValue;
         $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
@@ -836,6 +860,8 @@ class JobControlCopy1Add extends JobControlCopy1
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
+        $this->target_qty->setDbValue($row['target_qty']);
+        $this->picked_qty->setDbValue($row['picked_qty']);
         $this->status->setDbValue($row['status']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -851,6 +877,8 @@ class JobControlCopy1Add extends JobControlCopy1
         $row['area'] = $this->area->DefaultValue;
         $row['aisle'] = $this->aisle->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['target_qty'] = $this->target_qty->DefaultValue;
+        $row['picked_qty'] = $this->picked_qty->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
@@ -902,6 +930,12 @@ class JobControlCopy1Add extends JobControlCopy1
 
         // user
         $this->user->RowCssClass = "row";
+
+        // target_qty
+        $this->target_qty->RowCssClass = "row";
+
+        // picked_qty
+        $this->picked_qty->RowCssClass = "row";
 
         // status
         $this->status->RowCssClass = "row";
@@ -1074,6 +1108,14 @@ class JobControlCopy1Add extends JobControlCopy1
             }
             $this->user->ViewCustomAttributes = "";
 
+            // target_qty
+            $this->target_qty->ViewValue = $this->target_qty->CurrentValue;
+            $this->target_qty->ViewCustomAttributes = "";
+
+            // picked_qty
+            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
+            $this->picked_qty->ViewCustomAttributes = "";
+
             // status
             if (strval($this->status->CurrentValue) != "") {
                 $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
@@ -1111,6 +1153,14 @@ class JobControlCopy1Add extends JobControlCopy1
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
+
+            // target_qty
+            $this->target_qty->LinkCustomAttributes = "";
+            $this->target_qty->HrefValue = "";
+
+            // picked_qty
+            $this->picked_qty->LinkCustomAttributes = "";
+            $this->picked_qty->HrefValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -1296,6 +1346,24 @@ class JobControlCopy1Add extends JobControlCopy1
             }
             $this->user->PlaceHolder = RemoveHtml($this->user->caption());
 
+            // target_qty
+            $this->target_qty->setupEditAttributes();
+            $this->target_qty->EditCustomAttributes = "";
+            if (!$this->target_qty->Raw) {
+                $this->target_qty->CurrentValue = HtmlDecode($this->target_qty->CurrentValue);
+            }
+            $this->target_qty->EditValue = HtmlEncode($this->target_qty->CurrentValue);
+            $this->target_qty->PlaceHolder = RemoveHtml($this->target_qty->caption());
+
+            // picked_qty
+            $this->picked_qty->setupEditAttributes();
+            $this->picked_qty->EditCustomAttributes = "";
+            if (!$this->picked_qty->Raw) {
+                $this->picked_qty->CurrentValue = HtmlDecode($this->picked_qty->CurrentValue);
+            }
+            $this->picked_qty->EditValue = HtmlEncode($this->picked_qty->CurrentValue);
+            $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
+
             // status
             $this->status->setupEditAttributes();
             $this->status->EditCustomAttributes = "";
@@ -1331,6 +1399,14 @@ class JobControlCopy1Add extends JobControlCopy1
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
+
+            // target_qty
+            $this->target_qty->LinkCustomAttributes = "";
+            $this->target_qty->HrefValue = "";
+
+            // picked_qty
+            $this->picked_qty->LinkCustomAttributes = "";
+            $this->picked_qty->HrefValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -1394,6 +1470,16 @@ class JobControlCopy1Add extends JobControlCopy1
                 $this->user->addErrorMessage(str_replace("%s", $this->user->caption(), $this->user->RequiredErrorMessage));
             }
         }
+        if ($this->target_qty->Required) {
+            if (!$this->target_qty->IsDetailKey && EmptyValue($this->target_qty->FormValue)) {
+                $this->target_qty->addErrorMessage(str_replace("%s", $this->target_qty->caption(), $this->target_qty->RequiredErrorMessage));
+            }
+        }
+        if ($this->picked_qty->Required) {
+            if (!$this->picked_qty->IsDetailKey && EmptyValue($this->picked_qty->FormValue)) {
+                $this->picked_qty->addErrorMessage(str_replace("%s", $this->picked_qty->caption(), $this->picked_qty->RequiredErrorMessage));
+            }
+        }
         if ($this->status->Required) {
             if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
@@ -1447,6 +1533,12 @@ class JobControlCopy1Add extends JobControlCopy1
 
         // user
         $this->user->setDbValueDef($rsnew, $this->user->CurrentValue, null, false);
+
+        // target_qty
+        $this->target_qty->setDbValueDef($rsnew, $this->target_qty->CurrentValue, null, false);
+
+        // picked_qty
+        $this->picked_qty->setDbValueDef($rsnew, $this->picked_qty->CurrentValue, null, false);
 
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);

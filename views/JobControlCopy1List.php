@@ -47,6 +47,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["area", [], fields.area.isInvalid],
         ["aisle", [], fields.aisle.isInvalid],
         ["user", [], fields.user.isInvalid],
+        ["target_qty", [], fields.target_qty.isInvalid],
+        ["picked_qty", [], fields.picked_qty.isInvalid],
         ["status", [], fields.status.isInvalid],
         ["date_created", [], fields.date_created.isInvalid],
         ["date_updated", [], fields.date_updated.isInvalid]
@@ -550,6 +552,12 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->user->Visible) { // user ?>
         <th data-name="user" class="<?= $Page->user->headerCellClass() ?>"><div id="elh_job_control_copy1_user" class="job_control_copy1_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
 <?php } ?>
+<?php if ($Page->target_qty->Visible) { // target_qty ?>
+        <th data-name="target_qty" class="<?= $Page->target_qty->headerCellClass() ?>"><div id="elh_job_control_copy1_target_qty" class="job_control_copy1_target_qty"><?= $Page->renderFieldHeader($Page->target_qty) ?></div></th>
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+        <th data-name="picked_qty" class="<?= $Page->picked_qty->headerCellClass() ?>"><div id="elh_job_control_copy1_picked_qty" class="job_control_copy1_picked_qty"><?= $Page->renderFieldHeader($Page->picked_qty) ?></div></th>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_job_control_copy1_status" class="job_control_copy1_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
 <?php } ?>
@@ -679,6 +687,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_job_control_copy1_user" class="el_job_control_copy1_user">
 <span<?= $Page->user->viewAttributes() ?>>
 <?= $Page->user->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->target_qty->Visible) { // target_qty ?>
+        <td data-name="target_qty"<?= $Page->target_qty->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_copy1_target_qty" class="el_job_control_copy1_target_qty">
+<span<?= $Page->target_qty->viewAttributes() ?>>
+<?= $Page->target_qty->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+        <td data-name="picked_qty"<?= $Page->picked_qty->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_copy1_picked_qty" class="el_job_control_copy1_picked_qty">
+<span<?= $Page->picked_qty->viewAttributes() ?>>
+<?= $Page->picked_qty->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

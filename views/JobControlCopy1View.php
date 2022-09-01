@@ -110,6 +110,28 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->target_qty->Visible) { // target_qty ?>
+    <tr id="r_target_qty"<?= $Page->target_qty->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_copy1_target_qty"><?= $Page->target_qty->caption() ?></span></td>
+        <td data-name="target_qty"<?= $Page->target_qty->cellAttributes() ?>>
+<span id="el_job_control_copy1_target_qty">
+<span<?= $Page->target_qty->viewAttributes() ?>>
+<?= $Page->target_qty->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+    <tr id="r_picked_qty"<?= $Page->picked_qty->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_copy1_picked_qty"><?= $Page->picked_qty->caption() ?></span></td>
+        <td data-name="picked_qty"<?= $Page->picked_qty->cellAttributes() ?>>
+<span id="el_job_control_copy1_picked_qty">
+<span<?= $Page->picked_qty->viewAttributes() ?>>
+<?= $Page->picked_qty->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <tr id="r_status"<?= $Page->status->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_copy1_status"><?= $Page->status->caption() ?></span></td>

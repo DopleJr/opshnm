@@ -126,6 +126,8 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->date->InputTextType = "text";
+        $this->date->UseFilter = true; // Table header filter
+        $this->date->Lookup = new Lookup('date', 'oss_manual', true, 'date', ["date","","",""], [], [], [], [], [], [], '', '', "");
         $this->date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date'] = &$this->date;
 
@@ -150,6 +152,8 @@ class OssManual extends DbTable
         );
         $this->shipment->InputTextType = "number";
         $this->shipment->Required = true; // Required field
+        $this->shipment->UseFilter = true; // Table header filter
+        $this->shipment->Lookup = new Lookup('shipment', 'oss_manual', true, 'shipment', ["shipment","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['shipment'] = &$this->shipment;
 
         // pallet_no
@@ -173,6 +177,8 @@ class OssManual extends DbTable
         );
         $this->pallet_no->InputTextType = "text";
         $this->pallet_no->Required = true; // Required field
+        $this->pallet_no->UseFilter = true; // Table header filter
+        $this->pallet_no->Lookup = new Lookup('pallet_no', 'oss_manual', true, 'pallet_no', ["pallet_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['pallet_no'] = &$this->pallet_no;
 
         // sscc
@@ -196,6 +202,8 @@ class OssManual extends DbTable
         );
         $this->sscc->InputTextType = "text";
         $this->sscc->Required = true; // Required field
+        $this->sscc->UseFilter = true; // Table header filter
+        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['sscc'] = &$this->sscc;
 
         // idw
@@ -219,6 +227,8 @@ class OssManual extends DbTable
         );
         $this->idw->InputTextType = "number";
         $this->idw->Required = true; // Required field
+        $this->idw->UseFilter = true; // Table header filter
+        $this->idw->Lookup = new Lookup('idw', 'oss_manual', true, 'idw', ["idw","","",""], [], [], [], [], [], [], '', '', "");
         $this->idw->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['idw'] = &$this->idw;
 
@@ -243,6 +253,8 @@ class OssManual extends DbTable
         );
         $this->order_no->InputTextType = "number";
         $this->order_no->Required = true; // Required field
+        $this->order_no->UseFilter = true; // Table header filter
+        $this->order_no->Lookup = new Lookup('order_no', 'oss_manual', true, 'order_no', ["order_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->order_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['order_no'] = &$this->order_no;
 
@@ -267,6 +279,8 @@ class OssManual extends DbTable
         );
         $this->item_in_ctn->InputTextType = "number";
         $this->item_in_ctn->Required = true; // Required field
+        $this->item_in_ctn->UseFilter = true; // Table header filter
+        $this->item_in_ctn->Lookup = new Lookup('item_in_ctn', 'oss_manual', true, 'item_in_ctn', ["item_in_ctn","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['item_in_ctn'] = &$this->item_in_ctn;
 
         // no_of_ctn
@@ -290,6 +304,8 @@ class OssManual extends DbTable
         );
         $this->no_of_ctn->InputTextType = "number";
         $this->no_of_ctn->Required = true; // Required field
+        $this->no_of_ctn->UseFilter = true; // Table header filter
+        $this->no_of_ctn->Lookup = new Lookup('no_of_ctn', 'oss_manual', true, 'no_of_ctn', ["no_of_ctn","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['no_of_ctn'] = &$this->no_of_ctn;
 
         // ctn_no
@@ -313,6 +329,8 @@ class OssManual extends DbTable
         );
         $this->ctn_no->InputTextType = "number";
         $this->ctn_no->Required = true; // Required field
+        $this->ctn_no->UseFilter = true; // Table header filter
+        $this->ctn_no->Lookup = new Lookup('ctn_no', 'oss_manual', true, 'ctn_no', ["ctn_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->ctn_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['ctn_no'] = &$this->ctn_no;
 
@@ -337,6 +355,8 @@ class OssManual extends DbTable
         );
         $this->checker->InputTextType = "text";
         $this->checker->Required = true; // Required field
+        $this->checker->UseFilter = true; // Table header filter
+        $this->checker->Lookup = new Lookup('checker', 'oss_manual', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['checker'] = &$this->checker;
 
         // shift
@@ -359,7 +379,8 @@ class OssManual extends DbTable
             'RADIO'
         );
         $this->shift->InputTextType = "text";
-        $this->shift->Lookup = new Lookup('shift', 'oss_manual', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+        $this->shift->UseFilter = true; // Table header filter
+        $this->shift->Lookup = new Lookup('shift', 'oss_manual', true, 'shift', ["shift","","",""], [], [], [], [], [], [], '', '', "");
         $this->shift->OptionCount = 3;
         $this->Fields['shift'] = &$this->shift;
 

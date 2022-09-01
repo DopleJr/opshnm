@@ -18,6 +18,19 @@ loadjs.ready(["wrapper", "head"], function () {
     currentPageID = ew.PAGE_ID = "list";
     currentForm = foss_manuallist;
     foss_manuallist.formKeyCountName = "<?= $Page->FormKeyCountName ?>";
+
+    // Dynamic selection lists
+    foss_manuallist.lists.date = <?= $Page->date->toClientList($Page) ?>;
+    foss_manuallist.lists.shipment = <?= $Page->shipment->toClientList($Page) ?>;
+    foss_manuallist.lists.pallet_no = <?= $Page->pallet_no->toClientList($Page) ?>;
+    foss_manuallist.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
+    foss_manuallist.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
+    foss_manuallist.lists.order_no = <?= $Page->order_no->toClientList($Page) ?>;
+    foss_manuallist.lists.item_in_ctn = <?= $Page->item_in_ctn->toClientList($Page) ?>;
+    foss_manuallist.lists.no_of_ctn = <?= $Page->no_of_ctn->toClientList($Page) ?>;
+    foss_manuallist.lists.ctn_no = <?= $Page->ctn_no->toClientList($Page) ?>;
+    foss_manuallist.lists.checker = <?= $Page->checker->toClientList($Page) ?>;
+    foss_manuallist.lists.shift = <?= $Page->shift->toClientList($Page) ?>;
     loadjs.done("foss_manuallist");
 });
 var foss_manualsrch, currentSearchForm, currentAdvancedSearchForm;
@@ -27,7 +40,63 @@ loadjs.ready(["wrapper", "head"], function () {
     foss_manualsrch = new ew.Form("foss_manualsrch", "list");
     currentSearchForm = foss_manualsrch;
 
+    // Add fields
+    var fields = currentTable.fields;
+    foss_manualsrch.addFields([
+        ["id", [], fields.id.isInvalid],
+        ["date", [], fields.date.isInvalid],
+        ["y_date", [ew.Validators.between], false],
+        ["shipment", [], fields.shipment.isInvalid],
+        ["pallet_no", [], fields.pallet_no.isInvalid],
+        ["sscc", [], fields.sscc.isInvalid],
+        ["idw", [], fields.idw.isInvalid],
+        ["order_no", [], fields.order_no.isInvalid],
+        ["item_in_ctn", [], fields.item_in_ctn.isInvalid],
+        ["no_of_ctn", [], fields.no_of_ctn.isInvalid],
+        ["ctn_no", [], fields.ctn_no.isInvalid],
+        ["checker", [], fields.checker.isInvalid],
+        ["shift", [], fields.shift.isInvalid]
+    ]);
+
+    // Validate form
+    foss_manualsrch.validate = function () {
+        if (!this.validateRequired)
+            return true; // Ignore validation
+        var fobj = this.getForm();
+
+        // Validate fields
+        if (!this.validateFields())
+            return false;
+
+        // Call Form_CustomValidate event
+        if (!this.customValidate(fobj)) {
+            this.focus();
+            return false;
+        }
+        return true;
+    }
+
+    // Form_CustomValidate
+    foss_manualsrch.customValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+        // Your custom validation code here, return false if invalid.
+        return true;
+    }
+
+    // Use JavaScript validation or not
+    foss_manualsrch.validateRequired = ew.CLIENT_VALIDATE;
+
     // Dynamic selection lists
+    foss_manualsrch.lists.date = <?= $Page->date->toClientList($Page) ?>;
+    foss_manualsrch.lists.shipment = <?= $Page->shipment->toClientList($Page) ?>;
+    foss_manualsrch.lists.pallet_no = <?= $Page->pallet_no->toClientList($Page) ?>;
+    foss_manualsrch.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
+    foss_manualsrch.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
+    foss_manualsrch.lists.order_no = <?= $Page->order_no->toClientList($Page) ?>;
+    foss_manualsrch.lists.item_in_ctn = <?= $Page->item_in_ctn->toClientList($Page) ?>;
+    foss_manualsrch.lists.no_of_ctn = <?= $Page->no_of_ctn->toClientList($Page) ?>;
+    foss_manualsrch.lists.ctn_no = <?= $Page->ctn_no->toClientList($Page) ?>;
+    foss_manualsrch.lists.checker = <?= $Page->checker->toClientList($Page) ?>;
+    foss_manualsrch.lists.shift = <?= $Page->shift->toClientList($Page) ?>;
 
     // Filters
     foss_manualsrch.filterList = <?= $Page->getFilterList() ?>;
@@ -66,6 +135,421 @@ $Page->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="oss_manual">
 <div class="ew-extended-search container-fluid">
+<div class="row mb-0<?= ($Page->SearchFieldsPerRow > 0) ? " row-cols-sm-" . $Page->SearchFieldsPerRow : "" ?>">
+<?php
+// Render search row
+$Page->RowType = ROWTYPE_SEARCH;
+$Page->resetAttributes();
+$Page->renderRow();
+?>
+<?php if ($Page->date->Visible) { // date ?>
+<?php
+if (!$Page->date->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date"
+            name="x_date[]"
+            class="form-control ew-select<?= $Page->date->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_date"
+            data-table="oss_manual"
+            data-field="x_date"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date->getPlaceHolder()) ?>"
+            <?= $Page->date->editAttributes() ?>>
+            <?= $Page->date->selectOptionListHtml("x_date", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_date",
+                selectId: "foss_manualsrch_x_date",
+                ajax: { id: "x_date", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.date.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->shipment->Visible) { // shipment ?>
+<?php
+if (!$Page->shipment->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_shipment" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->shipment->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_shipment"
+            name="x_shipment[]"
+            class="form-control ew-select<?= $Page->shipment->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_shipment"
+            data-table="oss_manual"
+            data-field="x_shipment"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->shipment->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->shipment->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->shipment->getPlaceHolder()) ?>"
+            <?= $Page->shipment->editAttributes() ?>>
+            <?= $Page->shipment->selectOptionListHtml("x_shipment", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->shipment->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_shipment",
+                selectId: "foss_manualsrch_x_shipment",
+                ajax: { id: "x_shipment", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.shipment.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->pallet_no->Visible) { // pallet_no ?>
+<?php
+if (!$Page->pallet_no->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_pallet_no" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->pallet_no->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_pallet_no"
+            name="x_pallet_no[]"
+            class="form-control ew-select<?= $Page->pallet_no->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_pallet_no"
+            data-table="oss_manual"
+            data-field="x_pallet_no"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->pallet_no->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->pallet_no->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->pallet_no->getPlaceHolder()) ?>"
+            <?= $Page->pallet_no->editAttributes() ?>>
+            <?= $Page->pallet_no->selectOptionListHtml("x_pallet_no", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->pallet_no->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_pallet_no",
+                selectId: "foss_manualsrch_x_pallet_no",
+                ajax: { id: "x_pallet_no", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.pallet_no.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+<?php
+if (!$Page->sscc->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_sscc" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->sscc->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_sscc"
+            name="x_sscc[]"
+            class="form-control ew-select<?= $Page->sscc->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_sscc"
+            data-table="oss_manual"
+            data-field="x_sscc"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->sscc->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->sscc->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"
+            <?= $Page->sscc->editAttributes() ?>>
+            <?= $Page->sscc->selectOptionListHtml("x_sscc", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->sscc->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_sscc",
+                selectId: "foss_manualsrch_x_sscc",
+                ajax: { id: "x_sscc", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.sscc.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->idw->Visible) { // idw ?>
+<?php
+if (!$Page->idw->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_idw" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->idw->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_idw"
+            name="x_idw[]"
+            class="form-control ew-select<?= $Page->idw->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_idw"
+            data-table="oss_manual"
+            data-field="x_idw"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->idw->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->idw->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"
+            <?= $Page->idw->editAttributes() ?>>
+            <?= $Page->idw->selectOptionListHtml("x_idw", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->idw->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_idw",
+                selectId: "foss_manualsrch_x_idw",
+                ajax: { id: "x_idw", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.idw.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->order_no->Visible) { // order_no ?>
+<?php
+if (!$Page->order_no->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_order_no" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->order_no->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_order_no"
+            name="x_order_no[]"
+            class="form-control ew-select<?= $Page->order_no->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_order_no"
+            data-table="oss_manual"
+            data-field="x_order_no"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->order_no->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->order_no->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->order_no->getPlaceHolder()) ?>"
+            <?= $Page->order_no->editAttributes() ?>>
+            <?= $Page->order_no->selectOptionListHtml("x_order_no", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->order_no->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_order_no",
+                selectId: "foss_manualsrch_x_order_no",
+                ajax: { id: "x_order_no", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.order_no.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->item_in_ctn->Visible) { // item_in_ctn ?>
+<?php
+if (!$Page->item_in_ctn->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_item_in_ctn" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->item_in_ctn->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_item_in_ctn"
+            name="x_item_in_ctn[]"
+            class="form-control ew-select<?= $Page->item_in_ctn->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_item_in_ctn"
+            data-table="oss_manual"
+            data-field="x_item_in_ctn"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->item_in_ctn->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->item_in_ctn->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"
+            <?= $Page->item_in_ctn->editAttributes() ?>>
+            <?= $Page->item_in_ctn->selectOptionListHtml("x_item_in_ctn", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->item_in_ctn->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_item_in_ctn",
+                selectId: "foss_manualsrch_x_item_in_ctn",
+                ajax: { id: "x_item_in_ctn", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.item_in_ctn.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->no_of_ctn->Visible) { // no_of_ctn ?>
+<?php
+if (!$Page->no_of_ctn->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_no_of_ctn" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->no_of_ctn->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_no_of_ctn"
+            name="x_no_of_ctn[]"
+            class="form-control ew-select<?= $Page->no_of_ctn->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_no_of_ctn"
+            data-table="oss_manual"
+            data-field="x_no_of_ctn"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->no_of_ctn->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->no_of_ctn->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"
+            <?= $Page->no_of_ctn->editAttributes() ?>>
+            <?= $Page->no_of_ctn->selectOptionListHtml("x_no_of_ctn", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->no_of_ctn->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_no_of_ctn",
+                selectId: "foss_manualsrch_x_no_of_ctn",
+                ajax: { id: "x_no_of_ctn", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.no_of_ctn.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->ctn_no->Visible) { // ctn_no ?>
+<?php
+if (!$Page->ctn_no->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_ctn_no" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->ctn_no->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_ctn_no"
+            name="x_ctn_no[]"
+            class="form-control ew-select<?= $Page->ctn_no->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_ctn_no"
+            data-table="oss_manual"
+            data-field="x_ctn_no"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->ctn_no->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->ctn_no->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->ctn_no->getPlaceHolder()) ?>"
+            <?= $Page->ctn_no->editAttributes() ?>>
+            <?= $Page->ctn_no->selectOptionListHtml("x_ctn_no", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->ctn_no->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_ctn_no",
+                selectId: "foss_manualsrch_x_ctn_no",
+                ajax: { id: "x_ctn_no", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.ctn_no.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->checker->Visible) { // checker ?>
+<?php
+if (!$Page->checker->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_checker" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->checker->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_checker"
+            name="x_checker[]"
+            class="form-control ew-select<?= $Page->checker->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_checker"
+            data-table="oss_manual"
+            data-field="x_checker"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->checker->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->checker->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->checker->getPlaceHolder()) ?>"
+            <?= $Page->checker->editAttributes() ?>>
+            <?= $Page->checker->selectOptionListHtml("x_checker", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->checker->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_checker",
+                selectId: "foss_manualsrch_x_checker",
+                ajax: { id: "x_checker", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.checker.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->shift->Visible) { // shift ?>
+<?php
+if (!$Page->shift->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_shift" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->shift->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_shift"
+            name="x_shift[]"
+            class="form-control ew-select<?= $Page->shift->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_shift"
+            data-table="oss_manual"
+            data-field="x_shift"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->shift->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->shift->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->shift->getPlaceHolder()) ?>"
+            <?= $Page->shift->editAttributes() ?>>
+            <?= $Page->shift->selectOptionListHtml("x_shift", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->shift->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_shift",
+                selectId: "foss_manualsrch_x_shift",
+                ajax: { id: "x_shift", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.shift.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+</div><!-- /.row -->
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
         <div class="ew-basic-search input-group">

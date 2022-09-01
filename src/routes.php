@@ -541,6 +541,7 @@ return function (App $app) {
     $app->map(["GET","POST","OPTIONS"], '/ossmanualview[/{id}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('ossmanualview-oss_manual-view'); // view
     $app->map(["GET","POST","OPTIONS"], '/ossmanualedit[/{id}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('ossmanualedit-oss_manual-edit'); // edit
     $app->map(["GET","POST","OPTIONS"], '/ossmanualdelete[/{id}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('ossmanualdelete-oss_manual-delete'); // delete
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualsearch', OssManualController::class . ':search')->add(PermissionMiddleware::class)->setName('ossmanualsearch-oss_manual-search'); // search
     $app->group(
         '/oss_manual',
         function (RouteCollectorProxy $group) {
@@ -549,6 +550,7 @@ return function (App $app) {
             $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('oss_manual/view-oss_manual-view-2'); // view
             $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('oss_manual/edit-oss_manual-edit-2'); // edit
             $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{id}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('oss_manual/delete-oss_manual-delete-2'); // delete
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("SEARCH_ACTION") . '', OssManualController::class . ':search')->add(PermissionMiddleware::class)->setName('oss_manual/search-oss_manual-search-2'); // search
         }
     );
 

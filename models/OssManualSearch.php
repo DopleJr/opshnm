@@ -10,7 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 /**
  * Page class
  */
-class PickingSearch extends Picking
+class OssManualSearch extends OssManual
 {
     use MessagesTrait;
 
@@ -21,10 +21,10 @@ class PickingSearch extends Picking
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'picking';
+    public $TableName = 'oss_manual';
 
     // Page object name
-    public $PageObjName = "PickingSearch";
+    public $PageObjName = "OssManualSearch";
 
     // View file path
     public $View = null;
@@ -147,14 +147,14 @@ class PickingSearch extends Picking
         // Parent constuctor
         parent::__construct();
 
-        // Table object (picking)
-        if (!isset($GLOBALS["picking"]) || get_class($GLOBALS["picking"]) == PROJECT_NAMESPACE . "picking") {
-            $GLOBALS["picking"] = &$this;
+        // Table object (oss_manual)
+        if (!isset($GLOBALS["oss_manual"]) || get_class($GLOBALS["oss_manual"]) == PROJECT_NAMESPACE . "oss_manual") {
+            $GLOBALS["oss_manual"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'picking');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'oss_manual');
         }
 
         // Start timer
@@ -239,7 +239,7 @@ class PickingSearch extends Picking
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $tbl = Container("picking");
+                $tbl = Container("oss_manual");
                 $doc = new $class($tbl);
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
@@ -284,7 +284,7 @@ class PickingSearch extends Picking
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "pickingview") {
+                    if ($pageName == "ossmanualview") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -481,42 +481,17 @@ class PickingSearch extends Picking
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->po_no->Visible = false;
-        $this->to_no->Visible = false;
-        $this->to_order_item->Visible = false;
-        $this->to_priority->Visible = false;
-        $this->to_priority_code->Visible = false;
-        $this->source_storage_type->Visible = false;
-        $this->source_storage_bin->Visible = false;
-        $this->carton_number->Visible = false;
-        $this->creation_date->setVisibility();
-        $this->gr_number->Visible = false;
-        $this->gr_date->Visible = false;
-        $this->delivery->Visible = false;
-        $this->store_id->Visible = false;
-        $this->store_name->Visible = false;
-        $this->article->Visible = false;
-        $this->size_code->Visible = false;
-        $this->size_desc->Visible = false;
-        $this->color_code->Visible = false;
-        $this->color_desc->Visible = false;
-        $this->concept->Visible = false;
-        $this->target_qty->Visible = false;
-        $this->picked_qty->Visible = false;
-        $this->variance_qty->Visible = false;
-        $this->confirmation_date->setVisibility();
-        $this->confirmation_time->Visible = false;
-        $this->box_code->Visible = false;
-        $this->box_type->Visible = false;
-        $this->picker->Visible = false;
-        $this->status->Visible = false;
-        $this->remarks->Visible = false;
-        $this->aisle->Visible = false;
-        $this->area->Visible = false;
-        $this->aisle2->Visible = false;
-        $this->store_id2->Visible = false;
-        $this->close_totes->Visible = false;
-        $this->job_id->Visible = false;
+        $this->date->setVisibility();
+        $this->shipment->Visible = false;
+        $this->pallet_no->Visible = false;
+        $this->sscc->Visible = false;
+        $this->idw->Visible = false;
+        $this->order_no->Visible = false;
+        $this->item_in_ctn->Visible = false;
+        $this->no_of_ctn->Visible = false;
+        $this->ctn_no->Visible = false;
+        $this->checker->Visible = false;
+        $this->shift->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -533,6 +508,7 @@ class PickingSearch extends Picking
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->shift);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -555,7 +531,7 @@ class PickingSearch extends Picking
                 }
                 if ($srchStr != "") {
                     $srchStr = $this->getUrlParm($srchStr);
-                    $srchStr = "pickinglist" . "?" . $srchStr;
+                    $srchStr = "ossmanuallist" . "?" . $srchStr;
                     $this->terminate($srchStr); // Go to list page
                     return;
                 }
@@ -599,8 +575,7 @@ class PickingSearch extends Picking
     protected function buildAdvancedSearch()
     {
         $srchUrl = "";
-        $this->buildSearchUrl($srchUrl, $this->creation_date); // creation_date
-        $this->buildSearchUrl($srchUrl, $this->confirmation_date); // confirmation_date
+        $this->buildSearchUrl($srchUrl, $this->date); // date
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -682,158 +657,58 @@ class PickingSearch extends Picking
         // Load search values
         $hasValue = false;
 
-        // id
-        if ($this->id->AdvancedSearch->get()) {
+        // date
+        if ($this->date->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // po_no
-        if ($this->po_no->AdvancedSearch->get()) {
+        // shipment
+        if ($this->shipment->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // to_no
-        if ($this->to_no->AdvancedSearch->get()) {
+        // pallet_no
+        if ($this->pallet_no->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // to_order_item
-        if ($this->to_order_item->AdvancedSearch->get()) {
+        // sscc
+        if ($this->sscc->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // to_priority
-        if ($this->to_priority->AdvancedSearch->get()) {
+        // idw
+        if ($this->idw->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // to_priority_code
-        if ($this->to_priority_code->AdvancedSearch->get()) {
+        // order_no
+        if ($this->order_no->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // source_storage_type
-        if ($this->source_storage_type->AdvancedSearch->get()) {
+        // item_in_ctn
+        if ($this->item_in_ctn->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // source_storage_bin
-        if ($this->source_storage_bin->AdvancedSearch->get()) {
+        // no_of_ctn
+        if ($this->no_of_ctn->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // carton_number
-        if ($this->carton_number->AdvancedSearch->get()) {
+        // ctn_no
+        if ($this->ctn_no->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // creation_date
-        if ($this->creation_date->AdvancedSearch->get()) {
+        // checker
+        if ($this->checker->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // gr_number
-        if ($this->gr_number->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // gr_date
-        if ($this->gr_date->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // delivery
-        if ($this->delivery->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // store_id
-        if ($this->store_id->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // store_name
-        if ($this->store_name->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // article
-        if ($this->article->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // size_code
-        if ($this->size_code->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // size_desc
-        if ($this->size_desc->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // color_code
-        if ($this->color_code->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // color_desc
-        if ($this->color_desc->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // concept
-        if ($this->concept->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // target_qty
-        if ($this->target_qty->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // picked_qty
-        if ($this->picked_qty->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // variance_qty
-        if ($this->variance_qty->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // confirmation_date
-        if ($this->confirmation_date->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // confirmation_time
-        if ($this->confirmation_time->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // box_code
-        if ($this->box_code->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // box_type
-        if ($this->box_type->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // picker
-        if ($this->picker->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // status
-        if ($this->status->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // remarks
-        if ($this->remarks->AdvancedSearch->get()) {
+        // shift
+        if ($this->shift->AdvancedSearch->get()) {
             $hasValue = true;
         }
         return $hasValue;
@@ -854,272 +729,108 @@ class PickingSearch extends Picking
         // id
         $this->id->RowCssClass = "row";
 
-        // po_no
-        $this->po_no->RowCssClass = "row";
+        // date
+        $this->date->RowCssClass = "row";
 
-        // to_no
-        $this->to_no->RowCssClass = "row";
+        // shipment
+        $this->shipment->RowCssClass = "row";
 
-        // to_order_item
-        $this->to_order_item->RowCssClass = "row";
+        // pallet_no
+        $this->pallet_no->RowCssClass = "row";
 
-        // to_priority
-        $this->to_priority->RowCssClass = "row";
+        // sscc
+        $this->sscc->RowCssClass = "row";
 
-        // to_priority_code
-        $this->to_priority_code->RowCssClass = "row";
+        // idw
+        $this->idw->RowCssClass = "row";
 
-        // source_storage_type
-        $this->source_storage_type->RowCssClass = "row";
+        // order_no
+        $this->order_no->RowCssClass = "row";
 
-        // source_storage_bin
-        $this->source_storage_bin->RowCssClass = "row";
+        // item_in_ctn
+        $this->item_in_ctn->RowCssClass = "row";
 
-        // carton_number
-        $this->carton_number->RowCssClass = "row";
+        // no_of_ctn
+        $this->no_of_ctn->RowCssClass = "row";
 
-        // creation_date
-        $this->creation_date->RowCssClass = "row";
+        // ctn_no
+        $this->ctn_no->RowCssClass = "row";
 
-        // gr_number
-        $this->gr_number->RowCssClass = "row";
+        // checker
+        $this->checker->RowCssClass = "row";
 
-        // gr_date
-        $this->gr_date->RowCssClass = "row";
-
-        // delivery
-        $this->delivery->RowCssClass = "row";
-
-        // store_id
-        $this->store_id->RowCssClass = "row";
-
-        // store_name
-        $this->store_name->RowCssClass = "row";
-
-        // article
-        $this->article->RowCssClass = "row";
-
-        // size_code
-        $this->size_code->RowCssClass = "row";
-
-        // size_desc
-        $this->size_desc->RowCssClass = "row";
-
-        // color_code
-        $this->color_code->RowCssClass = "row";
-
-        // color_desc
-        $this->color_desc->RowCssClass = "row";
-
-        // concept
-        $this->concept->RowCssClass = "row";
-
-        // target_qty
-        $this->target_qty->RowCssClass = "row";
-
-        // picked_qty
-        $this->picked_qty->RowCssClass = "row";
-
-        // variance_qty
-        $this->variance_qty->RowCssClass = "row";
-
-        // confirmation_date
-        $this->confirmation_date->RowCssClass = "row";
-
-        // confirmation_time
-        $this->confirmation_time->RowCssClass = "row";
-
-        // box_code
-        $this->box_code->RowCssClass = "row";
-
-        // box_type
-        $this->box_type->RowCssClass = "row";
-
-        // picker
-        $this->picker->RowCssClass = "row";
-
-        // status
-        $this->status->RowCssClass = "row";
-
-        // remarks
-        $this->remarks->RowCssClass = "row";
-
-        // aisle
-        $this->aisle->RowCssClass = "row";
-
-        // area
-        $this->area->RowCssClass = "row";
-
-        // aisle2
-        $this->aisle2->RowCssClass = "row";
-
-        // store_id2
-        $this->store_id2->RowCssClass = "row";
-
-        // close_totes
-        $this->close_totes->RowCssClass = "row";
-
-        // job_id
-        $this->job_id->RowCssClass = "row";
+        // shift
+        $this->shift->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // po_no
-            $this->po_no->ViewValue = $this->po_no->CurrentValue;
-            $this->po_no->ViewCustomAttributes = "";
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
 
-            // to_no
-            $this->to_no->ViewValue = $this->to_no->CurrentValue;
-            $this->to_no->ViewCustomAttributes = "";
+            // date
+            $this->date->ViewValue = $this->date->CurrentValue;
+            $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
+            $this->date->ViewCustomAttributes = "";
 
-            // to_order_item
-            $this->to_order_item->ViewValue = $this->to_order_item->CurrentValue;
-            $this->to_order_item->ViewCustomAttributes = "";
+            // shipment
+            $this->shipment->ViewValue = $this->shipment->CurrentValue;
+            $this->shipment->ViewCustomAttributes = "";
 
-            // to_priority
-            $this->to_priority->ViewValue = $this->to_priority->CurrentValue;
-            $this->to_priority->ViewCustomAttributes = "";
+            // pallet_no
+            $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
+            $this->pallet_no->ViewCustomAttributes = "";
 
-            // to_priority_code
-            $this->to_priority_code->ViewValue = $this->to_priority_code->CurrentValue;
-            $this->to_priority_code->ViewCustomAttributes = "";
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
 
-            // source_storage_type
-            $this->source_storage_type->ViewValue = $this->source_storage_type->CurrentValue;
-            $this->source_storage_type->ViewCustomAttributes = "";
+            // idw
+            $this->idw->ViewValue = $this->idw->CurrentValue;
+            $this->idw->ViewCustomAttributes = "";
 
-            // source_storage_bin
-            $this->source_storage_bin->ViewValue = $this->source_storage_bin->CurrentValue;
-            $this->source_storage_bin->ViewCustomAttributes = "";
+            // order_no
+            $this->order_no->ViewValue = $this->order_no->CurrentValue;
+            $this->order_no->ViewCustomAttributes = "";
 
-            // carton_number
-            $this->carton_number->ViewValue = $this->carton_number->CurrentValue;
-            $this->carton_number->ViewCustomAttributes = "";
+            // item_in_ctn
+            $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewCustomAttributes = "";
 
-            // creation_date
-            $this->creation_date->ViewValue = $this->creation_date->CurrentValue;
-            $this->creation_date->ViewValue = FormatDateTime($this->creation_date->ViewValue, $this->creation_date->formatPattern());
-            $this->creation_date->ViewCustomAttributes = "";
+            // no_of_ctn
+            $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewCustomAttributes = "";
 
-            // gr_number
-            $this->gr_number->ViewValue = $this->gr_number->CurrentValue;
-            $this->gr_number->ViewCustomAttributes = "";
+            // ctn_no
+            $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewCustomAttributes = "";
 
-            // gr_date
-            $this->gr_date->ViewValue = $this->gr_date->CurrentValue;
-            $this->gr_date->ViewValue = FormatDateTime($this->gr_date->ViewValue, $this->gr_date->formatPattern());
-            $this->gr_date->ViewCustomAttributes = "";
+            // checker
+            $this->checker->ViewValue = $this->checker->CurrentValue;
+            $this->checker->ViewCustomAttributes = "";
 
-            // delivery
-            $this->delivery->ViewValue = $this->delivery->CurrentValue;
-            $this->delivery->ViewCustomAttributes = "";
+            // shift
+            if (strval($this->shift->CurrentValue) != "") {
+                $this->shift->ViewValue = $this->shift->optionCaption($this->shift->CurrentValue);
+            } else {
+                $this->shift->ViewValue = null;
+            }
+            $this->shift->ViewCustomAttributes = "";
 
-            // store_id
-            $this->store_id->ViewValue = $this->store_id->CurrentValue;
-            $this->store_id->ViewCustomAttributes = "";
-
-            // store_name
-            $this->store_name->ViewValue = $this->store_name->CurrentValue;
-            $this->store_name->ViewCustomAttributes = "";
-
-            // article
-            $this->article->ViewValue = $this->article->CurrentValue;
-            $this->article->ViewCustomAttributes = "";
-
-            // size_code
-            $this->size_code->ViewValue = $this->size_code->CurrentValue;
-            $this->size_code->ViewCustomAttributes = "";
-
-            // size_desc
-            $this->size_desc->ViewValue = $this->size_desc->CurrentValue;
-            $this->size_desc->ViewCustomAttributes = "";
-
-            // color_code
-            $this->color_code->ViewValue = $this->color_code->CurrentValue;
-            $this->color_code->ViewCustomAttributes = "";
-
-            // color_desc
-            $this->color_desc->ViewValue = $this->color_desc->CurrentValue;
-            $this->color_desc->ViewCustomAttributes = "";
-
-            // concept
-            $this->concept->ViewValue = $this->concept->CurrentValue;
-            $this->concept->ViewCustomAttributes = "";
-
-            // target_qty
-            $this->target_qty->ViewValue = $this->target_qty->CurrentValue;
-            $this->target_qty->ViewValue = FormatNumber($this->target_qty->ViewValue, $this->target_qty->formatPattern());
-            $this->target_qty->ViewCustomAttributes = "";
-
-            // picked_qty
-            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
-            $this->picked_qty->ViewCustomAttributes = "";
-
-            // variance_qty
-            $this->variance_qty->ViewValue = $this->variance_qty->CurrentValue;
-            $this->variance_qty->ViewValue = FormatNumber($this->variance_qty->ViewValue, $this->variance_qty->formatPattern());
-            $this->variance_qty->ViewCustomAttributes = "";
-
-            // confirmation_date
-            $this->confirmation_date->ViewValue = $this->confirmation_date->CurrentValue;
-            $this->confirmation_date->ViewValue = FormatDateTime($this->confirmation_date->ViewValue, $this->confirmation_date->formatPattern());
-            $this->confirmation_date->ViewCustomAttributes = "";
-
-            // confirmation_time
-            $this->confirmation_time->ViewValue = $this->confirmation_time->CurrentValue;
-            $this->confirmation_time->ViewValue = FormatDateTime($this->confirmation_time->ViewValue, $this->confirmation_time->formatPattern());
-            $this->confirmation_time->ViewCustomAttributes = "";
-
-            // box_code
-            $this->box_code->ViewValue = $this->box_code->CurrentValue;
-            $this->box_code->ViewCustomAttributes = "";
-
-            // box_type
-            $this->box_type->ViewValue = $this->box_type->CurrentValue;
-            $this->box_type->ViewCustomAttributes = "";
-
-            // picker
-            $this->picker->ViewValue = $this->picker->CurrentValue;
-            $this->picker->ViewCustomAttributes = "";
-
-            // status
-            $this->status->ViewValue = $this->status->CurrentValue;
-            $this->status->ViewCustomAttributes = "";
-
-            // remarks
-            $this->remarks->ViewValue = $this->remarks->CurrentValue;
-            $this->remarks->ViewCustomAttributes = "";
-
-            // creation_date
-            $this->creation_date->LinkCustomAttributes = "";
-            $this->creation_date->HrefValue = "";
-            $this->creation_date->TooltipValue = "";
-
-            // confirmation_date
-            $this->confirmation_date->LinkCustomAttributes = "";
-            $this->confirmation_date->HrefValue = "";
-            $this->confirmation_date->TooltipValue = "";
+            // date
+            $this->date->LinkCustomAttributes = "";
+            $this->date->HrefValue = "";
+            $this->date->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // creation_date
-            $this->creation_date->setupEditAttributes();
-            $this->creation_date->EditCustomAttributes = "";
-            $this->creation_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->creation_date->AdvancedSearch->SearchValue, $this->creation_date->formatPattern()), $this->creation_date->formatPattern()));
-            $this->creation_date->PlaceHolder = RemoveHtml($this->creation_date->caption());
-            $this->creation_date->setupEditAttributes();
-            $this->creation_date->EditCustomAttributes = "";
-            $this->creation_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->creation_date->AdvancedSearch->SearchValue2, $this->creation_date->formatPattern()), $this->creation_date->formatPattern()));
-            $this->creation_date->PlaceHolder = RemoveHtml($this->creation_date->caption());
-
-            // confirmation_date
-            $this->confirmation_date->setupEditAttributes();
-            $this->confirmation_date->EditCustomAttributes = "";
-            $this->confirmation_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->confirmation_date->AdvancedSearch->SearchValue, $this->confirmation_date->formatPattern()), $this->confirmation_date->formatPattern()));
-            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
-            $this->confirmation_date->setupEditAttributes();
-            $this->confirmation_date->EditCustomAttributes = "";
-            $this->confirmation_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->confirmation_date->AdvancedSearch->SearchValue2, $this->confirmation_date->formatPattern()), $this->confirmation_date->formatPattern()));
-            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+            // date
+            $this->date->setupEditAttributes();
+            $this->date->EditCustomAttributes = 'disabled';
+            $this->date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date->AdvancedSearch->SearchValue, $this->date->formatPattern()), $this->date->formatPattern()));
+            $this->date->PlaceHolder = RemoveHtml($this->date->caption());
+            $this->date->setupEditAttributes();
+            $this->date->EditCustomAttributes = 'disabled';
+            $this->date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date->AdvancedSearch->SearchValue2, $this->date->formatPattern()), $this->date->formatPattern()));
+            $this->date->PlaceHolder = RemoveHtml($this->date->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1138,17 +849,11 @@ class PickingSearch extends Picking
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if (!CheckDate($this->creation_date->AdvancedSearch->SearchValue, $this->creation_date->formatPattern())) {
-            $this->creation_date->addErrorMessage($this->creation_date->getErrorMessage(false));
+        if (!CheckDate($this->date->AdvancedSearch->SearchValue, $this->date->formatPattern())) {
+            $this->date->addErrorMessage($this->date->getErrorMessage(false));
         }
-        if (!CheckDate($this->creation_date->AdvancedSearch->SearchValue2, $this->creation_date->formatPattern())) {
-            $this->creation_date->addErrorMessage($this->creation_date->getErrorMessage(false));
-        }
-        if (!CheckDate($this->confirmation_date->AdvancedSearch->SearchValue, $this->confirmation_date->formatPattern())) {
-            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
-        }
-        if (!CheckDate($this->confirmation_date->AdvancedSearch->SearchValue2, $this->confirmation_date->formatPattern())) {
-            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
+        if (!CheckDate($this->date->AdvancedSearch->SearchValue2, $this->date->formatPattern())) {
+            $this->date->addErrorMessage($this->date->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1166,8 +871,7 @@ class PickingSearch extends Picking
     // Load advanced search
     public function loadAdvancedSearch()
     {
-        $this->creation_date->AdvancedSearch->load();
-        $this->confirmation_date->AdvancedSearch->load();
+        $this->date->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb
@@ -1176,7 +880,7 @@ class PickingSearch extends Picking
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("/dashboard2");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("pickinglist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ossmanuallist"), "", $this->TableVar, true);
         $pageId = "search";
         $Breadcrumb->add("search", $pageId, $url);
     }
@@ -1194,6 +898,8 @@ class PickingSearch extends Picking
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_shift":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

@@ -69,7 +69,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["area", [], fields.area.isInvalid],
         ["aisle2", [], fields.aisle2.isInvalid],
         ["store_id2", [], fields.store_id2.isInvalid],
-        ["close_totes", [], fields.close_totes.isInvalid]
+        ["close_totes", [], fields.close_totes.isInvalid],
+        ["job_id", [], fields.job_id.isInvalid]
     ]);
 
     // Validate form
@@ -355,6 +356,9 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->close_totes->Visible) { // close_totes ?>
         <th data-name="close_totes" class="<?= $Page->close_totes->headerCellClass() ?>"><div id="elh_picking_pending_close_totes" class="picking_pending_close_totes"><?= $Page->renderFieldHeader($Page->close_totes) ?></div></th>
+<?php } ?>
+<?php if ($Page->job_id->Visible) { // job_id ?>
+        <th data-name="job_id" class="<?= $Page->job_id->headerCellClass() ?>"><div id="elh_picking_pending_job_id" class="picking_pending_job_id"><?= $Page->renderFieldHeader($Page->job_id) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -716,6 +720,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_picking_pending_close_totes" class="el_picking_pending_close_totes">
 <span<?= $Page->close_totes->viewAttributes() ?>>
 <?= $Page->close_totes->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->job_id->Visible) { // job_id ?>
+        <td data-name="job_id"<?= $Page->job_id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_picking_pending_job_id" class="el_picking_pending_job_id">
+<span<?= $Page->job_id->viewAttributes() ?>>
+<?= $Page->job_id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

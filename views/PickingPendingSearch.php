@@ -60,7 +60,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["aisle2", [], fields.aisle2.isInvalid],
         ["store_id2", [], fields.store_id2.isInvalid],
         ["scan_article", [], fields.scan_article.isInvalid],
-        ["close_totes", [], fields.close_totes.isInvalid]
+        ["close_totes", [], fields.close_totes.isInvalid],
+        ["job_id", [], fields.job_id.isInvalid]
     ]);
 
     // Validate form
@@ -877,6 +878,24 @@ loadjs.ready(["fpicking_pendingsearch", "datetimepicker"], function () {
             <span id="el_picking_pending_close_totes" class="ew-search-field ew-search-field-single">
 <input type="<?= $Page->close_totes->getInputTextType() ?>" name="x_close_totes" id="x_close_totes" data-table="picking_pending" data-field="x_close_totes" value="<?= $Page->close_totes->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->close_totes->getPlaceHolder()) ?>"<?= $Page->close_totes->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->close_totes->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->job_id->Visible) { // job_id ?>
+    <div id="r_job_id"<?= $Page->job_id->rowAttributes() ?>>
+        <label for="x_job_id" class="<?= $Page->LeftColumnClass ?>"><span id="elh_picking_pending_job_id"><?= $Page->job_id->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_job_id" id="z_job_id" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->job_id->cellAttributes() ?>>
+            <span id="el_picking_pending_job_id" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->job_id->getInputTextType() ?>" name="x_job_id" id="x_job_id" data-table="picking_pending" data-field="x_job_id" value="<?= $Page->job_id->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->job_id->getPlaceHolder()) ?>"<?= $Page->job_id->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->job_id->getErrorMessage(false) ?></div>
 </span>
             </div>
         </div>

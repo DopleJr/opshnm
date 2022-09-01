@@ -1,1 +1,1 @@
-ew.events={};ew.charts={};ew.clientScript=function(){};ew.startupScript=function(){};
+ew.events={};ew.charts={};ew.clientScript=function(){};ew.startupScript=function(){$(document).ready((function(){$("[href^='/']").on("click",(function(){Swal.fire({title:"Loading",imageUrl:"http://localhost/images/Loading_2.gif",html:"Please wait...",showConfirmButton:false})}));$(".ew-search-panel #btn-submit, .modal-footer .ew-submit").on("click",(function(){Swal.fire({title:"Searching",html:"Please wait...",imageUrl:"http://localhost/images/search_2.gif",showConfirmButton:false})}))}))};

@@ -401,6 +401,8 @@ class JobControlCopy1Delete extends JobControlCopy1
         $this->area->setVisibility();
         $this->aisle->setVisibility();
         $this->user->setVisibility();
+        $this->target_qty->setVisibility();
+        $this->picked_qty->setVisibility();
         $this->status->setVisibility();
         $this->date_created->setVisibility();
         $this->date_updated->setVisibility();
@@ -599,6 +601,8 @@ class JobControlCopy1Delete extends JobControlCopy1
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
+        $this->target_qty->setDbValue($row['target_qty']);
+        $this->picked_qty->setDbValue($row['picked_qty']);
         $this->status->setDbValue($row['status']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -614,6 +618,8 @@ class JobControlCopy1Delete extends JobControlCopy1
         $row['area'] = $this->area->DefaultValue;
         $row['aisle'] = $this->aisle->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['target_qty'] = $this->target_qty->DefaultValue;
+        $row['picked_qty'] = $this->picked_qty->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
@@ -643,6 +649,10 @@ class JobControlCopy1Delete extends JobControlCopy1
         // aisle
 
         // user
+
+        // target_qty
+
+        // picked_qty
 
         // status
 
@@ -812,6 +822,14 @@ class JobControlCopy1Delete extends JobControlCopy1
             }
             $this->user->ViewCustomAttributes = "";
 
+            // target_qty
+            $this->target_qty->ViewValue = $this->target_qty->CurrentValue;
+            $this->target_qty->ViewCustomAttributes = "";
+
+            // picked_qty
+            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
+            $this->picked_qty->ViewCustomAttributes = "";
+
             // status
             if (strval($this->status->CurrentValue) != "") {
                 $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
@@ -859,6 +877,16 @@ class JobControlCopy1Delete extends JobControlCopy1
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
             $this->user->TooltipValue = "";
+
+            // target_qty
+            $this->target_qty->LinkCustomAttributes = "";
+            $this->target_qty->HrefValue = "";
+            $this->target_qty->TooltipValue = "";
+
+            // picked_qty
+            $this->picked_qty->LinkCustomAttributes = "";
+            $this->picked_qty->HrefValue = "";
+            $this->picked_qty->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";

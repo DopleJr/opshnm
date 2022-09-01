@@ -522,6 +522,7 @@ class PickingAdd extends Picking
         $this->aisle2->Visible = false;
         $this->store_id2->Visible = false;
         $this->close_totes->Visible = false;
+        $this->job_id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -1115,6 +1116,7 @@ class PickingAdd extends Picking
         $this->aisle2->setDbValue($row['aisle2']);
         $this->store_id2->setDbValue($row['store_id2']);
         $this->close_totes->setDbValue($row['close_totes']);
+        $this->job_id->setDbValue($row['job_id']);
     }
 
     // Return a row with default values
@@ -1157,6 +1159,7 @@ class PickingAdd extends Picking
         $row['aisle2'] = $this->aisle2->DefaultValue;
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
+        $row['job_id'] = $this->job_id->DefaultValue;
         return $row;
     }
 
@@ -1295,6 +1298,9 @@ class PickingAdd extends Picking
 
         // close_totes
         $this->close_totes->RowCssClass = "row";
+
+        // job_id
+        $this->job_id->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {

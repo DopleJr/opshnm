@@ -616,6 +616,9 @@ class OssManualList extends OssManual
 
         // Setup export options
         $this->setupExportOptions();
+
+        // Setup import options
+        $this->setupImportOptions();
         $this->id->setVisibility();
         $this->date->setVisibility();
         $this->shipment->setVisibility();
@@ -679,6 +682,22 @@ class OssManualList extends OssManual
                 $this->setupBreadcrumb();
             }
 
+            // Check QueryString parameters
+            if (Get("action") !== null) {
+                $this->CurrentAction = Get("action");
+            } else {
+                if (Post("action") !== null) {
+                    $this->CurrentAction = Post("action"); // Get action
+
+                    // Process import
+                    if ($this->isImport()) {
+                        $this->import(Post(Config("API_FILE_TOKEN_NAME")));
+                        $this->terminate();
+                        return;
+                    }
+                }
+            }
+
             // Hide list options
             if ($this->isExport()) {
                 $this->ListOptions->hideAllOptions(["sequence"]);
@@ -704,14 +723,23 @@ class OssManualList extends OssManual
 
             // Get default search criteria
             AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+            AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
 
             // Get basic search values
             $this->loadBasicSearchValues();
+
+            // Get and validate search values for advanced search
+            if (EmptyValue($this->UserAction)) { // Skip if user action
+                $this->loadSearchValues();
+            }
 
             // Process filter list
             if ($this->processFilterList()) {
                 $this->terminate();
                 return;
+            }
+            if (!$this->validateSearch()) {
+                // Nothing to do
             }
 
             // Restore search parms from Session if not searching / reset / export
@@ -728,6 +756,11 @@ class OssManualList extends OssManual
             // Get basic search criteria
             if (!$this->hasInvalidFields()) {
                 $srchBasic = $this->basicSearchWhere();
+            }
+
+            // Get search criteria for advanced search
+            if (!$this->hasInvalidFields()) {
+                $srchAdvanced = $this->advancedSearchWhere();
             }
         }
 
@@ -746,6 +779,16 @@ class OssManualList extends OssManual
             if ($this->BasicSearch->Keyword != "") {
                 $srchBasic = $this->basicSearchWhere();
             }
+
+            // Load advanced search from default
+            if ($this->loadAdvancedSearchDefault()) {
+                $srchAdvanced = $this->advancedSearchWhere();
+            }
+        }
+
+        // Restore search settings from Session
+        if (!$this->hasInvalidFields()) {
+            $this->loadAdvancedSearch();
         }
 
         // Build search criteria
@@ -931,18 +974,7 @@ class OssManualList extends OssManual
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->date->AdvancedSearch->toJson(), ","); // Field date
-        $filterList = Concat($filterList, $this->shipment->AdvancedSearch->toJson(), ","); // Field shipment
-        $filterList = Concat($filterList, $this->pallet_no->AdvancedSearch->toJson(), ","); // Field pallet_no
-        $filterList = Concat($filterList, $this->sscc->AdvancedSearch->toJson(), ","); // Field sscc
-        $filterList = Concat($filterList, $this->idw->AdvancedSearch->toJson(), ","); // Field idw
-        $filterList = Concat($filterList, $this->order_no->AdvancedSearch->toJson(), ","); // Field order_no
-        $filterList = Concat($filterList, $this->item_in_ctn->AdvancedSearch->toJson(), ","); // Field item_in_ctn
-        $filterList = Concat($filterList, $this->no_of_ctn->AdvancedSearch->toJson(), ","); // Field no_of_ctn
-        $filterList = Concat($filterList, $this->ctn_no->AdvancedSearch->toJson(), ","); // Field ctn_no
-        $filterList = Concat($filterList, $this->checker->AdvancedSearch->toJson(), ","); // Field checker
-        $filterList = Concat($filterList, $this->shift->AdvancedSearch->toJson(), ","); // Field shift
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -983,14 +1015,6 @@ class OssManualList extends OssManual
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
-
         // Field date
         $this->date->AdvancedSearch->SearchValue = @$filter["x_date"];
         $this->date->AdvancedSearch->SearchOperator = @$filter["z_date"];
@@ -998,88 +1022,101 @@ class OssManualList extends OssManual
         $this->date->AdvancedSearch->SearchValue2 = @$filter["y_date"];
         $this->date->AdvancedSearch->SearchOperator2 = @$filter["w_date"];
         $this->date->AdvancedSearch->save();
-
-        // Field shipment
-        $this->shipment->AdvancedSearch->SearchValue = @$filter["x_shipment"];
-        $this->shipment->AdvancedSearch->SearchOperator = @$filter["z_shipment"];
-        $this->shipment->AdvancedSearch->SearchCondition = @$filter["v_shipment"];
-        $this->shipment->AdvancedSearch->SearchValue2 = @$filter["y_shipment"];
-        $this->shipment->AdvancedSearch->SearchOperator2 = @$filter["w_shipment"];
-        $this->shipment->AdvancedSearch->save();
-
-        // Field pallet_no
-        $this->pallet_no->AdvancedSearch->SearchValue = @$filter["x_pallet_no"];
-        $this->pallet_no->AdvancedSearch->SearchOperator = @$filter["z_pallet_no"];
-        $this->pallet_no->AdvancedSearch->SearchCondition = @$filter["v_pallet_no"];
-        $this->pallet_no->AdvancedSearch->SearchValue2 = @$filter["y_pallet_no"];
-        $this->pallet_no->AdvancedSearch->SearchOperator2 = @$filter["w_pallet_no"];
-        $this->pallet_no->AdvancedSearch->save();
-
-        // Field sscc
-        $this->sscc->AdvancedSearch->SearchValue = @$filter["x_sscc"];
-        $this->sscc->AdvancedSearch->SearchOperator = @$filter["z_sscc"];
-        $this->sscc->AdvancedSearch->SearchCondition = @$filter["v_sscc"];
-        $this->sscc->AdvancedSearch->SearchValue2 = @$filter["y_sscc"];
-        $this->sscc->AdvancedSearch->SearchOperator2 = @$filter["w_sscc"];
-        $this->sscc->AdvancedSearch->save();
-
-        // Field idw
-        $this->idw->AdvancedSearch->SearchValue = @$filter["x_idw"];
-        $this->idw->AdvancedSearch->SearchOperator = @$filter["z_idw"];
-        $this->idw->AdvancedSearch->SearchCondition = @$filter["v_idw"];
-        $this->idw->AdvancedSearch->SearchValue2 = @$filter["y_idw"];
-        $this->idw->AdvancedSearch->SearchOperator2 = @$filter["w_idw"];
-        $this->idw->AdvancedSearch->save();
-
-        // Field order_no
-        $this->order_no->AdvancedSearch->SearchValue = @$filter["x_order_no"];
-        $this->order_no->AdvancedSearch->SearchOperator = @$filter["z_order_no"];
-        $this->order_no->AdvancedSearch->SearchCondition = @$filter["v_order_no"];
-        $this->order_no->AdvancedSearch->SearchValue2 = @$filter["y_order_no"];
-        $this->order_no->AdvancedSearch->SearchOperator2 = @$filter["w_order_no"];
-        $this->order_no->AdvancedSearch->save();
-
-        // Field item_in_ctn
-        $this->item_in_ctn->AdvancedSearch->SearchValue = @$filter["x_item_in_ctn"];
-        $this->item_in_ctn->AdvancedSearch->SearchOperator = @$filter["z_item_in_ctn"];
-        $this->item_in_ctn->AdvancedSearch->SearchCondition = @$filter["v_item_in_ctn"];
-        $this->item_in_ctn->AdvancedSearch->SearchValue2 = @$filter["y_item_in_ctn"];
-        $this->item_in_ctn->AdvancedSearch->SearchOperator2 = @$filter["w_item_in_ctn"];
-        $this->item_in_ctn->AdvancedSearch->save();
-
-        // Field no_of_ctn
-        $this->no_of_ctn->AdvancedSearch->SearchValue = @$filter["x_no_of_ctn"];
-        $this->no_of_ctn->AdvancedSearch->SearchOperator = @$filter["z_no_of_ctn"];
-        $this->no_of_ctn->AdvancedSearch->SearchCondition = @$filter["v_no_of_ctn"];
-        $this->no_of_ctn->AdvancedSearch->SearchValue2 = @$filter["y_no_of_ctn"];
-        $this->no_of_ctn->AdvancedSearch->SearchOperator2 = @$filter["w_no_of_ctn"];
-        $this->no_of_ctn->AdvancedSearch->save();
-
-        // Field ctn_no
-        $this->ctn_no->AdvancedSearch->SearchValue = @$filter["x_ctn_no"];
-        $this->ctn_no->AdvancedSearch->SearchOperator = @$filter["z_ctn_no"];
-        $this->ctn_no->AdvancedSearch->SearchCondition = @$filter["v_ctn_no"];
-        $this->ctn_no->AdvancedSearch->SearchValue2 = @$filter["y_ctn_no"];
-        $this->ctn_no->AdvancedSearch->SearchOperator2 = @$filter["w_ctn_no"];
-        $this->ctn_no->AdvancedSearch->save();
-
-        // Field checker
-        $this->checker->AdvancedSearch->SearchValue = @$filter["x_checker"];
-        $this->checker->AdvancedSearch->SearchOperator = @$filter["z_checker"];
-        $this->checker->AdvancedSearch->SearchCondition = @$filter["v_checker"];
-        $this->checker->AdvancedSearch->SearchValue2 = @$filter["y_checker"];
-        $this->checker->AdvancedSearch->SearchOperator2 = @$filter["w_checker"];
-        $this->checker->AdvancedSearch->save();
-
-        // Field shift
-        $this->shift->AdvancedSearch->SearchValue = @$filter["x_shift"];
-        $this->shift->AdvancedSearch->SearchOperator = @$filter["z_shift"];
-        $this->shift->AdvancedSearch->SearchCondition = @$filter["v_shift"];
-        $this->shift->AdvancedSearch->SearchValue2 = @$filter["y_shift"];
-        $this->shift->AdvancedSearch->SearchOperator2 = @$filter["w_shift"];
-        $this->shift->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Advanced search WHERE clause based on QueryString
+    protected function advancedSearchWhere($default = false)
+    {
+        global $Security;
+        $where = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $this->buildSearchSql($where, $this->date, $default, true); // date
+        $this->buildSearchSql($where, $this->shipment, $default, true); // shipment
+        $this->buildSearchSql($where, $this->pallet_no, $default, true); // pallet_no
+        $this->buildSearchSql($where, $this->sscc, $default, true); // sscc
+        $this->buildSearchSql($where, $this->idw, $default, true); // idw
+        $this->buildSearchSql($where, $this->order_no, $default, true); // order_no
+        $this->buildSearchSql($where, $this->item_in_ctn, $default, true); // item_in_ctn
+        $this->buildSearchSql($where, $this->no_of_ctn, $default, true); // no_of_ctn
+        $this->buildSearchSql($where, $this->ctn_no, $default, true); // ctn_no
+        $this->buildSearchSql($where, $this->checker, $default, true); // checker
+        $this->buildSearchSql($where, $this->shift, $default, true); // shift
+
+        // Set up search parm
+        if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
+            $this->Command = "search";
+        }
+        if (!$default && $this->Command == "search") {
+            $this->date->AdvancedSearch->save(); // date
+        }
+        return $where;
+    }
+
+    // Build search SQL
+    protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
+    {
+        $fldParm = $fld->Param;
+        $fldVal = $default ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+        $fldOpr = $default ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+        $fldCond = $default ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+        $fldVal2 = $default ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+        $fldOpr2 = $default ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+        $wrk = "";
+        if (is_array($fldVal)) {
+            $fldVal = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal);
+        }
+        if (is_array($fldVal2)) {
+            $fldVal2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal2);
+        }
+        $fldOpr = strtoupper(trim($fldOpr ?? ""));
+        if ($fldOpr == "") {
+            $fldOpr = "=";
+        }
+        $fldOpr2 = strtoupper(trim($fldOpr2 ?? ""));
+        if ($fldOpr2 == "") {
+            $fldOpr2 = "=";
+        }
+        if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 && !$fld->UseFilter || !IsMultiSearchOperator($fldOpr)) {
+            $multiValue = false;
+        }
+        if ($multiValue) {
+            $wrk = $fldVal != "" ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+            $wrk2 = $fldVal2 != "" ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+            AddFilter($wrk, $wrk2, $fldCond);
+        } else {
+            $fldVal = $this->convertSearchValue($fld, $fldVal);
+            $fldVal2 = $this->convertSearchValue($fld, $fldVal2);
+            $wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+        }
+        if ($this->SearchOption == "AUTO" && in_array($this->BasicSearch->getType(), ["AND", "OR"])) {
+            $cond = $this->BasicSearch->getType();
+        } else {
+            $cond = SameText($this->SearchOption, "OR") ? "OR" : "AND";
+        }
+        AddFilter($where, $wrk, $cond);
+    }
+
+    // Convert search value
+    protected function convertSearchValue(&$fld, $fldVal)
+    {
+        if ($fldVal == Config("NULL_VALUE") || $fldVal == Config("NOT_NULL_VALUE")) {
+            return $fldVal;
+        }
+        $value = $fldVal;
+        if ($fld->isBoolean()) {
+            if ($fldVal != "") {
+                $value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
+            }
+        } elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
+            if ($fldVal != "") {
+                $value = UnFormatDateTime($fldVal, $fld->formatPattern());
+            }
+        }
+        return $value;
     }
 
     // Return basic search WHERE clause based on search keyword and type
@@ -1125,6 +1162,39 @@ class OssManualList extends OssManual
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
+        if ($this->date->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->shipment->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->pallet_no->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->sscc->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->idw->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->order_no->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->item_in_ctn->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->no_of_ctn->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->ctn_no->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->checker->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->shift->AdvancedSearch->issetSession()) {
+            return true;
+        }
         return false;
     }
 
@@ -1137,6 +1207,9 @@ class OssManualList extends OssManual
 
         // Clear basic search parameters
         $this->resetBasicSearchParms();
+
+        // Clear advanced search parameters
+        $this->resetAdvancedSearchParms();
     }
 
     // Load advanced search default values
@@ -1151,6 +1224,22 @@ class OssManualList extends OssManual
         $this->BasicSearch->unsetSession();
     }
 
+    // Clear all advanced search parameters
+    protected function resetAdvancedSearchParms()
+    {
+        $this->date->AdvancedSearch->unsetSession();
+        $this->shipment->AdvancedSearch->unsetSession();
+        $this->pallet_no->AdvancedSearch->unsetSession();
+        $this->sscc->AdvancedSearch->unsetSession();
+        $this->idw->AdvancedSearch->unsetSession();
+        $this->order_no->AdvancedSearch->unsetSession();
+        $this->item_in_ctn->AdvancedSearch->unsetSession();
+        $this->no_of_ctn->AdvancedSearch->unsetSession();
+        $this->ctn_no->AdvancedSearch->unsetSession();
+        $this->checker->AdvancedSearch->unsetSession();
+        $this->shift->AdvancedSearch->unsetSession();
+    }
+
     // Restore all search parameters
     protected function restoreSearchParms()
     {
@@ -1158,6 +1247,19 @@ class OssManualList extends OssManual
 
         // Restore basic search values
         $this->BasicSearch->load();
+
+        // Restore advanced search values
+        $this->date->AdvancedSearch->load();
+        $this->shipment->AdvancedSearch->load();
+        $this->pallet_no->AdvancedSearch->load();
+        $this->sscc->AdvancedSearch->load();
+        $this->idw->AdvancedSearch->load();
+        $this->order_no->AdvancedSearch->load();
+        $this->item_in_ctn->AdvancedSearch->load();
+        $this->no_of_ctn->AdvancedSearch->load();
+        $this->ctn_no->AdvancedSearch->load();
+        $this->checker->AdvancedSearch->load();
+        $this->shift->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1603,6 +1705,102 @@ class OssManualList extends OssManual
         $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
+    // Load search values for validation
+    protected function loadSearchValues()
+    {
+        // Load search values
+        $hasValue = false;
+
+        // date
+        if ($this->date->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date->AdvancedSearch->SearchValue != "" || $this->date->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // shipment
+        if ($this->shipment->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->shipment->AdvancedSearch->SearchValue != "" || $this->shipment->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // pallet_no
+        if ($this->pallet_no->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->pallet_no->AdvancedSearch->SearchValue != "" || $this->pallet_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // sscc
+        if ($this->sscc->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->sscc->AdvancedSearch->SearchValue != "" || $this->sscc->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // idw
+        if ($this->idw->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->idw->AdvancedSearch->SearchValue != "" || $this->idw->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // order_no
+        if ($this->order_no->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->order_no->AdvancedSearch->SearchValue != "" || $this->order_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // item_in_ctn
+        if ($this->item_in_ctn->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->item_in_ctn->AdvancedSearch->SearchValue != "" || $this->item_in_ctn->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // no_of_ctn
+        if ($this->no_of_ctn->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->no_of_ctn->AdvancedSearch->SearchValue != "" || $this->no_of_ctn->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // ctn_no
+        if ($this->ctn_no->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->ctn_no->AdvancedSearch->SearchValue != "" || $this->ctn_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // checker
+        if ($this->checker->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->checker->AdvancedSearch->SearchValue != "" || $this->checker->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // shift
+        if ($this->shift->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->shift->AdvancedSearch->SearchValue != "" || $this->shift->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+        return $hasValue;
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1905,12 +2103,470 @@ class OssManualList extends OssManual
             $this->shift->LinkCustomAttributes = "";
             $this->shift->HrefValue = "";
             $this->shift->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_SEARCH) {
+            // id
+            $this->id->setupEditAttributes();
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->AdvancedSearch->SearchValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
+            // date
+            if ($this->date->UseFilter && !EmptyValue($this->date->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date->AdvancedSearch->SearchValue)) {
+                    $this->date->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date->AdvancedSearch->SearchValue);
+                }
+                $this->date->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date->AdvancedSearch->SearchValue);
+            }
+            $this->date->setupEditAttributes();
+            $this->date->EditCustomAttributes = 'disabled';
+            $this->date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date->AdvancedSearch->SearchValue2, $this->date->formatPattern()), $this->date->formatPattern()));
+            $this->date->PlaceHolder = RemoveHtml($this->date->caption());
+
+            // shipment
+            if ($this->shipment->UseFilter && !EmptyValue($this->shipment->AdvancedSearch->SearchValue)) {
+                if (is_array($this->shipment->AdvancedSearch->SearchValue)) {
+                    $this->shipment->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shipment->AdvancedSearch->SearchValue);
+                }
+                $this->shipment->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shipment->AdvancedSearch->SearchValue);
+            }
+
+            // pallet_no
+            if ($this->pallet_no->UseFilter && !EmptyValue($this->pallet_no->AdvancedSearch->SearchValue)) {
+                if (is_array($this->pallet_no->AdvancedSearch->SearchValue)) {
+                    $this->pallet_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->pallet_no->AdvancedSearch->SearchValue);
+                }
+                $this->pallet_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->pallet_no->AdvancedSearch->SearchValue);
+            }
+
+            // sscc
+            if ($this->sscc->UseFilter && !EmptyValue($this->sscc->AdvancedSearch->SearchValue)) {
+                if (is_array($this->sscc->AdvancedSearch->SearchValue)) {
+                    $this->sscc->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
+                }
+                $this->sscc->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
+            }
+
+            // idw
+            if ($this->idw->UseFilter && !EmptyValue($this->idw->AdvancedSearch->SearchValue)) {
+                if (is_array($this->idw->AdvancedSearch->SearchValue)) {
+                    $this->idw->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->idw->AdvancedSearch->SearchValue);
+                }
+                $this->idw->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->idw->AdvancedSearch->SearchValue);
+            }
+
+            // order_no
+            if ($this->order_no->UseFilter && !EmptyValue($this->order_no->AdvancedSearch->SearchValue)) {
+                if (is_array($this->order_no->AdvancedSearch->SearchValue)) {
+                    $this->order_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->order_no->AdvancedSearch->SearchValue);
+                }
+                $this->order_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->order_no->AdvancedSearch->SearchValue);
+            }
+
+            // item_in_ctn
+            if ($this->item_in_ctn->UseFilter && !EmptyValue($this->item_in_ctn->AdvancedSearch->SearchValue)) {
+                if (is_array($this->item_in_ctn->AdvancedSearch->SearchValue)) {
+                    $this->item_in_ctn->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->item_in_ctn->AdvancedSearch->SearchValue);
+                }
+                $this->item_in_ctn->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->item_in_ctn->AdvancedSearch->SearchValue);
+            }
+
+            // no_of_ctn
+            if ($this->no_of_ctn->UseFilter && !EmptyValue($this->no_of_ctn->AdvancedSearch->SearchValue)) {
+                if (is_array($this->no_of_ctn->AdvancedSearch->SearchValue)) {
+                    $this->no_of_ctn->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->no_of_ctn->AdvancedSearch->SearchValue);
+                }
+                $this->no_of_ctn->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->no_of_ctn->AdvancedSearch->SearchValue);
+            }
+
+            // ctn_no
+            if ($this->ctn_no->UseFilter && !EmptyValue($this->ctn_no->AdvancedSearch->SearchValue)) {
+                if (is_array($this->ctn_no->AdvancedSearch->SearchValue)) {
+                    $this->ctn_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->ctn_no->AdvancedSearch->SearchValue);
+                }
+                $this->ctn_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->ctn_no->AdvancedSearch->SearchValue);
+            }
+
+            // checker
+            if ($this->checker->UseFilter && !EmptyValue($this->checker->AdvancedSearch->SearchValue)) {
+                if (is_array($this->checker->AdvancedSearch->SearchValue)) {
+                    $this->checker->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->checker->AdvancedSearch->SearchValue);
+                }
+                $this->checker->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->checker->AdvancedSearch->SearchValue);
+            }
+
+            // shift
+            if ($this->shift->UseFilter && !EmptyValue($this->shift->AdvancedSearch->SearchValue)) {
+                if (is_array($this->shift->AdvancedSearch->SearchValue)) {
+                    $this->shift->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shift->AdvancedSearch->SearchValue);
+                }
+                $this->shift->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shift->AdvancedSearch->SearchValue);
+            }
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
+    }
+
+    // Validate search
+    protected function validateSearch()
+    {
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+
+        // Return validate result
+        $validateSearch = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateSearch = $validateSearch && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateSearch;
+    }
+
+    /**
+     * Import file
+     *
+     * @param string $filetoken File token to locate the uploaded import file
+     * @return bool
+     */
+    public function import($filetoken)
+    {
+        global $Security, $Language;
+        if (!$Security->canImport()) {
+            return false; // Import not allowed
+        }
+
+        // Check if valid token
+        if (EmptyValue($filetoken)) {
+            return false;
+        }
+
+        // Get uploaded files by token
+        $files = GetUploadedFileNames($filetoken);
+        $exts = explode(",", Config("IMPORT_FILE_ALLOWED_EXTENSIONS"));
+        $totCnt = 0;
+        $totSuccessCnt = 0;
+        $totFailCnt = 0;
+        $result = [Config("API_FILE_TOKEN_NAME") => $filetoken, "files" => [], "success" => false];
+
+        // Import records
+        foreach ($files as $file) {
+            $res = [Config("API_FILE_TOKEN_NAME") => $filetoken, "file" => basename($file)];
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            // Ignore log file
+            if ($ext == "txt") {
+                continue;
+            }
+            if (!in_array($ext, $exts)) {
+                $res = array_merge($res, ["error" => str_replace("%e", $ext, $Language->phrase("ImportMessageInvalidFileExtension"))]);
+                WriteJson($res);
+                return false;
+            }
+
+            // Set up options for Page Importing event
+
+            // Get optional data from $_POST first
+            $ar = array_keys($_POST);
+            $options = [];
+            foreach ($ar as $key) {
+                if (!in_array($key, ["action", "filetoken"])) {
+                    $options[$key] = $_POST[$key];
+                }
+            }
+
+            // Merge default options
+            $options = array_merge(["maxExecutionTime" => $this->ImportMaxExecutionTime, "file" => $file, "activeSheet" => 0, "headerRowNumber" => 0, "headers" => [], "offset" => 0, "limit" => 0], $options);
+            if ($ext == "csv") {
+                $options = array_merge(["inputEncoding" => $this->ImportCsvEncoding, "delimiter" => $this->ImportCsvDelimiter, "enclosure" => $this->ImportCsvQuoteCharacter], $options);
+            }
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader(ucfirst($ext));
+
+            // Call Page Importing server event
+            if (!$this->pageImporting($reader, $options)) {
+                WriteJson($res);
+                return false;
+            }
+
+            // Set max execution time
+            if ($options["maxExecutionTime"] > 0) {
+                ini_set("max_execution_time", $options["maxExecutionTime"]);
+            }
+            try {
+                if ($ext == "csv") {
+                    if ($options["inputEncoding"] != '') {
+                        $reader->setInputEncoding($options["inputEncoding"]);
+                    }
+                    if ($options["delimiter"] != '') {
+                        $reader->setDelimiter($options["delimiter"]);
+                    }
+                    if ($options["enclosure"] != '') {
+                        $reader->setEnclosure($options["enclosure"]);
+                    }
+                }
+                $spreadsheet = @$reader->load($file);
+            } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+                $res = array_merge($res, ["error" => $e->getMessage()]);
+                WriteJson($res);
+                return false;
+            }
+
+            // Get active worksheet
+            $spreadsheet->setActiveSheetIndex($options["activeSheet"]);
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            // Get row and column indexes
+            $highestRow = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn();
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+            // Get column headers
+            $headers = $options["headers"];
+            $headerRow = 0;
+            if (count($headers) == 0) { // Undetermined, load from header row
+                $headerRow = $options["headerRowNumber"] + 1;
+                $headers = $this->getImportHeaders($worksheet, $headerRow, $highestColumn);
+            }
+            if (count($headers) == 0) { // Unable to load header
+                $res["error"] = $Language->phrase("ImportMessageNoHeaderRow");
+                WriteJson($res);
+                return false;
+            }
+            $checkValue = true; // Clear blank header values at end
+            $headers = array_reverse(array_reduce(array_reverse($headers), function ($res, $name) use ($checkValue) {
+                if (!EmptyValue($name) || !$checkValue) {
+                    $res[] = $name;
+                    $checkValue = false; // Skip further checking
+                }
+                return $res;
+            }, []));
+            foreach ($headers as $name) {
+                if (!array_key_exists($name, $this->Fields)) { // Unidentified field, not header row
+                    $res["error"] = str_replace('%f', $name, $Language->phrase("ImportMessageInvalidFieldName"));
+                    WriteJson($res);
+                    return false;
+                }
+            }
+            $startRow = $headerRow + 1;
+            $endRow = $highestRow;
+            if ($options["offset"] > 0) {
+                $startRow += $options["offset"];
+            }
+            if ($options["limit"] > 0) {
+                $endRow = $startRow + $options["limit"] - 1;
+                if ($endRow > $highestRow) {
+                    $endRow = $highestRow;
+                }
+            }
+            if ($endRow >= $startRow) {
+                $records = $this->getImportRecords($worksheet, $startRow, $endRow, $highestColumn);
+            } else {
+                $records = [];
+            }
+            $recordCnt = count($records);
+            $cnt = 0;
+            $successCnt = 0;
+            $failCnt = 0;
+            $failList = [];
+            $relLogFile = IncludeTrailingDelimiter(UploadPath(false) . Config("UPLOAD_TEMP_FOLDER_PREFIX") . $filetoken, false) . $filetoken . ".txt";
+            $res = array_merge($res, ["totalCount" => $recordCnt, "count" => $cnt, "successCount" => $successCnt, "failCount" => 0]);
+
+            // Begin transaction
+            if ($this->ImportUseTransaction) {
+                $conn = $this->getConnection();
+                $conn->beginTransaction();
+            }
+
+            // Process records
+            foreach ($records as $values) {
+                $importSuccess = false;
+                try {
+                    if (count($values) > count($headers)) { // Make sure headers / values count matched
+                        array_splice($values, count($headers));
+                    }
+                    $row = array_combine($headers, $values);
+                    $cnt++;
+                    $res["count"] = $cnt;
+                    if ($this->importRow($row, $cnt)) {
+                        $successCnt++;
+                        $importSuccess = true;
+                    } else {
+                        $failCnt++;
+                        $failList["row" . $cnt] = $this->getFailureMessage();
+                        $this->clearFailureMessage(); // Clear error message
+                    }
+                } catch (\Throwable $e) {
+                    $failCnt++;
+                    if (@$failList["row" . $cnt] == "") {
+                        $failList["row" . $cnt] = $e->getMessage();
+                    }
+                }
+
+                // Reset count if import fail + use transaction
+                if (!$importSuccess && $this->ImportUseTransaction) {
+                    $successCnt = 0;
+                    $failCnt = $cnt;
+                }
+
+                // Save progress to cache
+                $res["successCount"] = $successCnt;
+                $res["failCount"] = $failCnt;
+                SetCache($filetoken, $res);
+
+                // No need to process further if import fail + use transaction
+                if (!$importSuccess && $this->ImportUseTransaction) {
+                    break;
+                }
+            }
+            $res["failList"] = $failList;
+
+            // Commit/Rollback transaction
+            if ($this->ImportUseTransaction) {
+                $conn = $this->getConnection();
+                if ($failCnt > 0) { // Rollback
+                    if ($this->UseTransaction) { // Rollback transaction
+                        $conn->rollback();
+                    }
+                } else { // Commit
+                    if ($this->UseTransaction) { // Commit transaction
+                        $conn->commit();
+                    }
+                }
+            }
+            $totCnt += $cnt;
+            $totSuccessCnt += $successCnt;
+            $totFailCnt += $failCnt;
+
+            // Call Page Imported server event
+            $this->pageImported($reader, $res);
+            if ($totCnt > 0 && $totFailCnt == 0) { // Clean up if all records imported
+                $res["success"] = true;
+                $result["success"] = true;
+            } else {
+                $res["log"] = $relLogFile;
+                $result["success"] = false;
+            }
+            $result["files"][] = $res;
+        }
+        if ($result["success"]) {
+            CleanUploadTempPaths($filetoken);
+        }
+        WriteJson($result);
+        return $result["success"];
+    }
+
+    /**
+     * Get import header
+     *
+     * @param object $ws PhpSpreadsheet worksheet
+     * @param int $rowIdx Row index for header row (1-based)
+     * @param string $endColName End column Name (e.g. "F")
+     * @return array
+     */
+    protected function getImportHeaders($ws, $rowIdx, $endColName)
+    {
+        $ar = $ws->rangeToArray("A" . $rowIdx . ":" . $endColName . $rowIdx);
+        return $ar[0];
+    }
+
+    /**
+     * Get import records
+     *
+     * @param object $ws PhpSpreadsheet worksheet
+     * @param int $startRowIdx Start row index
+     * @param int $endRowIdx End row index
+     * @param string $endColName End column Name (e.g. "F")
+     * @return array
+     */
+    protected function getImportRecords($ws, $startRowIdx, $endRowIdx, $endColName)
+    {
+        $ar = $ws->rangeToArray("A" . $startRowIdx . ":" . $endColName . $endRowIdx);
+        return $ar;
+    }
+
+    /**
+     * Import a row
+     *
+     * @param array $row
+     * @param int $cnt
+     * @return bool
+     */
+    protected function importRow($row, $cnt)
+    {
+        global $Language;
+
+        // Call Row Import server event
+        if (!$this->rowImport($row, $cnt)) {
+            return false;
+        }
+
+        // Check field values
+        foreach ($row as $name => $value) {
+            $fld = $this->Fields[$name];
+            if (!$this->checkValue($fld, $value)) {
+                $this->setFailureMessage(str_replace(["%f", "%v"], [$fld->Name, $value], $Language->phrase("ImportMessageInvalidFieldValue")));
+                return false;
+            }
+        }
+
+        // Insert/Update to database
+        $res = false;
+        if (!$this->ImportInsertOnly && $oldrow = $this->load($row)) {
+            if ($this->rowUpdating($oldrow, $row)) {
+                if ($res = $this->update($row, "", $oldrow)) {
+                    $this->rowUpdated($oldrow, $row);
+                }
+            }
+        } else {
+            if ($this->rowInserting(null, $row)) {
+                if ($res = $this->insert($row)) {
+                    $this->rowInserted(null, $row);
+                }
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * Check field value
+     *
+     * @param object $fld Field object
+     * @param object $value
+     * @return bool
+     */
+    protected function checkValue($fld, $value)
+    {
+        if ($fld->DataType == DATATYPE_NUMBER && !is_numeric($value)) {
+            return false;
+        } elseif ($fld->DataType == DATATYPE_DATE && !CheckDate($value, $fld->formatPattern())) {
+            return false;
+        }
+        return true;
+    }
+
+    // Load row
+    protected function load($row)
+    {
+        $filter = $this->getRecordFilter($row);
+        if (!$filter) {
+            return null;
+        }
+        $this->CurrentFilter = $filter;
+        $sql = $this->getCurrentSql();
+        $conn = $this->getConnection();
+        return $conn->fetchAssociative($sql);
+    }
+
+    // Load advanced search
+    public function loadAdvancedSearch()
+    {
+        $this->date->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -2028,6 +2684,15 @@ class OssManualList extends OssManual
         $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
         $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
+        // Advanced search button
+        $item = &$this->SearchOptions->add("advancedsearch");
+        if (IsMobile()) {
+            $item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"ossmanualsearch\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+        } else {
+            $item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-table=\"oss_manual\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" data-ew-action=\"modal\" data-url=\"ossmanualsearch\" data-btn=\"SearchBtn\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+        }
+        $item->Visible = true;
+
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
         $this->SearchOptions->UseButtonGroup = true;
@@ -2060,6 +2725,25 @@ class OssManualList extends OssManual
         if (!$this->hasSearchFields() && $this->SearchOptions["searchtoggle"]) {
             $this->SearchOptions["searchtoggle"]->Visible = false;
         }
+    }
+
+    // Set up import options
+    protected function setupImportOptions()
+    {
+        global $Security, $Language;
+
+        // Import
+        $item = &$this->ImportOptions->add("import");
+        $item->Body = "<a class=\"ew-import-link ew-import\" role=\"button\" title=\"" . $Language->phrase("ImportText") . "\" data-caption=\"" . $Language->phrase("ImportText") . "\" data-ew-action=\"import\" data-hdr=\"" . $Language->phrase("ImportText") . "\">" . $Language->phrase("Import") . "</a>";
+        $item->Visible = $Security->canImport();
+        $this->ImportOptions->UseButtonGroup = true;
+        $this->ImportOptions->UseDropDownButton = false;
+        $this->ImportOptions->DropDownButtonPhrase = $Language->phrase("ButtonImport");
+
+        // Add group option item
+        $item = &$this->ImportOptions->addGroupOption();
+        $item->Body = "";
+        $item->Visible = false;
     }
 
     /**

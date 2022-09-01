@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/8/31">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/2">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -2499,6 +2499,9 @@
       <field id="close_totes">
         <phrase id="fldcaption" value="close totes" />
       </field>
+      <field id="job_id">
+        <phrase id="fldcaption" value="job id" />
+      </field>
     </table>
     <table id="job_control_copy1">
       <phrase id="tblcaption" value="Job Control Picking Online" />
@@ -2519,6 +2522,12 @@
       </field>
       <field id="user">
         <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="target_qty">
+        <phrase id="fldcaption" value="Target" />
+      </field>
+      <field id="picked_qty">
+        <phrase id="fldcaption" value="Picked" />
       </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
@@ -2650,6 +2659,9 @@
       </field>
       <field id="close_totes">
         <phrase id="fldcaption" value="close totes" />
+      </field>
+      <field id="job_id">
+        <phrase id="fldcaption" value="job id" />
       </field>
     </table>
     <table id="report_totes">

@@ -56,7 +56,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["aisle2", [fields.aisle2.visible && fields.aisle2.required ? ew.Validators.required(fields.aisle2.caption) : null], fields.aisle2.isInvalid],
         ["store_id2", [fields.store_id2.visible && fields.store_id2.required ? ew.Validators.required(fields.store_id2.caption) : null], fields.store_id2.isInvalid],
         ["scan_article", [fields.scan_article.visible && fields.scan_article.required ? ew.Validators.required(fields.scan_article.caption) : null], fields.scan_article.isInvalid],
-        ["close_totes", [fields.close_totes.visible && fields.close_totes.required ? ew.Validators.required(fields.close_totes.caption) : null], fields.close_totes.isInvalid]
+        ["close_totes", [fields.close_totes.visible && fields.close_totes.required ? ew.Validators.required(fields.close_totes.caption) : null], fields.close_totes.isInvalid],
+        ["job_id", [fields.job_id.visible && fields.job_id.required ? ew.Validators.required(fields.job_id.caption) : null], fields.job_id.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -656,6 +657,18 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->job_id->Visible) { // job_id ?>
+    <div id="r_job_id"<?= $Page->job_id->rowAttributes() ?>>
+        <label id="elh_picking_pending_job_id" for="x_job_id" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_job_id"><?= $Page->job_id->caption() ?><?= $Page->job_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->job_id->cellAttributes() ?>>
+<template id="tpx_picking_pending_job_id"><span id="el_picking_pending_job_id">
+<input type="<?= $Page->job_id->getInputTextType() ?>" name="x_job_id" id="x_job_id" data-table="picking_pending" data-field="x_job_id" value="<?= $Page->job_id->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->job_id->getPlaceHolder()) ?>"<?= $Page->job_id->editAttributes() ?> aria-describedby="x_job_id_help">
+<?= $Page->job_id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->job_id->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <div id="tpd_picking_pendingedit" class="ew-custom-template"></div>
 <template id="tpm_picking_pendingedit">
@@ -922,6 +935,9 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
             <div class="formbuilder-item" hidden>
                 <h2 class="Location" id="control-225011"><slot class="ew-slot" name="tpc_picking_pending_store_id2"></slot>&nbsp;<slot class="ew-slot" name="tpx_picking_pending_store_id2"></slot></h2>
             </div>
+            <div class="formbuilder-item" hidden>
+                <h2 class="Location" id="control-225011"><slot class="ew-slot" name="tpc_picking_pending_job_id"></slot>&nbsp;<slot class="ew-slot" name="tpx_picking_pending_job_id"></slot></h2>
+            </div>
             <div id="r_store_name" class="formbuilder-item" >
                  <label for="x_scan_article" class="col-sm-2 col-form-label"><?= $Page->store_name->caption() ?></label>
                   <div class="col-sm-10"><slot class="ew-slot" name="tpx_picking_pending_store_id"></slot><slot class="ew-slot" name="tpx_picking_pending_store_name"></slot></div>
@@ -1020,17 +1036,19 @@ loadjs.ready("load", function () {
             //Check Qty Target & Actual
             if (target == result) {
               $("#x_scan_article").attr("readonly", true);
-              $("#x_scan_article").blur();
-              $("#x_box_code").focus();
+              //$("#x_scan_article").blur();
+              //$("#x_box_code").focus();
               $("#x_remarks").val("");
               $("#x_close_totes").val("1");
+
               //alert('Qty Match!!');
             }
             if (target !== result) {
               //$("#x_scan_article").val("");
-              $("#x_scan_article").focus();
+              //$("#x_scan_article").focus();
               $("#x_remarks").val("M");
               $("#x_close_totes").val("1");
+
               //alert('Shortpick');
             }
             //end
@@ -1039,7 +1057,6 @@ loadjs.ready("load", function () {
             $("#x_scan_article").val("");
             $("#x_scan_article").focus();
           }
-
           //alert("type 1");
         }
         if (
@@ -1062,17 +1079,19 @@ loadjs.ready("load", function () {
             //Check Qty Target & Actual
             if (target == result) {
               $("#x_scan_article").attr("readonly", true);
-              $("#x_scan_article").blur();
-              $("#x_box_code").focus();
+              //$("#x_scan_article").blur();
+              //$("#x_box_code").focus();
               $("#x_remarks").val("");
               $("#x_close_totes").val("1");
+
               //alert('Qty Match!!');
             }
             if (target !== result) {
               //$("#x_scan_article").val("");
-              $("#x_scan_article").focus();
+              //$("#x_scan_article").focus();
               $("#x_remarks").val("M");
               $("#x_close_totes").val("1");
+
               //alert('Shortpick');
             }
             //end
@@ -1081,7 +1100,6 @@ loadjs.ready("load", function () {
             $("#x_scan_article").val("");
             $("#x_scan_article").focus();
           }
-
           //alert("type 2");
         } else if (
           $("#x_scan_article").val().length == 29 &&
@@ -1102,17 +1120,19 @@ loadjs.ready("load", function () {
             //Check Qty Target & Actual
             if (target == result) {
               $("#x_scan_article").attr("readonly", true);
-              $("#x_scan_article").blur();
-              $("#x_box_code").focus();
+              //$("#x_scan_article").blur();
+              //$("#x_box_code").focus();
               $("#x_remarks").val("");
               $("#x_close_totes").val("1");
+
               //alert('Qty Match!!');
             }
             if (target !== result) {
               //$("#x_scan_article").val("");
-              $("#x_scan_article").focus();
+              //$("#x_scan_article").focus();
               $("#x_remarks").val("M");
               $("#x_close_totes").val("1");
+
               //alert('Shortpick');
             }
             //end
@@ -1121,7 +1141,7 @@ loadjs.ready("load", function () {
             $("#x_scan_article").val("");
             $("#x_scan_article").focus();
           }
-          alert("type 3");
+          //alert("type 3");
         } else if ($("#x_scan_article").val().length <= 29) {
           if ($("#x_scan_article").val() == $("#x_article").val()) {
             $("#x_scan_article").css({ color: "green" }); // warna text

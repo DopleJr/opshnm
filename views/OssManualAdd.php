@@ -234,6 +234,36 @@ $Page->showMessage();
 <div id="tpd_oss_manualadd" class="ew-custom-template"></div>
 <template id="tpm_oss_manualadd">
 <div id="ct_OssManualAdd"><script type="text/javascript">
+
+		function reset_shipment() {
+			$("#x_shipment").val("");
+			$("#x_pallet_no").val("");
+			$("#x_order_no").val("");
+			$("#x_idw").val("");
+			$("#x_shipment").focus();
+			$("#x_shipment").attr('readonly', false);
+			$("#x_pallet_no").attr('readonly', false);
+			$("#x_order_no").attr('readonly', false);
+			$("#x_idw").attr('readonly', false);
+		};
+
+		function reset_pallet() {
+			$("#x_pallet_no").val("");
+			$("#x_order_no").val("");
+			$("#x_idw").val("");
+			$("#x_pallet_no").attr('readonly', false);
+			$("#x_order_no").attr('readonly', false);
+			$("#x_idw").attr('readonly', false);
+			$("x_pallet_no").focus();
+		};
+
+		function reset_on() {
+			$("#x_order_no").val("");
+			$("#x_idw").val("");
+			$("#x_order_no").attr('readonly', false);
+			$("#x_idw").attr('readonly', false);
+			$("#x_idw").focus();
+		};
 		$('body').on('keydown', 'input, select', function(e) { // ganti enter jadi tab di setiap input
             if (e.key === "Enter") {
                 var self = $(this), form = self.parents('form:eq(0)'), focusable, next;
@@ -387,6 +417,15 @@ loadjs.ready("load", function () {
     // Startup script
     // Write your table-specific startup script here, no need to add script tags.
     $(document).ready(function () {
+        $("#btn-action").after(
+        	'<button class="btn btn-danger ew-btn" name="btn-action" id="btn-action" type="button" onclick="reset_shipment()">Reset Shipment</button>'
+        	);
+        $("#btn-action").after(
+        	'<button class="btn btn-danger ew-btn" name="btn-action" id="btn-action" type="button" onclick="reset_pallet()">Reset Pallet</button>'
+        	);
+    	$("#btn-action").after(
+        	'<button class="btn btn-danger ew-btn" name="btn-action" id="btn-action" type="button" onclick="reset_on()">Reset On</button>'
+        	);
       $(document).on("focus", "input[type=text]", function () {
         this.select();
       });
@@ -396,16 +435,16 @@ loadjs.ready("load", function () {
         $("#x_shipment").attr('readonly', true);
       });
       $("#x_pallet_no").change(function () {
-        $("#x_sscc").focus();
-        $("#x_pallet_no").attr('readonly', true);
-      });
-      $("#x_sscc").change(function () {
         $("#x_idw").focus();
+        $("#x_pallet_no").attr('readonly', true);
       });
       $("#x_idw").change(function () {
         $("#x_order_no").focus();
       });
       $("#x_order_no").change(function () {
+        $("#x_sscc").focus();
+      });
+      $("#x_sscc").change(function () {
         $("#x_item_in_ctn").focus();
       });
       $("#x_item_in_ctn").change(function () {
@@ -413,6 +452,9 @@ loadjs.ready("load", function () {
       });
       $("#x_no_of_ctn").change(function () {
         $("#x_ctn_no").focus();
+      });
+      $("#x_ctn_no").change(function () {
+        $("#btn-action").focus();
       });
     });
 });

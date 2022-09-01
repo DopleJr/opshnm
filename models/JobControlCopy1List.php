@@ -625,6 +625,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->area->setVisibility();
         $this->aisle->setVisibility();
         $this->user->setVisibility();
+        $this->target_qty->setVisibility();
+        $this->picked_qty->setVisibility();
         $this->status->setVisibility();
         $this->date_created->setVisibility();
         $this->date_updated->setVisibility();
@@ -966,6 +968,8 @@ class JobControlCopy1List extends JobControlCopy1
         $filterList = Concat($filterList, $this->area->AdvancedSearch->toJson(), ","); // Field area
         $filterList = Concat($filterList, $this->aisle->AdvancedSearch->toJson(), ","); // Field aisle
         $filterList = Concat($filterList, $this->user->AdvancedSearch->toJson(), ","); // Field user
+        $filterList = Concat($filterList, $this->target_qty->AdvancedSearch->toJson(), ","); // Field target_qty
+        $filterList = Concat($filterList, $this->picked_qty->AdvancedSearch->toJson(), ","); // Field picked_qty
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->date_created->AdvancedSearch->toJson(), ","); // Field date_created
         $filterList = Concat($filterList, $this->date_updated->AdvancedSearch->toJson(), ","); // Field date_updated
@@ -1057,6 +1061,22 @@ class JobControlCopy1List extends JobControlCopy1
         $this->user->AdvancedSearch->SearchOperator2 = @$filter["w_user"];
         $this->user->AdvancedSearch->save();
 
+        // Field target_qty
+        $this->target_qty->AdvancedSearch->SearchValue = @$filter["x_target_qty"];
+        $this->target_qty->AdvancedSearch->SearchOperator = @$filter["z_target_qty"];
+        $this->target_qty->AdvancedSearch->SearchCondition = @$filter["v_target_qty"];
+        $this->target_qty->AdvancedSearch->SearchValue2 = @$filter["y_target_qty"];
+        $this->target_qty->AdvancedSearch->SearchOperator2 = @$filter["w_target_qty"];
+        $this->target_qty->AdvancedSearch->save();
+
+        // Field picked_qty
+        $this->picked_qty->AdvancedSearch->SearchValue = @$filter["x_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchOperator = @$filter["z_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchCondition = @$filter["v_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchValue2 = @$filter["y_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchOperator2 = @$filter["w_picked_qty"];
+        $this->picked_qty->AdvancedSearch->save();
+
         // Field status
         $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
         $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
@@ -1098,6 +1118,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->buildSearchSql($where, $this->area, $default, true); // area
         $this->buildSearchSql($where, $this->aisle, $default, true); // aisle
         $this->buildSearchSql($where, $this->user, $default, true); // user
+        $this->buildSearchSql($where, $this->target_qty, $default, false); // target_qty
+        $this->buildSearchSql($where, $this->picked_qty, $default, false); // picked_qty
         $this->buildSearchSql($where, $this->status, $default, true); // status
         $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
         $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
@@ -1113,6 +1135,8 @@ class JobControlCopy1List extends JobControlCopy1
             $this->area->AdvancedSearch->save(); // area
             $this->aisle->AdvancedSearch->save(); // aisle
             $this->user->AdvancedSearch->save(); // user
+            $this->target_qty->AdvancedSearch->save(); // target_qty
+            $this->picked_qty->AdvancedSearch->save(); // picked_qty
             $this->status->AdvancedSearch->save(); // status
             $this->date_created->AdvancedSearch->save(); // date_created
             $this->date_updated->AdvancedSearch->save(); // date_updated
@@ -1198,6 +1222,8 @@ class JobControlCopy1List extends JobControlCopy1
         $searchFlds[] = &$this->area;
         $searchFlds[] = &$this->aisle;
         $searchFlds[] = &$this->user;
+        $searchFlds[] = &$this->target_qty;
+        $searchFlds[] = &$this->picked_qty;
         $searchFlds[] = &$this->status;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
@@ -1240,6 +1266,12 @@ class JobControlCopy1List extends JobControlCopy1
             return true;
         }
         if ($this->user->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->target_qty->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->picked_qty->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->status->AdvancedSearch->issetSession()) {
@@ -1289,6 +1321,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->area->AdvancedSearch->unsetSession();
         $this->aisle->AdvancedSearch->unsetSession();
         $this->user->AdvancedSearch->unsetSession();
+        $this->target_qty->AdvancedSearch->unsetSession();
+        $this->picked_qty->AdvancedSearch->unsetSession();
         $this->status->AdvancedSearch->unsetSession();
         $this->date_created->AdvancedSearch->unsetSession();
         $this->date_updated->AdvancedSearch->unsetSession();
@@ -1309,6 +1343,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->area->AdvancedSearch->load();
         $this->aisle->AdvancedSearch->load();
         $this->user->AdvancedSearch->load();
+        $this->target_qty->AdvancedSearch->load();
+        $this->picked_qty->AdvancedSearch->load();
         $this->status->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();
@@ -1319,7 +1355,7 @@ class JobControlCopy1List extends JobControlCopy1
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = ""; // Set up default sort
+            $defaultSort = $this->status->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1335,6 +1371,8 @@ class JobControlCopy1List extends JobControlCopy1
             $this->updateSort($this->area); // area
             $this->updateSort($this->aisle); // aisle
             $this->updateSort($this->user); // user
+            $this->updateSort($this->target_qty); // target_qty
+            $this->updateSort($this->picked_qty); // picked_qty
             $this->updateSort($this->status); // status
             $this->updateSort($this->date_created); // date_created
             $this->updateSort($this->date_updated); // date_updated
@@ -1368,6 +1406,8 @@ class JobControlCopy1List extends JobControlCopy1
                 $this->area->setSort("");
                 $this->aisle->setSort("");
                 $this->user->setSort("");
+                $this->target_qty->setSort("");
+                $this->picked_qty->setSort("");
                 $this->status->setSort("");
                 $this->date_created->setSort("");
                 $this->date_updated->setSort("");
@@ -1554,6 +1594,8 @@ class JobControlCopy1List extends JobControlCopy1
             $option->add("area", $this->createColumnOption("area"));
             $option->add("aisle", $this->createColumnOption("aisle"));
             $option->add("user", $this->createColumnOption("user"));
+            $option->add("target_qty", $this->createColumnOption("target_qty"));
+            $option->add("picked_qty", $this->createColumnOption("picked_qty"));
             $option->add("status", $this->createColumnOption("status"));
             $option->add("date_created", $this->createColumnOption("date_created"));
             $option->add("date_updated", $this->createColumnOption("date_updated"));
@@ -1799,6 +1841,22 @@ class JobControlCopy1List extends JobControlCopy1
             }
         }
 
+        // target_qty
+        if ($this->target_qty->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->target_qty->AdvancedSearch->SearchValue != "" || $this->target_qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // picked_qty
+        if ($this->picked_qty->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->picked_qty->AdvancedSearch->SearchValue != "" || $this->picked_qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // status
         if ($this->status->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1916,6 +1974,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
+        $this->target_qty->setDbValue($row['target_qty']);
+        $this->picked_qty->setDbValue($row['picked_qty']);
         $this->status->setDbValue($row['status']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -1931,6 +1991,8 @@ class JobControlCopy1List extends JobControlCopy1
         $row['area'] = $this->area->DefaultValue;
         $row['aisle'] = $this->aisle->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['target_qty'] = $this->target_qty->DefaultValue;
+        $row['picked_qty'] = $this->picked_qty->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
@@ -1982,6 +2044,10 @@ class JobControlCopy1List extends JobControlCopy1
         // aisle
 
         // user
+
+        // target_qty
+
+        // picked_qty
 
         // status
 
@@ -2151,6 +2217,14 @@ class JobControlCopy1List extends JobControlCopy1
             }
             $this->user->ViewCustomAttributes = "";
 
+            // target_qty
+            $this->target_qty->ViewValue = $this->target_qty->CurrentValue;
+            $this->target_qty->ViewCustomAttributes = "";
+
+            // picked_qty
+            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
+            $this->picked_qty->ViewCustomAttributes = "";
+
             // status
             if (strval($this->status->CurrentValue) != "") {
                 $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
@@ -2198,6 +2272,16 @@ class JobControlCopy1List extends JobControlCopy1
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
             $this->user->TooltipValue = "";
+
+            // target_qty
+            $this->target_qty->LinkCustomAttributes = "";
+            $this->target_qty->HrefValue = "";
+            $this->target_qty->TooltipValue = "";
+
+            // picked_qty
+            $this->picked_qty->LinkCustomAttributes = "";
+            $this->picked_qty->HrefValue = "";
+            $this->picked_qty->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2262,6 +2346,24 @@ class JobControlCopy1List extends JobControlCopy1
                 $this->user->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
             }
 
+            // target_qty
+            $this->target_qty->setupEditAttributes();
+            $this->target_qty->EditCustomAttributes = "";
+            if (!$this->target_qty->Raw) {
+                $this->target_qty->AdvancedSearch->SearchValue = HtmlDecode($this->target_qty->AdvancedSearch->SearchValue);
+            }
+            $this->target_qty->EditValue = HtmlEncode($this->target_qty->AdvancedSearch->SearchValue);
+            $this->target_qty->PlaceHolder = RemoveHtml($this->target_qty->caption());
+
+            // picked_qty
+            $this->picked_qty->setupEditAttributes();
+            $this->picked_qty->EditCustomAttributes = "";
+            if (!$this->picked_qty->Raw) {
+                $this->picked_qty->AdvancedSearch->SearchValue = HtmlDecode($this->picked_qty->AdvancedSearch->SearchValue);
+            }
+            $this->picked_qty->EditValue = HtmlEncode($this->picked_qty->AdvancedSearch->SearchValue);
+            $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
+
             // status
             if ($this->status->UseFilter && !EmptyValue($this->status->AdvancedSearch->SearchValue)) {
                 if (is_array($this->status->AdvancedSearch->SearchValue)) {
@@ -2322,6 +2424,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->area->AdvancedSearch->load();
         $this->aisle->AdvancedSearch->load();
         $this->user->AdvancedSearch->load();
+        $this->target_qty->AdvancedSearch->load();
+        $this->picked_qty->AdvancedSearch->load();
         $this->status->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();

@@ -67,6 +67,7 @@ class Picking extends DbTable
     public $aisle2;
     public $store_id2;
     public $close_totes;
+    public $job_id;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -979,6 +980,29 @@ class Picking extends DbTable
         $this->close_totes->Sortable = false; // Allow sort
         $this->Fields['close_totes'] = &$this->close_totes;
 
+        // job_id
+        $this->job_id = new DbField(
+            'picking',
+            'picking',
+            'x_job_id',
+            'job_id',
+            '`job_id`',
+            '`job_id`',
+            200,
+            255,
+            -1,
+            false,
+            '`job_id`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->job_id->InputTextType = "text";
+        $this->job_id->Sortable = false; // Allow sort
+        $this->Fields['job_id'] = &$this->job_id;
+
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
         $this->CacheProfile = new \Doctrine\DBAL\Cache\QueryCacheProfile(0, $this->TableVar);
@@ -1466,6 +1490,7 @@ class Picking extends DbTable
         $this->aisle2->DbValue = $row['aisle2'];
         $this->store_id2->DbValue = $row['store_id2'];
         $this->close_totes->DbValue = $row['close_totes'];
+        $this->job_id->DbValue = $row['job_id'];
     }
 
     // Delete uploaded files
@@ -1820,6 +1845,7 @@ class Picking extends DbTable
         $this->aisle2->setDbValue($row['aisle2']);
         $this->store_id2->setDbValue($row['store_id2']);
         $this->close_totes->setDbValue($row['close_totes']);
+        $this->job_id->setDbValue($row['job_id']);
     }
 
     // Render list row values
@@ -1939,6 +1965,9 @@ class Picking extends DbTable
 
         // close_totes
         $this->close_totes->CellCssStyle = "white-space: nowrap;";
+
+        // job_id
+        $this->job_id->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -2091,6 +2120,10 @@ class Picking extends DbTable
         // close_totes
         $this->close_totes->ViewValue = $this->close_totes->CurrentValue;
         $this->close_totes->ViewCustomAttributes = "";
+
+        // job_id
+        $this->job_id->ViewValue = $this->job_id->CurrentValue;
+        $this->job_id->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -2271,6 +2304,11 @@ class Picking extends DbTable
         $this->close_totes->LinkCustomAttributes = "";
         $this->close_totes->HrefValue = "";
         $this->close_totes->TooltipValue = "";
+
+        // job_id
+        $this->job_id->LinkCustomAttributes = "";
+        $this->job_id->HrefValue = "";
+        $this->job_id->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2597,6 +2635,15 @@ class Picking extends DbTable
         $this->close_totes->EditValue = $this->close_totes->CurrentValue;
         $this->close_totes->PlaceHolder = RemoveHtml($this->close_totes->caption());
 
+        // job_id
+        $this->job_id->setupEditAttributes();
+        $this->job_id->EditCustomAttributes = "";
+        if (!$this->job_id->Raw) {
+            $this->job_id->CurrentValue = HtmlDecode($this->job_id->CurrentValue);
+        }
+        $this->job_id->EditValue = $this->job_id->CurrentValue;
+        $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -2656,7 +2703,6 @@ class Picking extends DbTable
                     $doc->exportCaption($this->picker);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->remarks);
-                    $doc->exportCaption($this->close_totes);
                 } else {
                     $doc->exportCaption($this->po_no);
                     $doc->exportCaption($this->to_no);
@@ -2748,7 +2794,6 @@ class Picking extends DbTable
                         $doc->exportField($this->picker);
                         $doc->exportField($this->status);
                         $doc->exportField($this->remarks);
-                        $doc->exportField($this->close_totes);
                     } else {
                         $doc->exportField($this->po_no);
                         $doc->exportField($this->to_no);

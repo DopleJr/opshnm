@@ -37,6 +37,8 @@ class JobControlCopy1 extends DbTable
     public $area;
     public $aisle;
     public $user;
+    public $target_qty;
+    public $picked_qty;
     public $status;
     public $date_created;
     public $date_updated;
@@ -112,7 +114,7 @@ class JobControlCopy1 extends DbTable
             'x_creation_date',
             'creation_date',
             '`creation_date`',
-            CastDateFieldForLike("`creation_date`", 0, "DB"),
+            CastDateFieldForLike("`creation_date`", "yyyy-MM-dd", "DB"),
             133,
             10,
             0,
@@ -126,11 +128,12 @@ class JobControlCopy1 extends DbTable
         );
         $this->creation_date->InputTextType = "text";
         $this->creation_date->Required = true; // Required field
+        $this->creation_date->FormatPattern = "yyyy-MM-dd"; // Format pattern
         $this->creation_date->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->creation_date->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->creation_date->UseFilter = true; // Table header filter
         $this->creation_date->Lookup = new Lookup('creation_date', 'picking_pending', true, 'creation_date', ["creation_date","","",""], [], ["x_store_id[]","x_area","x_aisle[]"], [], [], [], [], '`creation_date` ASC', '', "" . CastDateFieldForLike("`creation_date`", 0, "DB") . "");
-        $this->creation_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->creation_date->DefaultErrorMessage = str_replace("%s", "yyyy-MM-dd", $Language->phrase("IncorrectDate"));
         $this->Fields['creation_date'] = &$this->creation_date;
 
         // store_id
@@ -155,7 +158,7 @@ class JobControlCopy1 extends DbTable
         $this->store_id->InputTextType = "text";
         $this->store_id->SelectMultiple = true; // Multiple select
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id","","",""], ["x_creation_date"], ["x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id` ASC', '', "`store_id`");
+        $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id2","","",""], ["x_creation_date"], ["x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id2`");
         $this->Fields['store_id'] = &$this->store_id;
 
         // area
@@ -234,6 +237,50 @@ class JobControlCopy1 extends DbTable
         $this->user->UseFilter = true; // Table header filter
         $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
         $this->Fields['user'] = &$this->user;
+
+        // target_qty
+        $this->target_qty = new DbField(
+            'job_control_copy1',
+            'job_control_copy1',
+            'x_target_qty',
+            'target_qty',
+            '`target_qty`',
+            '`target_qty`',
+            200,
+            255,
+            -1,
+            false,
+            '`target_qty`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->target_qty->InputTextType = "text";
+        $this->Fields['target_qty'] = &$this->target_qty;
+
+        // picked_qty
+        $this->picked_qty = new DbField(
+            'job_control_copy1',
+            'job_control_copy1',
+            'x_picked_qty',
+            'picked_qty',
+            '`picked_qty`',
+            '`picked_qty`',
+            200,
+            255,
+            -1,
+            false,
+            '`picked_qty`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->picked_qty->InputTextType = "text";
+        $this->Fields['picked_qty'] = &$this->picked_qty;
 
         // status
         $this->status = new DbField(
@@ -748,6 +795,8 @@ class JobControlCopy1 extends DbTable
         $this->area->DbValue = $row['area'];
         $this->aisle->DbValue = $row['aisle'];
         $this->user->DbValue = $row['user'];
+        $this->target_qty->DbValue = $row['target_qty'];
+        $this->picked_qty->DbValue = $row['picked_qty'];
         $this->status->DbValue = $row['status'];
         $this->date_created->DbValue = $row['date_created'];
         $this->date_updated->DbValue = $row['date_updated'];
@@ -1075,6 +1124,8 @@ class JobControlCopy1 extends DbTable
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
+        $this->target_qty->setDbValue($row['target_qty']);
+        $this->picked_qty->setDbValue($row['picked_qty']);
         $this->status->setDbValue($row['status']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -1101,6 +1152,10 @@ class JobControlCopy1 extends DbTable
         // aisle
 
         // user
+
+        // target_qty
+
+        // picked_qty
 
         // status
 
@@ -1268,6 +1323,14 @@ class JobControlCopy1 extends DbTable
         }
         $this->user->ViewCustomAttributes = "";
 
+        // target_qty
+        $this->target_qty->ViewValue = $this->target_qty->CurrentValue;
+        $this->target_qty->ViewCustomAttributes = "";
+
+        // picked_qty
+        $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
+        $this->picked_qty->ViewCustomAttributes = "";
+
         // status
         if (strval($this->status->CurrentValue) != "") {
             $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
@@ -1315,6 +1378,16 @@ class JobControlCopy1 extends DbTable
         $this->user->LinkCustomAttributes = "";
         $this->user->HrefValue = "";
         $this->user->TooltipValue = "";
+
+        // target_qty
+        $this->target_qty->LinkCustomAttributes = "";
+        $this->target_qty->HrefValue = "";
+        $this->target_qty->TooltipValue = "";
+
+        // picked_qty
+        $this->picked_qty->LinkCustomAttributes = "";
+        $this->picked_qty->HrefValue = "";
+        $this->picked_qty->TooltipValue = "";
 
         // status
         $this->status->LinkCustomAttributes = "";
@@ -1490,6 +1563,24 @@ class JobControlCopy1 extends DbTable
         }
         $this->user->PlaceHolder = RemoveHtml($this->user->caption());
 
+        // target_qty
+        $this->target_qty->setupEditAttributes();
+        $this->target_qty->EditCustomAttributes = "";
+        if (!$this->target_qty->Raw) {
+            $this->target_qty->CurrentValue = HtmlDecode($this->target_qty->CurrentValue);
+        }
+        $this->target_qty->EditValue = $this->target_qty->CurrentValue;
+        $this->target_qty->PlaceHolder = RemoveHtml($this->target_qty->caption());
+
+        // picked_qty
+        $this->picked_qty->setupEditAttributes();
+        $this->picked_qty->EditCustomAttributes = "";
+        if (!$this->picked_qty->Raw) {
+            $this->picked_qty->CurrentValue = HtmlDecode($this->picked_qty->CurrentValue);
+        }
+        $this->picked_qty->EditValue = $this->picked_qty->CurrentValue;
+        $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
+
         // status
         $this->status->setupEditAttributes();
         $this->status->EditCustomAttributes = "";
@@ -1538,6 +1629,8 @@ class JobControlCopy1 extends DbTable
                     $doc->exportCaption($this->area);
                     $doc->exportCaption($this->aisle);
                     $doc->exportCaption($this->user);
+                    $doc->exportCaption($this->target_qty);
+                    $doc->exportCaption($this->picked_qty);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
@@ -1548,6 +1641,8 @@ class JobControlCopy1 extends DbTable
                     $doc->exportCaption($this->area);
                     $doc->exportCaption($this->aisle);
                     $doc->exportCaption($this->user);
+                    $doc->exportCaption($this->target_qty);
+                    $doc->exportCaption($this->picked_qty);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
@@ -1586,6 +1681,8 @@ class JobControlCopy1 extends DbTable
                         $doc->exportField($this->area);
                         $doc->exportField($this->aisle);
                         $doc->exportField($this->user);
+                        $doc->exportField($this->target_qty);
+                        $doc->exportField($this->picked_qty);
                         $doc->exportField($this->status);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
@@ -1596,6 +1693,8 @@ class JobControlCopy1 extends DbTable
                         $doc->exportField($this->area);
                         $doc->exportField($this->aisle);
                         $doc->exportField($this->user);
+                        $doc->exportField($this->target_qty);
+                        $doc->exportField($this->picked_qty);
                         $doc->exportField($this->status);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
@@ -1677,17 +1776,30 @@ class JobControlCopy1 extends DbTable
     {
         //Log("Row Inserted");
         $currentDate = CurrentDate();
-        $_creation_date = $rsnew["creation_date"];
-        $_store_id = $rsnew["store_id"];
-        $_area = $rsnew["area"];
-        $_aisle = $rsnew["aisle"];
-        $_id = $rsnew["id"];
-        $_user = $rsnew["user"];
-
-        //$article = "SELECT `aisle2` FROM `picking` WHERE `aisle` =  '$_aisle' ";
-        //$_article1 = ExecuteScalar($article);
-        $result = "UPDATE picking SET `picker` = '$_user' WHERE `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
-        $_result = ExecuteStatement($result);
+            $_creation_date = $rsnew["creation_date"];
+            $_store_id = $rsnew["store_id"];
+            $_area = $rsnew["area"];
+            $_aisle = $rsnew["aisle"];
+            $_target = $rsnew["target_qty"];
+            $_picked = $rsnew["picked_qty"];
+            $_status = 'Done';
+            $_id = $rsnew["id"];
+            $_user = $rsnew["user"];
+            //set JOB ID
+            $result = "UPDATE picking SET `picker` = '$_user',`job_id` = '$_id' WHERE `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
+            $_result = ExecuteStatement($result);
+            //target qty
+                $target_qty = "SELECT sum(target_qty) FROM `picking_pending` WHERE `job_id` = '$_id' ";
+                $_target_qty = ExecuteScalar($target_qty);
+                $_target2 = $_target_qty;
+            //picked
+                $picked_qty = "SELECT sum(target_qty) FROM `picking` WHERE `job_id` = '$_id' AND `status` = '$_status' ";
+                $_picked_qty = ExecuteScalar($picked_qty);
+                $_picked2 = $_picked_qty;
+            $result2 = "UPDATE job_control_copy1 SET `target_qty` = '$_target2' WHERE `id` = '".$rsnew["id"]."'";
+            $_result2 = ExecuteStatement($result2);
+            $result3 = "UPDATE job_control_copy1 SET `picked_qty` = '$_picked2' WHERE `id` = '".$rsnew["id"]."'";
+            $_result3 = ExecuteStatement($result3);
     }
 
     // Row Updating event
@@ -1759,10 +1871,11 @@ class JobControlCopy1 extends DbTable
             $_aisle = $rs["aisle"];
             $_user = $rs["user"];
             $_user = $rs["user"];
+            $_id = $rs["id"];
             $_status = "Pending";
 
             //Delete Job
-            $result_true2 = "UPDATE picking SET `picker` = Null,`box_code` = Null ,`box_type` = Null,`close_totes` = Null WHERE `status` = ('$_status') AND `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
+            $result_true2 = "UPDATE picking SET `picker` = Null,`box_code` = Null ,`box_type` = Null,`close_totes` = Null WHERE `status` = ('$_status') AND `job_id` = '$_id' ";
             ExecuteStatement($result_true2);
             $this->setWarningMessage("Job Deleted");
     }
@@ -1792,6 +1905,34 @@ class JobControlCopy1 extends DbTable
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+         $currentDate = CurrentDate();
+            $_creation_date = $this->creation_date->CurrentValue;
+            $_store_id = $this->store_id->CurrentValue;
+            $_area = $this->area->CurrentValue;
+            $_aisle = $this->aisle->CurrentValue;
+            $_target = $this->target_qty->CurrentValue;
+            $_picked = $this->picked_qty->CurrentValue;
+            $_picked2 = $this->picked_qty->CurrentValue;
+            $_status = "Done";
+            $_id = $this->id->CurrentValue;
+            $_user = $this->user->CurrentValue;
+
+            //target qty
+                $target_qty = "SELECT sum(target_qty) FROM `picking_pending` WHERE `job_id` = '$_id' ";
+                $_target_qty = ExecuteScalar($target_qty);
+                $_target2 = $_target_qty;
+            //picked
+                $picked_qty = "SELECT sum(target_qty) FROM `picking` WHERE `job_id` = '$_id' AND `status` = '$_status' ";
+                $_picked_qty = ExecuteScalar($picked_qty);
+                $_picked2 = $_picked_qty;
+            $result2 = "UPDATE job_control_copy1 SET `target_qty` = '$_target2' WHERE `id` = '$_id'";
+            $_result2 = ExecuteStatement($result2);
+            $result3 = "UPDATE job_control_copy1 SET `picked_qty` = '$_picked2' WHERE `id` = '$_id'";
+            $_result3 = ExecuteStatement($result3);
+            if ($_target == $_picked ) {
+            	$result4 = "UPDATE job_control_copy1 SET `status` = '$_status' WHERE `id` = '$_id'";
+            	$_result4 = ExecuteStatement($result4);
+            }
     }
 
     // User ID Filtering event

@@ -656,6 +656,7 @@ class PickingPendingList extends PickingPending
         $this->store_id2->setVisibility();
         $this->scan_article->Visible = false;
         $this->close_totes->setVisibility();
+        $this->job_id->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -1036,6 +1037,7 @@ class PickingPendingList extends PickingPending
         $filterList = Concat($filterList, $this->store_id2->AdvancedSearch->toJson(), ","); // Field store_id2
         $filterList = Concat($filterList, $this->scan_article->AdvancedSearch->toJson(), ","); // Field scan_article
         $filterList = Concat($filterList, $this->close_totes->AdvancedSearch->toJson(), ","); // Field close_totes
+        $filterList = Concat($filterList, $this->job_id->AdvancedSearch->toJson(), ","); // Field job_id
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1371,6 +1373,14 @@ class PickingPendingList extends PickingPending
         $this->close_totes->AdvancedSearch->SearchValue2 = @$filter["y_close_totes"];
         $this->close_totes->AdvancedSearch->SearchOperator2 = @$filter["w_close_totes"];
         $this->close_totes->AdvancedSearch->save();
+
+        // Field job_id
+        $this->job_id->AdvancedSearch->SearchValue = @$filter["x_job_id"];
+        $this->job_id->AdvancedSearch->SearchOperator = @$filter["z_job_id"];
+        $this->job_id->AdvancedSearch->SearchCondition = @$filter["v_job_id"];
+        $this->job_id->AdvancedSearch->SearchValue2 = @$filter["y_job_id"];
+        $this->job_id->AdvancedSearch->SearchOperator2 = @$filter["w_job_id"];
+        $this->job_id->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1420,6 +1430,7 @@ class PickingPendingList extends PickingPending
         $this->buildSearchSql($where, $this->store_id2, $default, false); // store_id2
         $this->buildSearchSql($where, $this->scan_article, $default, false); // scan_article
         $this->buildSearchSql($where, $this->close_totes, $default, false); // close_totes
+        $this->buildSearchSql($where, $this->job_id, $default, false); // job_id
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1463,6 +1474,7 @@ class PickingPendingList extends PickingPending
             $this->store_id2->AdvancedSearch->save(); // store_id2
             $this->scan_article->AdvancedSearch->save(); // scan_article
             $this->close_totes->AdvancedSearch->save(); // close_totes
+            $this->job_id->AdvancedSearch->save(); // job_id
         }
         return $where;
     }
@@ -1570,6 +1582,7 @@ class PickingPendingList extends PickingPending
         $searchFlds[] = &$this->store_id2;
         $searchFlds[] = &$this->scan_article;
         $searchFlds[] = &$this->close_totes;
+        $searchFlds[] = &$this->job_id;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1706,6 +1719,9 @@ class PickingPendingList extends PickingPending
         if ($this->close_totes->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->job_id->AdvancedSearch->issetSession()) {
+            return true;
+        }
         return false;
     }
 
@@ -1775,6 +1791,7 @@ class PickingPendingList extends PickingPending
         $this->store_id2->AdvancedSearch->unsetSession();
         $this->scan_article->AdvancedSearch->unsetSession();
         $this->close_totes->AdvancedSearch->unsetSession();
+        $this->job_id->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1823,6 +1840,7 @@ class PickingPendingList extends PickingPending
         $this->store_id2->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
         $this->close_totes->AdvancedSearch->load();
+        $this->job_id->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1876,6 +1894,7 @@ class PickingPendingList extends PickingPending
             $this->updateSort($this->aisle2); // aisle2
             $this->updateSort($this->store_id2); // store_id2
             $this->updateSort($this->close_totes); // close_totes
+            $this->updateSort($this->job_id); // job_id
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1937,6 +1956,7 @@ class PickingPendingList extends PickingPending
                 $this->store_id2->setSort("");
                 $this->scan_article->setSort("");
                 $this->close_totes->setSort("");
+                $this->job_id->setSort("");
             }
 
             // Reset start position
@@ -2123,6 +2143,7 @@ class PickingPendingList extends PickingPending
             $option->add("aisle2", $this->createColumnOption("aisle2"));
             $option->add("store_id2", $this->createColumnOption("store_id2"));
             $option->add("close_totes", $this->createColumnOption("close_totes"));
+            $option->add("job_id", $this->createColumnOption("job_id"));
         }
 
         // Set up options default
@@ -2600,6 +2621,14 @@ class PickingPendingList extends PickingPending
                 $this->Command = "search";
             }
         }
+
+        // job_id
+        if ($this->job_id->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->job_id->AdvancedSearch->SearchValue != "" || $this->job_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
         return $hasValue;
     }
 
@@ -2725,6 +2754,7 @@ class PickingPendingList extends PickingPending
         $this->store_id2->setDbValue($row['store_id2']);
         $this->scan_article->setDbValue($row['scan_article']);
         $this->close_totes->setDbValue($row['close_totes']);
+        $this->job_id->setDbValue($row['job_id']);
     }
 
     // Return a row with default values
@@ -2768,6 +2798,7 @@ class PickingPendingList extends PickingPending
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['scan_article'] = $this->scan_article->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
+        $row['job_id'] = $this->job_id->DefaultValue;
         return $row;
     }
 
@@ -2878,6 +2909,8 @@ class PickingPendingList extends PickingPending
         // scan_article
 
         // close_totes
+
+        // job_id
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -3035,6 +3068,10 @@ class PickingPendingList extends PickingPending
             // close_totes
             $this->close_totes->ViewValue = $this->close_totes->CurrentValue;
             $this->close_totes->ViewCustomAttributes = "";
+
+            // job_id
+            $this->job_id->ViewValue = $this->job_id->CurrentValue;
+            $this->job_id->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -3215,6 +3252,11 @@ class PickingPendingList extends PickingPending
             $this->close_totes->LinkCustomAttributes = "";
             $this->close_totes->HrefValue = "";
             $this->close_totes->TooltipValue = "";
+
+            // job_id
+            $this->job_id->LinkCustomAttributes = "";
+            $this->job_id->HrefValue = "";
+            $this->job_id->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
             $this->id->setupEditAttributes();
@@ -3510,6 +3552,15 @@ class PickingPendingList extends PickingPending
             }
             $this->close_totes->EditValue = HtmlEncode($this->close_totes->AdvancedSearch->SearchValue);
             $this->close_totes->PlaceHolder = RemoveHtml($this->close_totes->caption());
+
+            // job_id
+            $this->job_id->setupEditAttributes();
+            $this->job_id->EditCustomAttributes = "";
+            if (!$this->job_id->Raw) {
+                $this->job_id->AdvancedSearch->SearchValue = HtmlDecode($this->job_id->AdvancedSearch->SearchValue);
+            }
+            $this->job_id->EditValue = HtmlEncode($this->job_id->AdvancedSearch->SearchValue);
+            $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
         }
 
         // Call Row Rendered event
@@ -3912,6 +3963,7 @@ class PickingPendingList extends PickingPending
         $this->store_id2->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
         $this->close_totes->AdvancedSearch->load();
+        $this->job_id->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -4307,7 +4359,9 @@ class PickingPendingList extends PickingPending
         $currentuser = CurrentUsername();
       if (Page('picking_pending')->picker->CurrentValue !== $currentuser) {// List page with null record
           	 // assume your ID field is number so no need to URL-encode
-          	echo "<script>alert('Job has complete!!')</script>";
+          	echo
+          	"<script>alert('Job has finished');
+        	</script>";
               //$url = "PickingPendingList";    
           	}
       	else{

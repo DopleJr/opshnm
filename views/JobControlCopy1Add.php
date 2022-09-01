@@ -25,6 +25,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["area", [fields.area.visible && fields.area.required ? ew.Validators.required(fields.area.caption) : null], fields.area.isInvalid],
         ["aisle", [fields.aisle.visible && fields.aisle.required ? ew.Validators.required(fields.aisle.caption) : null], fields.aisle.isInvalid],
         ["user", [fields.user.visible && fields.user.required ? ew.Validators.required(fields.user.caption) : null], fields.user.isInvalid],
+        ["target_qty", [fields.target_qty.visible && fields.target_qty.required ? ew.Validators.required(fields.target_qty.caption) : null], fields.target_qty.isInvalid],
+        ["picked_qty", [fields.picked_qty.visible && fields.picked_qty.required ? ew.Validators.required(fields.picked_qty.caption) : null], fields.picked_qty.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
         ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid]
@@ -274,6 +276,30 @@ loadjs.ready("fjob_control_copy1add", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->target_qty->Visible) { // target_qty ?>
+    <div id="r_target_qty"<?= $Page->target_qty->rowAttributes() ?>>
+        <label id="elh_job_control_copy1_target_qty" for="x_target_qty" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_copy1_target_qty"><?= $Page->target_qty->caption() ?><?= $Page->target_qty->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->target_qty->cellAttributes() ?>>
+<template id="tpx_job_control_copy1_target_qty"><span id="el_job_control_copy1_target_qty">
+<input type="<?= $Page->target_qty->getInputTextType() ?>" name="x_target_qty" id="x_target_qty" data-table="job_control_copy1" data-field="x_target_qty" value="<?= $Page->target_qty->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->target_qty->getPlaceHolder()) ?>"<?= $Page->target_qty->editAttributes() ?> aria-describedby="x_target_qty_help">
+<?= $Page->target_qty->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->target_qty->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+    <div id="r_picked_qty"<?= $Page->picked_qty->rowAttributes() ?>>
+        <label id="elh_job_control_copy1_picked_qty" for="x_picked_qty" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_copy1_picked_qty"><?= $Page->picked_qty->caption() ?><?= $Page->picked_qty->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->picked_qty->cellAttributes() ?>>
+<template id="tpx_job_control_copy1_picked_qty"><span id="el_job_control_copy1_picked_qty">
+<input type="<?= $Page->picked_qty->getInputTextType() ?>" name="x_picked_qty" id="x_picked_qty" data-table="job_control_copy1" data-field="x_picked_qty" value="<?= $Page->picked_qty->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->picked_qty->getPlaceHolder()) ?>"<?= $Page->picked_qty->editAttributes() ?> aria-describedby="x_picked_qty_help">
+<?= $Page->picked_qty->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->picked_qty->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <div id="r_status"<?= $Page->status->rowAttributes() ?>>
         <label id="elh_job_control_copy1_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_copy1_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
@@ -376,6 +402,10 @@ loadjs.ready(["fjob_control_copy1add", "datetimepicker"], function () {
     <div id="r_user" class="mb-3 row">
         <label for="x_user" class="col-sm-2 col-form-label"><?= $Page->user->caption() ?></label>
         <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_copy1_user"></slot></div>
+    </div>
+    <div id="r_qty" class="mb-3 row">
+        <label for="x_qty" class="col-sm-2 col-form-label"><slot class="ew-slot" name="tpcaption_qty"></slot></label>
+        <div class="col-sm-10"><slot class="ew-slot" name="tpx_qty"></slot></div>
     </div>
     <div id="r_status" class="mb-3 row" hidden>
         <label for="x_status" class="col-sm-2 col-form-label"><?= $Page->status->caption() ?></label>

@@ -62,6 +62,12 @@ $Page->showMessage();
 <?php if ($Page->user->Visible) { // user ?>
         <th class="<?= $Page->user->headerCellClass() ?>"><span id="elh_job_control_copy1_user" class="job_control_copy1_user"><?= $Page->user->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->target_qty->Visible) { // target_qty ?>
+        <th class="<?= $Page->target_qty->headerCellClass() ?>"><span id="elh_job_control_copy1_target_qty" class="job_control_copy1_target_qty"><?= $Page->target_qty->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+        <th class="<?= $Page->picked_qty->headerCellClass() ?>"><span id="elh_job_control_copy1_picked_qty" class="job_control_copy1_picked_qty"><?= $Page->picked_qty->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_job_control_copy1_status" class="job_control_copy1_status"><?= $Page->status->caption() ?></span></th>
 <?php } ?>
@@ -137,6 +143,22 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_job_control_copy1_user" class="el_job_control_copy1_user">
 <span<?= $Page->user->viewAttributes() ?>>
 <?= $Page->user->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->target_qty->Visible) { // target_qty ?>
+        <td<?= $Page->target_qty->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_copy1_target_qty" class="el_job_control_copy1_target_qty">
+<span<?= $Page->target_qty->viewAttributes() ?>>
+<?= $Page->target_qty->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+        <td<?= $Page->picked_qty->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_copy1_picked_qty" class="el_job_control_copy1_picked_qty">
+<span<?= $Page->picked_qty->viewAttributes() ?>>
+<?= $Page->picked_qty->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

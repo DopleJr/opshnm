@@ -50,8 +50,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["box_type", [fields.box_type.visible && fields.box_type.required ? ew.Validators.required(fields.box_type.caption) : null], fields.box_type.isInvalid],
         ["picker", [fields.picker.visible && fields.picker.required ? ew.Validators.required(fields.picker.caption) : null], fields.picker.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["remarks", [fields.remarks.visible && fields.remarks.required ? ew.Validators.required(fields.remarks.caption) : null], fields.remarks.isInvalid],
-        ["close_totes", [fields.close_totes.visible && fields.close_totes.required ? ew.Validators.required(fields.close_totes.caption) : null], fields.close_totes.isInvalid]
+        ["remarks", [fields.remarks.visible && fields.remarks.required ? ew.Validators.required(fields.remarks.caption) : null], fields.remarks.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -538,18 +537,6 @@ loadjs.ready(["fpickingedit", "datetimepicker"], function () {
 <input type="<?= $Page->remarks->getInputTextType() ?>" name="x_remarks" id="x_remarks" data-table="picking" data-field="x_remarks" value="<?= $Page->remarks->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->remarks->getPlaceHolder()) ?>"<?= $Page->remarks->editAttributes() ?> aria-describedby="x_remarks_help">
 <?= $Page->remarks->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->remarks->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->close_totes->Visible) { // close_totes ?>
-    <div id="r_close_totes"<?= $Page->close_totes->rowAttributes() ?>>
-        <label id="elh_picking_close_totes" for="x_close_totes" class="<?= $Page->LeftColumnClass ?>"><?= $Page->close_totes->caption() ?><?= $Page->close_totes->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->close_totes->cellAttributes() ?>>
-<span id="el_picking_close_totes">
-<input type="<?= $Page->close_totes->getInputTextType() ?>" name="x_close_totes" id="x_close_totes" data-table="picking" data-field="x_close_totes" value="<?= $Page->close_totes->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->close_totes->getPlaceHolder()) ?>"<?= $Page->close_totes->editAttributes() ?> aria-describedby="x_close_totes_help">
-<?= $Page->close_totes->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->close_totes->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

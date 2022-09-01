@@ -526,7 +526,8 @@ class PickingEdit extends Picking
         $this->area->Visible = false;
         $this->aisle2->Visible = false;
         $this->store_id2->Visible = false;
-        $this->close_totes->setVisibility();
+        $this->close_totes->Visible = false;
+        $this->job_id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -1021,16 +1022,6 @@ class PickingEdit extends Picking
                 $this->remarks->setFormValue($val);
             }
         }
-
-        // Check field name 'close_totes' first before field var 'x_close_totes'
-        $val = $CurrentForm->hasValue("close_totes") ? $CurrentForm->getValue("close_totes") : $CurrentForm->getValue("x_close_totes");
-        if (!$this->close_totes->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->close_totes->Visible = false; // Disable update for API request
-            } else {
-                $this->close_totes->setFormValue($val);
-            }
-        }
     }
 
     // Restore form values
@@ -1072,7 +1063,6 @@ class PickingEdit extends Picking
         $this->picker->CurrentValue = $this->picker->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->remarks->CurrentValue = $this->remarks->FormValue;
-        $this->close_totes->CurrentValue = $this->close_totes->FormValue;
     }
 
     /**
@@ -1158,6 +1148,7 @@ class PickingEdit extends Picking
         $this->aisle2->setDbValue($row['aisle2']);
         $this->store_id2->setDbValue($row['store_id2']);
         $this->close_totes->setDbValue($row['close_totes']);
+        $this->job_id->setDbValue($row['job_id']);
     }
 
     // Return a row with default values
@@ -1200,6 +1191,7 @@ class PickingEdit extends Picking
         $row['aisle2'] = $this->aisle2->DefaultValue;
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
+        $row['job_id'] = $this->job_id->DefaultValue;
         return $row;
     }
 
@@ -1339,6 +1331,9 @@ class PickingEdit extends Picking
         // close_totes
         $this->close_totes->RowCssClass = "row";
 
+        // job_id
+        $this->job_id->RowCssClass = "row";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
@@ -1473,10 +1468,6 @@ class PickingEdit extends Picking
             $this->remarks->ViewValue = $this->remarks->CurrentValue;
             $this->remarks->ViewCustomAttributes = "";
 
-            // close_totes
-            $this->close_totes->ViewValue = $this->close_totes->CurrentValue;
-            $this->close_totes->ViewCustomAttributes = "";
-
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
@@ -1600,10 +1591,6 @@ class PickingEdit extends Picking
             // remarks
             $this->remarks->LinkCustomAttributes = "";
             $this->remarks->HrefValue = "";
-
-            // close_totes
-            $this->close_totes->LinkCustomAttributes = "";
-            $this->close_totes->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -1870,15 +1857,6 @@ class PickingEdit extends Picking
             $this->remarks->EditValue = HtmlEncode($this->remarks->CurrentValue);
             $this->remarks->PlaceHolder = RemoveHtml($this->remarks->caption());
 
-            // close_totes
-            $this->close_totes->setupEditAttributes();
-            $this->close_totes->EditCustomAttributes = "";
-            if (!$this->close_totes->Raw) {
-                $this->close_totes->CurrentValue = HtmlDecode($this->close_totes->CurrentValue);
-            }
-            $this->close_totes->EditValue = HtmlEncode($this->close_totes->CurrentValue);
-            $this->close_totes->PlaceHolder = RemoveHtml($this->close_totes->caption());
-
             // Edit refer script
 
             // id
@@ -2004,10 +1982,6 @@ class PickingEdit extends Picking
             // remarks
             $this->remarks->LinkCustomAttributes = "";
             $this->remarks->HrefValue = "";
-
-            // close_totes
-            $this->close_totes->LinkCustomAttributes = "";
-            $this->close_totes->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2205,11 +2179,6 @@ class PickingEdit extends Picking
                 $this->remarks->addErrorMessage(str_replace("%s", $this->remarks->caption(), $this->remarks->RequiredErrorMessage));
             }
         }
-        if ($this->close_totes->Required) {
-            if (!$this->close_totes->IsDetailKey && EmptyValue($this->close_totes->FormValue)) {
-                $this->close_totes->addErrorMessage(str_replace("%s", $this->close_totes->caption(), $this->close_totes->RequiredErrorMessage));
-            }
-        }
 
         // Return validate result
         $validateForm = $validateForm && !$this->hasInvalidFields();
@@ -2335,9 +2304,6 @@ class PickingEdit extends Picking
 
         // remarks
         $this->remarks->setDbValueDef($rsnew, $this->remarks->CurrentValue, null, $this->remarks->ReadOnly);
-
-        // close_totes
-        $this->close_totes->setDbValueDef($rsnew, $this->close_totes->CurrentValue, null, $this->close_totes->ReadOnly);
 
         // Update current values
         $this->setCurrentValues($rsnew);
