@@ -27,14 +27,6 @@ class JobControl extends DbTable
     public $OffsetColumnClass = "col-sm-10 offset-sm-2";
     public $TableLeftColumnClass = "w-col-2";
 
-    // Audit trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Export
     public $ExportDoc;
 
@@ -658,9 +650,6 @@ class JobControl extends DbTable
             // Get insert id if necessary
             $this->id->setDbValue($conn->lastInsertId());
             $rs['id'] = $this->id->DbValue;
-            if ($this->AuditTrailOnAdd) {
-                $this->writeAuditTrailOnAdd($rs);
-            }
         }
         return $success;
     }
@@ -701,14 +690,6 @@ class JobControl extends DbTable
         // If no field is updated, execute may return 0. Treat as success
         $success = $this->updateSql($rs, $where, $curfilter)->execute();
         $success = ($success > 0) ? $success : true;
-        if ($success && $this->AuditTrailOnEdit && $rsold) {
-            $rsaudit = $rs;
-            $fldname = 'id';
-            if (!array_key_exists($fldname, $rsaudit)) {
-                $rsaudit[$fldname] = $rsold[$fldname];
-            }
-            $this->writeAuditTrailOnEdit($rsold, $rsaudit);
-        }
         return $success;
     }
 
@@ -743,9 +724,6 @@ class JobControl extends DbTable
         $success = true;
         if ($success) {
             $success = $this->deleteSql($rs, $where, $curfilter)->execute();
-        }
-        if ($success && $this->AuditTrailOnDelete) {
-            $this->writeAuditTrailOnDelete($rs);
         }
         return $success;
     }
@@ -1500,140 +1478,6 @@ class JobControl extends DbTable
 
         // No binary fields
         return false;
-    }
-
-    // Write Audit Trail start/end for grid update
-    public function writeAuditTrailDummy($typ)
-    {
-        $table = 'job_control';
-        $usr = CurrentUserID();
-        WriteAuditLog($usr, $typ, $table, "", "", "", "");
-    }
-
-    // Write Audit Trail (add page)
-    public function writeAuditTrailOnAdd(&$rs)
-    {
-        global $Language;
-        if (!$this->AuditTrailOnAdd) {
-            return;
-        }
-        $table = 'job_control';
-
-        // Get key value
-        $key = "";
-        if ($key != "") {
-            $key .= Config("COMPOSITE_KEY_SEPARATOR");
-        }
-        $key .= $rs['id'];
-
-        // Write Audit Trail
-        $usr = CurrentUserID();
-        foreach (array_keys($rs) as $fldname) {
-            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
-                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") {
-                    $newvalue = $Language->phrase("PasswordMask"); // Password Field
-                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_MEMO) {
-                    if (Config("AUDIT_TRAIL_TO_DATABASE")) {
-                        $newvalue = $rs[$fldname];
-                    } else {
-                        $newvalue = "[MEMO]"; // Memo Field
-                    }
-                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_XML) {
-                    $newvalue = "[XML]"; // XML Field
-                } else {
-                    $newvalue = $rs[$fldname];
-                }
-                WriteAuditLog($usr, "A", $table, $fldname, $key, "", $newvalue);
-            }
-        }
-    }
-
-    // Write Audit Trail (edit page)
-    public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
-    {
-        global $Language;
-        if (!$this->AuditTrailOnEdit) {
-            return;
-        }
-        $table = 'job_control';
-
-        // Get key value
-        $key = "";
-        if ($key != "") {
-            $key .= Config("COMPOSITE_KEY_SEPARATOR");
-        }
-        $key .= $rsold['id'];
-
-        // Write Audit Trail
-        $usr = CurrentUserID();
-        foreach (array_keys($rsnew) as $fldname) {
-            if (array_key_exists($fldname, $this->Fields) && array_key_exists($fldname, $rsold) && $this->Fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
-                if ($this->Fields[$fldname]->DataType == DATATYPE_DATE) { // DateTime field
-                    $modified = (FormatDateTime($rsold[$fldname], 0) != FormatDateTime($rsnew[$fldname], 0));
-                } else {
-                    $modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
-                }
-                if ($modified) {
-                    if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
-                        $oldvalue = $Language->phrase("PasswordMask");
-                        $newvalue = $Language->phrase("PasswordMask");
-                    } elseif ($this->Fields[$fldname]->DataType == DATATYPE_MEMO) { // Memo field
-                        if (Config("AUDIT_TRAIL_TO_DATABASE")) {
-                            $oldvalue = $rsold[$fldname];
-                            $newvalue = $rsnew[$fldname];
-                        } else {
-                            $oldvalue = "[MEMO]";
-                            $newvalue = "[MEMO]";
-                        }
-                    } elseif ($this->Fields[$fldname]->DataType == DATATYPE_XML) { // XML field
-                        $oldvalue = "[XML]";
-                        $newvalue = "[XML]";
-                    } else {
-                        $oldvalue = $rsold[$fldname];
-                        $newvalue = $rsnew[$fldname];
-                    }
-                    WriteAuditLog($usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
-                }
-            }
-        }
-    }
-
-    // Write Audit Trail (delete page)
-    public function writeAuditTrailOnDelete(&$rs)
-    {
-        global $Language;
-        if (!$this->AuditTrailOnDelete) {
-            return;
-        }
-        $table = 'job_control';
-
-        // Get key value
-        $key = "";
-        if ($key != "") {
-            $key .= Config("COMPOSITE_KEY_SEPARATOR");
-        }
-        $key .= $rs['id'];
-
-        // Write Audit Trail
-        $curUser = CurrentUserID();
-        foreach (array_keys($rs) as $fldname) {
-            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
-                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") {
-                    $oldvalue = $Language->phrase("PasswordMask"); // Password Field
-                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_MEMO) {
-                    if (Config("AUDIT_TRAIL_TO_DATABASE")) {
-                        $oldvalue = $rs[$fldname];
-                    } else {
-                        $oldvalue = "[MEMO]"; // Memo field
-                    }
-                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_XML) {
-                    $oldvalue = "[XML]"; // XML field
-                } else {
-                    $oldvalue = $rs[$fldname];
-                }
-                WriteAuditLog($curUser, "D", $table, $fldname, $key, $oldvalue, "");
-            }
-        }
     }
 
     // Table level events
