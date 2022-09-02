@@ -191,7 +191,7 @@ $Page->showMessage();
 <?php if (!$Page->creation_date->ReadOnly && !$Page->creation_date->Disabled && !isset($Page->creation_date->EditAttrs["readonly"]) && !isset($Page->creation_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingadd", "datetimepicker"], function () {
-    let format = "<?= "ddMMyyyy" ?>",
+    let format = "<?= "yyyyMMdd" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -243,7 +243,7 @@ loadjs.ready(["fpickingadd", "datetimepicker"], function () {
 <?php if (!$Page->gr_date->ReadOnly && !$Page->gr_date->Disabled && !isset($Page->gr_date->EditAttrs["readonly"]) && !isset($Page->gr_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingadd", "datetimepicker"], function () {
-    let format = "<?= "ddMMyyyy" ?>",
+    let format = "<?= "yyyyMMdd" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -427,7 +427,7 @@ loadjs.ready(["fpickingadd", "datetimepicker"], function () {
 <?php if (!$Page->confirmation_date->ReadOnly && !$Page->confirmation_date->Disabled && !isset($Page->confirmation_date->EditAttrs["readonly"]) && !isset($Page->confirmation_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingadd", "datetimepicker"], function () {
-    let format = "<?= "ddMMyyyy" ?>",
+    let format = "<?= "yyyyMMdd" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()

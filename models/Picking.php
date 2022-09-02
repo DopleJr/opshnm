@@ -265,7 +265,7 @@ class Picking extends DbTable
             '`source_storage_type`',
             200,
             255,
-            -1,
+            2,
             false,
             '`source_storage_type`',
             false,
@@ -275,6 +275,7 @@ class Picking extends DbTable
             'TEXT'
         );
         $this->source_storage_type->InputTextType = "text";
+        $this->source_storage_type->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->source_storage_type->UseFilter = true; // Table header filter
         $this->source_storage_type->Lookup = new Lookup('source_storage_type', 'picking', true, 'source_storage_type', ["source_storage_type","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['source_storage_type'] = &$this->source_storage_type;
@@ -334,7 +335,7 @@ class Picking extends DbTable
             'x_creation_date',
             'creation_date',
             '`creation_date`',
-            CastDateFieldForLike("`creation_date`", "ddMMyyyy", "DB"),
+            CastDateFieldForLike("`creation_date`", "yyyyMMdd", "DB"),
             133,
             10,
             0,
@@ -347,10 +348,10 @@ class Picking extends DbTable
             'TEXT'
         );
         $this->creation_date->InputTextType = "text";
-        $this->creation_date->FormatPattern = "ddMMyyyy"; // Format pattern
+        $this->creation_date->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->creation_date->UseFilter = true; // Table header filter
         $this->creation_date->Lookup = new Lookup('creation_date', 'picking', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
-        $this->creation_date->DefaultErrorMessage = str_replace("%s", "ddMMyyyy", $Language->phrase("IncorrectDate"));
+        $this->creation_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
         $this->Fields['creation_date'] = &$this->creation_date;
 
         // gr_number
@@ -384,7 +385,7 @@ class Picking extends DbTable
             'x_gr_date',
             'gr_date',
             '`gr_date`',
-            CastDateFieldForLike("`gr_date`", "ddMMyyyy", "DB"),
+            CastDateFieldForLike("`gr_date`", "yyyyMMdd", "DB"),
             133,
             10,
             0,
@@ -397,10 +398,10 @@ class Picking extends DbTable
             'TEXT'
         );
         $this->gr_date->InputTextType = "text";
-        $this->gr_date->FormatPattern = "ddMMyyyy"; // Format pattern
+        $this->gr_date->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->gr_date->UseFilter = true; // Table header filter
         $this->gr_date->Lookup = new Lookup('gr_date', 'picking', true, 'gr_date', ["gr_date","","",""], [], [], [], [], [], [], '', '', "");
-        $this->gr_date->DefaultErrorMessage = str_replace("%s", "ddMMyyyy", $Language->phrase("IncorrectDate"));
+        $this->gr_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
         $this->Fields['gr_date'] = &$this->gr_date;
 
         // delivery
@@ -701,10 +702,10 @@ class Picking extends DbTable
             'x_confirmation_date',
             'confirmation_date',
             '`confirmation_date`',
-            CastDateFieldForLike("`confirmation_date`", "ddMMyyyy", "DB"),
+            CastDateFieldForLike("`confirmation_date`", "yyyyMMdd", "DB"),
             133,
             10,
-            2,
+            0,
             false,
             '`confirmation_date`',
             false,
@@ -714,10 +715,10 @@ class Picking extends DbTable
             'TEXT'
         );
         $this->confirmation_date->InputTextType = "text";
-        $this->confirmation_date->FormatPattern = "ddMMyyyy"; // Format pattern
+        $this->confirmation_date->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->confirmation_date->UseFilter = true; // Table header filter
         $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'picking', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
-        $this->confirmation_date->DefaultErrorMessage = str_replace("%s", "ddMMyyyy", $Language->phrase("IncorrectDate"));
+        $this->confirmation_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
         $this->Fields['confirmation_date'] = &$this->confirmation_date;
 
         // confirmation_time
@@ -3019,6 +3020,7 @@ class Picking extends DbTable
         //var_dump($this-><FieldName>);
         if ($this->Export <> "" && $this->status->ViewValue == "Done" ) {
            $this->box_code->ViewValue = "=\"" . $this->box_code->ViewValue . "\"";
+           $this->creation_date->ViewValue = "=\"" . $this->creation_date->ViewValue . "\"";
          }
         if ($this->Export <> "" && $this->status->ViewValue == "Pending" ) {
            $this->box_code->ViewValue = "";
