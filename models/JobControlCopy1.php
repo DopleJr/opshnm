@@ -258,6 +258,8 @@ class JobControlCopy1 extends DbTable
             'TEXT'
         );
         $this->target_qty->InputTextType = "text";
+        $this->target_qty->UseFilter = true; // Table header filter
+        $this->target_qty->Lookup = new Lookup('target_qty', 'job_control_copy1', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['target_qty'] = &$this->target_qty;
 
         // picked_qty
@@ -280,6 +282,8 @@ class JobControlCopy1 extends DbTable
             'TEXT'
         );
         $this->picked_qty->InputTextType = "text";
+        $this->picked_qty->UseFilter = true; // Table header filter
+        $this->picked_qty->Lookup = new Lookup('picked_qty', 'job_control_copy1', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['picked_qty'] = &$this->picked_qty;
 
         // status
@@ -1906,33 +1910,44 @@ class JobControlCopy1 extends DbTable
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
          $currentDate = CurrentDate();
-            $_creation_date = $this->creation_date->CurrentValue;
-            $_store_id = $this->store_id->CurrentValue;
-            $_area = $this->area->CurrentValue;
-            $_aisle = $this->aisle->CurrentValue;
-            $_target = $this->target_qty->CurrentValue;
-            $_picked = $this->picked_qty->CurrentValue;
-            $_picked2 = $this->picked_qty->CurrentValue;
-            $_status = "Done";
-            $_id = $this->id->CurrentValue;
-            $_user = $this->user->CurrentValue;
+                $_creation_date = $this->creation_date->CurrentValue;
+                $_store_id = $this->store_id->CurrentValue;
+                $_area = $this->area->CurrentValue;
+                $_aisle = $this->aisle->CurrentValue;
+                $_target = $this->target_qty->CurrentValue;
+                $_picked = $this->picked_qty->CurrentValue;
+                $_picked2 = $this->picked_qty->CurrentValue;
+                $_status = "Done";
+                $_status2 = "Pending";
+                $_id = $this->id->CurrentValue;
+                $_user = $this->user->CurrentValue;
 
-            //target qty
-                $target_qty = "SELECT sum(target_qty) FROM `picking_pending` WHERE `job_id` = '$_id' ";
-                $_target_qty = ExecuteScalar($target_qty);
-                $_target2 = $_target_qty;
-            //picked
-                $picked_qty = "SELECT sum(target_qty) FROM `picking` WHERE `job_id` = '$_id' AND `status` = '$_status' ";
-                $_picked_qty = ExecuteScalar($picked_qty);
-                $_picked2 = $_picked_qty;
-            $result2 = "UPDATE job_control_copy1 SET `target_qty` = '$_target2' WHERE `id` = '$_id'";
-            $_result2 = ExecuteStatement($result2);
-            $result3 = "UPDATE job_control_copy1 SET `picked_qty` = '$_picked2' WHERE `id` = '$_id'";
-            $_result3 = ExecuteStatement($result3);
-            if ($_target == $_picked ) {
-            	$result4 = "UPDATE job_control_copy1 SET `status` = '$_status' WHERE `id` = '$_id'";
-            	$_result4 = ExecuteStatement($result4);
-            }
+                //target qty
+                    $target_qty = "SELECT sum(target_qty) FROM `picking` WHERE `job_id` = '$_id'  ";
+                    $_target_qty = ExecuteScalar($target_qty);
+                    $_target2 = $_target_qty;
+                //picked
+                    $picked_qty = "SELECT sum(target_qty) FROM `picking` WHERE `job_id` = '$_id' AND `status` = '$_status' ";
+                    $_picked_qty = ExecuteScalar($picked_qty);
+                    $_picked2 = $_picked_qty;
+                $result2 = "UPDATE job_control_copy1 SET `target_qty` = '$_target2' WHERE `id` = '$_id'";
+                $_result2 = ExecuteStatement($result2);
+                $result3 = "UPDATE job_control_copy1 SET `picked_qty` = '$_picked2' WHERE `id` = '$_id'";
+                $_result3 = ExecuteStatement($result3);
+                if ($_target == $_picked ) {
+                	$result4 = "UPDATE job_control_copy1 SET `status` = '$_status' WHERE `id` = '$_id'";
+                	$_result4 = ExecuteStatement($result4);
+                }
+                if ($this->status->ViewValue == "Done"){ 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: green
+                ";}
+                	elseif ($this->status->ViewValue == "Pending") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: grey
+                ";}
     }
 
     // User ID Filtering event

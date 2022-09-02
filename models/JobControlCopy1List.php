@@ -1118,8 +1118,8 @@ class JobControlCopy1List extends JobControlCopy1
         $this->buildSearchSql($where, $this->area, $default, true); // area
         $this->buildSearchSql($where, $this->aisle, $default, true); // aisle
         $this->buildSearchSql($where, $this->user, $default, true); // user
-        $this->buildSearchSql($where, $this->target_qty, $default, false); // target_qty
-        $this->buildSearchSql($where, $this->picked_qty, $default, false); // picked_qty
+        $this->buildSearchSql($where, $this->target_qty, $default, true); // target_qty
+        $this->buildSearchSql($where, $this->picked_qty, $default, true); // picked_qty
         $this->buildSearchSql($where, $this->status, $default, true); // status
         $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
         $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
@@ -1436,12 +1436,6 @@ class JobControlCopy1List extends JobControlCopy1
         $item->Visible = $Security->canView();
         $item->OnLeft = true;
 
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
-        $item->OnLeft = true;
-
         // List actions
         $item = &$this->ListOptions->add("listactions");
         $item->CssClass = "text-nowrap";
@@ -1498,16 +1492,11 @@ class JobControlCopy1List extends JobControlCopy1
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView()) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if ($Security->canAdd()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
+                if (IsMobile()) {
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+                } else {
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"job_control_copy1\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
+                }
             } else {
                 $opt->Body = "";
             }
@@ -2347,22 +2336,20 @@ class JobControlCopy1List extends JobControlCopy1
             }
 
             // target_qty
-            $this->target_qty->setupEditAttributes();
-            $this->target_qty->EditCustomAttributes = "";
-            if (!$this->target_qty->Raw) {
-                $this->target_qty->AdvancedSearch->SearchValue = HtmlDecode($this->target_qty->AdvancedSearch->SearchValue);
+            if ($this->target_qty->UseFilter && !EmptyValue($this->target_qty->AdvancedSearch->SearchValue)) {
+                if (is_array($this->target_qty->AdvancedSearch->SearchValue)) {
+                    $this->target_qty->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->target_qty->AdvancedSearch->SearchValue);
+                }
+                $this->target_qty->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->target_qty->AdvancedSearch->SearchValue);
             }
-            $this->target_qty->EditValue = HtmlEncode($this->target_qty->AdvancedSearch->SearchValue);
-            $this->target_qty->PlaceHolder = RemoveHtml($this->target_qty->caption());
 
             // picked_qty
-            $this->picked_qty->setupEditAttributes();
-            $this->picked_qty->EditCustomAttributes = "";
-            if (!$this->picked_qty->Raw) {
-                $this->picked_qty->AdvancedSearch->SearchValue = HtmlDecode($this->picked_qty->AdvancedSearch->SearchValue);
+            if ($this->picked_qty->UseFilter && !EmptyValue($this->picked_qty->AdvancedSearch->SearchValue)) {
+                if (is_array($this->picked_qty->AdvancedSearch->SearchValue)) {
+                    $this->picked_qty->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->picked_qty->AdvancedSearch->SearchValue);
+                }
+                $this->picked_qty->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->picked_qty->AdvancedSearch->SearchValue);
             }
-            $this->picked_qty->EditValue = HtmlEncode($this->picked_qty->AdvancedSearch->SearchValue);
-            $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
 
             // status
             if ($this->status->UseFilter && !EmptyValue($this->status->AdvancedSearch->SearchValue)) {

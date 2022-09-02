@@ -26,6 +26,8 @@ loadjs.ready(["wrapper", "head"], function () {
     fjob_control_copy1list.lists.area = <?= $Page->area->toClientList($Page) ?>;
     fjob_control_copy1list.lists.aisle = <?= $Page->aisle->toClientList($Page) ?>;
     fjob_control_copy1list.lists.user = <?= $Page->user->toClientList($Page) ?>;
+    fjob_control_copy1list.lists.target_qty = <?= $Page->target_qty->toClientList($Page) ?>;
+    fjob_control_copy1list.lists.picked_qty = <?= $Page->picked_qty->toClientList($Page) ?>;
     fjob_control_copy1list.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fjob_control_copy1list.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
     fjob_control_copy1list.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
@@ -88,6 +90,8 @@ loadjs.ready(["wrapper", "head"], function () {
     fjob_control_copy1srch.lists.area = <?= $Page->area->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.aisle = <?= $Page->aisle->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.user = <?= $Page->user->toClientList($Page) ?>;
+    fjob_control_copy1srch.lists.target_qty = <?= $Page->target_qty->toClientList($Page) ?>;
+    fjob_control_copy1srch.lists.picked_qty = <?= $Page->picked_qty->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
@@ -353,6 +357,80 @@ if (!$Page->user->UseFilter) {
                 ajax: { id: "x_user", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.user.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->target_qty->Visible) { // target_qty ?>
+<?php
+if (!$Page->target_qty->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_target_qty" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->target_qty->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_target_qty"
+            name="x_target_qty[]"
+            class="form-control ew-select<?= $Page->target_qty->isInvalidClass() ?>"
+            data-select2-id="fjob_control_copy1srch_x_target_qty"
+            data-table="job_control_copy1"
+            data-field="x_target_qty"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->target_qty->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->target_qty->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->target_qty->getPlaceHolder()) ?>"
+            <?= $Page->target_qty->editAttributes() ?>>
+            <?= $Page->target_qty->selectOptionListHtml("x_target_qty", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->target_qty->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_control_copy1srch", function() {
+            var options = {
+                name: "x_target_qty",
+                selectId: "fjob_control_copy1srch_x_target_qty",
+                ajax: { id: "x_target_qty", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.target_qty.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+<?php
+if (!$Page->picked_qty->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_picked_qty" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->picked_qty->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_picked_qty"
+            name="x_picked_qty[]"
+            class="form-control ew-select<?= $Page->picked_qty->isInvalidClass() ?>"
+            data-select2-id="fjob_control_copy1srch_x_picked_qty"
+            data-table="job_control_copy1"
+            data-field="x_picked_qty"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->picked_qty->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->picked_qty->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->picked_qty->getPlaceHolder()) ?>"
+            <?= $Page->picked_qty->editAttributes() ?>>
+            <?= $Page->picked_qty->selectOptionListHtml("x_picked_qty", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->picked_qty->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_control_copy1srch", function() {
+            var options = {
+                name: "x_picked_qty",
+                selectId: "fjob_control_copy1srch_x_picked_qty",
+                ajax: { id: "x_picked_qty", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.picked_qty.filterOptions);
             ew.createFilter(options);
         });
         </script>
