@@ -172,7 +172,7 @@ $USER_LEVEL_TABLES = [["audit staging","auditstaging","Audit Staging",true,"{82E
     ["job_control","job_control","Job Control",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}",""],
     ["shortpick_by_area","shortpick_by_area","Shortpick By Area",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","shortpickbyarealist"],
     ["findingshortpick","findingshortpick","Finding Shortpick",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","findingshortpicklist"],
-    ["picking","picking","Picking",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","pickinglist"],
+    ["picking","picking","Data Picking Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","pickinglist"],
     ["job_control_copy1","job_control_copy1","Job Control Picking Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","jobcontrolcopy1list"],
     ["picking_pending","picking_pending","Picking Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","pickingpendinglist"],
     ["report_totes","report_totes","Report Totes",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","reporttoteslist"],

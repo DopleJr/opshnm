@@ -3020,7 +3020,6 @@ class Picking extends DbTable
         //var_dump($this-><FieldName>);
         if ($this->Export <> "" && $this->status->ViewValue == "Done" ) {
            $this->box_code->ViewValue = "=\"" . $this->box_code->ViewValue . "\"";
-           $this->creation_date->ViewValue = "=\"" . $this->creation_date->ViewValue . "\"";
          }
         if ($this->Export <> "" && $this->status->ViewValue == "Pending" ) {
            $this->box_code->ViewValue = "";

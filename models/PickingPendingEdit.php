@@ -2869,24 +2869,24 @@ class PickingPendingEdit extends PickingPending
             $_boxtype = $this->box_type->CurrentValue;
             $_closetotes = $this->close_totes->CurrentValue;
             $hasil = $_picked - $_target;
-            //check last picked
-            //Box last picked
-            	$box = "SELECT `box_code` FROM picking WHERE `picker` = '$_user' AND `box_code` = '$_boxcode' AND `status` = '$_status' ";
-            	$_box = ExecuteScalar($box);
-            //Qty last picked
-            	$qty = "SELECT `picked_qty` FROM picking WHERE `picker` = '$_user' AND `box_code` = '$_boxcode' AND `status` = '$_status' ORDER BY `confirmation_date` AND `confirmation_time` DESC ";
+
+            //check Last Box
+            	$box = "SELECT `box_code` FROM picking WHERE `picker` = '$_user' AND `box_code` = '$_boxcode' AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1 ";
+            //Qty last Picked
+            	$qty = "SELECT `picked_qty` FROM picking WHERE `box_code` = '$_box' AND `picker` = '$_user' AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1  ";
             	$_qty = ExecuteScalar($qty);
-            //Qty last picked
-            	$fullqty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode' AND `picker` = '$_user' AND `status` = '$_status' ";
+            //Qty Full Box
+            	$fullqty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_box' AND `picker` = '$_user' AND `status` = '$_status' ";
             	$_fullqty = ExecuteScalar($fullqty);
             	if ($_closetotes == 1 ){
             	$_qty = ExecuteScalar($qty);
-            	$msg = ("Confirmed Qty : ");
+            	$msg = ("Confirmed Qty : ".$_qty);
             	}
             	if ($_closetotes == 2 ){
-            	$_qty = ExecuteScalar($qty);
+            	$_fullqty = ExecuteScalar($fullqty);
             	$_box = ExecuteScalar($box);
-            	$msg = ("BOX CODE : ");
+            	$msg = ("BOX CODE : ".$_box);
+            	$msg = ("Total Qty : ".$_fullqty);
         }
         } elseif ($type == 'failure') {
             //$msg = "your failure message";

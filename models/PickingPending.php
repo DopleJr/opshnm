@@ -3082,32 +3082,36 @@ class PickingPending extends DbTable
         $_result3 = ExecuteStatement($sql3);
         $boxupdate3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `to_no` LIMIT 1 ";
         $result3 = ExecuteStatement($boxupdate3);
-        $this->setSuccessMessage("Confirmed");
-        Log("No Close Totes 1");
+        //$this->setSuccessMessage("Confirmed");
+        //Log("No Close Totes 1");
+        //return true;
         }
         if ($hasil !== 0 && $_closetotes == 2 ){
         	$sql4 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
         	$result4 = ExecuteStatement($sql4);
         	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
         	$_qty = ExecuteScalar($qty);
-          $this -> setSuccessMessage("BOX CODE : ".$_boxcode. "Qty : ".$_qty);
-        Log("Close Totes 1");
+        	//$this -> setSuccessMessage("BOX CODE : ".$_boxcode. "Qty : ".$_qty);
+        	//Log("Close Totes 1");
+        	//return true;
         	}
         if($hasil == 0 && $_closetotes == 1 ){    
         $sql6 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
         $_result6 = ExecuteStatement($sql6);
         $boxupdate6 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `to_no` LIMIT 1 ";
         $result6 = ExecuteStatement($boxupdate6);
-        $this->setSuccessMessage("Confirmed");
-        Log("No Close Totes 2");
+        //$this->setSuccessMessage("Confirmed");
+        //Log("No Close Totes 2");
+        //return true;
         }
         if ($hasil == 0 && $_closetotes == 2 ){
         	$sql7 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
         	$result7 = ExecuteStatement($sql7);
         	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
         	$_qty = ExecuteScalar($qty);
-        	$this->setSuccessMessage("BOX CODE : ".$_boxcode. "Qty : " .$_qty);
-        	Log("Close Totes 2");
+        	//$this->setSuccessMessage("BOX CODE : ".$_boxcode. "Qty : " .$_qty);
+        	//Log("Close Totes 2");
+        	//return true;
         	}
     }
 

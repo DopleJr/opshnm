@@ -2395,7 +2395,7 @@
       </field>
     </table>
     <table id="picking">
-      <phrase id="tblcaption" value="Picking" />
+      <phrase id="tblcaption" value="Data Picking Online" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
