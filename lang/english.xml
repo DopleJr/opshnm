@@ -962,12 +962,6 @@
   <project>
     <phrase id="bodytitle" value="OPS HNM" />
     <phrase id="footertext" value="Copyright Gofur" />
-    <menu id="423">
-      <phrase id="menutext" value="Input Oss Manual" />
-    </menu>
-    <menu id="370">
-      <phrase id="menutext" value="Data OSS Manual" />
-    </menu>
     <menu id="222">
       <phrase id="menutext" value="On Staging" />
     </menu>
@@ -988,6 +982,21 @@
     </menu>
     <menu id="65">
       <phrase id="menutext" value="Empty Box" />
+    </menu>
+    <menu id="477">
+      <phrase id="menutext" value="Inbound" />
+    </menu>
+    <menu id="478">
+      <phrase id="menutext" value="Input Oss Manual" />
+    </menu>
+    <menu id="423">
+      <phrase id="menutext" value="Offline" />
+    </menu>
+    <menu id="479">
+      <phrase id="menutext" value="Online" />
+    </menu>
+    <menu id="370">
+      <phrase id="menutext" value="Data OSS Manual" />
     </menu>
     <menu id="367">
       <phrase id="menutext" value="Online" />

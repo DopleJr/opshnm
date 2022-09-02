@@ -129,8 +129,8 @@ element.style {
             <div class="card-body">
 <?php
 $OnStaging = Container("OnStaging");
-$OnStaging->OnStaging->Width = 0;
-$OnStaging->OnStaging->Height = 0;
+$OnStaging->OnStaging->Width = 305;
+$OnStaging->OnStaging->Height = 350;
 $OnStaging->OnStaging->setParameter("clickurl", "onstaging"); // Add click URL
 $OnStaging->OnStaging->DrillDownUrl = ""; // No drill down for dashboard
 $OnStaging->OnStaging->render("ew-chart-top");
@@ -144,8 +144,8 @@ $OnStaging->OnStaging->render("ew-chart-top");
             <div class="card-body">
 <?php
 $Outbound = Container("Outbound");
-$Outbound->DeliveryTypeOrder->Width = 0;
-$Outbound->DeliveryTypeOrder->Height = 0;
+$Outbound->DeliveryTypeOrder->Width = 305;
+$Outbound->DeliveryTypeOrder->Height = 350;
 $Outbound->DeliveryTypeOrder->setParameter("clickurl", "outbound"); // Add click URL
 $Outbound->DeliveryTypeOrder->DrillDownUrl = ""; // No drill down for dashboard
 $Outbound->DeliveryTypeOrder->render("ew-chart-top");
