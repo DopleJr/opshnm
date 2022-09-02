@@ -163,11 +163,6 @@ class Transferbin extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->date_created->AdvancedSearch->SearchValueDefault = date("Y-m-01");
-        $this->date_created->AdvancedSearch->SearchValue2Default = date("Y-m-d");
-        $this->date_created->AdvancedSearch->SearchOperatorDefault = "BETWEEN";
-        $this->date_created->AdvancedSearch->SearchOperatorDefault2 = "";
-        $this->date_created->AdvancedSearch->SearchConditionDefault = "AND";
         $this->Fields['date_created'] = &$this->date_created;
 
         // Add Doctrine Cache

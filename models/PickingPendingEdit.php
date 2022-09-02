@@ -2871,7 +2871,8 @@ class PickingPendingEdit extends PickingPending
             $hasil = $_picked - $_target;
 
             //check Last Box
-            	$box = "SELECT `box_code` FROM picking WHERE `picker` = '$_user' AND `box_code` = '$_boxcode' AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1 ";
+            	$box = "SELECT `box_code` FROM picking WHERE `picker` = '$_user'  AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1 ";
+            	$_box = ExecuteScalar($box);
             //Qty last Picked
             	$qty = "SELECT `picked_qty` FROM picking WHERE `box_code` = '$_box' AND `picker` = '$_user' AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1  ";
             	$_qty = ExecuteScalar($qty);
@@ -2879,15 +2880,12 @@ class PickingPendingEdit extends PickingPending
             	$fullqty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_box' AND `picker` = '$_user' AND `status` = '$_status' ";
             	$_fullqty = ExecuteScalar($fullqty);
             	if ($_closetotes == 1 ){
-            	$_qty = ExecuteScalar($qty);
             	$msg = ("Confirmed Qty : ".$_qty);
             	}
             	if ($_closetotes == 2 ){
-            	$_fullqty = ExecuteScalar($fullqty);
-            	$_box = ExecuteScalar($box);
             	$msg = ("BOX CODE : ".$_box);
             	$msg = ("Total Qty : ".$_fullqty);
-        }
+            	}
         } elseif ($type == 'failure') {
             //$msg = "your failure message";
         } elseif ($type == 'warning') {

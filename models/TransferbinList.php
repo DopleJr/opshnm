@@ -1051,8 +1051,7 @@ class TransferbinList extends Transferbin
     // Load advanced search default values
     protected function loadAdvancedSearchDefault()
     {
-                $this->date_created->AdvancedSearch->loadDefault();
-        return true;
+        return false;
     }
 
     // Clear all basic search parameters
@@ -2125,7 +2124,7 @@ class TransferbinList extends Transferbin
 
         // Show all button
         $item = &$this->SearchOptions->add("showall");
-        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ResetSearch") . "\" data-caption=\"" . $Language->phrase("ResetSearch") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ResetSearchBtn") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
         $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search

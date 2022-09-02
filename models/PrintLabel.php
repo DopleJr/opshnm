@@ -220,7 +220,7 @@ class PrintLabel extends DbTable
             false,
             false,
             'FORMATTED TEXT',
-            'TEXTAREA'
+            'TEXT'
         );
         $this->_barcode->InputTextType = "text";
         $this->_barcode->IsCustom = true; // Custom field
@@ -1161,6 +1161,9 @@ class PrintLabel extends DbTable
         // barcode
         $this->_barcode->setupEditAttributes();
         $this->_barcode->EditCustomAttributes = "";
+        if (!$this->_barcode->Raw) {
+            $this->_barcode->CurrentValue = HtmlDecode($this->_barcode->CurrentValue);
+        }
         $this->_barcode->EditValue = $this->_barcode->CurrentValue;
         $this->_barcode->PlaceHolder = RemoveHtml($this->_barcode->caption());
 

@@ -219,6 +219,22 @@ class BoxResult extends DbTable
         }
     }
 
+    // Single column sort
+    public function updateSort(&$fld)
+    {
+        if ($this->CurrentOrder == $fld->Name) {
+            $sortField = $fld->Expression;
+            $lastSort = $fld->getSort();
+            if (in_array($this->CurrentOrderType, ["ASC", "DESC", "NO"])) {
+                $curSort = $this->CurrentOrderType;
+            } else {
+                $curSort = $lastSort;
+            }
+            $orderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
+            $this->setSessionOrderBy($orderBy); // Save to Session
+        }
+    }
+
     // Update field sort
     public function updateFieldSort()
     {
@@ -792,6 +808,10 @@ class BoxResult extends DbTable
         global $Security, $Language;
         $sortUrl = "";
         $attrs = "";
+        if ($fld->Sortable) {
+            $sortUrl = $this->sortUrl($fld);
+            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="1"';
+        }
         $html = '<div class="ew-table-header-caption"' . $attrs . '>' . $fld->caption() . '</div>';
         if ($sortUrl) {
             $html .= '<div class="ew-table-header-sort">' . $fld->getSortIcon() . '</div>';
@@ -811,7 +831,17 @@ class BoxResult extends DbTable
     // Sort URL
     public function sortUrl($fld)
     {
-        return "";
+        if (
+            $this->CurrentAction || $this->isExport() ||
+            in_array($fld->Type, [128, 204, 205])
+        ) { // Unsortable data type
+                return "";
+        } elseif ($fld->Sortable) {
+            $urlParm = $this->getUrlParm("order=" . urlencode($fld->Name) . "&amp;ordertype=" . $fld->getNextSort());
+            return $this->addMasterUrl(CurrentPageName() . "?" . $urlParm);
+        } else {
+            return "";
+        }
     }
 
     // Get record keys from Post/Get/Session

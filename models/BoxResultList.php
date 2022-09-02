@@ -1211,6 +1211,11 @@ class BoxResultList extends BoxResult
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->confirmation_date); // confirmation_date
+            $this->updateSort($this->box_code); // box_code
+            $this->updateSort($this->store_id); // store_id
+            $this->updateSort($this->picker); // picker
+            $this->updateSort($this->total); // total
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1235,6 +1240,11 @@ class BoxResultList extends BoxResult
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
+                $this->confirmation_date->setSort("");
+                $this->box_code->setSort("");
+                $this->store_id->setSort("");
+                $this->picker->setSort("");
+                $this->total->setSort("");
             }
 
             // Reset start position

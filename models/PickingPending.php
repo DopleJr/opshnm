@@ -3091,7 +3091,7 @@ class PickingPending extends DbTable
         	$result4 = ExecuteStatement($sql4);
         	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
         	$_qty = ExecuteScalar($qty);
-        	//$this -> setSuccessMessage("BOX CODE : ".$_boxcode. "Qty : ".$_qty);
+        	//$this -> setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : ".$_qty);
         	//Log("Close Totes 1");
         	//return true;
         	}
@@ -3109,7 +3109,7 @@ class PickingPending extends DbTable
         	$result7 = ExecuteStatement($sql7);
         	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
         	$_qty = ExecuteScalar($qty);
-        	//$this->setSuccessMessage("BOX CODE : ".$_boxcode. "Qty : " .$_qty);
+        	//$this->setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : " .$_qty);
         	//Log("Close Totes 2");
         	//return true;
         	}

@@ -4377,7 +4377,6 @@ class PickingPendingList extends PickingPending
           	echo
           	"<script>alert('Job has finished');
         	</script>";
-              //$url = "PickingPendingList";    
           	}
       	else{
           $url = "pickingpendingedit?start=1";// List page has record

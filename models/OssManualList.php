@@ -1273,22 +1273,25 @@ class OssManualList extends OssManual
             }
         }
 
+        // Check for Ctrl pressed
+        $ctrl = Get("ctrl") !== null;
+
         // Check for "order" parameter
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
-            $this->updateSort($this->date); // date
-            $this->updateSort($this->shipment); // shipment
-            $this->updateSort($this->pallet_no); // pallet_no
-            $this->updateSort($this->sscc); // sscc
-            $this->updateSort($this->idw); // idw
-            $this->updateSort($this->order_no); // order_no
-            $this->updateSort($this->item_in_ctn); // item_in_ctn
-            $this->updateSort($this->no_of_ctn); // no_of_ctn
-            $this->updateSort($this->ctn_no); // ctn_no
-            $this->updateSort($this->checker); // checker
-            $this->updateSort($this->shift); // shift
+            $this->updateSort($this->id, $ctrl); // id
+            $this->updateSort($this->date, $ctrl); // date
+            $this->updateSort($this->shipment, $ctrl); // shipment
+            $this->updateSort($this->pallet_no, $ctrl); // pallet_no
+            $this->updateSort($this->sscc, $ctrl); // sscc
+            $this->updateSort($this->idw, $ctrl); // idw
+            $this->updateSort($this->order_no, $ctrl); // order_no
+            $this->updateSort($this->item_in_ctn, $ctrl); // item_in_ctn
+            $this->updateSort($this->no_of_ctn, $ctrl); // no_of_ctn
+            $this->updateSort($this->ctn_no, $ctrl); // ctn_no
+            $this->updateSort($this->checker, $ctrl); // checker
+            $this->updateSort($this->shift, $ctrl); // shift
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1354,12 +1357,6 @@ class OssManualList extends OssManual
         $item = &$this->ListOptions->add("edit");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canEdit();
-        $item->OnLeft = true;
-
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
         $item->OnLeft = true;
 
         // List actions
@@ -1428,15 +1425,6 @@ class OssManualList extends OssManual
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
             if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if ($Security->canAdd()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -2640,7 +2628,7 @@ class OssManualList extends OssManual
         // Export to CSV
         $item = &$this->ExportOptions->add("csv");
         $item->Body = $this->getExportTag("csv");
-        $item->Visible = false;
+        $item->Visible = true;
 
         // Export to PDF
         $item = &$this->ExportOptions->add("pdf");

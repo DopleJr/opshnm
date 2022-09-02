@@ -78,6 +78,7 @@ class OssManual extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UseColumnVisibility = true;
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
@@ -407,8 +408,8 @@ class OssManual extends DbTable
         }
     }
 
-    // Single column sort
-    public function updateSort(&$fld)
+    // Multiple column sort
+    public function updateSort(&$fld, $ctrl)
     {
         if ($this->CurrentOrder == $fld->Name) {
             $sortField = $fld->Expression;
@@ -418,8 +419,29 @@ class OssManual extends DbTable
             } else {
                 $curSort = $lastSort;
             }
-            $orderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
-            $this->setSessionOrderBy($orderBy); // Save to Session
+            $lastOrderBy = in_array($lastSort, ["ASC", "DESC"]) ? $sortField . " " . $lastSort : "";
+            $curOrderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
+            if ($ctrl) {
+                $orderBy = $this->getSessionOrderBy();
+                $arOrderBy = !empty($orderBy) ? explode(", ", $orderBy) : [];
+                if ($lastOrderBy != "" && in_array($lastOrderBy, $arOrderBy)) {
+                    foreach ($arOrderBy as $key => $val) {
+                        if ($val == $lastOrderBy) {
+                            if ($curOrderBy == "") {
+                                unset($arOrderBy[$key]);
+                            } else {
+                                $arOrderBy[$key] = $curOrderBy;
+                            }
+                        }
+                    }
+                } elseif ($curOrderBy != "") {
+                    $arOrderBy[] = $curOrderBy;
+                }
+                $orderBy = implode(", ", $arOrderBy);
+                $this->setSessionOrderBy($orderBy); // Save to Session
+            } else {
+                $this->setSessionOrderBy($curOrderBy); // Save to Session
+            }
         }
     }
 
@@ -1041,7 +1063,7 @@ class OssManual extends DbTable
         $attrs = "";
         if ($fld->Sortable) {
             $sortUrl = $this->sortUrl($fld);
-            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="1"';
+            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="2"';
         }
         $html = '<div class="ew-table-header-caption"' . $attrs . '>' . $fld->caption() . '</div>';
         if ($sortUrl) {
