@@ -1863,53 +1863,56 @@ class PickingPendingList extends PickingPending
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->source_storage_bin->Expression . " ASC"; // Set up default sort
+            $defaultSort = $this->job_id->Expression . " ASC" . ", " . $this->source_storage_bin->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
         }
 
+        // Check for Ctrl pressed
+        $ctrl = Get("ctrl") !== null;
+
         // Check for "order" parameter
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
-            $this->updateSort($this->po_no); // po_no
-            $this->updateSort($this->to_no); // to_no
-            $this->updateSort($this->to_order_item); // to_order_item
-            $this->updateSort($this->to_priority); // to_priority
-            $this->updateSort($this->to_priority_code); // to_priority_code
-            $this->updateSort($this->source_storage_type); // source_storage_type
-            $this->updateSort($this->source_storage_bin); // source_storage_bin
-            $this->updateSort($this->carton_number); // carton_number
-            $this->updateSort($this->creation_date); // creation_date
-            $this->updateSort($this->gr_number); // gr_number
-            $this->updateSort($this->gr_date); // gr_date
-            $this->updateSort($this->delivery); // delivery
-            $this->updateSort($this->store_id); // store_id
-            $this->updateSort($this->store_name); // store_name
-            $this->updateSort($this->article); // article
-            $this->updateSort($this->size_code); // size_code
-            $this->updateSort($this->size_desc); // size_desc
-            $this->updateSort($this->color_code); // color_code
-            $this->updateSort($this->color_desc); // color_desc
-            $this->updateSort($this->concept); // concept
-            $this->updateSort($this->target_qty); // target_qty
-            $this->updateSort($this->picked_qty); // picked_qty
-            $this->updateSort($this->variance_qty); // variance_qty
-            $this->updateSort($this->confirmation_date); // confirmation_date
-            $this->updateSort($this->confirmation_time); // confirmation_time
-            $this->updateSort($this->box_code); // box_code
-            $this->updateSort($this->box_type); // box_type
-            $this->updateSort($this->picker); // picker
-            $this->updateSort($this->status); // status
-            $this->updateSort($this->remarks); // remarks
-            $this->updateSort($this->aisle); // aisle
-            $this->updateSort($this->area); // area
-            $this->updateSort($this->aisle2); // aisle2
-            $this->updateSort($this->store_id2); // store_id2
-            $this->updateSort($this->close_totes); // close_totes
-            $this->updateSort($this->job_id); // job_id
+            $this->updateSort($this->id, $ctrl); // id
+            $this->updateSort($this->po_no, $ctrl); // po_no
+            $this->updateSort($this->to_no, $ctrl); // to_no
+            $this->updateSort($this->to_order_item, $ctrl); // to_order_item
+            $this->updateSort($this->to_priority, $ctrl); // to_priority
+            $this->updateSort($this->to_priority_code, $ctrl); // to_priority_code
+            $this->updateSort($this->source_storage_type, $ctrl); // source_storage_type
+            $this->updateSort($this->source_storage_bin, $ctrl); // source_storage_bin
+            $this->updateSort($this->carton_number, $ctrl); // carton_number
+            $this->updateSort($this->creation_date, $ctrl); // creation_date
+            $this->updateSort($this->gr_number, $ctrl); // gr_number
+            $this->updateSort($this->gr_date, $ctrl); // gr_date
+            $this->updateSort($this->delivery, $ctrl); // delivery
+            $this->updateSort($this->store_id, $ctrl); // store_id
+            $this->updateSort($this->store_name, $ctrl); // store_name
+            $this->updateSort($this->article, $ctrl); // article
+            $this->updateSort($this->size_code, $ctrl); // size_code
+            $this->updateSort($this->size_desc, $ctrl); // size_desc
+            $this->updateSort($this->color_code, $ctrl); // color_code
+            $this->updateSort($this->color_desc, $ctrl); // color_desc
+            $this->updateSort($this->concept, $ctrl); // concept
+            $this->updateSort($this->target_qty, $ctrl); // target_qty
+            $this->updateSort($this->picked_qty, $ctrl); // picked_qty
+            $this->updateSort($this->variance_qty, $ctrl); // variance_qty
+            $this->updateSort($this->confirmation_date, $ctrl); // confirmation_date
+            $this->updateSort($this->confirmation_time, $ctrl); // confirmation_time
+            $this->updateSort($this->box_code, $ctrl); // box_code
+            $this->updateSort($this->box_type, $ctrl); // box_type
+            $this->updateSort($this->picker, $ctrl); // picker
+            $this->updateSort($this->status, $ctrl); // status
+            $this->updateSort($this->remarks, $ctrl); // remarks
+            $this->updateSort($this->aisle, $ctrl); // aisle
+            $this->updateSort($this->area, $ctrl); // area
+            $this->updateSort($this->aisle2, $ctrl); // aisle2
+            $this->updateSort($this->store_id2, $ctrl); // store_id2
+            $this->updateSort($this->close_totes, $ctrl); // close_totes
+            $this->updateSort($this->job_id, $ctrl); // job_id
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -4377,6 +4380,7 @@ class PickingPendingList extends PickingPending
           	echo
           	"<script>alert('Job has finished');
         	</script>";
+        	$url = "boxresultlist";
           	}
       	else{
           $url = "pickingpendingedit?start=1";// List page has record

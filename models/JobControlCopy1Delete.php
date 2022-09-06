@@ -647,26 +647,36 @@ class JobControlCopy1Delete extends JobControlCopy1
         // Common render codes for all row types
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // creation_date
+        $this->creation_date->CellCssStyle = "white-space: nowrap;";
 
         // store_id
 
         // area
+        $this->area->CellCssStyle = "white-space: nowrap;";
 
         // aisle
+        $this->aisle->CellCssStyle = "white-space: nowrap;";
 
         // user
+        $this->user->CellCssStyle = "white-space: nowrap;";
 
         // target_qty
+        $this->target_qty->CellCssStyle = "white-space: nowrap;";
 
         // picked_qty
+        $this->picked_qty->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
 
         // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {

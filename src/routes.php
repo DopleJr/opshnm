@@ -554,6 +554,17 @@ return function (App $app) {
         }
     );
 
+    // oss_manual_online
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualonlinelist[/{id}]', OssManualOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('ossmanualonlinelist-oss_manual_online-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualonlineadd[/{id}]', OssManualOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('ossmanualonlineadd-oss_manual_online-add'); // add
+    $app->group(
+        '/oss_manual_online',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', OssManualOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('oss_manual_online/list-oss_manual_online-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', OssManualOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('oss_manual_online/add-oss_manual_online-add-2'); // add
+        }
+    );
+
     // error
     $app->map(["GET","POST","OPTIONS"], '/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

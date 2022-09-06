@@ -613,37 +613,37 @@ $Page->renderListOptions();
 $Page->ListOptions->render("header", "left");
 ?>
 <?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_job_control_copy1_id" class="job_control_copy1_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_id" class="job_control_copy1_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
 <?php } ?>
 <?php if ($Page->creation_date->Visible) { // creation_date ?>
-        <th data-name="creation_date" class="<?= $Page->creation_date->headerCellClass() ?>"><div id="elh_job_control_copy1_creation_date" class="job_control_copy1_creation_date"><?= $Page->renderFieldHeader($Page->creation_date) ?></div></th>
+        <th data-name="creation_date" class="<?= $Page->creation_date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_creation_date" class="job_control_copy1_creation_date"><?= $Page->renderFieldHeader($Page->creation_date) ?></div></th>
 <?php } ?>
 <?php if ($Page->store_id->Visible) { // store_id ?>
         <th data-name="store_id" class="<?= $Page->store_id->headerCellClass() ?>"><div id="elh_job_control_copy1_store_id" class="job_control_copy1_store_id"><?= $Page->renderFieldHeader($Page->store_id) ?></div></th>
 <?php } ?>
 <?php if ($Page->area->Visible) { // area ?>
-        <th data-name="area" class="<?= $Page->area->headerCellClass() ?>"><div id="elh_job_control_copy1_area" class="job_control_copy1_area"><?= $Page->renderFieldHeader($Page->area) ?></div></th>
+        <th data-name="area" class="<?= $Page->area->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_area" class="job_control_copy1_area"><?= $Page->renderFieldHeader($Page->area) ?></div></th>
 <?php } ?>
 <?php if ($Page->aisle->Visible) { // aisle ?>
-        <th data-name="aisle" class="<?= $Page->aisle->headerCellClass() ?>"><div id="elh_job_control_copy1_aisle" class="job_control_copy1_aisle"><?= $Page->renderFieldHeader($Page->aisle) ?></div></th>
+        <th data-name="aisle" class="<?= $Page->aisle->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_aisle" class="job_control_copy1_aisle"><?= $Page->renderFieldHeader($Page->aisle) ?></div></th>
 <?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
-        <th data-name="user" class="<?= $Page->user->headerCellClass() ?>"><div id="elh_job_control_copy1_user" class="job_control_copy1_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
+        <th data-name="user" class="<?= $Page->user->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_user" class="job_control_copy1_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
 <?php } ?>
 <?php if ($Page->target_qty->Visible) { // target_qty ?>
-        <th data-name="target_qty" class="<?= $Page->target_qty->headerCellClass() ?>"><div id="elh_job_control_copy1_target_qty" class="job_control_copy1_target_qty"><?= $Page->renderFieldHeader($Page->target_qty) ?></div></th>
+        <th data-name="target_qty" class="<?= $Page->target_qty->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_target_qty" class="job_control_copy1_target_qty"><?= $Page->renderFieldHeader($Page->target_qty) ?></div></th>
 <?php } ?>
 <?php if ($Page->picked_qty->Visible) { // picked_qty ?>
-        <th data-name="picked_qty" class="<?= $Page->picked_qty->headerCellClass() ?>"><div id="elh_job_control_copy1_picked_qty" class="job_control_copy1_picked_qty"><?= $Page->renderFieldHeader($Page->picked_qty) ?></div></th>
+        <th data-name="picked_qty" class="<?= $Page->picked_qty->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_picked_qty" class="job_control_copy1_picked_qty"><?= $Page->renderFieldHeader($Page->picked_qty) ?></div></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
-        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_job_control_copy1_status" class="job_control_copy1_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_status" class="job_control_copy1_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
-        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>"><div id="elh_job_control_copy1_date_created" class="job_control_copy1_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
+        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_date_created" class="job_control_copy1_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
-        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>"><div id="elh_job_control_copy1_date_updated" class="job_control_copy1_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
+        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_date_updated" class="job_control_copy1_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)

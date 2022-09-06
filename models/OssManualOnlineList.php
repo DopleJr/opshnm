@@ -10,7 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 /**
  * Page class
  */
-class JobControlCopy1List extends JobControlCopy1
+class OssManualOnlineList extends OssManualOnline
 {
     use MessagesTrait;
 
@@ -21,10 +21,10 @@ class JobControlCopy1List extends JobControlCopy1
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'job_control_copy1';
+    public $TableName = 'oss_manual_online';
 
     // Page object name
-    public $PageObjName = "JobControlCopy1List";
+    public $PageObjName = "OssManualOnlineList";
 
     // View file path
     public $View = null;
@@ -36,7 +36,7 @@ class JobControlCopy1List extends JobControlCopy1
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fjob_control_copy1list";
+    public $FormName = "foss_manual_onlinelist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -57,14 +57,6 @@ class JobControlCopy1List extends JobControlCopy1
     public $GridEditUrl;
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
-
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
 
     // Page headings
     public $Heading = "";
@@ -178,25 +170,25 @@ class JobControlCopy1List extends JobControlCopy1
         // Parent constuctor
         parent::__construct();
 
-        // Table object (job_control_copy1)
-        if (!isset($GLOBALS["job_control_copy1"]) || get_class($GLOBALS["job_control_copy1"]) == PROJECT_NAMESPACE . "job_control_copy1") {
-            $GLOBALS["job_control_copy1"] = &$this;
+        // Table object (oss_manual_online)
+        if (!isset($GLOBALS["oss_manual_online"]) || get_class($GLOBALS["oss_manual_online"]) == PROJECT_NAMESPACE . "oss_manual_online") {
+            $GLOBALS["oss_manual_online"] = &$this;
         }
 
         // Page URL
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "jobcontrolcopy1add";
+        $this->AddUrl = "ossmanualonlineadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "jobcontrolcopy1delete";
-        $this->MultiUpdateUrl = "jobcontrolcopy1update";
+        $this->MultiDeleteUrl = "ossmanualonlinedelete";
+        $this->MultiUpdateUrl = "ossmanualonlineupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job_control_copy1');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'oss_manual_online');
         }
 
         // Start timer
@@ -325,7 +317,7 @@ class JobControlCopy1List extends JobControlCopy1
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $tbl = Container("job_control_copy1");
+                $tbl = Container("oss_manual_online");
                 $doc = new $class($tbl);
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
@@ -462,9 +454,6 @@ class JobControlCopy1List extends JobControlCopy1
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
             $this->id->Visible = false;
         }
-        if ($this->isAddOrEdit()) {
-            $this->date_updated->Visible = false;
-        }
     }
 
     // Lookup data
@@ -542,12 +531,12 @@ class JobControlCopy1List extends JobControlCopy1
     public $ListActions; // List actions
     public $SelectedCount = 0;
     public $SelectedIndex = 0;
-    public $DisplayRecords = 50;
+    public $DisplayRecords = 20;
     public $StartRecord;
     public $StopRecord;
     public $TotalRecords = 0;
     public $RecordRange = 10;
-    public $PageSizes = "50,100"; // Page sizes (comma separated)
+    public $PageSizes = "10,20,50,100"; // Page sizes (comma separated)
     public $DefaultSearchWhere = ""; // Default search WHERE clause
     public $SearchWhere = ""; // Search WHERE clause
     public $SearchPanelClass = "ew-search-panel collapse show"; // Search Panel class
@@ -628,16 +617,17 @@ class JobControlCopy1List extends JobControlCopy1
         // Setup export options
         $this->setupExportOptions();
         $this->id->setVisibility();
-        $this->creation_date->setVisibility();
-        $this->store_id->setVisibility();
-        $this->area->setVisibility();
-        $this->aisle->setVisibility();
-        $this->user->setVisibility();
-        $this->target_qty->setVisibility();
-        $this->picked_qty->setVisibility();
-        $this->status->setVisibility();
-        $this->date_created->setVisibility();
-        $this->date_updated->setVisibility();
+        $this->date->setVisibility();
+        $this->order_no->setVisibility();
+        $this->shipment->setVisibility();
+        $this->pallet_no->setVisibility();
+        $this->sscc->setVisibility();
+        $this->idw->setVisibility();
+        $this->item_in_ctn->setVisibility();
+        $this->no_of_ctn->setVisibility();
+        $this->ctn_no->setVisibility();
+        $this->checker->setVisibility();
+        $this->shift->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -662,12 +652,7 @@ class JobControlCopy1List extends JobControlCopy1
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->creation_date);
-        $this->setupLookupOptions($this->store_id);
-        $this->setupLookupOptions($this->area);
-        $this->setupLookupOptions($this->aisle);
-        $this->setupLookupOptions($this->user);
-        $this->setupLookupOptions($this->status);
+        $this->setupLookupOptions($this->shift);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -764,7 +749,7 @@ class JobControlCopy1List extends JobControlCopy1
         if ($this->Command != "json" && $this->getRecordsPerPage() != "") {
             $this->DisplayRecords = $this->getRecordsPerPage(); // Restore from Session
         } else {
-            $this->DisplayRecords = 50; // Load default
+            $this->DisplayRecords = 20; // Load default
             $this->setRecordsPerPage($this->DisplayRecords); // Save default to Session
         }
 
@@ -854,13 +839,6 @@ class JobControlCopy1List extends JobControlCopy1
                     $this->setWarningMessage($Language->phrase("NoRecord"));
                 }
             }
-
-            // Audit trail on search
-            if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
-                $searchParm = ServerVar("QUERY_STRING");
-                $searchSql = $this->getSessionWhere();
-                $this->writeAuditTrailOnSearch($searchParm, $searchSql);
-            }
         }
 
         // Set up list action columns
@@ -928,7 +906,7 @@ class JobControlCopy1List extends JobControlCopy1
                 if (SameText($wrk, "all")) { // Display all records
                     $this->DisplayRecords = -1;
                 } else {
-                    $this->DisplayRecords = 50; // Non-numeric, load default
+                    $this->DisplayRecords = 20; // Non-numeric, load default
                 }
             }
             $this->setRecordsPerPage($this->DisplayRecords); // Save to Session
@@ -977,17 +955,7 @@ class JobControlCopy1List extends JobControlCopy1
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->creation_date->AdvancedSearch->toJson(), ","); // Field creation_date
-        $filterList = Concat($filterList, $this->store_id->AdvancedSearch->toJson(), ","); // Field store_id
-        $filterList = Concat($filterList, $this->area->AdvancedSearch->toJson(), ","); // Field area
-        $filterList = Concat($filterList, $this->aisle->AdvancedSearch->toJson(), ","); // Field aisle
-        $filterList = Concat($filterList, $this->user->AdvancedSearch->toJson(), ","); // Field user
-        $filterList = Concat($filterList, $this->target_qty->AdvancedSearch->toJson(), ","); // Field target_qty
-        $filterList = Concat($filterList, $this->picked_qty->AdvancedSearch->toJson(), ","); // Field picked_qty
-        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
-        $filterList = Concat($filterList, $this->date_created->AdvancedSearch->toJson(), ","); // Field date_created
-        $filterList = Concat($filterList, $this->date_updated->AdvancedSearch->toJson(), ","); // Field date_updated
+        $filterList = Concat($filterList, $this->date->AdvancedSearch->toJson(), ","); // Field date
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1009,7 +977,7 @@ class JobControlCopy1List extends JobControlCopy1
         global $UserProfile;
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fjob_control_copy1srch", $filters);
+            $UserProfile->setSearchFilters(CurrentUserName(), "foss_manual_onlinesrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -1028,93 +996,13 @@ class JobControlCopy1List extends JobControlCopy1
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
-
-        // Field creation_date
-        $this->creation_date->AdvancedSearch->SearchValue = @$filter["x_creation_date"];
-        $this->creation_date->AdvancedSearch->SearchOperator = @$filter["z_creation_date"];
-        $this->creation_date->AdvancedSearch->SearchCondition = @$filter["v_creation_date"];
-        $this->creation_date->AdvancedSearch->SearchValue2 = @$filter["y_creation_date"];
-        $this->creation_date->AdvancedSearch->SearchOperator2 = @$filter["w_creation_date"];
-        $this->creation_date->AdvancedSearch->save();
-
-        // Field store_id
-        $this->store_id->AdvancedSearch->SearchValue = @$filter["x_store_id"];
-        $this->store_id->AdvancedSearch->SearchOperator = @$filter["z_store_id"];
-        $this->store_id->AdvancedSearch->SearchCondition = @$filter["v_store_id"];
-        $this->store_id->AdvancedSearch->SearchValue2 = @$filter["y_store_id"];
-        $this->store_id->AdvancedSearch->SearchOperator2 = @$filter["w_store_id"];
-        $this->store_id->AdvancedSearch->save();
-
-        // Field area
-        $this->area->AdvancedSearch->SearchValue = @$filter["x_area"];
-        $this->area->AdvancedSearch->SearchOperator = @$filter["z_area"];
-        $this->area->AdvancedSearch->SearchCondition = @$filter["v_area"];
-        $this->area->AdvancedSearch->SearchValue2 = @$filter["y_area"];
-        $this->area->AdvancedSearch->SearchOperator2 = @$filter["w_area"];
-        $this->area->AdvancedSearch->save();
-
-        // Field aisle
-        $this->aisle->AdvancedSearch->SearchValue = @$filter["x_aisle"];
-        $this->aisle->AdvancedSearch->SearchOperator = @$filter["z_aisle"];
-        $this->aisle->AdvancedSearch->SearchCondition = @$filter["v_aisle"];
-        $this->aisle->AdvancedSearch->SearchValue2 = @$filter["y_aisle"];
-        $this->aisle->AdvancedSearch->SearchOperator2 = @$filter["w_aisle"];
-        $this->aisle->AdvancedSearch->save();
-
-        // Field user
-        $this->user->AdvancedSearch->SearchValue = @$filter["x_user"];
-        $this->user->AdvancedSearch->SearchOperator = @$filter["z_user"];
-        $this->user->AdvancedSearch->SearchCondition = @$filter["v_user"];
-        $this->user->AdvancedSearch->SearchValue2 = @$filter["y_user"];
-        $this->user->AdvancedSearch->SearchOperator2 = @$filter["w_user"];
-        $this->user->AdvancedSearch->save();
-
-        // Field target_qty
-        $this->target_qty->AdvancedSearch->SearchValue = @$filter["x_target_qty"];
-        $this->target_qty->AdvancedSearch->SearchOperator = @$filter["z_target_qty"];
-        $this->target_qty->AdvancedSearch->SearchCondition = @$filter["v_target_qty"];
-        $this->target_qty->AdvancedSearch->SearchValue2 = @$filter["y_target_qty"];
-        $this->target_qty->AdvancedSearch->SearchOperator2 = @$filter["w_target_qty"];
-        $this->target_qty->AdvancedSearch->save();
-
-        // Field picked_qty
-        $this->picked_qty->AdvancedSearch->SearchValue = @$filter["x_picked_qty"];
-        $this->picked_qty->AdvancedSearch->SearchOperator = @$filter["z_picked_qty"];
-        $this->picked_qty->AdvancedSearch->SearchCondition = @$filter["v_picked_qty"];
-        $this->picked_qty->AdvancedSearch->SearchValue2 = @$filter["y_picked_qty"];
-        $this->picked_qty->AdvancedSearch->SearchOperator2 = @$filter["w_picked_qty"];
-        $this->picked_qty->AdvancedSearch->save();
-
-        // Field status
-        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
-        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
-        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
-        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
-        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
-        $this->status->AdvancedSearch->save();
-
-        // Field date_created
-        $this->date_created->AdvancedSearch->SearchValue = @$filter["x_date_created"];
-        $this->date_created->AdvancedSearch->SearchOperator = @$filter["z_date_created"];
-        $this->date_created->AdvancedSearch->SearchCondition = @$filter["v_date_created"];
-        $this->date_created->AdvancedSearch->SearchValue2 = @$filter["y_date_created"];
-        $this->date_created->AdvancedSearch->SearchOperator2 = @$filter["w_date_created"];
-        $this->date_created->AdvancedSearch->save();
-
-        // Field date_updated
-        $this->date_updated->AdvancedSearch->SearchValue = @$filter["x_date_updated"];
-        $this->date_updated->AdvancedSearch->SearchOperator = @$filter["z_date_updated"];
-        $this->date_updated->AdvancedSearch->SearchCondition = @$filter["v_date_updated"];
-        $this->date_updated->AdvancedSearch->SearchValue2 = @$filter["y_date_updated"];
-        $this->date_updated->AdvancedSearch->SearchOperator2 = @$filter["w_date_updated"];
-        $this->date_updated->AdvancedSearch->save();
+        // Field date
+        $this->date->AdvancedSearch->SearchValue = @$filter["x_date"];
+        $this->date->AdvancedSearch->SearchOperator = @$filter["z_date"];
+        $this->date->AdvancedSearch->SearchCondition = @$filter["v_date"];
+        $this->date->AdvancedSearch->SearchValue2 = @$filter["y_date"];
+        $this->date->AdvancedSearch->SearchOperator2 = @$filter["w_date"];
+        $this->date->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1127,34 +1015,24 @@ class JobControlCopy1List extends JobControlCopy1
         if (!$Security->canSearch()) {
             return "";
         }
-        $this->buildSearchSql($where, $this->id, $default, true); // id
-        $this->buildSearchSql($where, $this->creation_date, $default, true); // creation_date
-        $this->buildSearchSql($where, $this->store_id, $default, true); // store_id
-        $this->buildSearchSql($where, $this->area, $default, true); // area
-        $this->buildSearchSql($where, $this->aisle, $default, true); // aisle
-        $this->buildSearchSql($where, $this->user, $default, true); // user
-        $this->buildSearchSql($where, $this->target_qty, $default, true); // target_qty
-        $this->buildSearchSql($where, $this->picked_qty, $default, true); // picked_qty
-        $this->buildSearchSql($where, $this->status, $default, true); // status
-        $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
-        $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
+        $this->buildSearchSql($where, $this->date, $default, true); // date
+        $this->buildSearchSql($where, $this->order_no, $default, true); // order_no
+        $this->buildSearchSql($where, $this->shipment, $default, true); // shipment
+        $this->buildSearchSql($where, $this->pallet_no, $default, true); // pallet_no
+        $this->buildSearchSql($where, $this->sscc, $default, true); // sscc
+        $this->buildSearchSql($where, $this->idw, $default, true); // idw
+        $this->buildSearchSql($where, $this->item_in_ctn, $default, true); // item_in_ctn
+        $this->buildSearchSql($where, $this->no_of_ctn, $default, true); // no_of_ctn
+        $this->buildSearchSql($where, $this->ctn_no, $default, true); // ctn_no
+        $this->buildSearchSql($where, $this->checker, $default, true); // checker
+        $this->buildSearchSql($where, $this->shift, $default, true); // shift
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
             $this->Command = "search";
         }
         if (!$default && $this->Command == "search") {
-            $this->id->AdvancedSearch->save(); // id
-            $this->creation_date->AdvancedSearch->save(); // creation_date
-            $this->store_id->AdvancedSearch->save(); // store_id
-            $this->area->AdvancedSearch->save(); // area
-            $this->aisle->AdvancedSearch->save(); // aisle
-            $this->user->AdvancedSearch->save(); // user
-            $this->target_qty->AdvancedSearch->save(); // target_qty
-            $this->picked_qty->AdvancedSearch->save(); // picked_qty
-            $this->status->AdvancedSearch->save(); // status
-            $this->date_created->AdvancedSearch->save(); // date_created
-            $this->date_updated->AdvancedSearch->save(); // date_updated
+            $this->date->AdvancedSearch->save(); // date
         }
         return $where;
     }
@@ -1233,13 +1111,13 @@ class JobControlCopy1List extends JobControlCopy1
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->store_id;
-        $searchFlds[] = &$this->area;
-        $searchFlds[] = &$this->aisle;
-        $searchFlds[] = &$this->user;
-        $searchFlds[] = &$this->target_qty;
-        $searchFlds[] = &$this->picked_qty;
-        $searchFlds[] = &$this->status;
+        $searchFlds[] = &$this->shipment;
+        $searchFlds[] = &$this->sscc;
+        $searchFlds[] = &$this->idw;
+        $searchFlds[] = &$this->item_in_ctn;
+        $searchFlds[] = &$this->no_of_ctn;
+        $searchFlds[] = &$this->checker;
+        $searchFlds[] = &$this->shift;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1265,37 +1143,37 @@ class JobControlCopy1List extends JobControlCopy1
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
-        if ($this->id->AdvancedSearch->issetSession()) {
+        if ($this->date->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->creation_date->AdvancedSearch->issetSession()) {
+        if ($this->order_no->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->store_id->AdvancedSearch->issetSession()) {
+        if ($this->shipment->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->area->AdvancedSearch->issetSession()) {
+        if ($this->pallet_no->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->aisle->AdvancedSearch->issetSession()) {
+        if ($this->sscc->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->user->AdvancedSearch->issetSession()) {
+        if ($this->idw->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->target_qty->AdvancedSearch->issetSession()) {
+        if ($this->item_in_ctn->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->picked_qty->AdvancedSearch->issetSession()) {
+        if ($this->no_of_ctn->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->status->AdvancedSearch->issetSession()) {
+        if ($this->ctn_no->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->date_created->AdvancedSearch->issetSession()) {
+        if ($this->checker->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->date_updated->AdvancedSearch->issetSession()) {
+        if ($this->shift->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1330,17 +1208,17 @@ class JobControlCopy1List extends JobControlCopy1
     // Clear all advanced search parameters
     protected function resetAdvancedSearchParms()
     {
-        $this->id->AdvancedSearch->unsetSession();
-        $this->creation_date->AdvancedSearch->unsetSession();
-        $this->store_id->AdvancedSearch->unsetSession();
-        $this->area->AdvancedSearch->unsetSession();
-        $this->aisle->AdvancedSearch->unsetSession();
-        $this->user->AdvancedSearch->unsetSession();
-        $this->target_qty->AdvancedSearch->unsetSession();
-        $this->picked_qty->AdvancedSearch->unsetSession();
-        $this->status->AdvancedSearch->unsetSession();
-        $this->date_created->AdvancedSearch->unsetSession();
-        $this->date_updated->AdvancedSearch->unsetSession();
+        $this->date->AdvancedSearch->unsetSession();
+        $this->order_no->AdvancedSearch->unsetSession();
+        $this->shipment->AdvancedSearch->unsetSession();
+        $this->pallet_no->AdvancedSearch->unsetSession();
+        $this->sscc->AdvancedSearch->unsetSession();
+        $this->idw->AdvancedSearch->unsetSession();
+        $this->item_in_ctn->AdvancedSearch->unsetSession();
+        $this->no_of_ctn->AdvancedSearch->unsetSession();
+        $this->ctn_no->AdvancedSearch->unsetSession();
+        $this->checker->AdvancedSearch->unsetSession();
+        $this->shift->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1352,17 +1230,17 @@ class JobControlCopy1List extends JobControlCopy1
         $this->BasicSearch->load();
 
         // Restore advanced search values
-        $this->id->AdvancedSearch->load();
-        $this->creation_date->AdvancedSearch->load();
-        $this->store_id->AdvancedSearch->load();
-        $this->area->AdvancedSearch->load();
-        $this->aisle->AdvancedSearch->load();
-        $this->user->AdvancedSearch->load();
-        $this->target_qty->AdvancedSearch->load();
-        $this->picked_qty->AdvancedSearch->load();
-        $this->status->AdvancedSearch->load();
-        $this->date_created->AdvancedSearch->load();
-        $this->date_updated->AdvancedSearch->load();
+        $this->date->AdvancedSearch->load();
+        $this->order_no->AdvancedSearch->load();
+        $this->shipment->AdvancedSearch->load();
+        $this->pallet_no->AdvancedSearch->load();
+        $this->sscc->AdvancedSearch->load();
+        $this->idw->AdvancedSearch->load();
+        $this->item_in_ctn->AdvancedSearch->load();
+        $this->no_of_ctn->AdvancedSearch->load();
+        $this->ctn_no->AdvancedSearch->load();
+        $this->checker->AdvancedSearch->load();
+        $this->shift->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1370,30 +1248,28 @@ class JobControlCopy1List extends JobControlCopy1
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->status->Expression . " DESC" . ", " . $this->id->Expression . " DESC"; // Set up default sort
+            $defaultSort = $this->date->Expression . " DESC" . ", " . $this->order_no->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
         }
 
-        // Check for Ctrl pressed
-        $ctrl = Get("ctrl") !== null;
-
         // Check for "order" parameter
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id, $ctrl); // id
-            $this->updateSort($this->creation_date, $ctrl); // creation_date
-            $this->updateSort($this->store_id, $ctrl); // store_id
-            $this->updateSort($this->area, $ctrl); // area
-            $this->updateSort($this->aisle, $ctrl); // aisle
-            $this->updateSort($this->user, $ctrl); // user
-            $this->updateSort($this->target_qty, $ctrl); // target_qty
-            $this->updateSort($this->picked_qty, $ctrl); // picked_qty
-            $this->updateSort($this->status, $ctrl); // status
-            $this->updateSort($this->date_created, $ctrl); // date_created
-            $this->updateSort($this->date_updated, $ctrl); // date_updated
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->date); // date
+            $this->updateSort($this->order_no); // order_no
+            $this->updateSort($this->shipment); // shipment
+            $this->updateSort($this->pallet_no); // pallet_no
+            $this->updateSort($this->sscc); // sscc
+            $this->updateSort($this->idw); // idw
+            $this->updateSort($this->item_in_ctn); // item_in_ctn
+            $this->updateSort($this->no_of_ctn); // no_of_ctn
+            $this->updateSort($this->ctn_no); // ctn_no
+            $this->updateSort($this->checker); // checker
+            $this->updateSort($this->shift); // shift
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1419,16 +1295,17 @@ class JobControlCopy1List extends JobControlCopy1
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->creation_date->setSort("");
-                $this->store_id->setSort("");
-                $this->area->setSort("");
-                $this->aisle->setSort("");
-                $this->user->setSort("");
-                $this->target_qty->setSort("");
-                $this->picked_qty->setSort("");
-                $this->status->setSort("");
-                $this->date_created->setSort("");
-                $this->date_updated->setSort("");
+                $this->date->setSort("");
+                $this->order_no->setSort("");
+                $this->shipment->setSort("");
+                $this->pallet_no->setSort("");
+                $this->sscc->setSort("");
+                $this->idw->setSort("");
+                $this->item_in_ctn->setSort("");
+                $this->no_of_ctn->setSort("");
+                $this->ctn_no->setSort("");
+                $this->checker->setSort("");
+                $this->shift->setSort("");
             }
 
             // Reset start position
@@ -1448,12 +1325,6 @@ class JobControlCopy1List extends JobControlCopy1
         $item->OnLeft = true;
         $item->Visible = false;
 
-        // "view"
-        $item = &$this->ListOptions->add("view");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
-        $item->OnLeft = true;
-
         // List actions
         $item = &$this->ListOptions->add("listactions");
         $item->CssClass = "text-nowrap";
@@ -1464,7 +1335,7 @@ class JobControlCopy1List extends JobControlCopy1
 
         // "checkbox"
         $item = &$this->ListOptions->add("checkbox");
-        $item->Visible = $Security->canDelete();
+        $item->Visible = false;
         $item->OnLeft = true;
         $item->Header = "<div class=\"form-check\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"form-check-input\" data-ew-action=\"select-all-keys\"></div>";
         if ($item->OnLeft) {
@@ -1505,19 +1376,7 @@ class JobControlCopy1List extends JobControlCopy1
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl(false);
-        if ($this->CurrentMode == "view") {
-            // "view"
-            $opt = $this->ListOptions["view"];
-            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView()) {
-                if (IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-                } else {
-                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"job_control_copy1\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
-                }
-            } else {
-                $opt->Body = "";
-            }
+        if ($this->CurrentMode == "view") { // Check view mode
         } // End View mode
 
         // Set up list action buttons
@@ -1531,11 +1390,11 @@ class JobControlCopy1List extends JobControlCopy1
                 if ($listaction->Select == ACTION_SINGLE && $allowed) {
                     $caption = $listaction->Caption;
                     $icon = ($listaction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listaction->Icon)) . "\" data-caption=\"" . HtmlTitle($caption) . "\"></i> " : "";
-                    $link = "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"fjob_control_copy1list\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button></li>";
+                    $link = "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"foss_manual_onlinelist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button></li>";
                     if ($link != "") {
                         $links[] = $link;
                         if ($body == "") { // Setup first button
-                            $body = "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"fjob_control_copy1list\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button>";
+                            $body = "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"foss_manual_onlinelist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button>";
                         }
                     }
                 }
@@ -1584,11 +1443,6 @@ class JobControlCopy1List extends JobControlCopy1
         $item->Visible = $this->AddUrl != "" && $Security->canAdd();
         $option = $options["action"];
 
-        // Add multi delete
-        $item = &$option->add("multidelete");
-        $item->Body = "<button type=\"button\" class=\"ew-action ew-multi-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteSelectedLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteSelectedLink")) . "\" form=\"fjob_control_copy1list\" data-ew-action=\"submit\" data-url=\"" . GetUrl($this->MultiDeleteUrl) . "\"data-data='{\"action\":\"show\"}'>" . $Language->phrase("DeleteSelectedLink") . "</button>";
-        $item->Visible = $Security->canDelete();
-
         // Show column list for column visibility
         if ($this->UseColumnVisibility) {
             $option = $this->OtherOptions["column"];
@@ -1596,16 +1450,17 @@ class JobControlCopy1List extends JobControlCopy1
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
             $option->add("id", $this->createColumnOption("id"));
-            $option->add("creation_date", $this->createColumnOption("creation_date"));
-            $option->add("store_id", $this->createColumnOption("store_id"));
-            $option->add("area", $this->createColumnOption("area"));
-            $option->add("aisle", $this->createColumnOption("aisle"));
-            $option->add("user", $this->createColumnOption("user"));
-            $option->add("target_qty", $this->createColumnOption("target_qty"));
-            $option->add("picked_qty", $this->createColumnOption("picked_qty"));
-            $option->add("status", $this->createColumnOption("status"));
-            $option->add("date_created", $this->createColumnOption("date_created"));
-            $option->add("date_updated", $this->createColumnOption("date_updated"));
+            $option->add("date", $this->createColumnOption("date"));
+            $option->add("order_no", $this->createColumnOption("order_no"));
+            $option->add("shipment", $this->createColumnOption("shipment"));
+            $option->add("pallet_no", $this->createColumnOption("pallet_no"));
+            $option->add("sscc", $this->createColumnOption("sscc"));
+            $option->add("idw", $this->createColumnOption("idw"));
+            $option->add("item_in_ctn", $this->createColumnOption("item_in_ctn"));
+            $option->add("no_of_ctn", $this->createColumnOption("no_of_ctn"));
+            $option->add("ctn_no", $this->createColumnOption("ctn_no"));
+            $option->add("checker", $this->createColumnOption("checker"));
+            $option->add("shift", $this->createColumnOption("shift"));
         }
 
         // Set up options default
@@ -1625,10 +1480,10 @@ class JobControlCopy1List extends JobControlCopy1
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fjob_control_copy1srch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"foss_manual_onlinesrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fjob_control_copy1srch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"foss_manual_onlinesrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1667,7 +1522,7 @@ class JobControlCopy1List extends JobControlCopy1
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fjob_control_copy1list"' . $listaction->toDataAttrs() . '>' . $icon . '</button>';
+                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="foss_manual_onlinelist"' . $listaction->toDataAttrs() . '>' . $icon . '</button>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1788,102 +1643,90 @@ class JobControlCopy1List extends JobControlCopy1
         // Load search values
         $hasValue = false;
 
-        // id
-        if ($this->id->AdvancedSearch->get()) {
+        // date
+        if ($this->date->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->id->AdvancedSearch->SearchValue != "" || $this->id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->date->AdvancedSearch->SearchValue != "" || $this->date->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // creation_date
-        if ($this->creation_date->AdvancedSearch->get()) {
+        // order_no
+        if ($this->order_no->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->creation_date->AdvancedSearch->SearchValue != "" || $this->creation_date->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->order_no->AdvancedSearch->SearchValue != "" || $this->order_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // store_id
-        if ($this->store_id->AdvancedSearch->get()) {
+        // shipment
+        if ($this->shipment->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->store_id->AdvancedSearch->SearchValue != "" || $this->store_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-        if (is_array($this->store_id->AdvancedSearch->SearchValue)) {
-            $this->store_id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
-        }
-        if (is_array($this->store_id->AdvancedSearch->SearchValue2)) {
-            $this->store_id->AdvancedSearch->SearchValue2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue2);
-        }
-
-        // area
-        if ($this->area->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->area->AdvancedSearch->SearchValue != "" || $this->area->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->shipment->AdvancedSearch->SearchValue != "" || $this->shipment->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // aisle
-        if ($this->aisle->AdvancedSearch->get()) {
+        // pallet_no
+        if ($this->pallet_no->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->aisle->AdvancedSearch->SearchValue != "" || $this->aisle->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-        if (is_array($this->aisle->AdvancedSearch->SearchValue)) {
-            $this->aisle->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->aisle->AdvancedSearch->SearchValue);
-        }
-        if (is_array($this->aisle->AdvancedSearch->SearchValue2)) {
-            $this->aisle->AdvancedSearch->SearchValue2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->aisle->AdvancedSearch->SearchValue2);
-        }
-
-        // user
-        if ($this->user->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->user->AdvancedSearch->SearchValue != "" || $this->user->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->pallet_no->AdvancedSearch->SearchValue != "" || $this->pallet_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // target_qty
-        if ($this->target_qty->AdvancedSearch->get()) {
+        // sscc
+        if ($this->sscc->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->target_qty->AdvancedSearch->SearchValue != "" || $this->target_qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->sscc->AdvancedSearch->SearchValue != "" || $this->sscc->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // picked_qty
-        if ($this->picked_qty->AdvancedSearch->get()) {
+        // idw
+        if ($this->idw->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->picked_qty->AdvancedSearch->SearchValue != "" || $this->picked_qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->idw->AdvancedSearch->SearchValue != "" || $this->idw->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // status
-        if ($this->status->AdvancedSearch->get()) {
+        // item_in_ctn
+        if ($this->item_in_ctn->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->status->AdvancedSearch->SearchValue != "" || $this->status->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->item_in_ctn->AdvancedSearch->SearchValue != "" || $this->item_in_ctn->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // date_created
-        if ($this->date_created->AdvancedSearch->get()) {
+        // no_of_ctn
+        if ($this->no_of_ctn->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->date_created->AdvancedSearch->SearchValue != "" || $this->date_created->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->no_of_ctn->AdvancedSearch->SearchValue != "" || $this->no_of_ctn->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
 
-        // date_updated
-        if ($this->date_updated->AdvancedSearch->get()) {
+        // ctn_no
+        if ($this->ctn_no->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->date_updated->AdvancedSearch->SearchValue != "" || $this->date_updated->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->ctn_no->AdvancedSearch->SearchValue != "" || $this->ctn_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // checker
+        if ($this->checker->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->checker->AdvancedSearch->SearchValue != "" || $this->checker->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // shift
+        if ($this->shift->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->shift->AdvancedSearch->SearchValue != "" || $this->shift->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1976,16 +1819,17 @@ class JobControlCopy1List extends JobControlCopy1
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->creation_date->setDbValue($row['creation_date']);
-        $this->store_id->setDbValue($row['store_id']);
-        $this->area->setDbValue($row['area']);
-        $this->aisle->setDbValue($row['aisle']);
-        $this->user->setDbValue($row['user']);
-        $this->target_qty->setDbValue($row['target_qty']);
-        $this->picked_qty->setDbValue($row['picked_qty']);
-        $this->status->setDbValue($row['status']);
-        $this->date_created->setDbValue($row['date_created']);
-        $this->date_updated->setDbValue($row['date_updated']);
+        $this->date->setDbValue($row['date']);
+        $this->order_no->setDbValue($row['order_no']);
+        $this->shipment->setDbValue($row['shipment']);
+        $this->pallet_no->setDbValue($row['pallet_no']);
+        $this->sscc->setDbValue($row['sscc']);
+        $this->idw->setDbValue($row['idw']);
+        $this->item_in_ctn->setDbValue($row['item_in_ctn']);
+        $this->no_of_ctn->setDbValue($row['no_of_ctn']);
+        $this->ctn_no->setDbValue($row['ctn_no']);
+        $this->checker->setDbValue($row['checker']);
+        $this->shift->setDbValue($row['shift']);
     }
 
     // Return a row with default values
@@ -1993,16 +1837,17 @@ class JobControlCopy1List extends JobControlCopy1
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['creation_date'] = $this->creation_date->DefaultValue;
-        $row['store_id'] = $this->store_id->DefaultValue;
-        $row['area'] = $this->area->DefaultValue;
-        $row['aisle'] = $this->aisle->DefaultValue;
-        $row['user'] = $this->user->DefaultValue;
-        $row['target_qty'] = $this->target_qty->DefaultValue;
-        $row['picked_qty'] = $this->picked_qty->DefaultValue;
-        $row['status'] = $this->status->DefaultValue;
-        $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['date'] = $this->date->DefaultValue;
+        $row['order_no'] = $this->order_no->DefaultValue;
+        $row['shipment'] = $this->shipment->DefaultValue;
+        $row['pallet_no'] = $this->pallet_no->DefaultValue;
+        $row['sscc'] = $this->sscc->DefaultValue;
+        $row['idw'] = $this->idw->DefaultValue;
+        $row['item_in_ctn'] = $this->item_in_ctn->DefaultValue;
+        $row['no_of_ctn'] = $this->no_of_ctn->DefaultValue;
+        $row['ctn_no'] = $this->ctn_no->DefaultValue;
+        $row['checker'] = $this->checker->DefaultValue;
+        $row['shift'] = $this->shift->DefaultValue;
         return $row;
     }
 
@@ -2043,34 +1888,38 @@ class JobControlCopy1List extends JobControlCopy1
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
 
-        // creation_date
-        $this->creation_date->CellCssStyle = "white-space: nowrap;";
+        // date
+        $this->date->CellCssStyle = "white-space: nowrap;";
 
-        // store_id
+        // order_no
+        $this->order_no->CellCssStyle = "white-space: nowrap;";
 
-        // area
-        $this->area->CellCssStyle = "white-space: nowrap;";
+        // shipment
+        $this->shipment->CellCssStyle = "white-space: nowrap;";
 
-        // aisle
-        $this->aisle->CellCssStyle = "white-space: nowrap;";
+        // pallet_no
+        $this->pallet_no->CellCssStyle = "white-space: nowrap;";
 
-        // user
-        $this->user->CellCssStyle = "white-space: nowrap;";
+        // sscc
+        $this->sscc->CellCssStyle = "white-space: nowrap;";
 
-        // target_qty
-        $this->target_qty->CellCssStyle = "white-space: nowrap;";
+        // idw
+        $this->idw->CellCssStyle = "white-space: nowrap;";
 
-        // picked_qty
-        $this->picked_qty->CellCssStyle = "white-space: nowrap;";
+        // item_in_ctn
+        $this->item_in_ctn->CellCssStyle = "white-space: nowrap;";
 
-        // status
-        $this->status->CellCssStyle = "white-space: nowrap;";
+        // no_of_ctn
+        $this->no_of_ctn->CellCssStyle = "white-space: nowrap;";
 
-        // date_created
-        $this->date_created->CellCssStyle = "white-space: nowrap;";
+        // ctn_no
+        $this->ctn_no->CellCssStyle = "white-space: nowrap;";
 
-        // date_updated
-        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+        // checker
+        $this->checker->CellCssStyle = "white-space: nowrap;";
+
+        // shift
+        $this->shift->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -2078,329 +1927,211 @@ class JobControlCopy1List extends JobControlCopy1
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // creation_date
-            $curVal = strval($this->creation_date->CurrentValue);
-            if ($curVal != "") {
-                $this->creation_date->ViewValue = $this->creation_date->lookupCacheOption($curVal);
-                if ($this->creation_date->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`creation_date`" . SearchString("=", $curVal, DATATYPE_DATE, "");
-                    $lookupFilter = function() {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->creation_date->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->creation_date->Lookup->renderViewRow($rswrk[0]);
-                        $this->creation_date->ViewValue = $this->creation_date->displayValue($arwrk);
-                    } else {
-                        $this->creation_date->ViewValue = FormatDateTime($this->creation_date->CurrentValue, $this->creation_date->formatPattern());
-                    }
-                }
+            // date
+            $this->date->ViewValue = $this->date->CurrentValue;
+            $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
+            $this->date->ViewCustomAttributes = "";
+
+            // order_no
+            $this->order_no->ViewValue = $this->order_no->CurrentValue;
+            $this->order_no->ViewCustomAttributes = "";
+
+            // shipment
+            $this->shipment->ViewValue = $this->shipment->CurrentValue;
+            $this->shipment->ViewCustomAttributes = "";
+
+            // pallet_no
+            $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
+            $this->pallet_no->ViewCustomAttributes = "";
+
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
+
+            // idw
+            $this->idw->ViewValue = $this->idw->CurrentValue;
+            $this->idw->ViewCustomAttributes = "";
+
+            // item_in_ctn
+            $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewCustomAttributes = "";
+
+            // no_of_ctn
+            $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewCustomAttributes = "";
+
+            // ctn_no
+            $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewCustomAttributes = "";
+
+            // checker
+            $this->checker->ViewValue = $this->checker->CurrentValue;
+            $this->checker->ViewCustomAttributes = "";
+
+            // shift
+            if (strval($this->shift->CurrentValue) != "") {
+                $this->shift->ViewValue = $this->shift->optionCaption($this->shift->CurrentValue);
             } else {
-                $this->creation_date->ViewValue = null;
+                $this->shift->ViewValue = null;
             }
-            $this->creation_date->ViewCustomAttributes = "";
-
-            // store_id
-            $curVal = strval($this->store_id->CurrentValue);
-            if ($curVal != "") {
-                $this->store_id->ViewValue = $this->store_id->lookupCacheOption($curVal);
-                if ($this->store_id->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`store_id2`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $lookupFilter = function() {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->store_id->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->store_id->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->store_id->Lookup->renderViewRow($row);
-                            $this->store_id->ViewValue->add($this->store_id->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->store_id->ViewValue = $this->store_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->store_id->ViewValue = null;
-            }
-            $this->store_id->ViewCustomAttributes = "";
-
-            // area
-            $curVal = strval($this->area->CurrentValue);
-            if ($curVal != "") {
-                $this->area->ViewValue = $this->area->lookupCacheOption($curVal);
-                if ($this->area->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`area`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $lookupFilter = function() {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->area->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->area->Lookup->renderViewRow($rswrk[0]);
-                        $this->area->ViewValue = $this->area->displayValue($arwrk);
-                    } else {
-                        $this->area->ViewValue = $this->area->CurrentValue;
-                    }
-                }
-            } else {
-                $this->area->ViewValue = null;
-            }
-            $this->area->ViewCustomAttributes = "";
-
-            // aisle
-            $curVal = strval($this->aisle->CurrentValue);
-            if ($curVal != "") {
-                $this->aisle->ViewValue = $this->aisle->lookupCacheOption($curVal);
-                if ($this->aisle->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`aisle2`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $lookupFilter = function() {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->aisle->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->aisle->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->aisle->Lookup->renderViewRow($row);
-                            $this->aisle->ViewValue->add($this->aisle->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->aisle->ViewValue = $this->aisle->CurrentValue;
-                    }
-                }
-            } else {
-                $this->aisle->ViewValue = null;
-            }
-            $this->aisle->ViewCustomAttributes = "";
-
-            // user
-            $curVal = strval($this->user->CurrentValue);
-            if ($curVal != "") {
-                $this->user->ViewValue = $this->user->lookupCacheOption($curVal);
-                if ($this->user->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`username`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->user->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->user->Lookup->renderViewRow($rswrk[0]);
-                        $this->user->ViewValue = $this->user->displayValue($arwrk);
-                    } else {
-                        $this->user->ViewValue = $this->user->CurrentValue;
-                    }
-                }
-            } else {
-                $this->user->ViewValue = null;
-            }
-            $this->user->ViewCustomAttributes = "";
-
-            // target_qty
-            $this->target_qty->ViewValue = $this->target_qty->CurrentValue;
-            $this->target_qty->ViewCustomAttributes = "";
-
-            // picked_qty
-            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
-
-            // date_created
-            $this->date_created->ViewValue = $this->date_created->CurrentValue;
-            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
-            $this->date_created->ViewCustomAttributes = "";
-
-            // date_updated
-            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
-            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
-            $this->date_updated->ViewCustomAttributes = "";
+            $this->shift->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
             $this->id->TooltipValue = "";
 
-            // creation_date
-            $this->creation_date->LinkCustomAttributes = "";
-            $this->creation_date->HrefValue = "";
-            $this->creation_date->TooltipValue = "";
+            // date
+            $this->date->LinkCustomAttributes = "";
+            $this->date->HrefValue = "";
+            $this->date->TooltipValue = "";
 
-            // store_id
-            $this->store_id->LinkCustomAttributes = "";
-            $this->store_id->HrefValue = "";
-            $this->store_id->TooltipValue = "";
+            // order_no
+            $this->order_no->LinkCustomAttributes = "";
+            $this->order_no->HrefValue = "";
+            $this->order_no->TooltipValue = "";
 
-            // area
-            $this->area->LinkCustomAttributes = "";
-            $this->area->HrefValue = "";
-            $this->area->TooltipValue = "";
+            // shipment
+            $this->shipment->LinkCustomAttributes = "";
+            $this->shipment->HrefValue = "";
+            $this->shipment->TooltipValue = "";
 
-            // aisle
-            $this->aisle->LinkCustomAttributes = "";
-            $this->aisle->HrefValue = "";
-            $this->aisle->TooltipValue = "";
+            // pallet_no
+            $this->pallet_no->LinkCustomAttributes = "";
+            $this->pallet_no->HrefValue = "";
+            $this->pallet_no->TooltipValue = "";
 
-            // user
-            $this->user->LinkCustomAttributes = "";
-            $this->user->HrefValue = "";
-            $this->user->TooltipValue = "";
+            // sscc
+            $this->sscc->LinkCustomAttributes = "";
+            $this->sscc->HrefValue = "";
+            $this->sscc->TooltipValue = "";
 
-            // target_qty
-            $this->target_qty->LinkCustomAttributes = "";
-            $this->target_qty->HrefValue = "";
-            $this->target_qty->TooltipValue = "";
+            // idw
+            $this->idw->LinkCustomAttributes = "";
+            $this->idw->HrefValue = "";
+            $this->idw->TooltipValue = "";
 
-            // picked_qty
-            $this->picked_qty->LinkCustomAttributes = "";
-            $this->picked_qty->HrefValue = "";
-            $this->picked_qty->TooltipValue = "";
+            // item_in_ctn
+            $this->item_in_ctn->LinkCustomAttributes = "";
+            $this->item_in_ctn->HrefValue = "";
+            $this->item_in_ctn->TooltipValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
+            // no_of_ctn
+            $this->no_of_ctn->LinkCustomAttributes = "";
+            $this->no_of_ctn->HrefValue = "";
+            $this->no_of_ctn->TooltipValue = "";
 
-            // date_created
-            $this->date_created->LinkCustomAttributes = "";
-            $this->date_created->HrefValue = "";
-            $this->date_created->TooltipValue = "";
+            // ctn_no
+            $this->ctn_no->LinkCustomAttributes = "";
+            $this->ctn_no->HrefValue = "";
+            $this->ctn_no->TooltipValue = "";
 
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
-            $this->date_updated->TooltipValue = "";
+            // checker
+            $this->checker->LinkCustomAttributes = "";
+            $this->checker->HrefValue = "";
+            $this->checker->TooltipValue = "";
+
+            // shift
+            $this->shift->LinkCustomAttributes = "";
+            $this->shift->HrefValue = "";
+            $this->shift->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
-            if ($this->id->UseFilter && !EmptyValue($this->id->AdvancedSearch->SearchValue)) {
-                if (is_array($this->id->AdvancedSearch->SearchValue)) {
-                    $this->id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
+            $this->id->setupEditAttributes();
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->AdvancedSearch->SearchValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
+            // date
+            if ($this->date->UseFilter && !EmptyValue($this->date->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date->AdvancedSearch->SearchValue)) {
+                    $this->date->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date->AdvancedSearch->SearchValue);
                 }
-                $this->id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
+                $this->date->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date->AdvancedSearch->SearchValue);
+            }
+            $this->date->setupEditAttributes();
+            $this->date->EditCustomAttributes = 'disabled';
+            $this->date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date->AdvancedSearch->SearchValue2, $this->date->formatPattern()), $this->date->formatPattern()));
+            $this->date->PlaceHolder = RemoveHtml($this->date->caption());
+
+            // order_no
+            if ($this->order_no->UseFilter && !EmptyValue($this->order_no->AdvancedSearch->SearchValue)) {
+                if (is_array($this->order_no->AdvancedSearch->SearchValue)) {
+                    $this->order_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->order_no->AdvancedSearch->SearchValue);
+                }
+                $this->order_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->order_no->AdvancedSearch->SearchValue);
             }
 
-            // creation_date
-            if ($this->creation_date->UseFilter && !EmptyValue($this->creation_date->AdvancedSearch->SearchValue)) {
-                if (is_array($this->creation_date->AdvancedSearch->SearchValue)) {
-                    $this->creation_date->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->creation_date->AdvancedSearch->SearchValue);
+            // shipment
+            if ($this->shipment->UseFilter && !EmptyValue($this->shipment->AdvancedSearch->SearchValue)) {
+                if (is_array($this->shipment->AdvancedSearch->SearchValue)) {
+                    $this->shipment->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shipment->AdvancedSearch->SearchValue);
                 }
-                $this->creation_date->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->creation_date->AdvancedSearch->SearchValue);
+                $this->shipment->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shipment->AdvancedSearch->SearchValue);
             }
 
-            // store_id
-            if ($this->store_id->UseFilter && !EmptyValue($this->store_id->AdvancedSearch->SearchValue)) {
-                if (is_array($this->store_id->AdvancedSearch->SearchValue)) {
-                    $this->store_id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
+            // pallet_no
+            if ($this->pallet_no->UseFilter && !EmptyValue($this->pallet_no->AdvancedSearch->SearchValue)) {
+                if (is_array($this->pallet_no->AdvancedSearch->SearchValue)) {
+                    $this->pallet_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->pallet_no->AdvancedSearch->SearchValue);
                 }
-                $this->store_id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
+                $this->pallet_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->pallet_no->AdvancedSearch->SearchValue);
             }
 
-            // area
-            if ($this->area->UseFilter && !EmptyValue($this->area->AdvancedSearch->SearchValue)) {
-                if (is_array($this->area->AdvancedSearch->SearchValue)) {
-                    $this->area->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->area->AdvancedSearch->SearchValue);
+            // sscc
+            if ($this->sscc->UseFilter && !EmptyValue($this->sscc->AdvancedSearch->SearchValue)) {
+                if (is_array($this->sscc->AdvancedSearch->SearchValue)) {
+                    $this->sscc->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
                 }
-                $this->area->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->area->AdvancedSearch->SearchValue);
+                $this->sscc->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
             }
 
-            // aisle
-            if ($this->aisle->UseFilter && !EmptyValue($this->aisle->AdvancedSearch->SearchValue)) {
-                if (is_array($this->aisle->AdvancedSearch->SearchValue)) {
-                    $this->aisle->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->aisle->AdvancedSearch->SearchValue);
+            // idw
+            if ($this->idw->UseFilter && !EmptyValue($this->idw->AdvancedSearch->SearchValue)) {
+                if (is_array($this->idw->AdvancedSearch->SearchValue)) {
+                    $this->idw->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->idw->AdvancedSearch->SearchValue);
                 }
-                $this->aisle->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->aisle->AdvancedSearch->SearchValue);
+                $this->idw->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->idw->AdvancedSearch->SearchValue);
             }
 
-            // user
-            if ($this->user->UseFilter && !EmptyValue($this->user->AdvancedSearch->SearchValue)) {
-                if (is_array($this->user->AdvancedSearch->SearchValue)) {
-                    $this->user->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
+            // item_in_ctn
+            if ($this->item_in_ctn->UseFilter && !EmptyValue($this->item_in_ctn->AdvancedSearch->SearchValue)) {
+                if (is_array($this->item_in_ctn->AdvancedSearch->SearchValue)) {
+                    $this->item_in_ctn->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->item_in_ctn->AdvancedSearch->SearchValue);
                 }
-                $this->user->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
+                $this->item_in_ctn->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->item_in_ctn->AdvancedSearch->SearchValue);
             }
 
-            // target_qty
-            if ($this->target_qty->UseFilter && !EmptyValue($this->target_qty->AdvancedSearch->SearchValue)) {
-                if (is_array($this->target_qty->AdvancedSearch->SearchValue)) {
-                    $this->target_qty->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->target_qty->AdvancedSearch->SearchValue);
+            // no_of_ctn
+            if ($this->no_of_ctn->UseFilter && !EmptyValue($this->no_of_ctn->AdvancedSearch->SearchValue)) {
+                if (is_array($this->no_of_ctn->AdvancedSearch->SearchValue)) {
+                    $this->no_of_ctn->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->no_of_ctn->AdvancedSearch->SearchValue);
                 }
-                $this->target_qty->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->target_qty->AdvancedSearch->SearchValue);
+                $this->no_of_ctn->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->no_of_ctn->AdvancedSearch->SearchValue);
             }
 
-            // picked_qty
-            if ($this->picked_qty->UseFilter && !EmptyValue($this->picked_qty->AdvancedSearch->SearchValue)) {
-                if (is_array($this->picked_qty->AdvancedSearch->SearchValue)) {
-                    $this->picked_qty->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->picked_qty->AdvancedSearch->SearchValue);
+            // ctn_no
+            if ($this->ctn_no->UseFilter && !EmptyValue($this->ctn_no->AdvancedSearch->SearchValue)) {
+                if (is_array($this->ctn_no->AdvancedSearch->SearchValue)) {
+                    $this->ctn_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->ctn_no->AdvancedSearch->SearchValue);
                 }
-                $this->picked_qty->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->picked_qty->AdvancedSearch->SearchValue);
+                $this->ctn_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->ctn_no->AdvancedSearch->SearchValue);
             }
 
-            // status
-            if ($this->status->UseFilter && !EmptyValue($this->status->AdvancedSearch->SearchValue)) {
-                if (is_array($this->status->AdvancedSearch->SearchValue)) {
-                    $this->status->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+            // checker
+            if ($this->checker->UseFilter && !EmptyValue($this->checker->AdvancedSearch->SearchValue)) {
+                if (is_array($this->checker->AdvancedSearch->SearchValue)) {
+                    $this->checker->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->checker->AdvancedSearch->SearchValue);
                 }
-                $this->status->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+                $this->checker->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->checker->AdvancedSearch->SearchValue);
             }
 
-            // date_created
-            if ($this->date_created->UseFilter && !EmptyValue($this->date_created->AdvancedSearch->SearchValue)) {
-                if (is_array($this->date_created->AdvancedSearch->SearchValue)) {
-                    $this->date_created->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_created->AdvancedSearch->SearchValue);
+            // shift
+            if ($this->shift->UseFilter && !EmptyValue($this->shift->AdvancedSearch->SearchValue)) {
+                if (is_array($this->shift->AdvancedSearch->SearchValue)) {
+                    $this->shift->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shift->AdvancedSearch->SearchValue);
                 }
-                $this->date_created->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_created->AdvancedSearch->SearchValue);
-            }
-
-            // date_updated
-            if ($this->date_updated->UseFilter && !EmptyValue($this->date_updated->AdvancedSearch->SearchValue)) {
-                if (is_array($this->date_updated->AdvancedSearch->SearchValue)) {
-                    $this->date_updated->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
-                }
-                $this->date_updated->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
+                $this->shift->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shift->AdvancedSearch->SearchValue);
             }
         }
 
@@ -2433,17 +2164,7 @@ class JobControlCopy1List extends JobControlCopy1
     // Load advanced search
     public function loadAdvancedSearch()
     {
-        $this->id->AdvancedSearch->load();
-        $this->creation_date->AdvancedSearch->load();
-        $this->store_id->AdvancedSearch->load();
-        $this->area->AdvancedSearch->load();
-        $this->aisle->AdvancedSearch->load();
-        $this->user->AdvancedSearch->load();
-        $this->target_qty->AdvancedSearch->load();
-        $this->picked_qty->AdvancedSearch->load();
-        $this->status->AdvancedSearch->load();
-        $this->date_created->AdvancedSearch->load();
-        $this->date_updated->AdvancedSearch->load();
+        $this->date->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -2454,19 +2175,19 @@ class JobControlCopy1List extends JobControlCopy1
         $exportUrl = GetUrl($pageUrl . "export=" . $type . ($custom ? "&amp;custom=1" : ""));
         if (SameText($type, "excel")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" form=\"fjob_control_copy1list\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"excel\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToExcel") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" form=\"foss_manual_onlinelist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"excel\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToExcel") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
             }
         } elseif (SameText($type, "word")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" form=\"fjob_control_copy1list\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"word\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToWord") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" form=\"foss_manual_onlinelist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"word\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToWord") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
             }
         } elseif (SameText($type, "pdf")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" form=\"fjob_control_copy1list\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"pdf\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToPdf") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" form=\"foss_manual_onlinelist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"pdf\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToPdf") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\">" . $Language->phrase("ExportToPdf") . "</a>";
             }
@@ -2478,7 +2199,7 @@ class JobControlCopy1List extends JobControlCopy1
             return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-csv\" title=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\">" . $Language->phrase("ExportToCsv") . "</a>";
         } elseif (SameText($type, "email")) {
             $url = $custom ? ' data-url="' . $exportUrl . '"' : '';
-            return '<button type="button" class="btn btn-default ew-export-link ew-email" title="' . $Language->phrase("ExportToEmailText") . '" data-caption="' . $Language->phrase("ExportToEmailText") . '" form="fjob_control_copy1list" data-ew-action="email" data-hdr="' . $Language->phrase("ExportToEmailText") . '" data-sel="false"' . $url . '>' . $Language->phrase("ExportToEmail") . '</button>';
+            return '<button type="button" class="btn btn-default ew-export-link ew-email" title="' . $Language->phrase("ExportToEmailText") . '" data-caption="' . $Language->phrase("ExportToEmailText") . '" form="foss_manual_onlinelist" data-ew-action="email" data-hdr="' . $Language->phrase("ExportToEmailText") . '" data-sel="false"' . $url . '>' . $Language->phrase("ExportToEmail") . '</button>';
         } elseif (SameText($type, "print")) {
             return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-print\" title=\"" . HtmlEncode($Language->phrase("ExportToPrintText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPrintText")) . "\">" . $Language->phrase("PrinterFriendly") . "</a>";
         }
@@ -2553,7 +2274,7 @@ class JobControlCopy1List extends JobControlCopy1
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fjob_control_copy1srch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"foss_manual_onlinesrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button
@@ -2714,33 +2435,7 @@ class JobControlCopy1List extends JobControlCopy1
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_creation_date":
-                    $lookupFilter = function () {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_store_id":
-                    $lookupFilter = function () {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_area":
-                    $lookupFilter = function () {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_aisle":
-                    $lookupFilter = function () {
-                        return "`picker` is Null  ";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_user":
-                    break;
-                case "x_status":
+                case "x_shift":
                     break;
                 default:
                     $lookupFilter = "";
@@ -2811,7 +2506,6 @@ class JobControlCopy1List extends JobControlCopy1
     public function pageLoad()
     {
         //Log("Page Load");
-        $this->aisle->Visible = FALSE;
     }
 
     // Page Unload event

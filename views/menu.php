@@ -26,7 +26,7 @@ $sideMenu->addMenuItem(65, "mi_empty_box", $MenuLanguage->MenuPhrase("65", "Menu
 $sideMenu->addMenuItem(477, "mci_Inbound", $MenuLanguage->MenuPhrase("477", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
 $sideMenu->addMenuItem(478, "mci_Input_Oss_Manual", $MenuLanguage->MenuPhrase("478", "MenuText"), "", 477, "", IsLoggedIn(), false, true, "", "", false, true);
 $sideMenu->addMenuItem(423, "mci_Offline", $MenuLanguage->MenuPhrase("423", "MenuText"), $MenuRelativePath . "ossmanualadd", 478, "", IsLoggedIn(), false, true, "", "", false, true);
-$sideMenu->addMenuItem(479, "mci_Online", $MenuLanguage->MenuPhrase("479", "MenuText"), "", 478, "", IsLoggedIn(), false, true, "", "", false, true);
+$sideMenu->addMenuItem(479, "mci_Online", $MenuLanguage->MenuPhrase("479", "MenuText"), $MenuRelativePath . "ossmanualonlineadd", 478, "", IsLoggedIn(), false, true, "", "", false, true);
 $sideMenu->addMenuItem(370, "mi_oss_manual", $MenuLanguage->MenuPhrase("370", "MenuText"), $MenuRelativePath . "ossmanuallist", 477, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(367, "mci_Online", $MenuLanguage->MenuPhrase("367", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
 $sideMenu->addMenuItem(318, "mi_picking_pending", $MenuLanguage->MenuPhrase("318", "MenuText"), $MenuRelativePath . "pickingpendinglist", 367, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}picking_pending'), false, false, "", "", false, true);

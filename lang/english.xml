@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/3">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/5">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -964,6 +964,9 @@
     <phrase id="footertext" value="Copyright Gofur" />
     <menu id="222">
       <phrase id="menutext" value="On Staging" />
+    </menu>
+    <menu id="480">
+      <phrase id="menutext" value="Oss Manual Online" />
     </menu>
     <menu id="223">
       <phrase id="menutext" value="Outbound" />
@@ -2745,6 +2748,51 @@
       </field>
       <field id="order_no">
         <phrase id="fldcaption" value="Order No" />
+      </field>
+      <field id="item_in_ctn">
+        <phrase id="fldcaption" value="Item In Ctn" />
+      </field>
+      <field id="no_of_ctn">
+        <phrase id="fldcaption" value="No Of Ctn" />
+      </field>
+      <field id="ctn_no">
+        <phrase id="fldcaption" value="Ctn No" />
+      </field>
+      <field id="checker">
+        <phrase id="fldcaption" value="Checker" />
+      </field>
+      <field id="shift">
+        <phrase id="fldcaption" value="Shift" />
+        <phrase id="fldtagvalue1" value="Shift 1" />
+        <phrase id="fldtagcaption1" value="Shift 1" />
+        <phrase id="fldtagvalue2" value="Shift 2" />
+        <phrase id="fldtagcaption2" value="Shift 2" />
+        <phrase id="fldtagvalue3" value="Shift 3" />
+        <phrase id="fldtagcaption3" value="Shift 3" />
+      </field>
+    </table>
+    <table id="oss_manual_online">
+      <phrase id="tblcaption" value="Oss Manual Online" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="date">
+        <phrase id="fldcaption" value="Date" />
+      </field>
+      <field id="order_no">
+        <phrase id="fldcaption" value="Order No" />
+      </field>
+      <field id="shipment">
+        <phrase id="fldcaption" value="Shipment" />
+      </field>
+      <field id="pallet_no">
+        <phrase id="fldcaption" value="Pallet No" />
+      </field>
+      <field id="sscc">
+        <phrase id="fldcaption" value="SSCC" />
+      </field>
+      <field id="idw">
+        <phrase id="fldcaption" value="IDW" />
       </field>
       <field id="item_in_ctn">
         <phrase id="fldcaption" value="Item In Ctn" />

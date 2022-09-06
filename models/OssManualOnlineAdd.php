@@ -10,7 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 /**
  * Page class
  */
-class OssManualAdd extends OssManual
+class OssManualOnlineAdd extends OssManualOnline
 {
     use MessagesTrait;
 
@@ -21,10 +21,10 @@ class OssManualAdd extends OssManual
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'oss_manual';
+    public $TableName = 'oss_manual_online';
 
     // Page object name
-    public $PageObjName = "OssManualAdd";
+    public $PageObjName = "OssManualOnlineAdd";
 
     // View file path
     public $View = null;
@@ -150,14 +150,14 @@ class OssManualAdd extends OssManual
         // Parent constuctor
         parent::__construct();
 
-        // Table object (oss_manual)
-        if (!isset($GLOBALS["oss_manual"]) || get_class($GLOBALS["oss_manual"]) == PROJECT_NAMESPACE . "oss_manual") {
-            $GLOBALS["oss_manual"] = &$this;
+        // Table object (oss_manual_online)
+        if (!isset($GLOBALS["oss_manual_online"]) || get_class($GLOBALS["oss_manual_online"]) == PROJECT_NAMESPACE . "oss_manual_online") {
+            $GLOBALS["oss_manual_online"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'oss_manual');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'oss_manual_online');
         }
 
         // Start timer
@@ -249,7 +249,7 @@ class OssManualAdd extends OssManual
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $tbl = Container("oss_manual");
+                $tbl = Container("oss_manual_online");
                 $doc = new $class($tbl);
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
@@ -299,7 +299,7 @@ class OssManualAdd extends OssManual
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "ossmanualview") {
+                    if ($pageName == "ossmanualonlineview") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -500,11 +500,11 @@ class OssManualAdd extends OssManual
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->date->setVisibility();
+        $this->order_no->setVisibility();
         $this->shipment->setVisibility();
         $this->pallet_no->setVisibility();
         $this->sscc->setVisibility();
         $this->idw->setVisibility();
-        $this->order_no->setVisibility();
         $this->item_in_ctn->setVisibility();
         $this->no_of_ctn->setVisibility();
         $this->ctn_no->setVisibility();
@@ -590,7 +590,7 @@ class OssManualAdd extends OssManual
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("ossmanuallist"); // No matching record, return to list
+                    $this->terminate("ossmanualonlinelist"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -601,9 +601,9 @@ class OssManualAdd extends OssManual
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->GetAddUrl();
-                    if (GetPageName($returnUrl) == "ossmanuallist") {
+                    if (GetPageName($returnUrl) == "ossmanualonlinelist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "ossmanualview") {
+                    } elseif (GetPageName($returnUrl) == "ossmanualonlineview") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
                     if (IsApi()) { // Return to caller
@@ -670,10 +670,8 @@ class OssManualAdd extends OssManual
         $this->shipment->OldValue = $this->shipment->DefaultValue;
         $this->pallet_no->DefaultValue = GetPallet();
         $this->pallet_no->OldValue = $this->pallet_no->DefaultValue;
-        $this->idw->DefaultValue = '224';
+        $this->idw->DefaultValue = '262';
         $this->idw->OldValue = $this->idw->DefaultValue;
-        $this->order_no->DefaultValue = GetOrder();
-        $this->order_no->OldValue = $this->order_no->DefaultValue;
         $this->checker->DefaultValue = CurrentUserName();
         $this->checker->OldValue = $this->checker->DefaultValue;
         $this->shift->DefaultValue = GetShift();
@@ -696,6 +694,16 @@ class OssManualAdd extends OssManual
                 $this->date->setFormValue($val, true, $validate);
             }
             $this->date->CurrentValue = UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern());
+        }
+
+        // Check field name 'order_no' first before field var 'x_order_no'
+        $val = $CurrentForm->hasValue("order_no") ? $CurrentForm->getValue("order_no") : $CurrentForm->getValue("x_order_no");
+        if (!$this->order_no->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->order_no->Visible = false; // Disable update for API request
+            } else {
+                $this->order_no->setFormValue($val, true, $validate);
+            }
         }
 
         // Check field name 'shipment' first before field var 'x_shipment'
@@ -735,16 +743,6 @@ class OssManualAdd extends OssManual
                 $this->idw->Visible = false; // Disable update for API request
             } else {
                 $this->idw->setFormValue($val, true, $validate);
-            }
-        }
-
-        // Check field name 'order_no' first before field var 'x_order_no'
-        $val = $CurrentForm->hasValue("order_no") ? $CurrentForm->getValue("order_no") : $CurrentForm->getValue("x_order_no");
-        if (!$this->order_no->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->order_no->Visible = false; // Disable update for API request
-            } else {
-                $this->order_no->setFormValue($val, true, $validate);
             }
         }
 
@@ -808,11 +806,11 @@ class OssManualAdd extends OssManual
         global $CurrentForm;
         $this->date->CurrentValue = $this->date->FormValue;
         $this->date->CurrentValue = UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern());
+        $this->order_no->CurrentValue = $this->order_no->FormValue;
         $this->shipment->CurrentValue = $this->shipment->FormValue;
         $this->pallet_no->CurrentValue = $this->pallet_no->FormValue;
         $this->sscc->CurrentValue = $this->sscc->FormValue;
         $this->idw->CurrentValue = $this->idw->FormValue;
-        $this->order_no->CurrentValue = $this->order_no->FormValue;
         $this->item_in_ctn->CurrentValue = $this->item_in_ctn->FormValue;
         $this->no_of_ctn->CurrentValue = $this->no_of_ctn->FormValue;
         $this->ctn_no->CurrentValue = $this->ctn_no->FormValue;
@@ -869,11 +867,11 @@ class OssManualAdd extends OssManual
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
+        $this->order_no->setDbValue($row['order_no']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
         $this->sscc->setDbValue($row['sscc']);
         $this->idw->setDbValue($row['idw']);
-        $this->order_no->setDbValue($row['order_no']);
         $this->item_in_ctn->setDbValue($row['item_in_ctn']);
         $this->no_of_ctn->setDbValue($row['no_of_ctn']);
         $this->ctn_no->setDbValue($row['ctn_no']);
@@ -887,11 +885,11 @@ class OssManualAdd extends OssManual
         $row = [];
         $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
+        $row['order_no'] = $this->order_no->DefaultValue;
         $row['shipment'] = $this->shipment->DefaultValue;
         $row['pallet_no'] = $this->pallet_no->DefaultValue;
         $row['sscc'] = $this->sscc->DefaultValue;
         $row['idw'] = $this->idw->DefaultValue;
-        $row['order_no'] = $this->order_no->DefaultValue;
         $row['item_in_ctn'] = $this->item_in_ctn->DefaultValue;
         $row['no_of_ctn'] = $this->no_of_ctn->DefaultValue;
         $row['ctn_no'] = $this->ctn_no->DefaultValue;
@@ -934,6 +932,9 @@ class OssManualAdd extends OssManual
         // date
         $this->date->RowCssClass = "row";
 
+        // order_no
+        $this->order_no->RowCssClass = "row";
+
         // shipment
         $this->shipment->RowCssClass = "row";
 
@@ -945,9 +946,6 @@ class OssManualAdd extends OssManual
 
         // idw
         $this->idw->RowCssClass = "row";
-
-        // order_no
-        $this->order_no->RowCssClass = "row";
 
         // item_in_ctn
         $this->item_in_ctn->RowCssClass = "row";
@@ -975,6 +973,10 @@ class OssManualAdd extends OssManual
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
             $this->date->ViewCustomAttributes = "";
 
+            // order_no
+            $this->order_no->ViewValue = $this->order_no->CurrentValue;
+            $this->order_no->ViewCustomAttributes = "";
+
             // shipment
             $this->shipment->ViewValue = $this->shipment->CurrentValue;
             $this->shipment->ViewCustomAttributes = "";
@@ -990,10 +992,6 @@ class OssManualAdd extends OssManual
             // idw
             $this->idw->ViewValue = $this->idw->CurrentValue;
             $this->idw->ViewCustomAttributes = "";
-
-            // order_no
-            $this->order_no->ViewValue = $this->order_no->CurrentValue;
-            $this->order_no->ViewCustomAttributes = "";
 
             // item_in_ctn
             $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
@@ -1023,6 +1021,10 @@ class OssManualAdd extends OssManual
             $this->date->LinkCustomAttributes = "";
             $this->date->HrefValue = "";
 
+            // order_no
+            $this->order_no->LinkCustomAttributes = "";
+            $this->order_no->HrefValue = "";
+
             // shipment
             $this->shipment->LinkCustomAttributes = "";
             $this->shipment->HrefValue = "";
@@ -1038,10 +1040,6 @@ class OssManualAdd extends OssManual
             // idw
             $this->idw->LinkCustomAttributes = "";
             $this->idw->HrefValue = "";
-
-            // order_no
-            $this->order_no->LinkCustomAttributes = "";
-            $this->order_no->HrefValue = "";
 
             // item_in_ctn
             $this->item_in_ctn->LinkCustomAttributes = "";
@@ -1069,9 +1067,18 @@ class OssManualAdd extends OssManual
             $this->date->EditValue = HtmlEncode(FormatDateTime($this->date->CurrentValue, $this->date->formatPattern()));
             $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
+            // order_no
+            $this->order_no->setupEditAttributes();
+            $this->order_no->EditCustomAttributes = 'autofocus';
+            $this->order_no->EditValue = HtmlEncode($this->order_no->CurrentValue);
+            $this->order_no->PlaceHolder = RemoveHtml($this->order_no->caption());
+            if (strval($this->order_no->EditValue) != "" && is_numeric($this->order_no->EditValue)) {
+                $this->order_no->EditValue = $this->order_no->EditValue;
+            }
+
             // shipment
             $this->shipment->setupEditAttributes();
-            $this->shipment->EditCustomAttributes = 'autofocus';
+            $this->shipment->EditCustomAttributes = "";
             if (!$this->shipment->Raw) {
                 $this->shipment->CurrentValue = HtmlDecode($this->shipment->CurrentValue);
             }
@@ -1080,7 +1087,7 @@ class OssManualAdd extends OssManual
 
             // pallet_no
             $this->pallet_no->setupEditAttributes();
-            $this->pallet_no->EditCustomAttributes = "";
+            $this->pallet_no->EditCustomAttributes = 'autofocus';
             if (!$this->pallet_no->Raw) {
                 $this->pallet_no->CurrentValue = HtmlDecode($this->pallet_no->CurrentValue);
             }
@@ -1104,15 +1111,6 @@ class OssManualAdd extends OssManual
             }
             $this->idw->EditValue = HtmlEncode($this->idw->CurrentValue);
             $this->idw->PlaceHolder = RemoveHtml($this->idw->caption());
-
-            // order_no
-            $this->order_no->setupEditAttributes();
-            $this->order_no->EditCustomAttributes = "";
-            $this->order_no->EditValue = HtmlEncode($this->order_no->CurrentValue);
-            $this->order_no->PlaceHolder = RemoveHtml($this->order_no->caption());
-            if (strval($this->order_no->EditValue) != "" && is_numeric($this->order_no->EditValue)) {
-                $this->order_no->EditValue = $this->order_no->EditValue;
-            }
 
             // item_in_ctn
             $this->item_in_ctn->setupEditAttributes();
@@ -1161,6 +1159,10 @@ class OssManualAdd extends OssManual
             $this->date->LinkCustomAttributes = "";
             $this->date->HrefValue = "";
 
+            // order_no
+            $this->order_no->LinkCustomAttributes = "";
+            $this->order_no->HrefValue = "";
+
             // shipment
             $this->shipment->LinkCustomAttributes = "";
             $this->shipment->HrefValue = "";
@@ -1176,10 +1178,6 @@ class OssManualAdd extends OssManual
             // idw
             $this->idw->LinkCustomAttributes = "";
             $this->idw->HrefValue = "";
-
-            // order_no
-            $this->order_no->LinkCustomAttributes = "";
-            $this->order_no->HrefValue = "";
 
             // item_in_ctn
             $this->item_in_ctn->LinkCustomAttributes = "";
@@ -1234,6 +1232,14 @@ class OssManualAdd extends OssManual
         if (!CheckDate($this->date->FormValue, $this->date->formatPattern())) {
             $this->date->addErrorMessage($this->date->getErrorMessage(false));
         }
+        if ($this->order_no->Required) {
+            if (!$this->order_no->IsDetailKey && EmptyValue($this->order_no->FormValue)) {
+                $this->order_no->addErrorMessage(str_replace("%s", $this->order_no->caption(), $this->order_no->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->order_no->FormValue)) {
+            $this->order_no->addErrorMessage($this->order_no->getErrorMessage(false));
+        }
         if ($this->shipment->Required) {
             if (!$this->shipment->IsDetailKey && EmptyValue($this->shipment->FormValue)) {
                 $this->shipment->addErrorMessage(str_replace("%s", $this->shipment->caption(), $this->shipment->RequiredErrorMessage));
@@ -1256,14 +1262,6 @@ class OssManualAdd extends OssManual
         }
         if (!CheckInteger($this->idw->FormValue)) {
             $this->idw->addErrorMessage($this->idw->getErrorMessage(false));
-        }
-        if ($this->order_no->Required) {
-            if (!$this->order_no->IsDetailKey && EmptyValue($this->order_no->FormValue)) {
-                $this->order_no->addErrorMessage(str_replace("%s", $this->order_no->caption(), $this->order_no->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->order_no->FormValue)) {
-            $this->order_no->addErrorMessage($this->order_no->getErrorMessage(false));
         }
         if ($this->item_in_ctn->Required) {
             if (!$this->item_in_ctn->IsDetailKey && EmptyValue($this->item_in_ctn->FormValue)) {
@@ -1317,6 +1315,9 @@ class OssManualAdd extends OssManual
         // date
         $this->date->setDbValueDef($rsnew, UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern()), null, false);
 
+        // order_no
+        $this->order_no->setDbValueDef($rsnew, $this->order_no->CurrentValue, null, false);
+
         // shipment
         $this->shipment->setDbValueDef($rsnew, $this->shipment->CurrentValue, null, false);
 
@@ -1328,9 +1329,6 @@ class OssManualAdd extends OssManual
 
         // idw
         $this->idw->setDbValueDef($rsnew, $this->idw->CurrentValue, null, false);
-
-        // order_no
-        $this->order_no->setDbValueDef($rsnew, $this->order_no->CurrentValue, null, false);
 
         // item_in_ctn
         $this->item_in_ctn->setDbValueDef($rsnew, $this->item_in_ctn->CurrentValue, null, false);
@@ -1394,7 +1392,7 @@ class OssManualAdd extends OssManual
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("/dashboard2");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ossmanuallist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ossmanualonlinelist"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

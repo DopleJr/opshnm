@@ -82,6 +82,7 @@ loadjs.ready("head", function () {
     $(".input-group").hide();
     $(".text-muted").hide();
     $(".ew-breadcrumbs").hide();// atribut text
+    $(".sweet-alert" ).remove();
     });
 });
 </script>
@@ -680,46 +681,50 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
 		};	
 </script>
 <script type="text/javascript">
-        $('body').on('keydown', 'input, select', function(e) { // ganti enter jadi tab di setiap input
-            if (e.key === "Enter") {
-                var self = $(this), form = self.parents('form:eq(0)'), focusable, next;
-                focusable = form.find('a,select,textarea,button').filter(":input:not([readonly])",".scan-article");
-                next = focusable.eq(focusable.index(this)+1);
-                if (next.length) {
-                    next.focus();
-                    //alert('Shortpick');
-                } else {
-                    form.submit(function (){
-                    //window.location = 'http://localhost/opsvaliram/auditstagingedit?start=1';
-                    return false;
-                });
-                }
-                return false;
-            }
-        });
-        $("#x_scan_article").on("keydown", function (e) {
-          	if (e.which == 13 || e.keycode == 13) {
-          		//alert('clikced');
-          		const element = document.getElementById('x_scan_article');
-          		$("#x_scan_article").focus();
-          		if (element.readOnly) {
-          			console.log('✅ element is read-only');
-          			$("#x_box_code").focus();
-          		}
-        }});
-        $("#x_box_code").on("keydown", function (e) {
-          	if (e.which == 13 || e.keycode == 13) {
-          		$("#x_box_type").focus();
-        }});
-       $("#x_pick_quantity").change(function () {
-            $("#x_pick_quantity").css({ color: 'green'}); // warna text
-            $("#btn-action").focus();
-        });
-        $(document).ready(function() {
-         $("#btn-action").on('focus', function() {
-            this.form.submit();
-             });
-         });
+$("body").on("keydown", "input, select", function (e) {
+  // ganti enter jadi tab di setiap input
+  if (e.key === "Enter") {
+    var self = $(this),
+      form = self.parents("form:eq(0)"),
+      focusable,
+      next;
+    focusable = form
+      .find("a,select,textarea,button")
+      .filter(":input:not([readonly])", ".scan-article");
+    next = focusable.eq(focusable.index(this) + 1);
+    if (next.length) {
+      next.focus();
+      //alert('Shortpick');
+    } else {
+      form.submit(function () {
+        //alert('Shortpick');
+        return false;
+      });
+    }
+    return false;
+  }
+});
+$("#x_scan_article").on("keydown", function (e) {
+  if (e.which == 13 || e.keycode == 13) {
+    //alert('clikced');
+    const element = document.getElementById("x_scan_article");
+    $("#x_scan_article").focus();
+    if (element.readOnly) {
+      console.log("✅ element is read-only");
+      $("#x_scan_article").blur();
+      $("#x_box_code").focus();
+    }
+  }
+});
+$("#x_box_code").on("keydown", function (e) {
+  if (e.which == 13 || e.keycode == 13) {
+    $("#x_box_type").focus();
+  }
+});
+$("#x_pick_quantity").change(function () {
+  $("#x_pick_quantity").css({ color: "green" }); // warna text
+  $("#btn-action").focus();
+});
 </script>
 <style>
     .main-frame {
@@ -821,6 +826,15 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
         height: 1.125em !important;
         margin-top: 0.1875em !important;
         vertical-align: top !important;
+    }
+    .swal2-input {
+    display: none !important;
+    }
+    .swal2-file {
+    display: none !important;
+    }
+    .swal2-checkbox {
+    display: none !important;
     }
 </style>
 <div class="main-form" >
@@ -1046,9 +1060,8 @@ loadjs.ready("load", function () {
             if (target !== result) {
               //$("#x_scan_article").val("");
               //$("#x_scan_article").focus();
-              $("#x_remarks").val("M");
-              $("#x_close_totes").val("1");
-
+             $("#x_remarks").val("M");
+             $("#x_close_totes").val("1");
               //alert('Shortpick');
             }
             //end
@@ -1087,10 +1100,8 @@ loadjs.ready("load", function () {
               //alert('Qty Match!!');
             }
             if (target !== result) {
-              //$("#x_scan_article").val("");
-              //$("#x_scan_article").focus();
               $("#x_remarks").val("M");
-              $("#x_close_totes").val("1");
+             $("#x_close_totes").val("1");
 
               //alert('Shortpick');
             }
@@ -1128,12 +1139,8 @@ loadjs.ready("load", function () {
               //alert('Qty Match!!');
             }
             if (target !== result) {
-              //$("#x_scan_article").val("");
-              //$("#x_scan_article").focus();
-              $("#x_remarks").val("M");
-              $("#x_close_totes").val("1");
-
-              //alert('Shortpick');
+             $("#x_remarks").val("M");
+             $("#x_close_totes").val("1");
             }
             //end
           } else {
@@ -1161,11 +1168,8 @@ loadjs.ready("load", function () {
               //alert('Qty Match!!');
             }
             if (target !== result) {
-              //$("#x_scan_article").val("");
-              //$("#x_scan_article").focus();
-              $("#x_remarks").val("M");
-              $("#x_close_totes").val("1");
-
+             $("#x_remarks").val("M");
+             $("#x_close_totes").val("1");
               //alert('Shortpick');
             }
             //end
@@ -1196,10 +1200,57 @@ loadjs.ready("load", function () {
       //    //$("#btn-action").focus();
       //  }
       //});
+    $(document).ready(function () {
+          $("#x_scan_article").on("blur", function () {
+            var picked = $("#x_picked_qty").val();
+            var target = $("#x_target_qty").val();
+            var result2 = parseInt(picked) - parseInt(target);
+            store = $("#x_store_id").val();
+              if (result2 == 0) {
+                  Swal.fire("Confirmed! "+picked+" Pcs", "For Store ID :" + store, "success").then((result) => {
+                      if (result.isConfirmed) {
+                      $("#x_box_code").focus();
+                      console.log('focus to box code');
+                      }
+                  });
+                }
+            if (result2 !== 0) {
+              Swal.fire({
+                title: "Want to shortpick?",
+                //text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, Shortpick it : " +result2+" Pcs",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire("Shortpicked! " +result2+" Pcs", "For Store ID :" + store, "success").then((result) => {
+                      if (result.isConfirmed) {
+                          $("#x_box_code").focus();
+                          console.log('focus to box code');
+                      }
+                  });
+                } else if (
+                  /* Read more about handling dismissals below */
+                  result.dismiss === Swal.DismissReason.cancel
+                ) {
+                  swal.fire(
+                    "Cancelled",
+                    "Try scan article again!",
+                    "warning"
+                  );
+                }
+              });
+            }
+          });
+        });
       $(document).ready(function () {
         $("#btn-action").on("focus", function () {
-          this.form.submit();
         });
+      });
+      $(".swal2-confirm").click(function () {
+        $("#x_box_code").focus();
       });
       $("#x_box_code").change(function () {
         $("#x_box_type").focus();

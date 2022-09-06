@@ -394,8 +394,8 @@ class JobControlCopy1 extends DbTable
         }
     }
 
-    // Single column sort
-    public function updateSort(&$fld)
+    // Multiple column sort
+    public function updateSort(&$fld, $ctrl)
     {
         if ($this->CurrentOrder == $fld->Name) {
             $sortField = $fld->Expression;
@@ -405,8 +405,29 @@ class JobControlCopy1 extends DbTable
             } else {
                 $curSort = $lastSort;
             }
-            $orderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
-            $this->setSessionOrderBy($orderBy); // Save to Session
+            $lastOrderBy = in_array($lastSort, ["ASC", "DESC"]) ? $sortField . " " . $lastSort : "";
+            $curOrderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
+            if ($ctrl) {
+                $orderBy = $this->getSessionOrderBy();
+                $arOrderBy = !empty($orderBy) ? explode(", ", $orderBy) : [];
+                if ($lastOrderBy != "" && in_array($lastOrderBy, $arOrderBy)) {
+                    foreach ($arOrderBy as $key => $val) {
+                        if ($val == $lastOrderBy) {
+                            if ($curOrderBy == "") {
+                                unset($arOrderBy[$key]);
+                            } else {
+                                $arOrderBy[$key] = $curOrderBy;
+                            }
+                        }
+                    }
+                } elseif ($curOrderBy != "") {
+                    $arOrderBy[] = $curOrderBy;
+                }
+                $orderBy = implode(", ", $arOrderBy);
+                $this->setSessionOrderBy($orderBy); // Save to Session
+            } else {
+                $this->setSessionOrderBy($curOrderBy); // Save to Session
+            }
         }
     }
 
@@ -1041,7 +1062,7 @@ class JobControlCopy1 extends DbTable
         $attrs = "";
         if ($fld->Sortable) {
             $sortUrl = $this->sortUrl($fld);
-            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="1"';
+            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="2"';
         }
         $html = '<div class="ew-table-header-caption"' . $attrs . '>' . $fld->caption() . '</div>';
         if ($sortUrl) {
@@ -1168,26 +1189,36 @@ class JobControlCopy1 extends DbTable
         // Common render codes
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // creation_date
+        $this->creation_date->CellCssStyle = "white-space: nowrap;";
 
         // store_id
 
         // area
+        $this->area->CellCssStyle = "white-space: nowrap;";
 
         // aisle
+        $this->aisle->CellCssStyle = "white-space: nowrap;";
 
         // user
+        $this->user->CellCssStyle = "white-space: nowrap;";
 
         // target_qty
+        $this->target_qty->CellCssStyle = "white-space: nowrap;";
 
         // picked_qty
+        $this->picked_qty->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
 
         // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1946,7 +1977,7 @@ class JobControlCopy1 extends DbTable
             $_id = $rsnew["id"];
             $_user = $rsnew["user"];
             //set JOB ID
-            $result = "UPDATE picking SET `picker` = '$_user',`job_id` = '$_id' WHERE `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
+            $result = "UPDATE picking_pending SET `picker` = '$_user',`job_id` = '$_id' WHERE `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
             $_result = ExecuteStatement($result);
             //target qty
                 $target_qty = "SELECT sum(target_qty) FROM `picking_pending` WHERE `job_id` = '$_id' ";
