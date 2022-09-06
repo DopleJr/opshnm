@@ -522,9 +522,9 @@ class OssManualView extends OssManual
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
         $this->date->setVisibility();
+        $this->sscc->setVisibility();
         $this->shipment->setVisibility();
         $this->pallet_no->setVisibility();
-        $this->sscc->setVisibility();
         $this->idw->setVisibility();
         $this->order_no->setVisibility();
         $this->item_in_ctn->setVisibility();
@@ -742,9 +742,9 @@ class OssManualView extends OssManual
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
+        $this->sscc->setDbValue($row['sscc']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
-        $this->sscc->setDbValue($row['sscc']);
         $this->idw->setDbValue($row['idw']);
         $this->order_no->setDbValue($row['order_no']);
         $this->item_in_ctn->setDbValue($row['item_in_ctn']);
@@ -760,9 +760,9 @@ class OssManualView extends OssManual
         $row = [];
         $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
+        $row['sscc'] = $this->sscc->DefaultValue;
         $row['shipment'] = $this->shipment->DefaultValue;
         $row['pallet_no'] = $this->pallet_no->DefaultValue;
-        $row['sscc'] = $this->sscc->DefaultValue;
         $row['idw'] = $this->idw->DefaultValue;
         $row['order_no'] = $this->order_no->DefaultValue;
         $row['item_in_ctn'] = $this->item_in_ctn->DefaultValue;
@@ -795,11 +795,11 @@ class OssManualView extends OssManual
 
         // date
 
+        // sscc
+
         // shipment
 
         // pallet_no
-
-        // sscc
 
         // idw
 
@@ -826,6 +826,10 @@ class OssManualView extends OssManual
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
             $this->date->ViewCustomAttributes = "";
 
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
+
             // shipment
             $this->shipment->ViewValue = $this->shipment->CurrentValue;
             $this->shipment->ViewCustomAttributes = "";
@@ -833,10 +837,6 @@ class OssManualView extends OssManual
             // pallet_no
             $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
             $this->pallet_no->ViewCustomAttributes = "";
-
-            // sscc
-            $this->sscc->ViewValue = $this->sscc->CurrentValue;
-            $this->sscc->ViewCustomAttributes = "";
 
             // idw
             $this->idw->ViewValue = $this->idw->CurrentValue;
@@ -880,6 +880,11 @@ class OssManualView extends OssManual
             $this->date->HrefValue = "";
             $this->date->TooltipValue = "";
 
+            // sscc
+            $this->sscc->LinkCustomAttributes = "";
+            $this->sscc->HrefValue = "";
+            $this->sscc->TooltipValue = "";
+
             // shipment
             $this->shipment->LinkCustomAttributes = "";
             $this->shipment->HrefValue = "";
@@ -889,11 +894,6 @@ class OssManualView extends OssManual
             $this->pallet_no->LinkCustomAttributes = "";
             $this->pallet_no->HrefValue = "";
             $this->pallet_no->TooltipValue = "";
-
-            // sscc
-            $this->sscc->LinkCustomAttributes = "";
-            $this->sscc->HrefValue = "";
-            $this->sscc->TooltipValue = "";
 
             // idw
             $this->idw->LinkCustomAttributes = "";

@@ -33,10 +33,10 @@ class OssManualOnline extends DbTable
     // Fields
     public $id;
     public $date;
+    public $sscc;
     public $order_no;
     public $shipment;
     public $pallet_no;
-    public $sscc;
     public $idw;
     public $item_in_ctn;
     public $no_of_ctn;
@@ -131,6 +131,31 @@ class OssManualOnline extends DbTable
         $this->date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date'] = &$this->date;
 
+        // sscc
+        $this->sscc = new DbField(
+            'oss_manual_online',
+            'oss_manual_online',
+            'x_sscc',
+            'sscc',
+            '`sscc`',
+            '`sscc`',
+            200,
+            255,
+            -1,
+            false,
+            '`sscc`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->sscc->InputTextType = "text";
+        $this->sscc->Required = true; // Required field
+        $this->sscc->UseFilter = true; // Table header filter
+        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual_online', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['sscc'] = &$this->sscc;
+
         // order_no
         $this->order_no = new DbField(
             'oss_manual_online',
@@ -206,31 +231,6 @@ class OssManualOnline extends DbTable
         $this->pallet_no->UseFilter = true; // Table header filter
         $this->pallet_no->Lookup = new Lookup('pallet_no', 'oss_manual_online', true, 'pallet_no', ["pallet_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['pallet_no'] = &$this->pallet_no;
-
-        // sscc
-        $this->sscc = new DbField(
-            'oss_manual_online',
-            'oss_manual_online',
-            'x_sscc',
-            'sscc',
-            '`sscc`',
-            '`sscc`',
-            200,
-            255,
-            -1,
-            false,
-            '`sscc`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->sscc->InputTextType = "text";
-        $this->sscc->Required = true; // Required field
-        $this->sscc->UseFilter = true; // Table header filter
-        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual_online', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
-        $this->Fields['sscc'] = &$this->sscc;
 
         // idw
         $this->idw = new DbField(
@@ -816,10 +816,10 @@ class OssManualOnline extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->date->DbValue = $row['date'];
+        $this->sscc->DbValue = $row['sscc'];
         $this->order_no->DbValue = $row['order_no'];
         $this->shipment->DbValue = $row['shipment'];
         $this->pallet_no->DbValue = $row['pallet_no'];
-        $this->sscc->DbValue = $row['sscc'];
         $this->idw->DbValue = $row['idw'];
         $this->item_in_ctn->DbValue = $row['item_in_ctn'];
         $this->no_of_ctn->DbValue = $row['no_of_ctn'];
@@ -1146,10 +1146,10 @@ class OssManualOnline extends DbTable
         }
         $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
+        $this->sscc->setDbValue($row['sscc']);
         $this->order_no->setDbValue($row['order_no']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
-        $this->sscc->setDbValue($row['sscc']);
         $this->idw->setDbValue($row['idw']);
         $this->item_in_ctn->setDbValue($row['item_in_ctn']);
         $this->no_of_ctn->setDbValue($row['no_of_ctn']);
@@ -1174,6 +1174,9 @@ class OssManualOnline extends DbTable
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
+        // sscc
+        $this->sscc->CellCssStyle = "white-space: nowrap;";
+
         // order_no
         $this->order_no->CellCssStyle = "white-space: nowrap;";
 
@@ -1182,9 +1185,6 @@ class OssManualOnline extends DbTable
 
         // pallet_no
         $this->pallet_no->CellCssStyle = "white-space: nowrap;";
-
-        // sscc
-        $this->sscc->CellCssStyle = "white-space: nowrap;";
 
         // idw
         $this->idw->CellCssStyle = "white-space: nowrap;";
@@ -1213,6 +1213,10 @@ class OssManualOnline extends DbTable
         $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
         $this->date->ViewCustomAttributes = "";
 
+        // sscc
+        $this->sscc->ViewValue = $this->sscc->CurrentValue;
+        $this->sscc->ViewCustomAttributes = "";
+
         // order_no
         $this->order_no->ViewValue = $this->order_no->CurrentValue;
         $this->order_no->ViewCustomAttributes = "";
@@ -1224,10 +1228,6 @@ class OssManualOnline extends DbTable
         // pallet_no
         $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
         $this->pallet_no->ViewCustomAttributes = "";
-
-        // sscc
-        $this->sscc->ViewValue = $this->sscc->CurrentValue;
-        $this->sscc->ViewCustomAttributes = "";
 
         // idw
         $this->idw->ViewValue = $this->idw->CurrentValue;
@@ -1267,6 +1267,11 @@ class OssManualOnline extends DbTable
         $this->date->HrefValue = "";
         $this->date->TooltipValue = "";
 
+        // sscc
+        $this->sscc->LinkCustomAttributes = "";
+        $this->sscc->HrefValue = "";
+        $this->sscc->TooltipValue = "";
+
         // order_no
         $this->order_no->LinkCustomAttributes = "";
         $this->order_no->HrefValue = "";
@@ -1281,11 +1286,6 @@ class OssManualOnline extends DbTable
         $this->pallet_no->LinkCustomAttributes = "";
         $this->pallet_no->HrefValue = "";
         $this->pallet_no->TooltipValue = "";
-
-        // sscc
-        $this->sscc->LinkCustomAttributes = "";
-        $this->sscc->HrefValue = "";
-        $this->sscc->TooltipValue = "";
 
         // idw
         $this->idw->LinkCustomAttributes = "";
@@ -1344,9 +1344,18 @@ class OssManualOnline extends DbTable
         $this->date->EditValue = FormatDateTime($this->date->CurrentValue, $this->date->formatPattern());
         $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
+        // sscc
+        $this->sscc->setupEditAttributes();
+        $this->sscc->EditCustomAttributes = 'autofocus';
+        if (!$this->sscc->Raw) {
+            $this->sscc->CurrentValue = HtmlDecode($this->sscc->CurrentValue);
+        }
+        $this->sscc->EditValue = $this->sscc->CurrentValue;
+        $this->sscc->PlaceHolder = RemoveHtml($this->sscc->caption());
+
         // order_no
         $this->order_no->setupEditAttributes();
-        $this->order_no->EditCustomAttributes = 'autofocus';
+        $this->order_no->EditCustomAttributes = "";
         $this->order_no->EditValue = $this->order_no->CurrentValue;
         $this->order_no->PlaceHolder = RemoveHtml($this->order_no->caption());
         if (strval($this->order_no->EditValue) != "" && is_numeric($this->order_no->EditValue)) {
@@ -1370,15 +1379,6 @@ class OssManualOnline extends DbTable
         }
         $this->pallet_no->EditValue = $this->pallet_no->CurrentValue;
         $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
-
-        // sscc
-        $this->sscc->setupEditAttributes();
-        $this->sscc->EditCustomAttributes = "";
-        if (!$this->sscc->Raw) {
-            $this->sscc->CurrentValue = HtmlDecode($this->sscc->CurrentValue);
-        }
-        $this->sscc->EditValue = $this->sscc->CurrentValue;
-        $this->sscc->PlaceHolder = RemoveHtml($this->sscc->caption());
 
         // idw
         $this->idw->setupEditAttributes();
@@ -1460,10 +1460,10 @@ class OssManualOnline extends DbTable
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
+                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->order_no);
                     $doc->exportCaption($this->shipment);
                     $doc->exportCaption($this->pallet_no);
-                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->idw);
                     $doc->exportCaption($this->item_in_ctn);
                     $doc->exportCaption($this->no_of_ctn);
@@ -1473,10 +1473,10 @@ class OssManualOnline extends DbTable
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
+                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->order_no);
                     $doc->exportCaption($this->shipment);
                     $doc->exportCaption($this->pallet_no);
-                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->idw);
                     $doc->exportCaption($this->item_in_ctn);
                     $doc->exportCaption($this->no_of_ctn);
@@ -1514,10 +1514,10 @@ class OssManualOnline extends DbTable
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
                         $doc->exportField($this->date);
+                        $doc->exportField($this->sscc);
                         $doc->exportField($this->order_no);
                         $doc->exportField($this->shipment);
                         $doc->exportField($this->pallet_no);
-                        $doc->exportField($this->sscc);
                         $doc->exportField($this->idw);
                         $doc->exportField($this->item_in_ctn);
                         $doc->exportField($this->no_of_ctn);
@@ -1527,10 +1527,10 @@ class OssManualOnline extends DbTable
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->date);
+                        $doc->exportField($this->sscc);
                         $doc->exportField($this->order_no);
                         $doc->exportField($this->shipment);
                         $doc->exportField($this->pallet_no);
-                        $doc->exportField($this->sscc);
                         $doc->exportField($this->idw);
                         $doc->exportField($this->item_in_ctn);
                         $doc->exportField($this->no_of_ctn);

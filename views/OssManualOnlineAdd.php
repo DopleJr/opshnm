@@ -21,10 +21,10 @@ loadjs.ready(["wrapper", "head"], function () {
     var fields = currentTable.fields;
     foss_manual_onlineadd.addFields([
         ["date", [fields.date.visible && fields.date.required ? ew.Validators.required(fields.date.caption) : null, ew.Validators.datetime(fields.date.clientFormatPattern)], fields.date.isInvalid],
+        ["sscc", [fields.sscc.visible && fields.sscc.required ? ew.Validators.required(fields.sscc.caption) : null], fields.sscc.isInvalid],
         ["order_no", [fields.order_no.visible && fields.order_no.required ? ew.Validators.required(fields.order_no.caption) : null, ew.Validators.integer], fields.order_no.isInvalid],
         ["shipment", [fields.shipment.visible && fields.shipment.required ? ew.Validators.required(fields.shipment.caption) : null], fields.shipment.isInvalid],
         ["pallet_no", [fields.pallet_no.visible && fields.pallet_no.required ? ew.Validators.required(fields.pallet_no.caption) : null], fields.pallet_no.isInvalid],
-        ["sscc", [fields.sscc.visible && fields.sscc.required ? ew.Validators.required(fields.sscc.caption) : null], fields.sscc.isInvalid],
         ["idw", [fields.idw.visible && fields.idw.required ? ew.Validators.required(fields.idw.caption) : null, ew.Validators.integer], fields.idw.isInvalid],
         ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null], fields.item_in_ctn.isInvalid],
         ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null], fields.no_of_ctn.isInvalid],
@@ -90,6 +90,18 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+    <div id="r_sscc"<?= $Page->sscc->rowAttributes() ?>>
+        <label id="elh_oss_manual_online_sscc" for="x_sscc" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_online_sscc"><?= $Page->sscc->caption() ?><?= $Page->sscc->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->sscc->cellAttributes() ?>>
+<template id="tpx_oss_manual_online_sscc"><span id="el_oss_manual_online_sscc">
+<input type="<?= $Page->sscc->getInputTextType() ?>" name="x_sscc" id="x_sscc" data-table="oss_manual_online" data-field="x_sscc" value="<?= $Page->sscc->EditValue ?>" size="50" maxlength="255" placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"<?= $Page->sscc->editAttributes() ?> aria-describedby="x_sscc_help">
+<?= $Page->sscc->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->sscc->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->order_no->Visible) { // order_no ?>
     <div id="r_order_no"<?= $Page->order_no->rowAttributes() ?>>
         <label id="elh_oss_manual_online_order_no" for="x_order_no" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_online_order_no"><?= $Page->order_no->caption() ?><?= $Page->order_no->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
@@ -122,18 +134,6 @@ $Page->showMessage();
 <input type="<?= $Page->pallet_no->getInputTextType() ?>" name="x_pallet_no" id="x_pallet_no" data-table="oss_manual_online" data-field="x_pallet_no" value="<?= $Page->pallet_no->EditValue ?>" size="20" maxlength="255" placeholder="<?= HtmlEncode($Page->pallet_no->getPlaceHolder()) ?>"<?= $Page->pallet_no->editAttributes() ?> aria-describedby="x_pallet_no_help">
 <?= $Page->pallet_no->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->pallet_no->getErrorMessage() ?></div>
-</span></template>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->sscc->Visible) { // sscc ?>
-    <div id="r_sscc"<?= $Page->sscc->rowAttributes() ?>>
-        <label id="elh_oss_manual_online_sscc" for="x_sscc" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_online_sscc"><?= $Page->sscc->caption() ?><?= $Page->sscc->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->sscc->cellAttributes() ?>>
-<template id="tpx_oss_manual_online_sscc"><span id="el_oss_manual_online_sscc">
-<input type="<?= $Page->sscc->getInputTextType() ?>" name="x_sscc" id="x_sscc" data-table="oss_manual_online" data-field="x_sscc" value="<?= $Page->sscc->EditValue ?>" size="50" maxlength="255" placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"<?= $Page->sscc->editAttributes() ?> aria-describedby="x_sscc_help">
-<?= $Page->sscc->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->sscc->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
@@ -329,6 +329,12 @@ loadjs.ready("foss_manual_onlineadd", function() {
     <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_online_date"></slot></div>
 </div>
 <div class="container-fluid">
+	<div class="row justify-content-start">
+        <div id="r_sscc" class="col">
+            <label for="x_sscc" class="col-sm-5 col-form-label"><?= $Page->sscc->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_online_sscc"></slot></div>
+        </div>
+    </div>
     <div class="row justify-content-start">
         <div id="r_shipment" class="col">
             <label for="x_shipment" class="col-sm-5 col-form-label"><?= $Page->shipment->caption() ?></label>
@@ -347,12 +353,6 @@ loadjs.ready("foss_manual_onlineadd", function() {
         <div id="r_order_no" class="col">
             <label for="x_order_no" class="col-sm-2 col-form-label"><?= $Page->order_no->caption() ?></label>
             <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_online_order_no"></slot></div>
-        </div>
-    </div>
-    <div class="row justify-content-start">
-        <div id="r_sscc" class="col">
-            <label for="x_sscc" class="col-sm-2 col-form-label"><?= $Page->sscc->caption() ?></label>
-            <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_online_sscc"></slot></div>
         </div>
     </div>
     <div class="row justify-content-start">
@@ -425,6 +425,10 @@ loadjs.ready("load", function () {
       $(document).on("focus", "input[type=text]", function () {
         this.select();
       });
+      $("#x_sscc").focus();
+      $("#x_sscc").change(function () {
+        $("#x_shipment").focus();
+      });
       $("#x_shipment").change(function () {
         $("#x_pallet_no").focus();
         $("#x_shipment").attr('readonly', true);
@@ -434,9 +438,6 @@ loadjs.ready("load", function () {
         $("#x_pallet_no").attr('readonly', true);
       });
       $("#x_order_no").change(function () {
-        $("#x_sscc").focus();
-      });
-      $("#x_sscc").change(function () {
         $("#x_item_in_ctn").focus();
       });
       $("#x_item_in_ctn").change(function () {

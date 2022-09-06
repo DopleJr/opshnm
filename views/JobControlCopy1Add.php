@@ -53,7 +53,11 @@ loadjs.ready(["wrapper", "head"], function () {
 </script>
 <script>
 loadjs.ready("head", function () {
+    // Client script
     // Write your table-specific client script here, no need to add script tags.
+    	$("#ew-modal-lookup-dialog .modal-footer")
+    .prepend('<button type="button" class="btn btn-default">Select All</button>')
+    .click(e => $("#ew-modal-lookup-dialog .select2-results_option--selectable:not(.select2-results_option--selected)").mousedown().mouseup());
 });
 </script>
 <?php $Page->showPageHeader(); ?>
@@ -381,7 +385,11 @@ loadjs.ready(["fjob_control_copy1add", "datetimepicker"], function () {
 </div><!-- /page* -->
 <div id="tpd_job_control_copy1add" class="ew-custom-template"></div>
 <template id="tpm_job_control_copy1add">
-<div id="ct_JobControlCopy1Add"><style>
+<div id="ct_JobControlCopy1Add"><script>
+$(document).ready(function () {
+	});
+</script>
+<style>
 </style>
 	<div id="r_creation_date" class="mb-3 row">
         <label for="x_creation_date" class="col-sm-2 col-form-label"><?= $Page->creation_date->caption() ?></label>
@@ -398,6 +406,10 @@ loadjs.ready(["fjob_control_copy1add", "datetimepicker"], function () {
     <div id="r_aisle" class="mb-3 row">
         <label for="x_aisle" class="col-sm-2 col-form-label"><?= $Page->aisle->caption() ?></label>
         <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_copy1_aisle"></slot></div>
+    </div>
+    <div id="r_aisle" class="mb-3 row">
+        <label for="x_aisle" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10"><input type="checkbox" id="checkbox" > Select All</div>
     </div>
     <div id="r_user" class="mb-3 row">
         <label for="x_user" class="col-sm-2 col-form-label"><?= $Page->user->caption() ?></label>
@@ -447,24 +459,17 @@ loadjs.ready("head", function() {
 loadjs.ready("load", function () {
     // Startup script
     // Write your table-specific startup script here, no need to add script tags.
-    $(document).ready(function() {
-        $("#my-select").select2();
-    });
-
-    function addQuotes(value){
-        var quotedVar = "\'" + value + "\'";
-        return quotedVar;
-    }
 
     /////////////////////////////////////////////////////////////////////////////////////
-    $(document).ready(function() {
-        		$(document).on('focus','input[type=text]',function(){ this.select(); });
-        		$("#x_store_id").focus();
-                $("#x_store_id").change(function () {
-                });
-                $("#x_area").change(function () {
-                    $("#x_aisle").focus();
-                });
-        });
+    $(document).ready(function () {
+      $(document).on("focus", "input[type=text]", function () {
+        this.select();
+      });
+      $("#x_store_id").focus();
+      $("#x_store_id").change(function () {});
+      $("#x_area").change(function () {
+        $("#x_aisle").focus();
+      });
+    });
 });
 </script>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/5">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/6">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -2734,14 +2734,14 @@
       <field id="date">
         <phrase id="fldcaption" value="Date" />
       </field>
+      <field id="sscc">
+        <phrase id="fldcaption" value="SSCC" />
+      </field>
       <field id="shipment">
         <phrase id="fldcaption" value="Shipment" />
       </field>
       <field id="pallet_no">
         <phrase id="fldcaption" value="Pallet No" />
-      </field>
-      <field id="sscc">
-        <phrase id="fldcaption" value="SSCC" />
       </field>
       <field id="idw">
         <phrase id="fldcaption" value="IDW" />
@@ -2779,6 +2779,9 @@
       <field id="date">
         <phrase id="fldcaption" value="Date" />
       </field>
+      <field id="sscc">
+        <phrase id="fldcaption" value="SSCC" />
+      </field>
       <field id="order_no">
         <phrase id="fldcaption" value="Order No" />
       </field>
@@ -2787,9 +2790,6 @@
       </field>
       <field id="pallet_no">
         <phrase id="fldcaption" value="Pallet No" />
-      </field>
-      <field id="sscc">
-        <phrase id="fldcaption" value="SSCC" />
       </field>
       <field id="idw">
         <phrase id="fldcaption" value="IDW" />

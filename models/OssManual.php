@@ -33,9 +33,9 @@ class OssManual extends DbTable
     // Fields
     public $id;
     public $date;
+    public $sscc;
     public $shipment;
     public $pallet_no;
-    public $sscc;
     public $idw;
     public $order_no;
     public $item_in_ctn;
@@ -132,6 +132,31 @@ class OssManual extends DbTable
         $this->date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date'] = &$this->date;
 
+        // sscc
+        $this->sscc = new DbField(
+            'oss_manual',
+            'oss_manual',
+            'x_sscc',
+            'sscc',
+            '`sscc`',
+            '`sscc`',
+            200,
+            255,
+            -1,
+            false,
+            '`sscc`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->sscc->InputTextType = "text";
+        $this->sscc->Required = true; // Required field
+        $this->sscc->UseFilter = true; // Table header filter
+        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['sscc'] = &$this->sscc;
+
         // shipment
         $this->shipment = new DbField(
             'oss_manual',
@@ -181,31 +206,6 @@ class OssManual extends DbTable
         $this->pallet_no->UseFilter = true; // Table header filter
         $this->pallet_no->Lookup = new Lookup('pallet_no', 'oss_manual', true, 'pallet_no', ["pallet_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['pallet_no'] = &$this->pallet_no;
-
-        // sscc
-        $this->sscc = new DbField(
-            'oss_manual',
-            'oss_manual',
-            'x_sscc',
-            'sscc',
-            '`sscc`',
-            '`sscc`',
-            200,
-            255,
-            -1,
-            false,
-            '`sscc`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->sscc->InputTextType = "text";
-        $this->sscc->Required = true; // Required field
-        $this->sscc->UseFilter = true; // Table header filter
-        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
-        $this->Fields['sscc'] = &$this->sscc;
 
         // idw
         $this->idw = new DbField(
@@ -838,9 +838,9 @@ class OssManual extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->date->DbValue = $row['date'];
+        $this->sscc->DbValue = $row['sscc'];
         $this->shipment->DbValue = $row['shipment'];
         $this->pallet_no->DbValue = $row['pallet_no'];
-        $this->sscc->DbValue = $row['sscc'];
         $this->idw->DbValue = $row['idw'];
         $this->order_no->DbValue = $row['order_no'];
         $this->item_in_ctn->DbValue = $row['item_in_ctn'];
@@ -1168,9 +1168,9 @@ class OssManual extends DbTable
         }
         $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
+        $this->sscc->setDbValue($row['sscc']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
-        $this->sscc->setDbValue($row['sscc']);
         $this->idw->setDbValue($row['idw']);
         $this->order_no->setDbValue($row['order_no']);
         $this->item_in_ctn->setDbValue($row['item_in_ctn']);
@@ -1196,14 +1196,14 @@ class OssManual extends DbTable
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
+        // sscc
+        $this->sscc->CellCssStyle = "white-space: nowrap;";
+
         // shipment
         $this->shipment->CellCssStyle = "white-space: nowrap;";
 
         // pallet_no
         $this->pallet_no->CellCssStyle = "white-space: nowrap;";
-
-        // sscc
-        $this->sscc->CellCssStyle = "white-space: nowrap;";
 
         // idw
         $this->idw->CellCssStyle = "white-space: nowrap;";
@@ -1235,6 +1235,10 @@ class OssManual extends DbTable
         $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
         $this->date->ViewCustomAttributes = "";
 
+        // sscc
+        $this->sscc->ViewValue = $this->sscc->CurrentValue;
+        $this->sscc->ViewCustomAttributes = "";
+
         // shipment
         $this->shipment->ViewValue = $this->shipment->CurrentValue;
         $this->shipment->ViewCustomAttributes = "";
@@ -1242,10 +1246,6 @@ class OssManual extends DbTable
         // pallet_no
         $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
         $this->pallet_no->ViewCustomAttributes = "";
-
-        // sscc
-        $this->sscc->ViewValue = $this->sscc->CurrentValue;
-        $this->sscc->ViewCustomAttributes = "";
 
         // idw
         $this->idw->ViewValue = $this->idw->CurrentValue;
@@ -1289,6 +1289,11 @@ class OssManual extends DbTable
         $this->date->HrefValue = "";
         $this->date->TooltipValue = "";
 
+        // sscc
+        $this->sscc->LinkCustomAttributes = "";
+        $this->sscc->HrefValue = "";
+        $this->sscc->TooltipValue = "";
+
         // shipment
         $this->shipment->LinkCustomAttributes = "";
         $this->shipment->HrefValue = "";
@@ -1298,11 +1303,6 @@ class OssManual extends DbTable
         $this->pallet_no->LinkCustomAttributes = "";
         $this->pallet_no->HrefValue = "";
         $this->pallet_no->TooltipValue = "";
-
-        // sscc
-        $this->sscc->LinkCustomAttributes = "";
-        $this->sscc->HrefValue = "";
-        $this->sscc->TooltipValue = "";
 
         // idw
         $this->idw->LinkCustomAttributes = "";
@@ -1366,9 +1366,18 @@ class OssManual extends DbTable
         $this->date->EditValue = FormatDateTime($this->date->CurrentValue, $this->date->formatPattern());
         $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
+        // sscc
+        $this->sscc->setupEditAttributes();
+        $this->sscc->EditCustomAttributes = 'autofocus';
+        if (!$this->sscc->Raw) {
+            $this->sscc->CurrentValue = HtmlDecode($this->sscc->CurrentValue);
+        }
+        $this->sscc->EditValue = $this->sscc->CurrentValue;
+        $this->sscc->PlaceHolder = RemoveHtml($this->sscc->caption());
+
         // shipment
         $this->shipment->setupEditAttributes();
-        $this->shipment->EditCustomAttributes = 'autofocus';
+        $this->shipment->EditCustomAttributes = "";
         if (!$this->shipment->Raw) {
             $this->shipment->CurrentValue = HtmlDecode($this->shipment->CurrentValue);
         }
@@ -1383,15 +1392,6 @@ class OssManual extends DbTable
         }
         $this->pallet_no->EditValue = $this->pallet_no->CurrentValue;
         $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
-
-        // sscc
-        $this->sscc->setupEditAttributes();
-        $this->sscc->EditCustomAttributes = "";
-        if (!$this->sscc->Raw) {
-            $this->sscc->CurrentValue = HtmlDecode($this->sscc->CurrentValue);
-        }
-        $this->sscc->EditValue = $this->sscc->CurrentValue;
-        $this->sscc->PlaceHolder = RemoveHtml($this->sscc->caption());
 
         // idw
         $this->idw->setupEditAttributes();
@@ -1482,9 +1482,9 @@ class OssManual extends DbTable
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
+                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->shipment);
                     $doc->exportCaption($this->pallet_no);
-                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->idw);
                     $doc->exportCaption($this->order_no);
                     $doc->exportCaption($this->item_in_ctn);
@@ -1495,9 +1495,9 @@ class OssManual extends DbTable
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
+                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->shipment);
                     $doc->exportCaption($this->pallet_no);
-                    $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->idw);
                     $doc->exportCaption($this->order_no);
                     $doc->exportCaption($this->item_in_ctn);
@@ -1536,9 +1536,9 @@ class OssManual extends DbTable
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
                         $doc->exportField($this->date);
+                        $doc->exportField($this->sscc);
                         $doc->exportField($this->shipment);
                         $doc->exportField($this->pallet_no);
-                        $doc->exportField($this->sscc);
                         $doc->exportField($this->idw);
                         $doc->exportField($this->order_no);
                         $doc->exportField($this->item_in_ctn);
@@ -1549,9 +1549,9 @@ class OssManual extends DbTable
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->date);
+                        $doc->exportField($this->sscc);
                         $doc->exportField($this->shipment);
                         $doc->exportField($this->pallet_no);
-                        $doc->exportField($this->sscc);
                         $doc->exportField($this->idw);
                         $doc->exportField($this->order_no);
                         $doc->exportField($this->item_in_ctn);

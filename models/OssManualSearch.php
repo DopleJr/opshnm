@@ -482,9 +482,9 @@ class OssManualSearch extends OssManual
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->date->setVisibility();
+        $this->sscc->Visible = false;
         $this->shipment->Visible = false;
         $this->pallet_no->Visible = false;
-        $this->sscc->Visible = false;
         $this->idw->Visible = false;
         $this->order_no->Visible = false;
         $this->item_in_ctn->Visible = false;
@@ -662,6 +662,11 @@ class OssManualSearch extends OssManual
             $hasValue = true;
         }
 
+        // sscc
+        if ($this->sscc->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // shipment
         if ($this->shipment->AdvancedSearch->get()) {
             $hasValue = true;
@@ -669,11 +674,6 @@ class OssManualSearch extends OssManual
 
         // pallet_no
         if ($this->pallet_no->AdvancedSearch->get()) {
-            $hasValue = true;
-        }
-
-        // sscc
-        if ($this->sscc->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
@@ -732,14 +732,14 @@ class OssManualSearch extends OssManual
         // date
         $this->date->RowCssClass = "row";
 
+        // sscc
+        $this->sscc->RowCssClass = "row";
+
         // shipment
         $this->shipment->RowCssClass = "row";
 
         // pallet_no
         $this->pallet_no->RowCssClass = "row";
-
-        // sscc
-        $this->sscc->RowCssClass = "row";
 
         // idw
         $this->idw->RowCssClass = "row";
@@ -773,6 +773,10 @@ class OssManualSearch extends OssManual
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
             $this->date->ViewCustomAttributes = "";
 
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
+
             // shipment
             $this->shipment->ViewValue = $this->shipment->CurrentValue;
             $this->shipment->ViewCustomAttributes = "";
@@ -780,10 +784,6 @@ class OssManualSearch extends OssManual
             // pallet_no
             $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
             $this->pallet_no->ViewCustomAttributes = "";
-
-            // sscc
-            $this->sscc->ViewValue = $this->sscc->CurrentValue;
-            $this->sscc->ViewCustomAttributes = "";
 
             // idw
             $this->idw->ViewValue = $this->idw->CurrentValue;

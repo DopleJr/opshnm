@@ -621,9 +621,9 @@ class OssManualList extends OssManual
         $this->setupImportOptions();
         $this->id->setVisibility();
         $this->date->setVisibility();
+        $this->sscc->setVisibility();
         $this->shipment->setVisibility();
         $this->pallet_no->setVisibility();
-        $this->sscc->setVisibility();
         $this->idw->setVisibility();
         $this->order_no->setVisibility();
         $this->item_in_ctn->setVisibility();
@@ -1035,9 +1035,9 @@ class OssManualList extends OssManual
             return "";
         }
         $this->buildSearchSql($where, $this->date, $default, true); // date
+        $this->buildSearchSql($where, $this->sscc, $default, true); // sscc
         $this->buildSearchSql($where, $this->shipment, $default, true); // shipment
         $this->buildSearchSql($where, $this->pallet_no, $default, true); // pallet_no
-        $this->buildSearchSql($where, $this->sscc, $default, true); // sscc
         $this->buildSearchSql($where, $this->idw, $default, true); // idw
         $this->buildSearchSql($where, $this->order_no, $default, true); // order_no
         $this->buildSearchSql($where, $this->item_in_ctn, $default, true); // item_in_ctn
@@ -1130,8 +1130,8 @@ class OssManualList extends OssManual
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->shipment;
         $searchFlds[] = &$this->sscc;
+        $searchFlds[] = &$this->shipment;
         $searchFlds[] = &$this->idw;
         $searchFlds[] = &$this->item_in_ctn;
         $searchFlds[] = &$this->no_of_ctn;
@@ -1165,13 +1165,13 @@ class OssManualList extends OssManual
         if ($this->date->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->sscc->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->shipment->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->pallet_no->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->sscc->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->idw->AdvancedSearch->issetSession()) {
@@ -1228,9 +1228,9 @@ class OssManualList extends OssManual
     protected function resetAdvancedSearchParms()
     {
         $this->date->AdvancedSearch->unsetSession();
+        $this->sscc->AdvancedSearch->unsetSession();
         $this->shipment->AdvancedSearch->unsetSession();
         $this->pallet_no->AdvancedSearch->unsetSession();
-        $this->sscc->AdvancedSearch->unsetSession();
         $this->idw->AdvancedSearch->unsetSession();
         $this->order_no->AdvancedSearch->unsetSession();
         $this->item_in_ctn->AdvancedSearch->unsetSession();
@@ -1250,9 +1250,9 @@ class OssManualList extends OssManual
 
         // Restore advanced search values
         $this->date->AdvancedSearch->load();
+        $this->sscc->AdvancedSearch->load();
         $this->shipment->AdvancedSearch->load();
         $this->pallet_no->AdvancedSearch->load();
-        $this->sscc->AdvancedSearch->load();
         $this->idw->AdvancedSearch->load();
         $this->order_no->AdvancedSearch->load();
         $this->item_in_ctn->AdvancedSearch->load();
@@ -1282,9 +1282,9 @@ class OssManualList extends OssManual
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->id, $ctrl); // id
             $this->updateSort($this->date, $ctrl); // date
+            $this->updateSort($this->sscc, $ctrl); // sscc
             $this->updateSort($this->shipment, $ctrl); // shipment
             $this->updateSort($this->pallet_no, $ctrl); // pallet_no
-            $this->updateSort($this->sscc, $ctrl); // sscc
             $this->updateSort($this->idw, $ctrl); // idw
             $this->updateSort($this->order_no, $ctrl); // order_no
             $this->updateSort($this->item_in_ctn, $ctrl); // item_in_ctn
@@ -1318,9 +1318,9 @@ class OssManualList extends OssManual
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->date->setSort("");
+                $this->sscc->setSort("");
                 $this->shipment->setSort("");
                 $this->pallet_no->setSort("");
-                $this->sscc->setSort("");
                 $this->idw->setSort("");
                 $this->order_no->setSort("");
                 $this->item_in_ctn->setSort("");
@@ -1507,9 +1507,9 @@ class OssManualList extends OssManual
             $item->Visible = $this->UseColumnVisibility;
             $option->add("id", $this->createColumnOption("id"));
             $option->add("date", $this->createColumnOption("date"));
+            $option->add("sscc", $this->createColumnOption("sscc"));
             $option->add("shipment", $this->createColumnOption("shipment"));
             $option->add("pallet_no", $this->createColumnOption("pallet_no"));
-            $option->add("sscc", $this->createColumnOption("sscc"));
             $option->add("idw", $this->createColumnOption("idw"));
             $option->add("order_no", $this->createColumnOption("order_no"));
             $option->add("item_in_ctn", $this->createColumnOption("item_in_ctn"));
@@ -1707,6 +1707,14 @@ class OssManualList extends OssManual
             }
         }
 
+        // sscc
+        if ($this->sscc->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->sscc->AdvancedSearch->SearchValue != "" || $this->sscc->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // shipment
         if ($this->shipment->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1719,14 +1727,6 @@ class OssManualList extends OssManual
         if ($this->pallet_no->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->pallet_no->AdvancedSearch->SearchValue != "" || $this->pallet_no->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // sscc
-        if ($this->sscc->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->sscc->AdvancedSearch->SearchValue != "" || $this->sscc->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1876,9 +1876,9 @@ class OssManualList extends OssManual
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
+        $this->sscc->setDbValue($row['sscc']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
-        $this->sscc->setDbValue($row['sscc']);
         $this->idw->setDbValue($row['idw']);
         $this->order_no->setDbValue($row['order_no']);
         $this->item_in_ctn->setDbValue($row['item_in_ctn']);
@@ -1894,9 +1894,9 @@ class OssManualList extends OssManual
         $row = [];
         $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
+        $row['sscc'] = $this->sscc->DefaultValue;
         $row['shipment'] = $this->shipment->DefaultValue;
         $row['pallet_no'] = $this->pallet_no->DefaultValue;
-        $row['sscc'] = $this->sscc->DefaultValue;
         $row['idw'] = $this->idw->DefaultValue;
         $row['order_no'] = $this->order_no->DefaultValue;
         $row['item_in_ctn'] = $this->item_in_ctn->DefaultValue;
@@ -1947,14 +1947,14 @@ class OssManualList extends OssManual
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
+        // sscc
+        $this->sscc->CellCssStyle = "white-space: nowrap;";
+
         // shipment
         $this->shipment->CellCssStyle = "white-space: nowrap;";
 
         // pallet_no
         $this->pallet_no->CellCssStyle = "white-space: nowrap;";
-
-        // sscc
-        $this->sscc->CellCssStyle = "white-space: nowrap;";
 
         // idw
         $this->idw->CellCssStyle = "white-space: nowrap;";
@@ -1988,6 +1988,10 @@ class OssManualList extends OssManual
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
             $this->date->ViewCustomAttributes = "";
 
+            // sscc
+            $this->sscc->ViewValue = $this->sscc->CurrentValue;
+            $this->sscc->ViewCustomAttributes = "";
+
             // shipment
             $this->shipment->ViewValue = $this->shipment->CurrentValue;
             $this->shipment->ViewCustomAttributes = "";
@@ -1995,10 +1999,6 @@ class OssManualList extends OssManual
             // pallet_no
             $this->pallet_no->ViewValue = $this->pallet_no->CurrentValue;
             $this->pallet_no->ViewCustomAttributes = "";
-
-            // sscc
-            $this->sscc->ViewValue = $this->sscc->CurrentValue;
-            $this->sscc->ViewCustomAttributes = "";
 
             // idw
             $this->idw->ViewValue = $this->idw->CurrentValue;
@@ -2042,6 +2042,11 @@ class OssManualList extends OssManual
             $this->date->HrefValue = "";
             $this->date->TooltipValue = "";
 
+            // sscc
+            $this->sscc->LinkCustomAttributes = "";
+            $this->sscc->HrefValue = "";
+            $this->sscc->TooltipValue = "";
+
             // shipment
             $this->shipment->LinkCustomAttributes = "";
             $this->shipment->HrefValue = "";
@@ -2051,11 +2056,6 @@ class OssManualList extends OssManual
             $this->pallet_no->LinkCustomAttributes = "";
             $this->pallet_no->HrefValue = "";
             $this->pallet_no->TooltipValue = "";
-
-            // sscc
-            $this->sscc->LinkCustomAttributes = "";
-            $this->sscc->HrefValue = "";
-            $this->sscc->TooltipValue = "";
 
             // idw
             $this->idw->LinkCustomAttributes = "";
@@ -2110,6 +2110,14 @@ class OssManualList extends OssManual
             $this->date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date->AdvancedSearch->SearchValue2, $this->date->formatPattern()), $this->date->formatPattern()));
             $this->date->PlaceHolder = RemoveHtml($this->date->caption());
 
+            // sscc
+            if ($this->sscc->UseFilter && !EmptyValue($this->sscc->AdvancedSearch->SearchValue)) {
+                if (is_array($this->sscc->AdvancedSearch->SearchValue)) {
+                    $this->sscc->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
+                }
+                $this->sscc->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
+            }
+
             // shipment
             if ($this->shipment->UseFilter && !EmptyValue($this->shipment->AdvancedSearch->SearchValue)) {
                 if (is_array($this->shipment->AdvancedSearch->SearchValue)) {
@@ -2124,14 +2132,6 @@ class OssManualList extends OssManual
                     $this->pallet_no->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->pallet_no->AdvancedSearch->SearchValue);
                 }
                 $this->pallet_no->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->pallet_no->AdvancedSearch->SearchValue);
-            }
-
-            // sscc
-            if ($this->sscc->UseFilter && !EmptyValue($this->sscc->AdvancedSearch->SearchValue)) {
-                if (is_array($this->sscc->AdvancedSearch->SearchValue)) {
-                    $this->sscc->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
-                }
-                $this->sscc->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->sscc->AdvancedSearch->SearchValue);
             }
 
             // idw

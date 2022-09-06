@@ -66,6 +66,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+    <tr id="r_sscc"<?= $Page->sscc->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_sscc"><?= $Page->sscc->caption() ?></span></td>
+        <td data-name="sscc"<?= $Page->sscc->cellAttributes() ?>>
+<span id="el_oss_manual_sscc">
+<span<?= $Page->sscc->viewAttributes() ?>>
+<?= $Page->sscc->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->shipment->Visible) { // shipment ?>
     <tr id="r_shipment"<?= $Page->shipment->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_shipment"><?= $Page->shipment->caption() ?></span></td>
@@ -84,17 +95,6 @@ $Page->showMessage();
 <span id="el_oss_manual_pallet_no">
 <span<?= $Page->pallet_no->viewAttributes() ?>>
 <?= $Page->pallet_no->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->sscc->Visible) { // sscc ?>
-    <tr id="r_sscc"<?= $Page->sscc->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_sscc"><?= $Page->sscc->caption() ?></span></td>
-        <td data-name="sscc"<?= $Page->sscc->cellAttributes() ?>>
-<span id="el_oss_manual_sscc">
-<span<?= $Page->sscc->viewAttributes() ?>>
-<?= $Page->sscc->getViewValue() ?></span>
 </span>
 </td>
     </tr>

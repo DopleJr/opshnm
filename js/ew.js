@@ -6493,7 +6493,7 @@
    */
 
   function modalDialogShow(args) {
-    var _args$evt2, _bootstrap$Tooltip$ge4, _args$evt3, _args$evt3$currentTar, _args$evt4, _args$evt4$currentTar;
+    var _args$evt2, _bootstrap$Tooltip$ge4, _args$evt3, _args$evt3$currentTar, _args$evt4, _args$evt4$currentTar, _$dlg$data;
 
     args.lnk = args.lnk || ((_args$evt2 = args.evt) == null ? void 0 : _args$evt2.currentTarget);
     (_bootstrap$Tooltip$ge4 = bootstrap.Tooltip.getInstance(args.lnk)) == null ? void 0 : _bootstrap$Tooltip$ge4.hide();
@@ -6573,9 +6573,13 @@
             if (result.modal && !_current(url)) {
               var args = $dlg.data("args");
               args.reload = true;
+              args.url = url;
               if (result.caption) args.caption = result.caption;
               args.btn = result.view ? null : "";
-              $dlg.data("args", args);
+              $dlg.data({
+                args,
+                url
+              });
               url += (url.split("?").length > 1 ? "&" : "?") + "modal=1&rnd=" + random();
               $body.css("cursor", "wait");
               $__default["default"].get(url).done(success).fail(_fail).always(_always);
@@ -6711,9 +6715,6 @@
       return false;
     };
 
-    $dlg.modal("hide");
-    $dlg.data("args", args);
-
     var success = function (data) {
       var result = parseJson(data);
 
@@ -6767,6 +6768,15 @@
       }
     };
 
+    if (url && (_$dlg$data = $dlg.data("args")) != null && _$dlg$data.reload) {
+      // About to load URL but previous result required reload
+      args.reload = true; // Carry the reload state to current args
+
+      $dlg.data("args").reload = false; // Remove reload so "hidden" event will not reload
+    }
+
+    $dlg.modal("hide");
+    $dlg.data("args", args);
     $body.css("cursor", "wait");
 
     if (f) {

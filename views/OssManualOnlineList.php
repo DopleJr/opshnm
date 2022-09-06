@@ -21,10 +21,10 @@ loadjs.ready(["wrapper", "head"], function () {
 
     // Dynamic selection lists
     foss_manual_onlinelist.lists.date = <?= $Page->date->toClientList($Page) ?>;
+    foss_manual_onlinelist.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
     foss_manual_onlinelist.lists.order_no = <?= $Page->order_no->toClientList($Page) ?>;
     foss_manual_onlinelist.lists.shipment = <?= $Page->shipment->toClientList($Page) ?>;
     foss_manual_onlinelist.lists.pallet_no = <?= $Page->pallet_no->toClientList($Page) ?>;
-    foss_manual_onlinelist.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
     foss_manual_onlinelist.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
     foss_manual_onlinelist.lists.item_in_ctn = <?= $Page->item_in_ctn->toClientList($Page) ?>;
     foss_manual_onlinelist.lists.no_of_ctn = <?= $Page->no_of_ctn->toClientList($Page) ?>;
@@ -46,10 +46,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["id", [], fields.id.isInvalid],
         ["date", [], fields.date.isInvalid],
         ["y_date", [ew.Validators.between], false],
+        ["sscc", [], fields.sscc.isInvalid],
         ["order_no", [], fields.order_no.isInvalid],
         ["shipment", [], fields.shipment.isInvalid],
         ["pallet_no", [], fields.pallet_no.isInvalid],
-        ["sscc", [], fields.sscc.isInvalid],
         ["idw", [], fields.idw.isInvalid],
         ["item_in_ctn", [], fields.item_in_ctn.isInvalid],
         ["no_of_ctn", [], fields.no_of_ctn.isInvalid],
@@ -87,10 +87,10 @@ loadjs.ready(["wrapper", "head"], function () {
 
     // Dynamic selection lists
     foss_manual_onlinesrch.lists.date = <?= $Page->date->toClientList($Page) ?>;
+    foss_manual_onlinesrch.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
     foss_manual_onlinesrch.lists.order_no = <?= $Page->order_no->toClientList($Page) ?>;
     foss_manual_onlinesrch.lists.shipment = <?= $Page->shipment->toClientList($Page) ?>;
     foss_manual_onlinesrch.lists.pallet_no = <?= $Page->pallet_no->toClientList($Page) ?>;
-    foss_manual_onlinesrch.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
     foss_manual_onlinesrch.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
     foss_manual_onlinesrch.lists.item_in_ctn = <?= $Page->item_in_ctn->toClientList($Page) ?>;
     foss_manual_onlinesrch.lists.no_of_ctn = <?= $Page->no_of_ctn->toClientList($Page) ?>;
@@ -174,6 +174,43 @@ if (!$Page->date->UseFilter) {
                 ajax: { id: "x_date", form: "foss_manual_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual_online.fields.date.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+<?php
+if (!$Page->sscc->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_sscc" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->sscc->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_sscc"
+            name="x_sscc[]"
+            class="form-control ew-select<?= $Page->sscc->isInvalidClass() ?>"
+            data-select2-id="foss_manual_onlinesrch_x_sscc"
+            data-table="oss_manual_online"
+            data-field="x_sscc"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->sscc->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->sscc->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"
+            <?= $Page->sscc->editAttributes() ?>>
+            <?= $Page->sscc->selectOptionListHtml("x_sscc", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->sscc->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manual_onlinesrch", function() {
+            var options = {
+                name: "x_sscc",
+                selectId: "foss_manual_onlinesrch_x_sscc",
+                ajax: { id: "x_sscc", form: "foss_manual_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual_online.fields.sscc.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -285,43 +322,6 @@ if (!$Page->pallet_no->UseFilter) {
                 ajax: { id: "x_pallet_no", form: "foss_manual_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual_online.fields.pallet_no.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-<?php if ($Page->sscc->Visible) { // sscc ?>
-<?php
-if (!$Page->sscc->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_sscc" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->sscc->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_sscc"
-            name="x_sscc[]"
-            class="form-control ew-select<?= $Page->sscc->isInvalidClass() ?>"
-            data-select2-id="foss_manual_onlinesrch_x_sscc"
-            data-table="oss_manual_online"
-            data-field="x_sscc"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->sscc->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->sscc->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"
-            <?= $Page->sscc->editAttributes() ?>>
-            <?= $Page->sscc->selectOptionListHtml("x_sscc", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->sscc->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("foss_manual_onlinesrch", function() {
-            var options = {
-                name: "x_sscc",
-                selectId: "foss_manual_onlinesrch_x_sscc",
-                ajax: { id: "x_sscc", form: "foss_manual_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual_online.fields.sscc.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -620,6 +620,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->date->Visible) { // date ?>
         <th data-name="date" class="<?= $Page->date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_date" class="oss_manual_online_date"><?= $Page->renderFieldHeader($Page->date) ?></div></th>
 <?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+        <th data-name="sscc" class="<?= $Page->sscc->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_sscc" class="oss_manual_online_sscc"><?= $Page->renderFieldHeader($Page->sscc) ?></div></th>
+<?php } ?>
 <?php if ($Page->order_no->Visible) { // order_no ?>
         <th data-name="order_no" class="<?= $Page->order_no->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_order_no" class="oss_manual_online_order_no"><?= $Page->renderFieldHeader($Page->order_no) ?></div></th>
 <?php } ?>
@@ -628,9 +631,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->pallet_no->Visible) { // pallet_no ?>
         <th data-name="pallet_no" class="<?= $Page->pallet_no->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_pallet_no" class="oss_manual_online_pallet_no"><?= $Page->renderFieldHeader($Page->pallet_no) ?></div></th>
-<?php } ?>
-<?php if ($Page->sscc->Visible) { // sscc ?>
-        <th data-name="sscc" class="<?= $Page->sscc->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_sscc" class="oss_manual_online_sscc"><?= $Page->renderFieldHeader($Page->sscc) ?></div></th>
 <?php } ?>
 <?php if ($Page->idw->Visible) { // idw ?>
         <th data-name="idw" class="<?= $Page->idw->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_idw" class="oss_manual_online_idw"><?= $Page->renderFieldHeader($Page->idw) ?></div></th>
@@ -741,6 +741,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->sscc->Visible) { // sscc ?>
+        <td data-name="sscc"<?= $Page->sscc->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_online_sscc" class="el_oss_manual_online_sscc">
+<span<?= $Page->sscc->viewAttributes() ?>>
+<?= $Page->sscc->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->order_no->Visible) { // order_no ?>
         <td data-name="order_no"<?= $Page->order_no->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_oss_manual_online_order_no" class="el_oss_manual_online_order_no">
@@ -762,14 +770,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_oss_manual_online_pallet_no" class="el_oss_manual_online_pallet_no">
 <span<?= $Page->pallet_no->viewAttributes() ?>>
 <?= $Page->pallet_no->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->sscc->Visible) { // sscc ?>
-        <td data-name="sscc"<?= $Page->sscc->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_online_sscc" class="el_oss_manual_online_sscc">
-<span<?= $Page->sscc->viewAttributes() ?>>
-<?= $Page->sscc->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

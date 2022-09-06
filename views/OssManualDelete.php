@@ -50,14 +50,14 @@ $Page->showMessage();
 <?php if ($Page->date->Visible) { // date ?>
         <th class="<?= $Page->date->headerCellClass() ?>"><span id="elh_oss_manual_date" class="oss_manual_date"><?= $Page->date->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+        <th class="<?= $Page->sscc->headerCellClass() ?>"><span id="elh_oss_manual_sscc" class="oss_manual_sscc"><?= $Page->sscc->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->shipment->Visible) { // shipment ?>
         <th class="<?= $Page->shipment->headerCellClass() ?>"><span id="elh_oss_manual_shipment" class="oss_manual_shipment"><?= $Page->shipment->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->pallet_no->Visible) { // pallet_no ?>
         <th class="<?= $Page->pallet_no->headerCellClass() ?>"><span id="elh_oss_manual_pallet_no" class="oss_manual_pallet_no"><?= $Page->pallet_no->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->sscc->Visible) { // sscc ?>
-        <th class="<?= $Page->sscc->headerCellClass() ?>"><span id="elh_oss_manual_sscc" class="oss_manual_sscc"><?= $Page->sscc->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->idw->Visible) { // idw ?>
         <th class="<?= $Page->idw->headerCellClass() ?>"><span id="elh_oss_manual_idw" class="oss_manual_idw"><?= $Page->idw->caption() ?></span></th>
@@ -117,6 +117,14 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->sscc->Visible) { // sscc ?>
+        <td<?= $Page->sscc->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_sscc" class="el_oss_manual_sscc">
+<span<?= $Page->sscc->viewAttributes() ?>>
+<?= $Page->sscc->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->shipment->Visible) { // shipment ?>
         <td<?= $Page->shipment->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_oss_manual_shipment" class="el_oss_manual_shipment">
@@ -130,14 +138,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_oss_manual_pallet_no" class="el_oss_manual_pallet_no">
 <span<?= $Page->pallet_no->viewAttributes() ?>>
 <?= $Page->pallet_no->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->sscc->Visible) { // sscc ?>
-        <td<?= $Page->sscc->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_sscc" class="el_oss_manual_sscc">
-<span<?= $Page->sscc->viewAttributes() ?>>
-<?= $Page->sscc->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
