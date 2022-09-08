@@ -1288,7 +1288,6 @@ class JobControlCopy1Add extends JobControlCopy1
             $this->area->PlaceHolder = RemoveHtml($this->area->caption());
 
             // aisle
-            $this->aisle->setupEditAttributes();
             $this->aisle->EditCustomAttributes = "";
             $curVal = trim(strval($this->aisle->CurrentValue));
             if ($curVal != "") {

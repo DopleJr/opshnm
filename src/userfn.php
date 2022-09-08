@@ -251,6 +251,11 @@ function GetArea()
 	return ExecuteScalar("SELECT area FROM locations WHERE `location` = '$_location' ORDER BY `id` ");
 }
 
+function GetAisle()
+{
+	return ExecuteScalar("SELECT aisle2 FROM `picking` WHERE `status` = 'Pending' ORDER BY `id` ");
+}
+
 function GetSkip()
 {
 	$like = "%";

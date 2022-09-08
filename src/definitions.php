@@ -95,6 +95,7 @@ return [
     "box_result" => \DI\create(BoxResult::class),
     "oss_manual" => \DI\create(OssManual::class),
     "oss_manual_online" => \DI\create(OssManualOnline::class),
+    "productivity_online" => \DI\create(ProductivityOnline::class),
 
     // User table
     "usertable" => \DI\get("user"),

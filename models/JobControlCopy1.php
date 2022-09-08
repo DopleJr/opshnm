@@ -164,6 +164,7 @@ class JobControlCopy1 extends DbTable
             'SELECT'
         );
         $this->store_id->InputTextType = "text";
+        $this->store_id->Required = true; // Required field
         $this->store_id->SelectMultiple = true; // Multiple select
         $this->store_id->UseFilter = true; // Table header filter
         $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id2","","",""], ["x_creation_date"], ["x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id2`");
@@ -189,6 +190,7 @@ class JobControlCopy1 extends DbTable
             'SELECT'
         );
         $this->area->InputTextType = "text";
+        $this->area->Required = true; // Required field
         $this->area->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->area->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->area->UseFilter = true; // Table header filter
@@ -215,6 +217,7 @@ class JobControlCopy1 extends DbTable
             'SELECT'
         );
         $this->aisle->InputTextType = "text";
+        $this->aisle->Required = true; // Required field
         $this->aisle->SelectMultiple = true; // Multiple select
         $this->aisle->UseFilter = true; // Table header filter
         $this->aisle->Lookup = new Lookup('aisle', 'picking_pending', true, 'aisle2', ["aisle","","",""], ["x_area","x_creation_date","x_store_id[]"], [], ["area","creation_date","store_id2"], ["x_area","x_creation_date","x_store_id2"], [], [], '`aisle2` ASC', '', "`aisle`");
@@ -240,6 +243,7 @@ class JobControlCopy1 extends DbTable
             'SELECT'
         );
         $this->user->InputTextType = "text";
+        $this->user->Required = true; // Required field
         $this->user->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->user->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->user->UseFilter = true; // Table header filter
@@ -1569,7 +1573,6 @@ class JobControlCopy1 extends DbTable
         $this->area->PlaceHolder = RemoveHtml($this->area->caption());
 
         // aisle
-        $this->aisle->setupEditAttributes();
         $this->aisle->EditCustomAttributes = "";
         $curVal = trim(strval($this->aisle->CurrentValue));
         if ($curVal != "") {

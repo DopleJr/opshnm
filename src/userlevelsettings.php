@@ -137,7 +137,10 @@ $USER_LEVEL_PRIVS = [["{82E0F641-A651-4BB1-8010-BEBF3749166D}audit staging","-2"
     ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual","1","367"],
     ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual_online","-2","0"],
     ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual_online","0","0"],
-    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual_online","1","367"]];
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}oss_manual_online","1","367"],
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}productivity_online","-2","0"],
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}productivity_online","0","0"],
+    ["{82E0F641-A651-4BB1-8010-BEBF3749166D}productivity_online","1","367"]];
 // User level table info
 $USER_LEVEL_TABLES = [["audit staging","auditstaging","Audit Staging",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","auditstaginglist"],
     ["audittrail","audittrail","Logs",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","audittraillist"],
@@ -181,4 +184,5 @@ $USER_LEVEL_TABLES = [["audit staging","auditstaging","Audit Staging",true,"{82E
     ["report_totes","report_totes","Report Totes",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","reporttoteslist"],
     ["box_result","box_result","Box Result",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","boxresultlist"],
     ["oss_manual","oss_manual","Data OSS Manual",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","ossmanuallist"],
-    ["oss_manual_online","oss_manual_online","Oss Manual Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","ossmanualonlinelist"]];
+    ["oss_manual_online","oss_manual_online","Oss Manual Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","ossmanualonlinelist"],
+    ["productivity_online","productivity_online","Productivity Online",true,"{82E0F641-A651-4BB1-8010-BEBF3749166D}","productivityonlinelist"]];

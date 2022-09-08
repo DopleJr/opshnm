@@ -565,6 +565,15 @@ return function (App $app) {
         }
     );
 
+    // productivity_online
+    $app->map(["GET","POST","OPTIONS"], '/productivityonlinelist', ProductivityOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('productivityonlinelist-productivity_online-list'); // list
+    $app->group(
+        '/productivity_online',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '', ProductivityOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('productivity_online/list-productivity_online-list-2'); // list
+        }
+    );
+
     // error
     $app->map(["GET","POST","OPTIONS"], '/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

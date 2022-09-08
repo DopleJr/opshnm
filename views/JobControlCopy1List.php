@@ -243,7 +243,7 @@ if (!$Page->store_id->UseFilter) {
             var options = {
                 name: "x_store_id",
                 selectId: "fjob_control_copy1srch_x_store_id",
-                ajax: { id: "x_store_id", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+                ajax: { id: "x_store_id", form: "fjob_control_copy1srch", limit: 1000, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.store_id.filterOptions);
             ew.createFilter(options);
@@ -317,7 +317,7 @@ if (!$Page->aisle->UseFilter) {
             var options = {
                 name: "x_aisle",
                 selectId: "fjob_control_copy1srch_x_aisle",
-                ajax: { id: "x_aisle", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+                ajax: { id: "x_aisle", form: "fjob_control_copy1srch", limit: 100, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.aisle.filterOptions);
             ew.createFilter(options);
@@ -354,7 +354,7 @@ if (!$Page->user->UseFilter) {
             var options = {
                 name: "x_user",
                 selectId: "fjob_control_copy1srch_x_user",
-                ajax: { id: "x_user", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+                ajax: { id: "x_user", form: "fjob_control_copy1srch", limit: 20, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.user.filterOptions);
             ew.createFilter(options);
