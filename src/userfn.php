@@ -291,29 +291,29 @@ function GetBoxType()
 function GetShipment()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `shipment` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `shipment` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
 }
 
 function GetPallet()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `pallet_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `pallet_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
 }
 
 function GetShift()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `shift` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `shift` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
 }
 
 function GetOrder()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `order_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `order_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
 }
 
 function GetIdw()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `idw` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `id` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `idw` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
 }

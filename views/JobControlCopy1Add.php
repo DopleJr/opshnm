@@ -143,7 +143,7 @@ loadjs.ready("fjob_control_copy1add", function() {
     if (fjob_control_copy1add.lists.store_id.lookupOptions.length) {
         options.data = { id: "x_store_id[]", form: "fjob_control_copy1add" };
     } else {
-        options.ajax = { id: "x_store_id[]", form: "fjob_control_copy1add", limit: 1000 };
+        options.ajax = { id: "x_store_id[]", form: "fjob_control_copy1add", limit: 100 };
     }
     options.minimumResultsForSearch = Infinity;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.job_control_copy1.fields.store_id.selectOptions);

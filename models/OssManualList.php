@@ -439,7 +439,7 @@ class OssManualList extends OssManual
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['sscc'];
         }
         return $key;
     }
@@ -451,9 +451,6 @@ class OssManualList extends OssManual
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -619,9 +616,9 @@ class OssManualList extends OssManual
 
         // Setup import options
         $this->setupImportOptions();
-        $this->id->setVisibility();
         $this->date->setVisibility();
         $this->sscc->setVisibility();
+        $this->scan->Visible = false;
         $this->shipment->setVisibility();
         $this->pallet_no->setVisibility();
         $this->idw->setVisibility();
@@ -631,6 +628,9 @@ class OssManualList extends OssManual
         $this->ctn_no->setVisibility();
         $this->checker->setVisibility();
         $this->shift->setVisibility();
+        $this->status->setVisibility();
+        $this->date_updated->setVisibility();
+        $this->time_updated->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -655,7 +655,9 @@ class OssManualList extends OssManual
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idw);
         $this->setupLookupOptions($this->shift);
+        $this->setupLookupOptions($this->status);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -1036,6 +1038,7 @@ class OssManualList extends OssManual
         }
         $this->buildSearchSql($where, $this->date, $default, true); // date
         $this->buildSearchSql($where, $this->sscc, $default, true); // sscc
+        $this->buildSearchSql($where, $this->scan, $default, true); // scan
         $this->buildSearchSql($where, $this->shipment, $default, true); // shipment
         $this->buildSearchSql($where, $this->pallet_no, $default, true); // pallet_no
         $this->buildSearchSql($where, $this->idw, $default, true); // idw
@@ -1045,6 +1048,9 @@ class OssManualList extends OssManual
         $this->buildSearchSql($where, $this->ctn_no, $default, true); // ctn_no
         $this->buildSearchSql($where, $this->checker, $default, true); // checker
         $this->buildSearchSql($where, $this->shift, $default, true); // shift
+        $this->buildSearchSql($where, $this->status, $default, true); // status
+        $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
+        $this->buildSearchSql($where, $this->time_updated, $default, true); // time_updated
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1132,11 +1138,16 @@ class OssManualList extends OssManual
         $searchFlds = [];
         $searchFlds[] = &$this->sscc;
         $searchFlds[] = &$this->shipment;
+        $searchFlds[] = &$this->pallet_no;
         $searchFlds[] = &$this->idw;
+        $searchFlds[] = &$this->order_no;
         $searchFlds[] = &$this->item_in_ctn;
         $searchFlds[] = &$this->no_of_ctn;
+        $searchFlds[] = &$this->ctn_no;
         $searchFlds[] = &$this->checker;
         $searchFlds[] = &$this->shift;
+        $searchFlds[] = &$this->status;
+        $searchFlds[] = &$this->date_updated;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1168,6 +1179,9 @@ class OssManualList extends OssManual
         if ($this->sscc->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->scan->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->shipment->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1193,6 +1207,15 @@ class OssManualList extends OssManual
             return true;
         }
         if ($this->shift->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->status->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->date_updated->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->time_updated->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1229,6 +1252,7 @@ class OssManualList extends OssManual
     {
         $this->date->AdvancedSearch->unsetSession();
         $this->sscc->AdvancedSearch->unsetSession();
+        $this->scan->AdvancedSearch->unsetSession();
         $this->shipment->AdvancedSearch->unsetSession();
         $this->pallet_no->AdvancedSearch->unsetSession();
         $this->idw->AdvancedSearch->unsetSession();
@@ -1238,6 +1262,9 @@ class OssManualList extends OssManual
         $this->ctn_no->AdvancedSearch->unsetSession();
         $this->checker->AdvancedSearch->unsetSession();
         $this->shift->AdvancedSearch->unsetSession();
+        $this->status->AdvancedSearch->unsetSession();
+        $this->date_updated->AdvancedSearch->unsetSession();
+        $this->time_updated->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1251,6 +1278,7 @@ class OssManualList extends OssManual
         // Restore advanced search values
         $this->date->AdvancedSearch->load();
         $this->sscc->AdvancedSearch->load();
+        $this->scan->AdvancedSearch->load();
         $this->shipment->AdvancedSearch->load();
         $this->pallet_no->AdvancedSearch->load();
         $this->idw->AdvancedSearch->load();
@@ -1260,6 +1288,9 @@ class OssManualList extends OssManual
         $this->ctn_no->AdvancedSearch->load();
         $this->checker->AdvancedSearch->load();
         $this->shift->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
+        $this->date_updated->AdvancedSearch->load();
+        $this->time_updated->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1267,7 +1298,7 @@ class OssManualList extends OssManual
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->date->Expression . " DESC" . ", " . $this->order_no->Expression . " ASC"; // Set up default sort
+            $defaultSort = $this->date_updated->Expression . " DESC" . ", " . $this->time_updated->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1280,7 +1311,6 @@ class OssManualList extends OssManual
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id, $ctrl); // id
             $this->updateSort($this->date, $ctrl); // date
             $this->updateSort($this->sscc, $ctrl); // sscc
             $this->updateSort($this->shipment, $ctrl); // shipment
@@ -1292,6 +1322,9 @@ class OssManualList extends OssManual
             $this->updateSort($this->ctn_no, $ctrl); // ctn_no
             $this->updateSort($this->checker, $ctrl); // checker
             $this->updateSort($this->shift, $ctrl); // shift
+            $this->updateSort($this->status, $ctrl); // status
+            $this->updateSort($this->date_updated, $ctrl); // date_updated
+            $this->updateSort($this->time_updated, $ctrl); // time_updated
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1316,9 +1349,9 @@ class OssManualList extends OssManual
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
                 $this->date->setSort("");
                 $this->sscc->setSort("");
+                $this->scan->setSort("");
                 $this->shipment->setSort("");
                 $this->pallet_no->setSort("");
                 $this->idw->setSort("");
@@ -1328,6 +1361,9 @@ class OssManualList extends OssManual
                 $this->ctn_no->setSort("");
                 $this->checker->setSort("");
                 $this->shift->setSort("");
+                $this->status->setSort("");
+                $this->date_updated->setSort("");
+                $this->time_updated->setSort("");
             }
 
             // Reset start position
@@ -1466,7 +1502,7 @@ class OssManualList extends OssManual
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->sscc->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1505,7 +1541,6 @@ class OssManualList extends OssManual
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $option->add("id", $this->createColumnOption("id"));
             $option->add("date", $this->createColumnOption("date"));
             $option->add("sscc", $this->createColumnOption("sscc"));
             $option->add("shipment", $this->createColumnOption("shipment"));
@@ -1517,6 +1552,9 @@ class OssManualList extends OssManual
             $option->add("ctn_no", $this->createColumnOption("ctn_no"));
             $option->add("checker", $this->createColumnOption("checker"));
             $option->add("shift", $this->createColumnOption("shift"));
+            $option->add("status", $this->createColumnOption("status"));
+            $option->add("date_updated", $this->createColumnOption("date_updated"));
+            $option->add("time_updated", $this->createColumnOption("time_updated"));
         }
 
         // Set up options default
@@ -1715,6 +1753,14 @@ class OssManualList extends OssManual
             }
         }
 
+        // scan
+        if ($this->scan->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->scan->AdvancedSearch->SearchValue != "" || $this->scan->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // shipment
         if ($this->shipment->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1783,6 +1829,30 @@ class OssManualList extends OssManual
         if ($this->shift->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->shift->AdvancedSearch->SearchValue != "" || $this->shift->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // status
+        if ($this->status->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->status->AdvancedSearch->SearchValue != "" || $this->status->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // date_updated
+        if ($this->date_updated->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date_updated->AdvancedSearch->SearchValue != "" || $this->date_updated->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // time_updated
+        if ($this->time_updated->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->time_updated->AdvancedSearch->SearchValue != "" || $this->time_updated->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1874,9 +1944,9 @@ class OssManualList extends OssManual
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
         $this->sscc->setDbValue($row['sscc']);
+        $this->scan->setDbValue($row['scan']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
         $this->idw->setDbValue($row['idw']);
@@ -1886,15 +1956,18 @@ class OssManualList extends OssManual
         $this->ctn_no->setDbValue($row['ctn_no']);
         $this->checker->setDbValue($row['checker']);
         $this->shift->setDbValue($row['shift']);
+        $this->status->setDbValue($row['status']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
         $row['sscc'] = $this->sscc->DefaultValue;
+        $row['scan'] = $this->scan->DefaultValue;
         $row['shipment'] = $this->shipment->DefaultValue;
         $row['pallet_no'] = $this->pallet_no->DefaultValue;
         $row['idw'] = $this->idw->DefaultValue;
@@ -1904,6 +1977,9 @@ class OssManualList extends OssManual
         $row['ctn_no'] = $this->ctn_no->DefaultValue;
         $row['checker'] = $this->checker->DefaultValue;
         $row['shift'] = $this->shift->DefaultValue;
+        $row['status'] = $this->status->DefaultValue;
+        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['time_updated'] = $this->time_updated->DefaultValue;
         return $row;
     }
 
@@ -1941,14 +2017,14 @@ class OssManualList extends OssManual
 
         // Common render codes for all row types
 
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
-
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
         // sscc
         $this->sscc->CellCssStyle = "white-space: nowrap;";
+
+        // scan
+        $this->scan->CellCssStyle = "white-space: nowrap;";
 
         // shipment
         $this->shipment->CellCssStyle = "white-space: nowrap;";
@@ -1977,12 +2053,17 @@ class OssManualList extends OssManual
         // shift
         $this->shift->CellCssStyle = "white-space: nowrap;";
 
+        // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // date
             $this->date->ViewValue = $this->date->CurrentValue;
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
@@ -2001,7 +2082,11 @@ class OssManualList extends OssManual
             $this->pallet_no->ViewCustomAttributes = "";
 
             // idw
-            $this->idw->ViewValue = $this->idw->CurrentValue;
+            if (strval($this->idw->CurrentValue) != "") {
+                $this->idw->ViewValue = $this->idw->optionCaption($this->idw->CurrentValue);
+            } else {
+                $this->idw->ViewValue = null;
+            }
             $this->idw->ViewCustomAttributes = "";
 
             // order_no
@@ -2010,14 +2095,17 @@ class OssManualList extends OssManual
 
             // item_in_ctn
             $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
             $this->item_in_ctn->ViewCustomAttributes = "";
 
             // no_of_ctn
             $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
             $this->no_of_ctn->ViewCustomAttributes = "";
 
             // ctn_no
             $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
             $this->ctn_no->ViewCustomAttributes = "";
 
             // checker
@@ -2032,10 +2120,23 @@ class OssManualList extends OssManual
             }
             $this->shift->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // status
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
+            $this->status->ViewCustomAttributes = "";
+
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
 
             // date
             $this->date->LinkCustomAttributes = "";
@@ -2091,13 +2192,22 @@ class OssManualList extends OssManual
             $this->shift->LinkCustomAttributes = "";
             $this->shift->HrefValue = "";
             $this->shift->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->AdvancedSearch->SearchValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+            $this->date_updated->TooltipValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
+            $this->time_updated->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // date
             if ($this->date->UseFilter && !EmptyValue($this->date->AdvancedSearch->SearchValue)) {
                 if (is_array($this->date->AdvancedSearch->SearchValue)) {
@@ -2188,6 +2298,30 @@ class OssManualList extends OssManual
                     $this->shift->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shift->AdvancedSearch->SearchValue);
                 }
                 $this->shift->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->shift->AdvancedSearch->SearchValue);
+            }
+
+            // status
+            if ($this->status->UseFilter && !EmptyValue($this->status->AdvancedSearch->SearchValue)) {
+                if (is_array($this->status->AdvancedSearch->SearchValue)) {
+                    $this->status->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+                }
+                $this->status->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+            }
+
+            // date_updated
+            if ($this->date_updated->UseFilter && !EmptyValue($this->date_updated->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date_updated->AdvancedSearch->SearchValue)) {
+                    $this->date_updated->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
+                }
+                $this->date_updated->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
+            }
+
+            // time_updated
+            if ($this->time_updated->UseFilter && !EmptyValue($this->time_updated->AdvancedSearch->SearchValue)) {
+                if (is_array($this->time_updated->AdvancedSearch->SearchValue)) {
+                    $this->time_updated->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->time_updated->AdvancedSearch->SearchValue);
+                }
+                $this->time_updated->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->time_updated->AdvancedSearch->SearchValue);
             }
         }
 
@@ -2853,7 +2987,11 @@ class OssManualList extends OssManual
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idw":
+                    break;
                 case "x_shift":
+                    break;
+                case "x_status":
                     break;
                 default:
                     $lookupFilter = "";

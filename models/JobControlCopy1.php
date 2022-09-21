@@ -110,6 +110,7 @@ class JobControlCopy1 extends DbTable
         $this->id->InputTextType = "text";
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = false; // Allow sort
         $this->id->UseFilter = true; // Table header filter
         $this->id->Lookup = new Lookup('id', 'job_control_copy1', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -136,6 +137,7 @@ class JobControlCopy1 extends DbTable
         );
         $this->creation_date->InputTextType = "text";
         $this->creation_date->Required = true; // Required field
+        $this->creation_date->Sortable = false; // Allow sort
         $this->creation_date->FormatPattern = "yyyy-MM-dd"; // Format pattern
         $this->creation_date->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->creation_date->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -165,9 +167,10 @@ class JobControlCopy1 extends DbTable
         );
         $this->store_id->InputTextType = "text";
         $this->store_id->Required = true; // Required field
+        $this->store_id->Sortable = false; // Allow sort
         $this->store_id->SelectMultiple = true; // Multiple select
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id2","","",""], ["x_creation_date"], ["x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id2`");
+        $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id","","",""], ["x_creation_date"], ["x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id`");
         $this->Fields['store_id'] = &$this->store_id;
 
         // area
@@ -191,6 +194,7 @@ class JobControlCopy1 extends DbTable
         );
         $this->area->InputTextType = "text";
         $this->area->Required = true; // Required field
+        $this->area->Sortable = false; // Allow sort
         $this->area->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->area->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->area->UseFilter = true; // Table header filter
@@ -218,6 +222,7 @@ class JobControlCopy1 extends DbTable
         );
         $this->aisle->InputTextType = "text";
         $this->aisle->Required = true; // Required field
+        $this->aisle->Sortable = false; // Allow sort
         $this->aisle->SelectMultiple = true; // Multiple select
         $this->aisle->UseFilter = true; // Table header filter
         $this->aisle->Lookup = new Lookup('aisle', 'picking_pending', true, 'aisle2', ["aisle","","",""], ["x_area","x_creation_date","x_store_id[]"], [], ["area","creation_date","store_id2"], ["x_area","x_creation_date","x_store_id2"], [], [], '`aisle2` ASC', '', "`aisle`");
@@ -244,6 +249,7 @@ class JobControlCopy1 extends DbTable
         );
         $this->user->InputTextType = "text";
         $this->user->Required = true; // Required field
+        $this->user->Sortable = false; // Allow sort
         $this->user->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->user->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->user->UseFilter = true; // Table header filter
@@ -270,6 +276,7 @@ class JobControlCopy1 extends DbTable
             'TEXT'
         );
         $this->target_qty->InputTextType = "text";
+        $this->target_qty->Sortable = false; // Allow sort
         $this->target_qty->UseFilter = true; // Table header filter
         $this->target_qty->Lookup = new Lookup('target_qty', 'job_control_copy1', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['target_qty'] = &$this->target_qty;
@@ -294,6 +301,7 @@ class JobControlCopy1 extends DbTable
             'TEXT'
         );
         $this->picked_qty->InputTextType = "text";
+        $this->picked_qty->Sortable = false; // Allow sort
         $this->picked_qty->UseFilter = true; // Table header filter
         $this->picked_qty->Lookup = new Lookup('picked_qty', 'job_control_copy1', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['picked_qty'] = &$this->picked_qty;
@@ -318,6 +326,7 @@ class JobControlCopy1 extends DbTable
             'SELECT'
         );
         $this->status->InputTextType = "text";
+        $this->status->Sortable = false; // Allow sort
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
@@ -345,6 +354,7 @@ class JobControlCopy1 extends DbTable
             'TEXT'
         );
         $this->date_created->InputTextType = "text";
+        $this->date_created->Sortable = false; // Allow sort
         $this->date_created->UseFilter = true; // Table header filter
         $this->date_created->Lookup = new Lookup('date_created', 'job_control_copy1', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
@@ -370,6 +380,7 @@ class JobControlCopy1 extends DbTable
             'TEXT'
         );
         $this->date_updated->InputTextType = "text";
+        $this->date_updated->Sortable = false; // Allow sort
         $this->date_updated->UseFilter = true; // Table header filter
         $this->date_updated->Lookup = new Lookup('date_updated', 'job_control_copy1', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
@@ -1204,7 +1215,6 @@ class JobControlCopy1 extends DbTable
         $this->area->CellCssStyle = "white-space: nowrap;";
 
         // aisle
-        $this->aisle->CellCssStyle = "white-space: nowrap;";
 
         // user
         $this->user->CellCssStyle = "white-space: nowrap;";
@@ -1213,7 +1223,7 @@ class JobControlCopy1 extends DbTable
         $this->target_qty->CellCssStyle = "white-space: nowrap;";
 
         // picked_qty
-        $this->picked_qty->CellCssStyle = "white-space: nowrap;";
+        $this->picked_qty->CellCssStyle = "min-width: 10rem; white-space: nowrap;";
 
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
@@ -2138,6 +2148,14 @@ class JobControlCopy1 extends DbTable
                 color: aliceblue;
                 background-color: grey
                 ";}
+                $total = 0;
+                $total = @round(($this->picked_qty->CurrentValue /$this->target_qty->CurrentValue) * 100,2);
+                //Progress Bar Start
+                $this->picked_qty->ViewValue = "
+                <div class='progress' style='overflow: hidden;background-color: #e9ecef;height: 1.5rem;box-shadow: inset 0 1.5px 3px rgb(0 0 0 / 8%);border-radius: 0.45rem'>
+                <div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='".$total." aria-valuemin='0' aria-valuemax='100' style='height: 1.5rem;font-size: 1rem;border-radius: 0.45rem;min-width: 2em; width: ".$total."%'>".$total."%
+                </div></div></div>";
+                //Progress Bar End
     }
 
     // User ID Filtering event

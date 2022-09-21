@@ -504,12 +504,12 @@ class PickingSearch extends Picking
         $this->target_qty->Visible = false;
         $this->picked_qty->Visible = false;
         $this->variance_qty->Visible = false;
-        $this->confirmation_date->setVisibility();
+        $this->confirmation_date->Visible = false;
         $this->confirmation_time->Visible = false;
         $this->box_code->Visible = false;
         $this->box_type->Visible = false;
         $this->picker->Visible = false;
-        $this->status->Visible = false;
+        $this->status->setVisibility();
         $this->remarks->Visible = false;
         $this->aisle->Visible = false;
         $this->area->Visible = false;
@@ -517,6 +517,7 @@ class PickingSearch extends Picking
         $this->store_id2->Visible = false;
         $this->close_totes->Visible = false;
         $this->job_id->Visible = false;
+        $this->sequence->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -533,6 +534,7 @@ class PickingSearch extends Picking
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->status);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -600,7 +602,7 @@ class PickingSearch extends Picking
     {
         $srchUrl = "";
         $this->buildSearchUrl($srchUrl, $this->creation_date); // creation_date
-        $this->buildSearchUrl($srchUrl, $this->confirmation_date); // confirmation_date
+        $this->buildSearchUrl($srchUrl, $this->status); // status
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -962,6 +964,9 @@ class PickingSearch extends Picking
         // job_id
         $this->job_id->RowCssClass = "row";
 
+        // sequence
+        $this->sequence->RowCssClass = "row";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // po_no
@@ -1084,7 +1089,11 @@ class PickingSearch extends Picking
             $this->picker->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // remarks
@@ -1096,10 +1105,10 @@ class PickingSearch extends Picking
             $this->creation_date->HrefValue = "";
             $this->creation_date->TooltipValue = "";
 
-            // confirmation_date
-            $this->confirmation_date->LinkCustomAttributes = "";
-            $this->confirmation_date->HrefValue = "";
-            $this->confirmation_date->TooltipValue = "";
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // creation_date
             $this->creation_date->setupEditAttributes();
@@ -1111,15 +1120,11 @@ class PickingSearch extends Picking
             $this->creation_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->creation_date->AdvancedSearch->SearchValue2, $this->creation_date->formatPattern()), $this->creation_date->formatPattern()));
             $this->creation_date->PlaceHolder = RemoveHtml($this->creation_date->caption());
 
-            // confirmation_date
-            $this->confirmation_date->setupEditAttributes();
-            $this->confirmation_date->EditCustomAttributes = "";
-            $this->confirmation_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->confirmation_date->AdvancedSearch->SearchValue, $this->confirmation_date->formatPattern()), $this->confirmation_date->formatPattern()));
-            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
-            $this->confirmation_date->setupEditAttributes();
-            $this->confirmation_date->EditCustomAttributes = "";
-            $this->confirmation_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->confirmation_date->AdvancedSearch->SearchValue2, $this->confirmation_date->formatPattern()), $this->confirmation_date->formatPattern()));
-            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+            // status
+            $this->status->setupEditAttributes();
+            $this->status->EditCustomAttributes = "";
+            $this->status->EditValue = $this->status->options(true);
+            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1144,12 +1149,6 @@ class PickingSearch extends Picking
         if (!CheckDate($this->creation_date->AdvancedSearch->SearchValue2, $this->creation_date->formatPattern())) {
             $this->creation_date->addErrorMessage($this->creation_date->getErrorMessage(false));
         }
-        if (!CheckDate($this->confirmation_date->AdvancedSearch->SearchValue, $this->confirmation_date->formatPattern())) {
-            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
-        }
-        if (!CheckDate($this->confirmation_date->AdvancedSearch->SearchValue2, $this->confirmation_date->formatPattern())) {
-            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
-        }
 
         // Return validate result
         $validateSearch = !$this->hasInvalidFields();
@@ -1167,7 +1166,7 @@ class PickingSearch extends Picking
     public function loadAdvancedSearch()
     {
         $this->creation_date->AdvancedSearch->load();
-        $this->confirmation_date->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb
@@ -1194,6 +1193,8 @@ class PickingSearch extends Picking
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_status":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

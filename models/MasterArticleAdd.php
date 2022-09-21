@@ -1217,6 +1217,16 @@ class MasterArticleAdd extends MasterArticle
 
         // Update current values
         $this->setCurrentValues($rsnew);
+        if ($this->gtin->CurrentValue != "") { // Check field with unique index
+            $filter = "(`gtin` = '" . AdjustSql($this->gtin->CurrentValue, $this->Dbid) . "')";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->gtin->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->gtin->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
+        }
         $conn = $this->getConnection();
 
         // Load db values from old row

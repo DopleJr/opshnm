@@ -358,7 +358,7 @@ class OssManualDelete extends OssManual
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['sscc'];
         }
         return $key;
     }
@@ -370,9 +370,6 @@ class OssManualDelete extends OssManual
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -395,9 +392,9 @@ class OssManualDelete extends OssManual
         // Use layout
         $this->UseLayout = $this->UseLayout && ConvertToBool(Param("layout", true));
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
         $this->date->setVisibility();
         $this->sscc->setVisibility();
+        $this->scan->Visible = false;
         $this->shipment->setVisibility();
         $this->pallet_no->setVisibility();
         $this->idw->setVisibility();
@@ -407,6 +404,9 @@ class OssManualDelete extends OssManual
         $this->ctn_no->setVisibility();
         $this->checker->setVisibility();
         $this->shift->setVisibility();
+        $this->status->setVisibility();
+        $this->date_updated->setVisibility();
+        $this->time_updated->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -423,7 +423,9 @@ class OssManualDelete extends OssManual
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idw);
         $this->setupLookupOptions($this->shift);
+        $this->setupLookupOptions($this->status);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -591,9 +593,9 @@ class OssManualDelete extends OssManual
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
         $this->sscc->setDbValue($row['sscc']);
+        $this->scan->setDbValue($row['scan']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
         $this->idw->setDbValue($row['idw']);
@@ -603,15 +605,18 @@ class OssManualDelete extends OssManual
         $this->ctn_no->setDbValue($row['ctn_no']);
         $this->checker->setDbValue($row['checker']);
         $this->shift->setDbValue($row['shift']);
+        $this->status->setDbValue($row['status']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
         $row['sscc'] = $this->sscc->DefaultValue;
+        $row['scan'] = $this->scan->DefaultValue;
         $row['shipment'] = $this->shipment->DefaultValue;
         $row['pallet_no'] = $this->pallet_no->DefaultValue;
         $row['idw'] = $this->idw->DefaultValue;
@@ -621,6 +626,9 @@ class OssManualDelete extends OssManual
         $row['ctn_no'] = $this->ctn_no->DefaultValue;
         $row['checker'] = $this->checker->DefaultValue;
         $row['shift'] = $this->shift->DefaultValue;
+        $row['status'] = $this->status->DefaultValue;
+        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['time_updated'] = $this->time_updated->DefaultValue;
         return $row;
     }
 
@@ -636,14 +644,14 @@ class OssManualDelete extends OssManual
 
         // Common render codes for all row types
 
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
-
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
         // sscc
         $this->sscc->CellCssStyle = "white-space: nowrap;";
+
+        // scan
+        $this->scan->CellCssStyle = "white-space: nowrap;";
 
         // shipment
         $this->shipment->CellCssStyle = "white-space: nowrap;";
@@ -672,12 +680,17 @@ class OssManualDelete extends OssManual
         // shift
         $this->shift->CellCssStyle = "white-space: nowrap;";
 
+        // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // date
             $this->date->ViewValue = $this->date->CurrentValue;
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
@@ -696,7 +709,11 @@ class OssManualDelete extends OssManual
             $this->pallet_no->ViewCustomAttributes = "";
 
             // idw
-            $this->idw->ViewValue = $this->idw->CurrentValue;
+            if (strval($this->idw->CurrentValue) != "") {
+                $this->idw->ViewValue = $this->idw->optionCaption($this->idw->CurrentValue);
+            } else {
+                $this->idw->ViewValue = null;
+            }
             $this->idw->ViewCustomAttributes = "";
 
             // order_no
@@ -705,14 +722,17 @@ class OssManualDelete extends OssManual
 
             // item_in_ctn
             $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
             $this->item_in_ctn->ViewCustomAttributes = "";
 
             // no_of_ctn
             $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
             $this->no_of_ctn->ViewCustomAttributes = "";
 
             // ctn_no
             $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
             $this->ctn_no->ViewCustomAttributes = "";
 
             // checker
@@ -727,10 +747,23 @@ class OssManualDelete extends OssManual
             }
             $this->shift->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // status
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
+            $this->status->ViewCustomAttributes = "";
+
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
 
             // date
             $this->date->LinkCustomAttributes = "";
@@ -786,6 +819,21 @@ class OssManualDelete extends OssManual
             $this->shift->LinkCustomAttributes = "";
             $this->shift->HrefValue = "";
             $this->shift->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+            $this->date_updated->TooltipValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
+            $this->time_updated->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -822,7 +870,7 @@ class OssManualDelete extends OssManual
             if ($thisKey != "") {
                 $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
             }
-            $thisKey .= $row['id'];
+            $thisKey .= $row['sscc'];
 
             // Call row deleting event
             $deleteRow = $this->rowDeleting($row);
@@ -906,7 +954,11 @@ class OssManualDelete extends OssManual
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idw":
+                    break;
                 case "x_shift":
+                    break;
+                case "x_status":
                     break;
                 default:
                     $lookupFilter = "";

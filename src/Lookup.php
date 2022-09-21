@@ -393,7 +393,7 @@ class Lookup
             if ($displayField) {
                 $sfx = $index > 0 ? $index + 1 : "";
                 $viewValue = $displayField->getViewValue();
-                if (!EmptyString($viewValue) && !($sameTable && $name == $this->Name)) { // Make sure that ViewValue is not empty and not self lookup field
+                if (!EmptyString($viewValue) && !($sameTable && $name == $this->Name && !in_array($displayField->DataType, [DATATYPE_DATE, DATATYPE_TIME]))) { // Make sure that ViewValue is not empty and not self lookup field (except Date/Time)
                     $row["df" . $sfx] = $viewValue;
                 }
             }

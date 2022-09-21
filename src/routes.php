@@ -536,32 +536,21 @@ return function (App $app) {
     );
 
     // oss_manual
-    $app->map(["GET","POST","OPTIONS"], '/ossmanuallist[/{id}]', OssManualController::class . ':list')->add(PermissionMiddleware::class)->setName('ossmanuallist-oss_manual-list'); // list
-    $app->map(["GET","POST","OPTIONS"], '/ossmanualadd[/{id}]', OssManualController::class . ':add')->add(PermissionMiddleware::class)->setName('ossmanualadd-oss_manual-add'); // add
-    $app->map(["GET","POST","OPTIONS"], '/ossmanualview[/{id}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('ossmanualview-oss_manual-view'); // view
-    $app->map(["GET","POST","OPTIONS"], '/ossmanualedit[/{id}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('ossmanualedit-oss_manual-edit'); // edit
-    $app->map(["GET","POST","OPTIONS"], '/ossmanualdelete[/{id}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('ossmanualdelete-oss_manual-delete'); // delete
+    $app->map(["GET","POST","OPTIONS"], '/ossmanuallist[/{sscc:.*}]', OssManualController::class . ':list')->add(PermissionMiddleware::class)->setName('ossmanuallist-oss_manual-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualadd[/{sscc:.*}]', OssManualController::class . ':add')->add(PermissionMiddleware::class)->setName('ossmanualadd-oss_manual-add'); // add
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualview[/{sscc:.*}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('ossmanualview-oss_manual-view'); // view
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualedit[/{sscc:.*}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('ossmanualedit-oss_manual-edit'); // edit
+    $app->map(["GET","POST","OPTIONS"], '/ossmanualdelete[/{sscc:.*}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('ossmanualdelete-oss_manual-delete'); // delete
     $app->map(["GET","POST","OPTIONS"], '/ossmanualsearch', OssManualController::class . ':search')->add(PermissionMiddleware::class)->setName('ossmanualsearch-oss_manual-search'); // search
     $app->group(
         '/oss_manual',
         function (RouteCollectorProxy $group) {
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', OssManualController::class . ':list')->add(PermissionMiddleware::class)->setName('oss_manual/list-oss_manual-list-2'); // list
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', OssManualController::class . ':add')->add(PermissionMiddleware::class)->setName('oss_manual/add-oss_manual-add-2'); // add
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('oss_manual/view-oss_manual-view-2'); // view
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('oss_manual/edit-oss_manual-edit-2'); // edit
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{id}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('oss_manual/delete-oss_manual-delete-2'); // delete
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{sscc:.*}]', OssManualController::class . ':list')->add(PermissionMiddleware::class)->setName('oss_manual/list-oss_manual-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{sscc:.*}]', OssManualController::class . ':add')->add(PermissionMiddleware::class)->setName('oss_manual/add-oss_manual-add-2'); // add
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{sscc:.*}]', OssManualController::class . ':view')->add(PermissionMiddleware::class)->setName('oss_manual/view-oss_manual-view-2'); // view
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{sscc:.*}]', OssManualController::class . ':edit')->add(PermissionMiddleware::class)->setName('oss_manual/edit-oss_manual-edit-2'); // edit
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{sscc:.*}]', OssManualController::class . ':delete')->add(PermissionMiddleware::class)->setName('oss_manual/delete-oss_manual-delete-2'); // delete
             $group->map(["GET","POST","OPTIONS"], '/' . Config("SEARCH_ACTION") . '', OssManualController::class . ':search')->add(PermissionMiddleware::class)->setName('oss_manual/search-oss_manual-search-2'); // search
-        }
-    );
-
-    // oss_manual_online
-    $app->map(["GET","POST","OPTIONS"], '/ossmanualonlinelist[/{id}]', OssManualOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('ossmanualonlinelist-oss_manual_online-list'); // list
-    $app->map(["GET","POST","OPTIONS"], '/ossmanualonlineadd[/{id}]', OssManualOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('ossmanualonlineadd-oss_manual_online-add'); // add
-    $app->group(
-        '/oss_manual_online',
-        function (RouteCollectorProxy $group) {
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', OssManualOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('oss_manual_online/list-oss_manual_online-list-2'); // list
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', OssManualOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('oss_manual_online/add-oss_manual_online-add-2'); // add
         }
     );
 
@@ -571,6 +560,15 @@ return function (App $app) {
         '/productivity_online',
         function (RouteCollectorProxy $group) {
             $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '', ProductivityOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('productivity_online/list-productivity_online-list-2'); // list
+        }
+    );
+
+    // check_box
+    $app->map(["GET","POST","OPTIONS"], '/checkboxlist[/{box_code:.*}]', CheckBoxController::class . ':list')->add(PermissionMiddleware::class)->setName('checkboxlist-check_box-list'); // list
+    $app->group(
+        '/check_box',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{box_code:.*}]', CheckBoxController::class . ':list')->add(PermissionMiddleware::class)->setName('check_box/list-check_box-list-2'); // list
         }
     );
 

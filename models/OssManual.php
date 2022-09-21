@@ -31,9 +31,9 @@ class OssManual extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $id;
     public $date;
     public $sscc;
+    public $scan;
     public $shipment;
     public $pallet_no;
     public $idw;
@@ -43,6 +43,9 @@ class OssManual extends DbTable
     public $ctn_no;
     public $checker;
     public $shift;
+    public $status;
+    public $date_updated;
+    public $time_updated;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -82,31 +85,6 @@ class OssManual extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // id
-        $this->id = new DbField(
-            'oss_manual',
-            'oss_manual',
-            'x_id',
-            'id',
-            '`id`',
-            '`id`',
-            3,
-            11,
-            -1,
-            false,
-            '`id`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'NO'
-        );
-        $this->id->InputTextType = "text";
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Fields['id'] = &$this->id;
-
         // date
         $this->date = new DbField(
             'oss_manual',
@@ -127,6 +105,7 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->date->InputTextType = "text";
+        $this->date->Sortable = false; // Allow sort
         $this->date->UseFilter = true; // Table header filter
         $this->date->Lookup = new Lookup('date', 'oss_manual', true, 'date', ["date","","",""], [], [], [], [], [], [], '', '', "");
         $this->date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
@@ -152,10 +131,40 @@ class OssManual extends DbTable
             'TEXT'
         );
         $this->sscc->InputTextType = "text";
+        $this->sscc->IsPrimaryKey = true; // Primary key field
+        $this->sscc->Nullable = false; // NOT NULL field
         $this->sscc->Required = true; // Required field
+        $this->sscc->Sortable = false; // Allow sort
         $this->sscc->UseFilter = true; // Table header filter
-        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
+        $this->sscc->Lookup = new Lookup('sscc', 'oss_manual', true, 'sscc', ["sscc","","",""], [], [], [], [], ["date","shipment","pallet_no","idw","order_no","item_in_ctn","no_of_ctn","ctn_no"], ["x_date","x_shipment","x_pallet_no","x_idw","x_order_no","x_item_in_ctn","x_no_of_ctn","x_ctn_no"], '', '', "`sscc`");
+        $this->sscc->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['sscc'] = &$this->sscc;
+
+        // scan
+        $this->scan = new DbField(
+            'oss_manual',
+            'oss_manual',
+            'x_scan',
+            'scan',
+            '\'\'',
+            '\'\'',
+            201,
+            65530,
+            -1,
+            false,
+            '\'\'',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->scan->InputTextType = "text";
+        $this->scan->IsCustom = true; // Custom field
+        $this->scan->Sortable = false; // Allow sort
+        $this->scan->UseFilter = true; // Table header filter
+        $this->scan->Lookup = new Lookup('scan', 'oss_manual', true, 'scan', ["scan","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['scan'] = &$this->scan;
 
         // shipment
         $this->shipment = new DbField(
@@ -178,8 +187,10 @@ class OssManual extends DbTable
         );
         $this->shipment->InputTextType = "number";
         $this->shipment->Required = true; // Required field
+        $this->shipment->Sortable = false; // Allow sort
         $this->shipment->UseFilter = true; // Table header filter
         $this->shipment->Lookup = new Lookup('shipment', 'oss_manual', true, 'shipment', ["shipment","","",""], [], [], [], [], [], [], '', '', "");
+        $this->shipment->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['shipment'] = &$this->shipment;
 
         // pallet_no
@@ -203,6 +214,7 @@ class OssManual extends DbTable
         );
         $this->pallet_no->InputTextType = "text";
         $this->pallet_no->Required = true; // Required field
+        $this->pallet_no->Sortable = false; // Allow sort
         $this->pallet_no->UseFilter = true; // Table header filter
         $this->pallet_no->Lookup = new Lookup('pallet_no', 'oss_manual', true, 'pallet_no', ["pallet_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['pallet_no'] = &$this->pallet_no;
@@ -224,12 +236,14 @@ class OssManual extends DbTable
             false,
             false,
             'FORMATTED TEXT',
-            'TEXT'
+            'RADIO'
         );
         $this->idw->InputTextType = "number";
         $this->idw->Required = true; // Required field
+        $this->idw->Sortable = false; // Allow sort
         $this->idw->UseFilter = true; // Table header filter
         $this->idw->Lookup = new Lookup('idw', 'oss_manual', true, 'idw', ["idw","","",""], [], [], [], [], [], [], '', '', "");
+        $this->idw->OptionCount = 2;
         $this->idw->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['idw'] = &$this->idw;
 
@@ -254,6 +268,7 @@ class OssManual extends DbTable
         );
         $this->order_no->InputTextType = "number";
         $this->order_no->Required = true; // Required field
+        $this->order_no->Sortable = false; // Allow sort
         $this->order_no->UseFilter = true; // Table header filter
         $this->order_no->Lookup = new Lookup('order_no', 'oss_manual', true, 'order_no', ["order_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->order_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -267,8 +282,8 @@ class OssManual extends DbTable
             'item_in_ctn',
             '`item_in_ctn`',
             '`item_in_ctn`',
-            200,
-            255,
+            3,
+            11,
             -1,
             false,
             '`item_in_ctn`',
@@ -280,8 +295,10 @@ class OssManual extends DbTable
         );
         $this->item_in_ctn->InputTextType = "number";
         $this->item_in_ctn->Required = true; // Required field
+        $this->item_in_ctn->Sortable = false; // Allow sort
         $this->item_in_ctn->UseFilter = true; // Table header filter
         $this->item_in_ctn->Lookup = new Lookup('item_in_ctn', 'oss_manual', true, 'item_in_ctn', ["item_in_ctn","","",""], [], [], [], [], [], [], '', '', "");
+        $this->item_in_ctn->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['item_in_ctn'] = &$this->item_in_ctn;
 
         // no_of_ctn
@@ -292,8 +309,8 @@ class OssManual extends DbTable
             'no_of_ctn',
             '`no_of_ctn`',
             '`no_of_ctn`',
-            200,
-            255,
+            3,
+            11,
             -1,
             false,
             '`no_of_ctn`',
@@ -305,8 +322,10 @@ class OssManual extends DbTable
         );
         $this->no_of_ctn->InputTextType = "number";
         $this->no_of_ctn->Required = true; // Required field
+        $this->no_of_ctn->Sortable = false; // Allow sort
         $this->no_of_ctn->UseFilter = true; // Table header filter
         $this->no_of_ctn->Lookup = new Lookup('no_of_ctn', 'oss_manual', true, 'no_of_ctn', ["no_of_ctn","","",""], [], [], [], [], [], [], '', '', "");
+        $this->no_of_ctn->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['no_of_ctn'] = &$this->no_of_ctn;
 
         // ctn_no
@@ -330,6 +349,7 @@ class OssManual extends DbTable
         );
         $this->ctn_no->InputTextType = "number";
         $this->ctn_no->Required = true; // Required field
+        $this->ctn_no->Sortable = false; // Allow sort
         $this->ctn_no->UseFilter = true; // Table header filter
         $this->ctn_no->Lookup = new Lookup('ctn_no', 'oss_manual', true, 'ctn_no', ["ctn_no","","",""], [], [], [], [], [], [], '', '', "");
         $this->ctn_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -356,6 +376,7 @@ class OssManual extends DbTable
         );
         $this->checker->InputTextType = "text";
         $this->checker->Required = true; // Required field
+        $this->checker->Sortable = false; // Allow sort
         $this->checker->UseFilter = true; // Table header filter
         $this->checker->Lookup = new Lookup('checker', 'oss_manual', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['checker'] = &$this->checker;
@@ -380,10 +401,91 @@ class OssManual extends DbTable
             'RADIO'
         );
         $this->shift->InputTextType = "text";
+        $this->shift->Sortable = false; // Allow sort
         $this->shift->UseFilter = true; // Table header filter
         $this->shift->Lookup = new Lookup('shift', 'oss_manual', true, 'shift', ["shift","","",""], [], [], [], [], [], [], '', '', "");
         $this->shift->OptionCount = 3;
         $this->Fields['shift'] = &$this->shift;
+
+        // status
+        $this->status = new DbField(
+            'oss_manual',
+            'oss_manual',
+            'x_status',
+            'status',
+            '`status`',
+            '`status`',
+            200,
+            255,
+            -1,
+            false,
+            '`status`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'SELECT'
+        );
+        $this->status->InputTextType = "text";
+        $this->status->Sortable = false; // Allow sort
+        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->status->UseFilter = true; // Table header filter
+        $this->status->Lookup = new Lookup('status', 'oss_manual', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        $this->status->OptionCount = 2;
+        $this->Fields['status'] = &$this->status;
+
+        // date_updated
+        $this->date_updated = new DbField(
+            'oss_manual',
+            'oss_manual',
+            'x_date_updated',
+            'date_updated',
+            '`date_updated`',
+            CastDateFieldForLike("`date_updated`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_updated`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_updated->InputTextType = "text";
+        $this->date_updated->Sortable = false; // Allow sort
+        $this->date_updated->UseFilter = true; // Table header filter
+        $this->date_updated->Lookup = new Lookup('date_updated', 'oss_manual', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_updated'] = &$this->date_updated;
+
+        // time_updated
+        $this->time_updated = new DbField(
+            'oss_manual',
+            'oss_manual',
+            'x_time_updated',
+            'time_updated',
+            '`time_updated`',
+            CastDateFieldForLike("`time_updated`", 4, "DB"),
+            134,
+            10,
+            4,
+            false,
+            '`time_updated`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->time_updated->InputTextType = "text";
+        $this->time_updated->Sortable = false; // Allow sort
+        $this->time_updated->UseFilter = true; // Table header filter
+        $this->time_updated->Lookup = new Lookup('time_updated', 'oss_manual', true, 'time_updated', ["time_updated","","",""], [], [], [], [], [], [], '', '', "");
+        $this->time_updated->DefaultErrorMessage = str_replace("%s", DateFormat(4), $Language->phrase("IncorrectTime"));
+        $this->Fields['time_updated'] = &$this->time_updated;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -479,7 +581,7 @@ class OssManual extends DbTable
 
     public function getSqlSelect() // Select
     {
-        return $this->SqlSelect ?? $this->getQueryBuilder()->select("*");
+        return $this->SqlSelect ?? $this->getQueryBuilder()->select("*, '' AS `scan`");
     }
 
     public function sqlSelect() // For backward compatibility
@@ -749,9 +851,6 @@ class OssManual extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -811,8 +910,8 @@ class OssManual extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('sscc', $rs)) {
+                AddFilter($where, QuotedName('sscc', $this->Dbid) . '=' . QuotedValue($rs['sscc'], $this->sscc->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -836,9 +935,9 @@ class OssManual extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
         $this->date->DbValue = $row['date'];
         $this->sscc->DbValue = $row['sscc'];
+        $this->scan->DbValue = $row['scan'];
         $this->shipment->DbValue = $row['shipment'];
         $this->pallet_no->DbValue = $row['pallet_no'];
         $this->idw->DbValue = $row['idw'];
@@ -848,6 +947,9 @@ class OssManual extends DbTable
         $this->ctn_no->DbValue = $row['ctn_no'];
         $this->checker->DbValue = $row['checker'];
         $this->shift->DbValue = $row['shift'];
+        $this->status->DbValue = $row['status'];
+        $this->date_updated->DbValue = $row['date_updated'];
+        $this->time_updated->DbValue = $row['time_updated'];
     }
 
     // Delete uploaded files
@@ -859,14 +961,14 @@ class OssManual extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`sscc` = '@sscc@'";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->sscc->CurrentValue : $this->sscc->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -882,9 +984,9 @@ class OssManual extends DbTable
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->sscc->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->sscc->OldValue = $keys[0];
             }
         }
     }
@@ -894,17 +996,14 @@ class OssManual extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('sscc', $row) ? $row['sscc'] : null;
         } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
-        }
-        if (!is_numeric($val)) {
-            return "0=1"; // Invalid key
+            $val = $this->sscc->OldValue !== null ? $this->sscc->OldValue : $this->sscc->CurrentValue;
         }
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@sscc@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -1033,7 +1132,7 @@ class OssManual extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . JsonEncode($this->id->CurrentValue, "number");
+        $json .= "\"sscc\":" . JsonEncode($this->sscc->CurrentValue, "string");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -1044,8 +1143,8 @@ class OssManual extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->sscc->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->sscc->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -1106,7 +1205,7 @@ class OssManual extends DbTable
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("sscc") ?? Route("sscc")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1120,9 +1219,6 @@ class OssManual extends DbTable
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
-                    continue;
-                }
                 $ar[] = $key;
             }
         }
@@ -1139,9 +1235,9 @@ class OssManual extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->sscc->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->sscc->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1166,9 +1262,9 @@ class OssManual extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
         $this->sscc->setDbValue($row['sscc']);
+        $this->scan->setDbValue($row['scan']);
         $this->shipment->setDbValue($row['shipment']);
         $this->pallet_no->setDbValue($row['pallet_no']);
         $this->idw->setDbValue($row['idw']);
@@ -1178,6 +1274,9 @@ class OssManual extends DbTable
         $this->ctn_no->setDbValue($row['ctn_no']);
         $this->checker->setDbValue($row['checker']);
         $this->shift->setDbValue($row['shift']);
+        $this->status->setDbValue($row['status']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Render list row values
@@ -1190,14 +1289,14 @@ class OssManual extends DbTable
 
         // Common render codes
 
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
-
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
         // sscc
         $this->sscc->CellCssStyle = "white-space: nowrap;";
+
+        // scan
+        $this->scan->CellCssStyle = "white-space: nowrap;";
 
         // shipment
         $this->shipment->CellCssStyle = "white-space: nowrap;";
@@ -1226,9 +1325,14 @@ class OssManual extends DbTable
         // shift
         $this->shift->CellCssStyle = "white-space: nowrap;";
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
 
         // date
         $this->date->ViewValue = $this->date->CurrentValue;
@@ -1239,6 +1343,10 @@ class OssManual extends DbTable
         $this->sscc->ViewValue = $this->sscc->CurrentValue;
         $this->sscc->ViewCustomAttributes = "";
 
+        // scan
+        $this->scan->ViewValue = $this->scan->CurrentValue;
+        $this->scan->ViewCustomAttributes = "";
+
         // shipment
         $this->shipment->ViewValue = $this->shipment->CurrentValue;
         $this->shipment->ViewCustomAttributes = "";
@@ -1248,7 +1356,11 @@ class OssManual extends DbTable
         $this->pallet_no->ViewCustomAttributes = "";
 
         // idw
-        $this->idw->ViewValue = $this->idw->CurrentValue;
+        if (strval($this->idw->CurrentValue) != "") {
+            $this->idw->ViewValue = $this->idw->optionCaption($this->idw->CurrentValue);
+        } else {
+            $this->idw->ViewValue = null;
+        }
         $this->idw->ViewCustomAttributes = "";
 
         // order_no
@@ -1257,14 +1369,17 @@ class OssManual extends DbTable
 
         // item_in_ctn
         $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+        $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
         $this->item_in_ctn->ViewCustomAttributes = "";
 
         // no_of_ctn
         $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+        $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
         $this->no_of_ctn->ViewCustomAttributes = "";
 
         // ctn_no
         $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+        $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
         $this->ctn_no->ViewCustomAttributes = "";
 
         // checker
@@ -1279,10 +1394,23 @@ class OssManual extends DbTable
         }
         $this->shift->ViewCustomAttributes = "";
 
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // status
+        if (strval($this->status->CurrentValue) != "") {
+            $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+        } else {
+            $this->status->ViewValue = null;
+        }
+        $this->status->ViewCustomAttributes = "";
+
+        // date_updated
+        $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+        $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+        $this->date_updated->ViewCustomAttributes = "";
+
+        // time_updated
+        $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+        $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+        $this->time_updated->ViewCustomAttributes = "";
 
         // date
         $this->date->LinkCustomAttributes = "";
@@ -1293,6 +1421,11 @@ class OssManual extends DbTable
         $this->sscc->LinkCustomAttributes = "";
         $this->sscc->HrefValue = "";
         $this->sscc->TooltipValue = "";
+
+        // scan
+        $this->scan->LinkCustomAttributes = "";
+        $this->scan->HrefValue = "";
+        $this->scan->TooltipValue = "";
 
         // shipment
         $this->shipment->LinkCustomAttributes = "";
@@ -1339,6 +1472,21 @@ class OssManual extends DbTable
         $this->shift->HrefValue = "";
         $this->shift->TooltipValue = "";
 
+        // status
+        $this->status->LinkCustomAttributes = "";
+        $this->status->HrefValue = "";
+        $this->status->TooltipValue = "";
+
+        // date_updated
+        $this->date_updated->LinkCustomAttributes = "";
+        $this->date_updated->HrefValue = "";
+        $this->date_updated->TooltipValue = "";
+
+        // time_updated
+        $this->time_updated->LinkCustomAttributes = "";
+        $this->time_updated->HrefValue = "";
+        $this->time_updated->TooltipValue = "";
+
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1354,12 +1502,6 @@ class OssManual extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
-
         // date
         $this->date->setupEditAttributes();
         $this->date->EditCustomAttributes = 'disabled';
@@ -1368,12 +1510,21 @@ class OssManual extends DbTable
 
         // sscc
         $this->sscc->setupEditAttributes();
-        $this->sscc->EditCustomAttributes = 'autofocus';
+        $this->sscc->EditCustomAttributes = "";
         if (!$this->sscc->Raw) {
             $this->sscc->CurrentValue = HtmlDecode($this->sscc->CurrentValue);
         }
         $this->sscc->EditValue = $this->sscc->CurrentValue;
         $this->sscc->PlaceHolder = RemoveHtml($this->sscc->caption());
+
+        // scan
+        $this->scan->setupEditAttributes();
+        $this->scan->EditCustomAttributes = 'autofocus';
+        if (!$this->scan->Raw) {
+            $this->scan->CurrentValue = HtmlDecode($this->scan->CurrentValue);
+        }
+        $this->scan->EditValue = $this->scan->CurrentValue;
+        $this->scan->PlaceHolder = RemoveHtml($this->scan->caption());
 
         // shipment
         $this->shipment->setupEditAttributes();
@@ -1394,12 +1545,8 @@ class OssManual extends DbTable
         $this->pallet_no->PlaceHolder = RemoveHtml($this->pallet_no->caption());
 
         // idw
-        $this->idw->setupEditAttributes();
         $this->idw->EditCustomAttributes = "";
-        if (!$this->idw->Raw) {
-            $this->idw->CurrentValue = HtmlDecode($this->idw->CurrentValue);
-        }
-        $this->idw->EditValue = $this->idw->CurrentValue;
+        $this->idw->EditValue = $this->idw->options(false);
         $this->idw->PlaceHolder = RemoveHtml($this->idw->caption());
 
         // order_no
@@ -1414,20 +1561,20 @@ class OssManual extends DbTable
         // item_in_ctn
         $this->item_in_ctn->setupEditAttributes();
         $this->item_in_ctn->EditCustomAttributes = "";
-        if (!$this->item_in_ctn->Raw) {
-            $this->item_in_ctn->CurrentValue = HtmlDecode($this->item_in_ctn->CurrentValue);
-        }
         $this->item_in_ctn->EditValue = $this->item_in_ctn->CurrentValue;
         $this->item_in_ctn->PlaceHolder = RemoveHtml($this->item_in_ctn->caption());
+        if (strval($this->item_in_ctn->EditValue) != "" && is_numeric($this->item_in_ctn->EditValue)) {
+            $this->item_in_ctn->EditValue = FormatNumber($this->item_in_ctn->EditValue, null);
+        }
 
         // no_of_ctn
         $this->no_of_ctn->setupEditAttributes();
         $this->no_of_ctn->EditCustomAttributes = "";
-        if (!$this->no_of_ctn->Raw) {
-            $this->no_of_ctn->CurrentValue = HtmlDecode($this->no_of_ctn->CurrentValue);
-        }
         $this->no_of_ctn->EditValue = $this->no_of_ctn->CurrentValue;
         $this->no_of_ctn->PlaceHolder = RemoveHtml($this->no_of_ctn->caption());
+        if (strval($this->no_of_ctn->EditValue) != "" && is_numeric($this->no_of_ctn->EditValue)) {
+            $this->no_of_ctn->EditValue = FormatNumber($this->no_of_ctn->EditValue, null);
+        }
 
         // ctn_no
         $this->ctn_no->setupEditAttributes();
@@ -1435,7 +1582,7 @@ class OssManual extends DbTable
         $this->ctn_no->EditValue = $this->ctn_no->CurrentValue;
         $this->ctn_no->PlaceHolder = RemoveHtml($this->ctn_no->caption());
         if (strval($this->ctn_no->EditValue) != "" && is_numeric($this->ctn_no->EditValue)) {
-            $this->ctn_no->EditValue = $this->ctn_no->EditValue;
+            $this->ctn_no->EditValue = FormatNumber($this->ctn_no->EditValue, null);
         }
 
         // checker
@@ -1451,6 +1598,24 @@ class OssManual extends DbTable
         $this->shift->EditCustomAttributes = "";
         $this->shift->EditValue = $this->shift->options(false);
         $this->shift->PlaceHolder = RemoveHtml($this->shift->caption());
+
+        // status
+        $this->status->setupEditAttributes();
+        $this->status->EditCustomAttributes = "";
+        $this->status->EditValue = $this->status->options(true);
+        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
+        // date_updated
+        $this->date_updated->setupEditAttributes();
+        $this->date_updated->EditCustomAttributes = "";
+        $this->date_updated->EditValue = FormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
+        $this->date_updated->PlaceHolder = RemoveHtml($this->date_updated->caption());
+
+        // time_updated
+        $this->time_updated->setupEditAttributes();
+        $this->time_updated->EditCustomAttributes = "";
+        $this->time_updated->EditValue = FormatDateTime($this->time_updated->CurrentValue, $this->time_updated->formatPattern());
+        $this->time_updated->PlaceHolder = RemoveHtml($this->time_updated->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1480,9 +1645,9 @@ class OssManual extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
                     $doc->exportCaption($this->sscc);
+                    $doc->exportCaption($this->scan);
                     $doc->exportCaption($this->shipment);
                     $doc->exportCaption($this->pallet_no);
                     $doc->exportCaption($this->idw);
@@ -1492,8 +1657,10 @@ class OssManual extends DbTable
                     $doc->exportCaption($this->ctn_no);
                     $doc->exportCaption($this->checker);
                     $doc->exportCaption($this->shift);
+                    $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->time_updated);
                 } else {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
                     $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->shipment);
@@ -1505,6 +1672,9 @@ class OssManual extends DbTable
                     $doc->exportCaption($this->ctn_no);
                     $doc->exportCaption($this->checker);
                     $doc->exportCaption($this->shift);
+                    $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->time_updated);
                 }
                 $doc->endExportRow();
             }
@@ -1534,9 +1704,9 @@ class OssManual extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->date);
                         $doc->exportField($this->sscc);
+                        $doc->exportField($this->scan);
                         $doc->exportField($this->shipment);
                         $doc->exportField($this->pallet_no);
                         $doc->exportField($this->idw);
@@ -1546,8 +1716,10 @@ class OssManual extends DbTable
                         $doc->exportField($this->ctn_no);
                         $doc->exportField($this->checker);
                         $doc->exportField($this->shift);
+                        $doc->exportField($this->status);
+                        $doc->exportField($this->date_updated);
+                        $doc->exportField($this->time_updated);
                     } else {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->date);
                         $doc->exportField($this->sscc);
                         $doc->exportField($this->shipment);
@@ -1559,6 +1731,9 @@ class OssManual extends DbTable
                         $doc->exportField($this->ctn_no);
                         $doc->exportField($this->checker);
                         $doc->exportField($this->shift);
+                        $doc->exportField($this->status);
+                        $doc->exportField($this->date_updated);
+                        $doc->exportField($this->time_updated);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1636,7 +1811,38 @@ class OssManual extends DbTable
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-    }
+        $currentDate = CurrentDate();
+        $currentTime = CurrentTime();
+        $currentUser = CurrentUsername();
+        $_sscc 		= $rsnew["sscc"];
+        $_scan 		= $rsnew["scan"];
+        $_shipment 	= $rsnew["shipment"];
+        $_pallet_no = $rsnew["pallet_no"];
+        $_idw 		= $rsnew["idw"];
+        $_order_no 	= $rsnew["order_no"];
+        $_in_ctn 	= $rsnew["item_in_ctn"];
+        $_no_ctn 	= $rsnew["no_of_ctn"];
+        $_ctn_no 	= $rsnew["ctn_no"];
+        $_checker 	= $rsnew["checker"];
+        $_shift 	= $rsnew["shift"];
+        $_status 	= $rsnew["status"];
+        $_dateupdate 	= $rsnew["date_updated"];
+        $length = "SELECT LENGTH(`sscc`) FROM `oss_manual` WHERE `sscc` =  '$_sscc' ";
+        $_length = ExecuteScalar($length);
+        $remove = "DELETE  FROM `oss_manual` WHERE `sscc` =  '$_sscc' ";
+        //$_remove = ExecuteScalar($remove);
+        $update = "UPDATE oss_manual SET `shipment` = '$_shipment',`pallet_no` = '$_pallet_no',`order_no` = '$_order_no',`item_in_ctn` = '$_in_ctn' ,`no_of_ctn` = '$_no_ctn',`ctn_no` = '$_ctn_no' ,`status` = 'Done',`date_updated` = '$currentDate',`time_updated` = '$currentTime',`checker` = '$currentUser' WHERE `sscc` = '$_scan' ";
+        //$_update = ExecuteStatement($update);
+        $status2 = "UPDATE oss_manual SET `status` = 'Pending' WHERE `sscc` = '$_sscc' ";
+        //$_status2 = ExecuteStatement($status2);
+        if($_length == 22){
+        	$_remove = ExecuteScalar($remove);
+        	$_update = ExecuteStatement($update);
+        }
+        if($_length == 20 && $_status == ""){
+        	$_status2 = ExecuteStatement($status2);
+        }
+     }   
 
     // Row Updating event
     public function rowUpdating($rsold, &$rsnew)
@@ -1727,6 +1933,30 @@ class OssManual extends DbTable
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        if ($this->status->ViewValue == "Done"){ 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: green
+                ";}
+         elseif ($this->status->ViewValue == "Pending") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: grey
+                ";}
+         elseif ($this->status->ViewValue == "Quarantine") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: red
+                ";}
+         elseif ($this->status->ViewValue == "Delivered") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: orange
+                ";}
+         if ($this->Export <> "") {
+         //$this->box_id->ViewValue = "'" .$this->box_id->ViewValue;
+         $this->sscc->ViewValue = "=\"" . $this->sscc->ViewValue . "\"";
+         }
     }
 
     // User ID Filtering event

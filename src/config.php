@@ -146,7 +146,7 @@ $CONFIG = [
 
     // General
     "UNFORMAT_YEAR" => 50, // Unformat year
-    "RANDOM_KEY" => 'yVOl2Nxe138zbGgy', // Random key for encryption
+    "RANDOM_KEY" => 'OSCDoailihVo6t89', // Random key for encryption
     "ENCRYPTION_KEY" => '', // Encryption key for data protection
     "PROJECT_STYLESHEET_FILENAME" => "css/opsmezzanineupload.css", // Project stylesheet file name
     "USE_COMPRESSED_STYLESHEET" => true, // Compressed stylesheet
@@ -388,7 +388,7 @@ $CONFIG = [
     "IMAGE_ALLOWED_FILE_EXT" => "gif,jpe,jpeg,jpg,png,bmp", // Allowed file extensions for images
     "DOWNLOAD_ALLOWED_FILE_EXT" => "csv,pdf,xls,doc,xlsx,docx", // Allowed file extensions for download (non-image)
     "ENCRYPT_FILE_PATH" => true, // Encrypt file path
-    "MAX_FILE_SIZE" => 2000000, // Max file size
+    "MAX_FILE_SIZE" => 52428800, // Max file size
     "MAX_FILE_COUNT" => 0, // Max file count
     "THUMBNAIL_DEFAULT_WIDTH" => 100, // Thumbnail default width
     "THUMBNAIL_DEFAULT_HEIGHT" => 0, // Thumbnail default height
@@ -996,7 +996,7 @@ $CONFIG = [
     "SORT_OPTION" => "Toggle", // Sort option (toggle/tristate)
 
     // Validate options
-    "CLIENT_VALIDATE" => false,
+    "CLIENT_VALIDATE" => true,
     "SERVER_VALIDATE" => true,
     "INVALID_USERNAME_CHARACTERS" => "<>\"'&",
     "INVALID_PASSWORD_CHARACTERS" => "<>\"'&",

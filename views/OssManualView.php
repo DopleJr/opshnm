@@ -44,17 +44,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="oss_manual">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-bordered table-hover table-sm ew-view-table">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_oss_manual_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->date->Visible) { // date ?>
     <tr id="r_date"<?= $Page->date->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_date"><?= $Page->date->caption() ?></span></td>
@@ -73,6 +62,17 @@ $Page->showMessage();
 <span id="el_oss_manual_sscc">
 <span<?= $Page->sscc->viewAttributes() ?>>
 <?= $Page->sscc->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->scan->Visible) { // scan ?>
+    <tr id="r_scan"<?= $Page->scan->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_scan"><?= $Page->scan->caption() ?></span></td>
+        <td data-name="scan"<?= $Page->scan->cellAttributes() ?>>
+<span id="el_oss_manual_scan">
+<span<?= $Page->scan->viewAttributes() ?>>
+<?= $Page->scan->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -172,6 +172,39 @@ $Page->showMessage();
 <span id="el_oss_manual_shift">
 <span<?= $Page->shift->viewAttributes() ?>>
 <?= $Page->shift->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <tr id="r_status"<?= $Page->status->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_status"><?= $Page->status->caption() ?></span></td>
+        <td data-name="status"<?= $Page->status->cellAttributes() ?>>
+<span id="el_oss_manual_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+    <tr id="r_date_updated"<?= $Page->date_updated->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_date_updated"><?= $Page->date_updated->caption() ?></span></td>
+        <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el_oss_manual_date_updated">
+<span<?= $Page->date_updated->viewAttributes() ?>>
+<?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+    <tr id="r_time_updated"<?= $Page->time_updated->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_oss_manual_time_updated"><?= $Page->time_updated->caption() ?></span></td>
+        <td data-name="time_updated"<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el_oss_manual_time_updated">
+<span<?= $Page->time_updated->viewAttributes() ?>>
+<?= $Page->time_updated->getViewValue() ?></span>
 </span>
 </td>
     </tr>

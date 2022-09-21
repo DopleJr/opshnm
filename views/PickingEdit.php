@@ -63,6 +63,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fpickingedit.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
+    fpickingedit.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("fpickingedit");
 });
 </script>
@@ -204,7 +205,7 @@ $Page->showMessage();
 <?php if (!$Page->creation_date->ReadOnly && !$Page->creation_date->Disabled && !isset($Page->creation_date->EditAttrs["readonly"]) && !isset($Page->creation_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingedit", "datetimepicker"], function () {
-    let format = "<?= "yyyyMMdd" ?>",
+    let format = "<?= "MM/dd/yyyy" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -256,7 +257,7 @@ loadjs.ready(["fpickingedit", "datetimepicker"], function () {
 <?php if (!$Page->gr_date->ReadOnly && !$Page->gr_date->Disabled && !isset($Page->gr_date->EditAttrs["readonly"]) && !isset($Page->gr_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingedit", "datetimepicker"], function () {
-    let format = "<?= "yyyyMMdd" ?>",
+    let format = "<?= "MM/dd/yyyy" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -522,9 +523,35 @@ loadjs.ready(["fpickingedit", "datetimepicker"], function () {
         <label id="elh_picking_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
 <span id="el_picking_status">
-<input type="<?= $Page->status->getInputTextType() ?>" name="x_status" id="x_status" data-table="picking" data-field="x_status" value="<?= $Page->status->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"<?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
-<?= $Page->status->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+    <select
+        id="x_status"
+        name="x_status"
+        class="form-select ew-select<?= $Page->status->isInvalidClass() ?>"
+        data-select2-id="fpickingedit_x_status"
+        data-table="picking"
+        data-field="x_status"
+        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+        <?= $Page->status->editAttributes() ?>>
+        <?= $Page->status->selectOptionListHtml("x_status") ?>
+    </select>
+    <?= $Page->status->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("fpickingedit", function() {
+    var options = { name: "x_status", selectId: "fpickingedit_x_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpickingedit.lists.status.lookupOptions.length) {
+        options.data = { id: "x_status", form: "fpickingedit" };
+    } else {
+        options.ajax = { id: "x_status", form: "fpickingedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.picking.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

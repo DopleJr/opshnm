@@ -983,6 +983,16 @@ class LocationsAdd extends Locations
 
         // Update current values
         $this->setCurrentValues($rsnew);
+        if ($this->location->CurrentValue != "") { // Check field with unique index
+            $filter = "(`location` = '" . AdjustSql($this->location->CurrentValue, $this->Dbid) . "')";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->location->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->location->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
+        }
         $conn = $this->getConnection();
 
         // Load db values from old row

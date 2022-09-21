@@ -547,8 +547,10 @@ class PickingPendingEdit extends PickingPending
         $this->aisle2->setVisibility();
         $this->store_id2->setVisibility();
         $this->scan_article->setVisibility();
+        $this->scan_box->setVisibility();
         $this->close_totes->setVisibility();
         $this->job_id->setVisibility();
+        $this->sequence->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -1156,6 +1158,16 @@ class PickingPendingEdit extends PickingPending
             }
         }
 
+        // Check field name 'scan_box' first before field var 'x_scan_box'
+        $val = $CurrentForm->hasValue("scan_box") ? $CurrentForm->getValue("scan_box") : $CurrentForm->getValue("x_scan_box");
+        if (!$this->scan_box->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->scan_box->Visible = false; // Disable update for API request
+            } else {
+                $this->scan_box->setFormValue($val);
+            }
+        }
+
         // Check field name 'close_totes' first before field var 'x_close_totes'
         $val = $CurrentForm->hasValue("close_totes") ? $CurrentForm->getValue("close_totes") : $CurrentForm->getValue("x_close_totes");
         if (!$this->close_totes->IsDetailKey) {
@@ -1173,6 +1185,16 @@ class PickingPendingEdit extends PickingPending
                 $this->job_id->Visible = false; // Disable update for API request
             } else {
                 $this->job_id->setFormValue($val);
+            }
+        }
+
+        // Check field name 'sequence' first before field var 'x_sequence'
+        $val = $CurrentForm->hasValue("sequence") ? $CurrentForm->getValue("sequence") : $CurrentForm->getValue("x_sequence");
+        if (!$this->sequence->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->sequence->Visible = false; // Disable update for API request
+            } else {
+                $this->sequence->setFormValue($val);
             }
         }
     }
@@ -1221,8 +1243,10 @@ class PickingPendingEdit extends PickingPending
         $this->aisle2->CurrentValue = $this->aisle2->FormValue;
         $this->store_id2->CurrentValue = $this->store_id2->FormValue;
         $this->scan_article->CurrentValue = $this->scan_article->FormValue;
+        $this->scan_box->CurrentValue = $this->scan_box->FormValue;
         $this->close_totes->CurrentValue = $this->close_totes->FormValue;
         $this->job_id->CurrentValue = $this->job_id->FormValue;
+        $this->sequence->CurrentValue = $this->sequence->FormValue;
     }
 
     // Load recordset
@@ -1355,8 +1379,10 @@ class PickingPendingEdit extends PickingPending
         $this->aisle2->setDbValue($row['aisle2']);
         $this->store_id2->setDbValue($row['store_id2']);
         $this->scan_article->setDbValue($row['scan_article']);
+        $this->scan_box->setDbValue($row['scan_box']);
         $this->close_totes->setDbValue($row['close_totes']);
         $this->job_id->setDbValue($row['job_id']);
+        $this->sequence->setDbValue($row['sequence']);
     }
 
     // Return a row with default values
@@ -1399,8 +1425,10 @@ class PickingPendingEdit extends PickingPending
         $row['aisle2'] = $this->aisle2->DefaultValue;
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['scan_article'] = $this->scan_article->DefaultValue;
+        $row['scan_box'] = $this->scan_box->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
         $row['job_id'] = $this->job_id->DefaultValue;
+        $row['sequence'] = $this->sequence->DefaultValue;
         return $row;
     }
 
@@ -1540,11 +1568,17 @@ class PickingPendingEdit extends PickingPending
         // scan_article
         $this->scan_article->RowCssClass = "row";
 
+        // scan_box
+        $this->scan_box->RowCssClass = "row";
+
         // close_totes
         $this->close_totes->RowCssClass = "row";
 
         // job_id
         $this->job_id->RowCssClass = "row";
+
+        // sequence
+        $this->sequence->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1703,6 +1737,10 @@ class PickingPendingEdit extends PickingPending
             $this->scan_article->ViewValue = $this->scan_article->CurrentValue;
             $this->scan_article->ViewCustomAttributes = "";
 
+            // scan_box
+            $this->scan_box->ViewValue = $this->scan_box->CurrentValue;
+            $this->scan_box->ViewCustomAttributes = "";
+
             // close_totes
             $this->close_totes->ViewValue = $this->close_totes->CurrentValue;
             $this->close_totes->ViewCustomAttributes = "";
@@ -1710,6 +1748,10 @@ class PickingPendingEdit extends PickingPending
             // job_id
             $this->job_id->ViewValue = $this->job_id->CurrentValue;
             $this->job_id->ViewCustomAttributes = "";
+
+            // sequence
+            $this->sequence->ViewValue = $this->sequence->CurrentValue;
+            $this->sequence->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1863,6 +1905,10 @@ class PickingPendingEdit extends PickingPending
             $this->scan_article->LinkCustomAttributes = "";
             $this->scan_article->HrefValue = "";
 
+            // scan_box
+            $this->scan_box->LinkCustomAttributes = "";
+            $this->scan_box->HrefValue = "";
+
             // close_totes
             $this->close_totes->LinkCustomAttributes = "";
             $this->close_totes->HrefValue = "";
@@ -1870,6 +1916,10 @@ class PickingPendingEdit extends PickingPending
             // job_id
             $this->job_id->LinkCustomAttributes = "";
             $this->job_id->HrefValue = "";
+
+            // sequence
+            $this->sequence->LinkCustomAttributes = "";
+            $this->sequence->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -2159,6 +2209,15 @@ class PickingPendingEdit extends PickingPending
             $this->scan_article->EditValue = HtmlEncode($this->scan_article->CurrentValue);
             $this->scan_article->PlaceHolder = RemoveHtml($this->scan_article->caption());
 
+            // scan_box
+            $this->scan_box->setupEditAttributes();
+            $this->scan_box->EditCustomAttributes = "";
+            if (!$this->scan_box->Raw) {
+                $this->scan_box->CurrentValue = HtmlDecode($this->scan_box->CurrentValue);
+            }
+            $this->scan_box->EditValue = HtmlEncode($this->scan_box->CurrentValue);
+            $this->scan_box->PlaceHolder = RemoveHtml($this->scan_box->caption());
+
             // close_totes
             $this->close_totes->setupEditAttributes();
             $this->close_totes->EditCustomAttributes = "";
@@ -2176,6 +2235,15 @@ class PickingPendingEdit extends PickingPending
             }
             $this->job_id->EditValue = HtmlEncode($this->job_id->CurrentValue);
             $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
+
+            // sequence
+            $this->sequence->setupEditAttributes();
+            $this->sequence->EditCustomAttributes = "";
+            if (!$this->sequence->Raw) {
+                $this->sequence->CurrentValue = HtmlDecode($this->sequence->CurrentValue);
+            }
+            $this->sequence->EditValue = HtmlEncode($this->sequence->CurrentValue);
+            $this->sequence->PlaceHolder = RemoveHtml($this->sequence->caption());
 
             // Edit refer script
 
@@ -2331,6 +2399,10 @@ class PickingPendingEdit extends PickingPending
             $this->scan_article->LinkCustomAttributes = "";
             $this->scan_article->HrefValue = "";
 
+            // scan_box
+            $this->scan_box->LinkCustomAttributes = "";
+            $this->scan_box->HrefValue = "";
+
             // close_totes
             $this->close_totes->LinkCustomAttributes = "";
             $this->close_totes->HrefValue = "";
@@ -2338,6 +2410,10 @@ class PickingPendingEdit extends PickingPending
             // job_id
             $this->job_id->LinkCustomAttributes = "";
             $this->job_id->HrefValue = "";
+
+            // sequence
+            $this->sequence->LinkCustomAttributes = "";
+            $this->sequence->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2562,6 +2638,11 @@ class PickingPendingEdit extends PickingPending
                 $this->scan_article->addErrorMessage(str_replace("%s", $this->scan_article->caption(), $this->scan_article->RequiredErrorMessage));
             }
         }
+        if ($this->scan_box->Required) {
+            if (!$this->scan_box->IsDetailKey && EmptyValue($this->scan_box->FormValue)) {
+                $this->scan_box->addErrorMessage(str_replace("%s", $this->scan_box->caption(), $this->scan_box->RequiredErrorMessage));
+            }
+        }
         if ($this->close_totes->Required) {
             if (!$this->close_totes->IsDetailKey && EmptyValue($this->close_totes->FormValue)) {
                 $this->close_totes->addErrorMessage(str_replace("%s", $this->close_totes->caption(), $this->close_totes->RequiredErrorMessage));
@@ -2570,6 +2651,11 @@ class PickingPendingEdit extends PickingPending
         if ($this->job_id->Required) {
             if (!$this->job_id->IsDetailKey && EmptyValue($this->job_id->FormValue)) {
                 $this->job_id->addErrorMessage(str_replace("%s", $this->job_id->caption(), $this->job_id->RequiredErrorMessage));
+            }
+        }
+        if ($this->sequence->Required) {
+            if (!$this->sequence->IsDetailKey && EmptyValue($this->sequence->FormValue)) {
+                $this->sequence->addErrorMessage(str_replace("%s", $this->sequence->caption(), $this->sequence->RequiredErrorMessage));
             }
         }
 
@@ -2689,11 +2775,17 @@ class PickingPendingEdit extends PickingPending
         // scan_article
         $this->scan_article->setDbValueDef($rsnew, $this->scan_article->CurrentValue, "", $this->scan_article->ReadOnly);
 
+        // scan_box
+        $this->scan_box->setDbValueDef($rsnew, $this->scan_box->CurrentValue, "", $this->scan_box->ReadOnly);
+
         // close_totes
         $this->close_totes->setDbValueDef($rsnew, $this->close_totes->CurrentValue, null, $this->close_totes->ReadOnly);
 
         // job_id
         $this->job_id->setDbValueDef($rsnew, $this->job_id->CurrentValue, null, $this->job_id->ReadOnly);
+
+        // sequence
+        $this->sequence->setDbValueDef($rsnew, $this->sequence->CurrentValue, null, $this->sequence->ReadOnly);
 
         // Update current values
         $this->setCurrentValues($rsnew);
@@ -2852,40 +2944,6 @@ class PickingPendingEdit extends PickingPending
     {
         if ($type == 'success') {
             //$msg = "your success message";
-            $currentDate = CurrentDate();
-            $currentTime = CurrentTime();
-            $_status = "Done";
-            $_shortpick = "M";
-            $_user = CurrentUsername();
-            $_status2 = "Pending";
-            $status = $this->picked_qty->CurrentValue;
-            //Compare
-            $like = "%";
-            $_picked = $this->picked_qty->CurrentValue;
-            $_target = $this->target_qty->CurrentValue;
-            $_variance = $this->variance_qty->CurrentValue;
-            $_storecid = $this->store_id->CurrentValue;
-            $_boxcode = $this->box_code->CurrentValue;
-            $_boxtype = $this->box_type->CurrentValue;
-            $_closetotes = $this->close_totes->CurrentValue;
-            $hasil = $_picked - $_target;
-
-            //check Last Box
-            	$box = "SELECT `box_code` FROM picking WHERE `picker` = '$_user'  AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1 ";
-            	$_box = ExecuteScalar($box);
-            //Qty last Picked
-            	$qty = "SELECT `picked_qty` FROM picking WHERE `box_code` = '$_box' AND `picker` = '$_user' AND `status` = '$_status' ORDER BY confirmation_date desc, confirmation_time desc limit 1  ";
-            	$_qty = ExecuteScalar($qty);
-            //Qty Full Box
-            	$fullqty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_box' AND `picker` = '$_user' AND `status` = '$_status' ";
-            	$_fullqty = ExecuteScalar($fullqty);
-            	if ($_closetotes == 1 ){
-            	$msg = ("Confirmed Qty : ".$_qty);
-            	}
-            	if ($_closetotes == 2 ){
-            	$msg = ("BOX CODE : ".$_box);
-            	$msg = ("Total Qty : ".$_fullqty);
-            	}
         } elseif ($type == 'failure') {
             //$msg = "your failure message";
         } elseif ($type == 'warning') {

@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table table-bordered table-hover table-sm ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_oss_manual_id" class="oss_manual_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->date->Visible) { // date ?>
         <th class="<?= $Page->date->headerCellClass() ?>"><span id="elh_oss_manual_date" class="oss_manual_date"><?= $Page->date->caption() ?></span></th>
 <?php } ?>
@@ -80,6 +77,15 @@ $Page->showMessage();
 <?php if ($Page->shift->Visible) { // shift ?>
         <th class="<?= $Page->shift->headerCellClass() ?>"><span id="elh_oss_manual_shift" class="oss_manual_shift"><?= $Page->shift->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_oss_manual_status" class="oss_manual_status"><?= $Page->status->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <th class="<?= $Page->date_updated->headerCellClass() ?>"><span id="elh_oss_manual_date_updated" class="oss_manual_date_updated"><?= $Page->date_updated->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <th class="<?= $Page->time_updated->headerCellClass() ?>"><span id="elh_oss_manual_time_updated" class="oss_manual_time_updated"><?= $Page->time_updated->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -101,14 +107,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_id" class="el_oss_manual_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->date->Visible) { // date ?>
         <td<?= $Page->date->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_oss_manual_date" class="el_oss_manual_date">
@@ -194,6 +192,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_oss_manual_shift" class="el_oss_manual_shift">
 <span<?= $Page->shift->viewAttributes() ?>>
 <?= $Page->shift->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <td<?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_status" class="el_oss_manual_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <td<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_date_updated" class="el_oss_manual_date_updated">
+<span<?= $Page->date_updated->viewAttributes() ?>>
+<?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <td<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_time_updated" class="el_oss_manual_time_updated">
+<span<?= $Page->time_updated->viewAttributes() ?>>
+<?= $Page->time_updated->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

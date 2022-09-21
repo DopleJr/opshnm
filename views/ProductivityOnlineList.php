@@ -22,6 +22,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Dynamic selection lists
     fproductivity_onlinelist.lists.picking_date = <?= $Page->picking_date->toClientList($Page) ?>;
     fproductivity_onlinelist.lists.picker = <?= $Page->picker->toClientList($Page) ?>;
+    fproductivity_onlinelist.lists.total_bin = <?= $Page->total_bin->toClientList($Page) ?>;
     fproductivity_onlinelist.lists.total = <?= $Page->total->toClientList($Page) ?>;
     fproductivity_onlinelist.lists.picked = <?= $Page->picked->toClientList($Page) ?>;
     fproductivity_onlinelist.lists.variance = <?= $Page->variance->toClientList($Page) ?>;
@@ -40,6 +41,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["picking_date", [], fields.picking_date.isInvalid],
         ["y_picking_date", [ew.Validators.between], false],
         ["picker", [], fields.picker.isInvalid],
+        ["total_bin", [], fields.total_bin.isInvalid],
         ["total", [], fields.total.isInvalid],
         ["picked", [], fields.picked.isInvalid],
         ["variance", [], fields.variance.isInvalid]
@@ -75,6 +77,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Dynamic selection lists
     fproductivity_onlinesrch.lists.picking_date = <?= $Page->picking_date->toClientList($Page) ?>;
     fproductivity_onlinesrch.lists.picker = <?= $Page->picker->toClientList($Page) ?>;
+    fproductivity_onlinesrch.lists.total_bin = <?= $Page->total_bin->toClientList($Page) ?>;
     fproductivity_onlinesrch.lists.total = <?= $Page->total->toClientList($Page) ?>;
     fproductivity_onlinesrch.lists.picked = <?= $Page->picked->toClientList($Page) ?>;
     fproductivity_onlinesrch.lists.variance = <?= $Page->variance->toClientList($Page) ?>;
@@ -192,6 +195,43 @@ if (!$Page->picker->UseFilter) {
                 ajax: { id: "x_picker", form: "fproductivity_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.productivity_online.fields.picker.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->total_bin->Visible) { // total_bin ?>
+<?php
+if (!$Page->total_bin->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_total_bin" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->total_bin->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_total_bin"
+            name="x_total_bin[]"
+            class="form-control ew-select<?= $Page->total_bin->isInvalidClass() ?>"
+            data-select2-id="fproductivity_onlinesrch_x_total_bin"
+            data-table="productivity_online"
+            data-field="x_total_bin"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->total_bin->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->total_bin->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->total_bin->getPlaceHolder()) ?>"
+            <?= $Page->total_bin->editAttributes() ?>>
+            <?= $Page->total_bin->selectOptionListHtml("x_total_bin", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->total_bin->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fproductivity_onlinesrch", function() {
+            var options = {
+                name: "x_total_bin",
+                selectId: "fproductivity_onlinesrch_x_total_bin",
+                ajax: { id: "x_total_bin", form: "fproductivity_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.productivity_online.fields.total_bin.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -379,6 +419,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->picker->Visible) { // picker ?>
         <th data-name="picker" class="<?= $Page->picker->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_productivity_online_picker" class="productivity_online_picker"><?= $Page->renderFieldHeader($Page->picker) ?></div></th>
 <?php } ?>
+<?php if ($Page->total_bin->Visible) { // total_bin ?>
+        <th data-name="total_bin" class="<?= $Page->total_bin->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_productivity_online_total_bin" class="productivity_online_total_bin"><?= $Page->renderFieldHeader($Page->total_bin) ?></div></th>
+<?php } ?>
 <?php if ($Page->total->Visible) { // total ?>
         <th data-name="total" class="<?= $Page->total->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_productivity_online_total" class="productivity_online_total"><?= $Page->renderFieldHeader($Page->total) ?></div></th>
 <?php } ?>
@@ -479,6 +522,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->total_bin->Visible) { // total_bin ?>
+        <td data-name="total_bin"<?= $Page->total_bin->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_productivity_online_total_bin" class="el_productivity_online_total_bin">
+<span<?= $Page->total_bin->viewAttributes() ?>>
+<?= $Page->total_bin->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->total->Visible) { // total ?>
         <td data-name="total"<?= $Page->total->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_productivity_online_total" class="el_productivity_online_total">
@@ -540,6 +591,12 @@ $Page->ListOptions->render("footer", "left");
         <td data-name="picker" class="<?= $Page->picker->footerCellClass() ?>"><span id="elf_productivity_online_picker" class="productivity_online_picker">
         <span class="ew-aggregate"><?= $Language->phrase("COUNT") ?></span><span class="ew-aggregate-value">
         <?= $Page->picker->ViewValue ?></span>
+        </span></td>
+    <?php } ?>
+    <?php if ($Page->total_bin->Visible) { // total_bin ?>
+        <td data-name="total_bin" class="<?= $Page->total_bin->footerCellClass() ?>"><span id="elf_productivity_online_total_bin" class="productivity_online_total_bin">
+        <span class="ew-aggregate"><?= $Language->phrase("TOTAL") ?></span><span class="ew-aggregate-value">
+        <?= $Page->total_bin->ViewValue ?></span>
         </span></td>
     <?php } ?>
     <?php if ($Page->total->Visible) { // total ?>

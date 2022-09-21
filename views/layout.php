@@ -519,7 +519,7 @@ loadjs.done("wrapper");
 <div class="modal-body">
     <div class="fileinput-button ew-file-drop-zone w-100">
         <input type="file" class="form-control ew-file-input" title="" id="importfiles" name="importfiles[]" multiple lang="<?= CurrentLanguageID() ?>">
-        <div class="text-muted ew-file-text">Drop file here or click to upload</div>
+        <div class="text-muted ew-file-text"><?= $Language->phrase("ChooseFile") ?></div>
     </div>
     <div class="message d-none mt-3"></div>
     <div class="progress d-none mt-3"><div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div></div>

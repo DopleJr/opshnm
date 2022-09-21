@@ -21,16 +21,20 @@ loadjs.ready(["wrapper", "head"], function () {
     var fields = currentTable.fields;
     foss_manualadd.addFields([
         ["date", [fields.date.visible && fields.date.required ? ew.Validators.required(fields.date.caption) : null, ew.Validators.datetime(fields.date.clientFormatPattern)], fields.date.isInvalid],
-        ["sscc", [fields.sscc.visible && fields.sscc.required ? ew.Validators.required(fields.sscc.caption) : null], fields.sscc.isInvalid],
-        ["shipment", [fields.shipment.visible && fields.shipment.required ? ew.Validators.required(fields.shipment.caption) : null], fields.shipment.isInvalid],
+        ["sscc", [fields.sscc.visible && fields.sscc.required ? ew.Validators.required(fields.sscc.caption) : null, ew.Validators.integer], fields.sscc.isInvalid],
+        ["scan", [fields.scan.visible && fields.scan.required ? ew.Validators.required(fields.scan.caption) : null], fields.scan.isInvalid],
+        ["shipment", [fields.shipment.visible && fields.shipment.required ? ew.Validators.required(fields.shipment.caption) : null, ew.Validators.integer], fields.shipment.isInvalid],
         ["pallet_no", [fields.pallet_no.visible && fields.pallet_no.required ? ew.Validators.required(fields.pallet_no.caption) : null], fields.pallet_no.isInvalid],
-        ["idw", [fields.idw.visible && fields.idw.required ? ew.Validators.required(fields.idw.caption) : null, ew.Validators.integer], fields.idw.isInvalid],
+        ["idw", [fields.idw.visible && fields.idw.required ? ew.Validators.required(fields.idw.caption) : null], fields.idw.isInvalid],
         ["order_no", [fields.order_no.visible && fields.order_no.required ? ew.Validators.required(fields.order_no.caption) : null, ew.Validators.integer], fields.order_no.isInvalid],
-        ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null], fields.item_in_ctn.isInvalid],
-        ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null], fields.no_of_ctn.isInvalid],
+        ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null, ew.Validators.integer], fields.item_in_ctn.isInvalid],
+        ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null, ew.Validators.integer], fields.no_of_ctn.isInvalid],
         ["ctn_no", [fields.ctn_no.visible && fields.ctn_no.required ? ew.Validators.required(fields.ctn_no.caption) : null, ew.Validators.integer], fields.ctn_no.isInvalid],
         ["checker", [fields.checker.visible && fields.checker.required ? ew.Validators.required(fields.checker.caption) : null], fields.checker.isInvalid],
-        ["shift", [fields.shift.visible && fields.shift.required ? ew.Validators.required(fields.shift.caption) : null], fields.shift.isInvalid]
+        ["shift", [fields.shift.visible && fields.shift.required ? ew.Validators.required(fields.shift.caption) : null], fields.shift.isInvalid],
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null, ew.Validators.datetime(fields.date_updated.clientFormatPattern)], fields.date_updated.isInvalid],
+        ["time_updated", [fields.time_updated.visible && fields.time_updated.required ? ew.Validators.required(fields.time_updated.caption) : null, ew.Validators.time(fields.time_updated.clientFormatPattern)], fields.time_updated.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -43,7 +47,9 @@ loadjs.ready(["wrapper", "head"], function () {
     foss_manualadd.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
+    foss_manualadd.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
     foss_manualadd.lists.shift = <?= $Page->shift->toClientList($Page) ?>;
+    foss_manualadd.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("foss_manualadd");
 });
 </script>
@@ -52,16 +58,16 @@ loadjs.ready("head", function () {
     // Client script
     // Write your table-specific client script here, no need to add script tags.
     $(document).ready(function() {
-    $(".input-group").hide();
+    //$(".input-group").hide();
     $(".text-muted").hide();
     $(".ew-breadcrumbs").hide();// atribut text
-    $("#x_sscc").focus();
+    $("#x_shipment").attr('readonly', false);
+    $("#x_pallet_no").attr('readonly', false);
+    $("#x_idw").attr('readonly', false);
     $("#x_checker").attr('readonly', true);
-    $("#x_shipment").attr('readonly', true);
-    $("#x_pallet_no").attr('readonly', true);
-    $("#x_idw").attr('readonly', true);
-    $("#x_checker").attr('readonly', true);
-    $("#x_order_no").attr('readonly', true);
+    $("#x_order_no").attr('readonly', false);
+    $(".swal2-deny").hide();
+    $(".swal2-cancel").hide();
     });
 });
 </script>
@@ -103,6 +109,18 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->scan->Visible) { // scan ?>
+    <div id="r_scan"<?= $Page->scan->rowAttributes() ?>>
+        <label id="elh_oss_manual_scan" for="x_scan" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_scan"><?= $Page->scan->caption() ?><?= $Page->scan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->scan->cellAttributes() ?>>
+<template id="tpx_oss_manual_scan"><span id="el_oss_manual_scan">
+<input type="<?= $Page->scan->getInputTextType() ?>" name="x_scan" id="x_scan" data-table="oss_manual" data-field="x_scan" value="<?= $Page->scan->EditValue ?>" size="50" maxlength="255" placeholder="<?= HtmlEncode($Page->scan->getPlaceHolder()) ?>"<?= $Page->scan->editAttributes() ?> aria-describedby="x_scan_help">
+<?= $Page->scan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->scan->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->shipment->Visible) { // shipment ?>
     <div id="r_shipment"<?= $Page->shipment->rowAttributes() ?>>
         <label id="elh_oss_manual_shipment" for="x_shipment" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_shipment"><?= $Page->shipment->caption() ?><?= $Page->shipment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
@@ -129,12 +147,49 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->idw->Visible) { // idw ?>
     <div id="r_idw"<?= $Page->idw->rowAttributes() ?>>
-        <label id="elh_oss_manual_idw" for="x_idw" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_idw"><?= $Page->idw->caption() ?><?= $Page->idw->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_oss_manual_idw" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_idw"><?= $Page->idw->caption() ?><?= $Page->idw->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->idw->cellAttributes() ?>>
 <template id="tpx_oss_manual_idw"><span id="el_oss_manual_idw">
-<input type="<?= $Page->idw->getInputTextType() ?>" name="x_idw" id="x_idw" data-table="oss_manual" data-field="x_idw" value="<?= $Page->idw->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"<?= $Page->idw->editAttributes() ?> aria-describedby="x_idw_help">
-<?= $Page->idw->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idw->getErrorMessage() ?></div>
+    <select
+        id="x_idw"
+        name="x_idw"
+        class="form-select ew-select<?= $Page->idw->isInvalidClass() ?>"
+        data-select2-id="foss_manualadd_x_idw"
+        data-table="oss_manual"
+        data-field="x_idw"
+        data-dropdown
+        data-value-separator="<?= $Page->idw->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"
+        <?= $Page->idw->editAttributes() ?>>
+        <?= $Page->idw->selectOptionListHtml("x_idw") ?>
+    </select>
+    <?= $Page->idw->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idw->getErrorMessage() ?></div>
+<style>oss_manual-x_idw-dropdown { max-height: 100px !important; overflow-y: auto; min-width: 158px !important }</style>
+<script>
+loadjs.ready("foss_manualadd", function() {
+    var options = { name: "x_idw", selectId: "foss_manualadd_x_idw" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.columns = el.dataset.repeatcolumn || 5;
+    options.dropdown = !ew.IS_MOBILE && options.columns > 0; // Use custom dropdown
+    el.dataset.dropdown = options.dropdown;
+    if (options.dropdown) {
+        options.dropdownAutoWidth = true;
+        options.dropdownCssClass = "ew-select-dropdown ew-select-one oss_manual-x_idw-dropdown";
+        if (options.columns > 1)
+            options.dropdownCssClass += " ew-repeat-column";
+    }
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (foss_manualadd.lists.idw.lookupOptions.length) {
+        options.data = { id: "x_idw", form: "foss_manualadd" };
+    } else {
+        options.ajax = { id: "x_idw", form: "foss_manualadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.oss_manual.fields.idw.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span></template>
 </div></div>
     </div>
@@ -156,7 +211,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_item_in_ctn" for="x_item_in_ctn" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_item_in_ctn"><?= $Page->item_in_ctn->caption() ?><?= $Page->item_in_ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->item_in_ctn->cellAttributes() ?>>
 <template id="tpx_oss_manual_item_in_ctn"><span id="el_oss_manual_item_in_ctn">
-<input type="<?= $Page->item_in_ctn->getInputTextType() ?>" name="x_item_in_ctn" id="x_item_in_ctn" data-table="oss_manual" data-field="x_item_in_ctn" value="<?= $Page->item_in_ctn->EditValue ?>" size="6" maxlength="255" placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"<?= $Page->item_in_ctn->editAttributes() ?> aria-describedby="x_item_in_ctn_help">
+<input type="<?= $Page->item_in_ctn->getInputTextType() ?>" name="x_item_in_ctn" id="x_item_in_ctn" data-table="oss_manual" data-field="x_item_in_ctn" value="<?= $Page->item_in_ctn->EditValue ?>" size="4" maxlength="4" placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"<?= $Page->item_in_ctn->editAttributes() ?> aria-describedby="x_item_in_ctn_help">
 <?= $Page->item_in_ctn->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->item_in_ctn->getErrorMessage() ?></div>
 </span></template>
@@ -168,7 +223,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_no_of_ctn" for="x_no_of_ctn" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_no_of_ctn"><?= $Page->no_of_ctn->caption() ?><?= $Page->no_of_ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->no_of_ctn->cellAttributes() ?>>
 <template id="tpx_oss_manual_no_of_ctn"><span id="el_oss_manual_no_of_ctn">
-<input type="<?= $Page->no_of_ctn->getInputTextType() ?>" name="x_no_of_ctn" id="x_no_of_ctn" data-table="oss_manual" data-field="x_no_of_ctn" value="<?= $Page->no_of_ctn->EditValue ?>" size="4" maxlength="255" placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"<?= $Page->no_of_ctn->editAttributes() ?> aria-describedby="x_no_of_ctn_help">
+<input type="<?= $Page->no_of_ctn->getInputTextType() ?>" name="x_no_of_ctn" id="x_no_of_ctn" data-table="oss_manual" data-field="x_no_of_ctn" value="<?= $Page->no_of_ctn->EditValue ?>" size="4" maxlength="4" placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"<?= $Page->no_of_ctn->editAttributes() ?> aria-describedby="x_no_of_ctn_help">
 <?= $Page->no_of_ctn->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->no_of_ctn->getErrorMessage() ?></div>
 </span></template>
@@ -219,6 +274,7 @@ $Page->showMessage();
     </select>
     <?= $Page->shift->getCustomMessage() ?>
     <div class="invalid-feedback"><?= $Page->shift->getErrorMessage() ?></div>
+<style>oss_manual-x_shift-dropdown { max-height: 100px !important; overflow-y: auto; min-width: 158px !important }</style>
 <script>
 loadjs.ready("foss_manualadd", function() {
     var options = { name: "x_shift", selectId: "foss_manualadd_x_shift" },
@@ -247,51 +303,203 @@ loadjs.ready("foss_manualadd", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <div id="r_status"<?= $Page->status->rowAttributes() ?>>
+        <label id="elh_oss_manual_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
+<template id="tpx_oss_manual_status"><span id="el_oss_manual_status">
+    <select
+        id="x_status"
+        name="x_status"
+        class="form-select ew-select<?= $Page->status->isInvalidClass() ?>"
+        data-select2-id="foss_manualadd_x_status"
+        data-table="oss_manual"
+        data-field="x_status"
+        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+        <?= $Page->status->editAttributes() ?>>
+        <?= $Page->status->selectOptionListHtml("x_status") ?>
+    </select>
+    <?= $Page->status->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("foss_manualadd", function() {
+    var options = { name: "x_status", selectId: "foss_manualadd_x_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (foss_manualadd.lists.status.lookupOptions.length) {
+        options.data = { id: "x_status", form: "foss_manualadd" };
+    } else {
+        options.ajax = { id: "x_status", form: "foss_manualadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.oss_manual.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+    <div id="r_date_updated"<?= $Page->date_updated->rowAttributes() ?>>
+        <label id="elh_oss_manual_date_updated" for="x_date_updated" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_date_updated"><?= $Page->date_updated->caption() ?><?= $Page->date_updated->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_updated->cellAttributes() ?>>
+<template id="tpx_oss_manual_date_updated"><span id="el_oss_manual_date_updated">
+<input type="<?= $Page->date_updated->getInputTextType() ?>" name="x_date_updated" id="x_date_updated" data-table="oss_manual" data-field="x_date_updated" value="<?= $Page->date_updated->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_updated->getPlaceHolder()) ?>"<?= $Page->date_updated->editAttributes() ?> aria-describedby="x_date_updated_help">
+<?= $Page->date_updated->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->date_updated->getErrorMessage() ?></div>
+<?php if (!$Page->date_updated->ReadOnly && !$Page->date_updated->Disabled && !isset($Page->date_updated->EditAttrs["readonly"]) && !isset($Page->date_updated->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["foss_manualadd", "datetimepicker"], function () {
+    let format = "<?= DateFormat(0) ?>",
+        options = {
+            localization: {
+                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
+            },
+            display: {
+                icons: {
+                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                },
+                components: {
+                    hours: !!format.match(/h/i),
+                    minutes: !!format.match(/m/),
+                    seconds: !!format.match(/s/i),
+                    useTwentyfourHour: !!format.match(/H/)
+                }
+            },
+            meta: {
+                format
+            }
+        };
+    ew.createDateTimePicker("foss_manualadd", "x_date_updated", ew.deepAssign({"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+    <div id="r_time_updated"<?= $Page->time_updated->rowAttributes() ?>>
+        <label id="elh_oss_manual_time_updated" for="x_time_updated" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_time_updated"><?= $Page->time_updated->caption() ?><?= $Page->time_updated->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->time_updated->cellAttributes() ?>>
+<template id="tpx_oss_manual_time_updated"><span id="el_oss_manual_time_updated">
+<input type="<?= $Page->time_updated->getInputTextType() ?>" name="x_time_updated" id="x_time_updated" data-table="oss_manual" data-field="x_time_updated" value="<?= $Page->time_updated->EditValue ?>" placeholder="<?= HtmlEncode($Page->time_updated->getPlaceHolder()) ?>"<?= $Page->time_updated->editAttributes() ?> aria-describedby="x_time_updated_help">
+<?= $Page->time_updated->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->time_updated->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <div id="tpd_oss_manualadd" class="ew-custom-template"></div>
 <template id="tpm_oss_manualadd">
-<div id="ct_OssManualAdd"><script type="text/javascript">
+<div id="ct_OssManualAdd"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript">
 
-		function reset_shipment() {
-			$("#x_shipment").val("");
-			$("#x_pallet_no").val("");
-			$("#x_order_no").val("");
-			$("#x_shipment").focus();
-			$("#x_shipment").attr('readonly', false);
-			$("#x_pallet_no").attr('readonly', false);
-			$("#x_order_no").attr('readonly', false);
-		};
+function reset_shipment() {
+  $("#x_shipment").val("");
+  $("#x_pallet_no").val("");
+  $("#x_order_no").val("");
+  $("#x_shipment").attr("readonly", false);
+  $("#x_pallet_no").attr("readonly", false);
+  $("#x_order_no").attr("readonly", false);
+  $("#x_shipment").focus();
+}
 
-		function reset_pallet() {
-			$("#x_pallet_no").val("");
-			$("#x_order_no").val("");
-			$("#x_pallet_no").attr('readonly', false);
-			$("#x_order_no").attr('readonly', false);
-			$("x_pallet_no").focus();
-		};
+function reset_pallet() {
+  $("#x_pallet_no").val("");
+  $("#x_order_no").val("");
+  $("#x_pallet_no").attr("readonly", false);
+  $("#x_order_no").attr("readonly", false);
+  $("x_pallet_no").focus();
+}
 
-		function reset_on() {
-			$("#x_order_no").val("");
-			$("#x_order_no").attr('readonly', false);
-			$("x_order_no").focus();
-		};
-		$('body').on('keydown', 'input, select', function(e) { // ganti enter jadi tab di setiap input
-            if (e.key === "Enter") {
-                var self = $(this), form = self.parents('form:eq(0)'), focusable, next;
-                focusable = form.find('input,a,select,textarea,button').filter(":input:not([readonly])");
-                next = focusable.eq(focusable.index(this)+1);
-                if (next.length) {
-                    next.focus();
-                } else {
-                    form.submit(function (){
-                    return false;
-                });
-                }
-                return false;
-            }
+function reset_on() {
+  $("#x_order_no").val("");
+  $("#x_order_no").attr("readonly", false);
+  $("x_order_no").focus();
+}
+$("body").on("keydown", "input, select", function (e) {
+  // ganti enter jadi tab di setiap input
+  if (e.which == 13 || e.keycode == 13) {
+    var self = $(this),
+      form = self.parents("form:eq(0)"),
+      focusable,
+      next;
+    focusable = form
+      .find(":input")
+      .filter(":input:not([readonly])", ".scan-article");
+    next = focusable.eq(focusable.index(this) + 1);
+    if (next.length) {
+      next.focus();
+      //alert('Shortpick');
+    } else {
+      form.submit(function () {
+        //alert('Shortpick');
+        return false;
+      });
+    }
+    return false;
+  }
+});
+$(document).ready(function () {
+  $("#x_scan").on("keyup", function () {
+    var object = "oss_manual",
+      key = encodeURIComponent($(this).val());
+    $.get("/api/view/" + object + "/" + key, function (res) {
+      // Get response from View page API
+      if (res && res.success) {
+        var row = res[object];
+        var orderno = row["order_no"];
+        var shipment = row["shipment"];
+        var palletno = row["pallet_no"];
+        var inctn = row["item_in_ctn"];
+        var noctn = row["no_of_ctn"];
+        var ctnno = row["ctn_no"];
+        var idw = row["idw"];
+        var scan = $("#x_scan").val();
+        $("#x_sscc").val(scan + "_1");
+        $("#x_shipment").val(shipment);
+        $("#x_pallet_no").val(palletno);
+        $("#x_order_no").val(orderno);
+        $("#x_idw").val(idw);
+        $("#x_item_in_ctn").val(inctn);
+        $("#x_no_of_ctn").val(noctn);
+        $("#x_ctn_no").val(ctnno);
+        $("#x_scan").attr("readonly", true);
+        $("#x_item_in_ctn").focus();
+      } else {
+        Swal.fire({
+          title: "New SSCC !",
+          text: "New SSCC has been scanned",
+          icon: "warning",
+          width: 200,
+          height: 180,
+          didClose: (e) => {
+            // focus your element
+            $("#x_sscc").val($("#x_scan").val());
+            $("#x_scan").attr("readonly", true);
+            $("#x_date").attr("disabled", false);
+            $("#x_date").attr("readonly", true);
+            $("#x_idw").attr('readonly', false);
+            $("#x_scan").blur();
+            $("#x_shipment").focus();
+          },
         });
+      }
+    });
+  });
+});
 </script>
 <style>
+	html {
+	display: block !important;
+	height: 100% !important;
+	width: 100% !important;
+	}
 	input {
         display: flex;
         width: 100%;
@@ -308,19 +516,30 @@ loadjs.ready("foss_manualadd", function() {
     	flex: 1 0 0%;
     	width: 250px !important;
     }
-}
+    .swal2-deny {
+    display: none !important;
+    }
+    .swal2-cancel {
+    display: none !important;
+    }
+    .select2-container {
+    min-width: 10em!important;
+    }
 </style>
-<div id="r_id" class="mb-3 row" hidden>
-    <label for="x_id" class="col-sm-3 col-form-label"><?= $Page->id->caption() ?></label>
-    <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_id"></slot></div>
-</div>
+<body>
 <div id="r_date" class="mb-3 row">
     <label for="x_date" class="col-sm-3 col-form-label"><?= $Page->date->caption() ?></label>
     <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_date"></slot></div>
 </div>
 <div class="container-fluid">
 	<div class="row justify-content-start">
-        <div id="r_sscc" class="col">
+        <div id="r_scan" class="col">
+            <label for="x_scan" class="col-sm-5 col-form-label"><?= $Page->scan->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_scan"></slot></div>
+        </div>
+    </div>
+	<div class="row justify-content-start">
+        <div id="r_sscc" class="col" hidden>
             <label for="x_sscc" class="col-sm-5 col-form-label"><?= $Page->sscc->caption() ?></label>
             <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_sscc"></slot></div>
         </div>
@@ -368,8 +587,21 @@ loadjs.ready("foss_manualadd", function() {
             <label for="x_shift" class="col-sm-2 col-form-label"><?= $Page->shift->caption() ?></label>
             <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_shift"></slot></div>
         </div>
+        <div id="r_status" class="col" hidden>
+            <label for="x_status" class="col-sm-2 col-form-label"><?= $Page->status->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_status"></slot></div>
+        </div>
+        <div id="r_date_updated" class="col" hidden>
+            <label for="x_date_updated" class="col-sm-2 col-form-label"><?= $Page->date_updated->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_date_updated"></slot></div>
+        </div>
+        <div id="r_time_updated" class="col" hidden>
+            <label for="x_time_updated" class="col-sm-2 col-form-label"><?= $Page->time_updated->caption() ?></label>
+            <div class="col-sm-5"><slot class="ew-slot" name="tpx_oss_manual_time_updated"></slot></div>
+        </div>
     </div>
 </div>
+</body>
 </div>
 </template>
 <?php if (!$Page->IsModal) { ?>
@@ -412,15 +644,11 @@ loadjs.ready("load", function () {
     	$("#btn-action").after(
         	'<button class="btn btn-danger ew-btn" name="btn-action" id="btn-action" type="button" onclick="reset_on()">Reset On</button>'
         	);
-      $(document).on("focus", "input[type=text]", function () {
-        this.select();
-      });
-      $("#x_sscc").focus();
-      $("#x_sscc").change(function () {
-        $("#x_shipment").focus();
-      });
+      $("#x_scan").focus();
       $("#x_shipment").change(function () {
         $("#x_pallet_no").focus();
+        $("#x_sscc").attr('disabled', false);
+        $("#x_sscc").attr('readonly', true);
         $("#x_shipment").attr('readonly', true);
       });
       $("#x_pallet_no").change(function () {
@@ -445,7 +673,7 @@ loadjs.ready("load", function () {
         const element2 = document.getElementById("x_pallet_no");
         const element3 = document.getElementById("x_order_no");
         if (element1.readOnly) {
-          console.log("✅ element is read-only");
+          //console.log("✅ element is read-only");
           $("#x_shipment").blur();
           $("#x_pallet_no").focus();
         }

@@ -375,7 +375,7 @@ class OssManualSearch extends OssManual
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['sscc'];
         }
         return $key;
     }
@@ -387,9 +387,6 @@ class OssManualSearch extends OssManual
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -480,9 +477,9 @@ class OssManualSearch extends OssManual
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
         $this->date->setVisibility();
         $this->sscc->Visible = false;
+        $this->scan->Visible = false;
         $this->shipment->Visible = false;
         $this->pallet_no->Visible = false;
         $this->idw->Visible = false;
@@ -492,6 +489,9 @@ class OssManualSearch extends OssManual
         $this->ctn_no->Visible = false;
         $this->checker->Visible = false;
         $this->shift->Visible = false;
+        $this->status->Visible = false;
+        $this->date_updated->Visible = false;
+        $this->time_updated->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -508,7 +508,9 @@ class OssManualSearch extends OssManual
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idw);
         $this->setupLookupOptions($this->shift);
+        $this->setupLookupOptions($this->status);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -667,6 +669,11 @@ class OssManualSearch extends OssManual
             $hasValue = true;
         }
 
+        // scan
+        if ($this->scan->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // shipment
         if ($this->shipment->AdvancedSearch->get()) {
             $hasValue = true;
@@ -711,6 +718,21 @@ class OssManualSearch extends OssManual
         if ($this->shift->AdvancedSearch->get()) {
             $hasValue = true;
         }
+
+        // status
+        if ($this->status->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // date_updated
+        if ($this->date_updated->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // time_updated
+        if ($this->time_updated->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
         return $hasValue;
     }
 
@@ -726,14 +748,14 @@ class OssManualSearch extends OssManual
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
-
         // date
         $this->date->RowCssClass = "row";
 
         // sscc
         $this->sscc->RowCssClass = "row";
+
+        // scan
+        $this->scan->RowCssClass = "row";
 
         // shipment
         $this->shipment->RowCssClass = "row";
@@ -762,12 +784,17 @@ class OssManualSearch extends OssManual
         // shift
         $this->shift->RowCssClass = "row";
 
+        // status
+        $this->status->RowCssClass = "row";
+
+        // date_updated
+        $this->date_updated->RowCssClass = "row";
+
+        // time_updated
+        $this->time_updated->RowCssClass = "row";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // date
             $this->date->ViewValue = $this->date->CurrentValue;
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
@@ -786,7 +813,11 @@ class OssManualSearch extends OssManual
             $this->pallet_no->ViewCustomAttributes = "";
 
             // idw
-            $this->idw->ViewValue = $this->idw->CurrentValue;
+            if (strval($this->idw->CurrentValue) != "") {
+                $this->idw->ViewValue = $this->idw->optionCaption($this->idw->CurrentValue);
+            } else {
+                $this->idw->ViewValue = null;
+            }
             $this->idw->ViewCustomAttributes = "";
 
             // order_no
@@ -795,14 +826,17 @@ class OssManualSearch extends OssManual
 
             // item_in_ctn
             $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
             $this->item_in_ctn->ViewCustomAttributes = "";
 
             // no_of_ctn
             $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
             $this->no_of_ctn->ViewCustomAttributes = "";
 
             // ctn_no
             $this->ctn_no->ViewValue = $this->ctn_no->CurrentValue;
+            $this->ctn_no->ViewValue = FormatNumber($this->ctn_no->ViewValue, $this->ctn_no->formatPattern());
             $this->ctn_no->ViewCustomAttributes = "";
 
             // checker
@@ -816,6 +850,24 @@ class OssManualSearch extends OssManual
                 $this->shift->ViewValue = null;
             }
             $this->shift->ViewCustomAttributes = "";
+
+            // status
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
+            $this->status->ViewCustomAttributes = "";
+
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
 
             // date
             $this->date->LinkCustomAttributes = "";
@@ -898,7 +950,11 @@ class OssManualSearch extends OssManual
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idw":
+                    break;
                 case "x_shift":
+                    break;
+                case "x_status":
                     break;
                 default:
                     $lookupFilter = "";

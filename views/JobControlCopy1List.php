@@ -30,7 +30,6 @@ loadjs.ready(["wrapper", "head"], function () {
     fjob_control_copy1list.lists.picked_qty = <?= $Page->picked_qty->toClientList($Page) ?>;
     fjob_control_copy1list.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fjob_control_copy1list.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
-    fjob_control_copy1list.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
     loadjs.done("fjob_control_copy1list");
 });
 var fjob_control_copy1srch, currentSearchForm, currentAdvancedSearchForm;
@@ -52,8 +51,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["target_qty", [], fields.target_qty.isInvalid],
         ["picked_qty", [], fields.picked_qty.isInvalid],
         ["status", [], fields.status.isInvalid],
-        ["date_created", [], fields.date_created.isInvalid],
-        ["date_updated", [], fields.date_updated.isInvalid]
+        ["date_created", [], fields.date_created.isInvalid]
     ]);
 
     // Validate form
@@ -243,7 +241,7 @@ if (!$Page->store_id->UseFilter) {
             var options = {
                 name: "x_store_id",
                 selectId: "fjob_control_copy1srch_x_store_id",
-                ajax: { id: "x_store_id", form: "fjob_control_copy1srch", limit: 1000, data: { ajax: "filter" } }
+                ajax: { id: "x_store_id", form: "fjob_control_copy1srch", limit: 100, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.store_id.filterOptions);
             ew.createFilter(options);
@@ -625,7 +623,7 @@ $Page->ListOptions->render("header", "left");
         <th data-name="area" class="<?= $Page->area->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_area" class="job_control_copy1_area"><?= $Page->renderFieldHeader($Page->area) ?></div></th>
 <?php } ?>
 <?php if ($Page->aisle->Visible) { // aisle ?>
-        <th data-name="aisle" class="<?= $Page->aisle->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_aisle" class="job_control_copy1_aisle"><?= $Page->renderFieldHeader($Page->aisle) ?></div></th>
+        <th data-name="aisle" class="<?= $Page->aisle->headerCellClass() ?>"><div id="elh_job_control_copy1_aisle" class="job_control_copy1_aisle"><?= $Page->renderFieldHeader($Page->aisle) ?></div></th>
 <?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
         <th data-name="user" class="<?= $Page->user->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_user" class="job_control_copy1_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
@@ -634,16 +632,13 @@ $Page->ListOptions->render("header", "left");
         <th data-name="target_qty" class="<?= $Page->target_qty->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_target_qty" class="job_control_copy1_target_qty"><?= $Page->renderFieldHeader($Page->target_qty) ?></div></th>
 <?php } ?>
 <?php if ($Page->picked_qty->Visible) { // picked_qty ?>
-        <th data-name="picked_qty" class="<?= $Page->picked_qty->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_picked_qty" class="job_control_copy1_picked_qty"><?= $Page->renderFieldHeader($Page->picked_qty) ?></div></th>
+        <th data-name="picked_qty" class="<?= $Page->picked_qty->headerCellClass() ?>" style="min-width: 10rem; white-space: nowrap;"><div id="elh_job_control_copy1_picked_qty" class="job_control_copy1_picked_qty"><?= $Page->renderFieldHeader($Page->picked_qty) ?></div></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_status" class="job_control_copy1_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_date_created" class="job_control_copy1_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
-<?php } ?>
-<?php if ($Page->date_updated->Visible) { // date_updated ?>
-        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_date_updated" class="job_control_copy1_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -800,14 +795,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->date_updated->Visible) { // date_updated ?>
-        <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_job_control_copy1_date_updated" class="el_job_control_copy1_date_updated">
-<span<?= $Page->date_updated->viewAttributes() ?>>
-<?= $Page->date_updated->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -853,7 +840,18 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
+    // Startup script
     // Write your table-specific startup script here, no need to add script tags.
+    $(document).ready(function () {
+
+      function refreshTable() {
+        tableRefresh = setInterval(function () {
+          $("table.ew-table > tbody").load(
+            location.href + " table.ew-table > tbody tr");
+        }, 30000); // Change this value as appropriate to set the refresh period ... 1000 = 1 second
+      }
+      refreshTable();
+    });
 });
 </script>
 <?php } ?>

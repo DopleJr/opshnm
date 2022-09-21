@@ -523,8 +523,11 @@ loadjs.ready("load", function () {
     // Startup script
     // Write your table-specific startup script here, no need to add script tags.
     $(document).ready(function() {
-    	$(document).on('focus','input[type=search]',function(){ this.select(); });
-    });
+    	$(document).on('focus','input[type=search]',function(){
+    		this.select();
+    		this.focus();
+    		});
+    	});
 });
 </script>
 <?php } ?>

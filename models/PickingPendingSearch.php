@@ -524,8 +524,10 @@ class PickingPendingSearch extends PickingPending
         $this->aisle2->setVisibility();
         $this->store_id2->setVisibility();
         $this->scan_article->setVisibility();
+        $this->scan_box->setVisibility();
         $this->close_totes->setVisibility();
         $this->job_id->setVisibility();
+        $this->sequence->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -645,8 +647,10 @@ class PickingPendingSearch extends PickingPending
         $this->buildSearchUrl($srchUrl, $this->aisle2); // aisle2
         $this->buildSearchUrl($srchUrl, $this->store_id2); // store_id2
         $this->buildSearchUrl($srchUrl, $this->scan_article); // scan_article
+        $this->buildSearchUrl($srchUrl, $this->scan_box); // scan_box
         $this->buildSearchUrl($srchUrl, $this->close_totes); // close_totes
         $this->buildSearchUrl($srchUrl, $this->job_id); // job_id
+        $this->buildSearchUrl($srchUrl, $this->sequence); // sequence
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -908,6 +912,11 @@ class PickingPendingSearch extends PickingPending
             $hasValue = true;
         }
 
+        // scan_box
+        if ($this->scan_box->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // close_totes
         if ($this->close_totes->AdvancedSearch->get()) {
             $hasValue = true;
@@ -915,6 +924,11 @@ class PickingPendingSearch extends PickingPending
 
         // job_id
         if ($this->job_id->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // sequence
+        if ($this->sequence->AdvancedSearch->get()) {
             $hasValue = true;
         }
         return $hasValue;
@@ -1040,11 +1054,17 @@ class PickingPendingSearch extends PickingPending
         // scan_article
         $this->scan_article->RowCssClass = "row";
 
+        // scan_box
+        $this->scan_box->RowCssClass = "row";
+
         // close_totes
         $this->close_totes->RowCssClass = "row";
 
         // job_id
         $this->job_id->RowCssClass = "row";
+
+        // sequence
+        $this->sequence->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1203,6 +1223,10 @@ class PickingPendingSearch extends PickingPending
             $this->scan_article->ViewValue = $this->scan_article->CurrentValue;
             $this->scan_article->ViewCustomAttributes = "";
 
+            // scan_box
+            $this->scan_box->ViewValue = $this->scan_box->CurrentValue;
+            $this->scan_box->ViewCustomAttributes = "";
+
             // close_totes
             $this->close_totes->ViewValue = $this->close_totes->CurrentValue;
             $this->close_totes->ViewCustomAttributes = "";
@@ -1210,6 +1234,10 @@ class PickingPendingSearch extends PickingPending
             // job_id
             $this->job_id->ViewValue = $this->job_id->CurrentValue;
             $this->job_id->ViewCustomAttributes = "";
+
+            // sequence
+            $this->sequence->ViewValue = $this->sequence->CurrentValue;
+            $this->sequence->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1391,6 +1419,11 @@ class PickingPendingSearch extends PickingPending
             $this->scan_article->HrefValue = "";
             $this->scan_article->TooltipValue = "";
 
+            // scan_box
+            $this->scan_box->LinkCustomAttributes = "";
+            $this->scan_box->HrefValue = "";
+            $this->scan_box->TooltipValue = "";
+
             // close_totes
             $this->close_totes->LinkCustomAttributes = "";
             $this->close_totes->HrefValue = "";
@@ -1400,6 +1433,11 @@ class PickingPendingSearch extends PickingPending
             $this->job_id->LinkCustomAttributes = "";
             $this->job_id->HrefValue = "";
             $this->job_id->TooltipValue = "";
+
+            // sequence
+            $this->sequence->LinkCustomAttributes = "";
+            $this->sequence->HrefValue = "";
+            $this->sequence->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
             $this->id->setupEditAttributes();
@@ -1697,6 +1735,15 @@ class PickingPendingSearch extends PickingPending
             $this->scan_article->EditValue = HtmlEncode($this->scan_article->AdvancedSearch->SearchValue);
             $this->scan_article->PlaceHolder = RemoveHtml($this->scan_article->caption());
 
+            // scan_box
+            $this->scan_box->setupEditAttributes();
+            $this->scan_box->EditCustomAttributes = "";
+            if (!$this->scan_box->Raw) {
+                $this->scan_box->AdvancedSearch->SearchValue = HtmlDecode($this->scan_box->AdvancedSearch->SearchValue);
+            }
+            $this->scan_box->EditValue = HtmlEncode($this->scan_box->AdvancedSearch->SearchValue);
+            $this->scan_box->PlaceHolder = RemoveHtml($this->scan_box->caption());
+
             // close_totes
             $this->close_totes->setupEditAttributes();
             $this->close_totes->EditCustomAttributes = "";
@@ -1714,6 +1761,15 @@ class PickingPendingSearch extends PickingPending
             }
             $this->job_id->EditValue = HtmlEncode($this->job_id->AdvancedSearch->SearchValue);
             $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
+
+            // sequence
+            $this->sequence->setupEditAttributes();
+            $this->sequence->EditCustomAttributes = "";
+            if (!$this->sequence->Raw) {
+                $this->sequence->AdvancedSearch->SearchValue = HtmlDecode($this->sequence->AdvancedSearch->SearchValue);
+            }
+            $this->sequence->EditValue = HtmlEncode($this->sequence->AdvancedSearch->SearchValue);
+            $this->sequence->PlaceHolder = RemoveHtml($this->sequence->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1808,8 +1864,10 @@ class PickingPendingSearch extends PickingPending
         $this->aisle2->AdvancedSearch->load();
         $this->store_id2->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
+        $this->scan_box->AdvancedSearch->load();
         $this->close_totes->AdvancedSearch->load();
         $this->job_id->AdvancedSearch->load();
+        $this->sequence->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb

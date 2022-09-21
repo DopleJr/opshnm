@@ -31,7 +31,6 @@ class OssManualOnline extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $id;
     public $date;
     public $sscc;
     public $order_no;
@@ -81,31 +80,6 @@ class OssManualOnline extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // id
-        $this->id = new DbField(
-            'oss_manual_online',
-            'oss_manual_online',
-            'x_id',
-            'id',
-            '`id`',
-            '`id`',
-            3,
-            11,
-            -1,
-            false,
-            '`id`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'NO'
-        );
-        $this->id->InputTextType = "text";
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Fields['id'] = &$this->id;
-
         // date
         $this->date = new DbField(
             'oss_manual_online',
@@ -151,6 +125,8 @@ class OssManualOnline extends DbTable
             'TEXT'
         );
         $this->sscc->InputTextType = "text";
+        $this->sscc->IsPrimaryKey = true; // Primary key field
+        $this->sscc->Nullable = false; // NOT NULL field
         $this->sscc->Required = true; // Required field
         $this->sscc->UseFilter = true; // Table header filter
         $this->sscc->Lookup = new Lookup('sscc', 'oss_manual_online', true, 'sscc', ["sscc","","",""], [], [], [], [], [], [], '', '', "");
@@ -266,8 +242,8 @@ class OssManualOnline extends DbTable
             'item_in_ctn',
             '`item_in_ctn`',
             '`item_in_ctn`',
-            200,
-            255,
+            3,
+            11,
             -1,
             false,
             '`item_in_ctn`',
@@ -281,6 +257,7 @@ class OssManualOnline extends DbTable
         $this->item_in_ctn->Required = true; // Required field
         $this->item_in_ctn->UseFilter = true; // Table header filter
         $this->item_in_ctn->Lookup = new Lookup('item_in_ctn', 'oss_manual_online', true, 'item_in_ctn', ["item_in_ctn","","",""], [], [], [], [], [], [], '', '', "");
+        $this->item_in_ctn->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['item_in_ctn'] = &$this->item_in_ctn;
 
         // no_of_ctn
@@ -291,8 +268,8 @@ class OssManualOnline extends DbTable
             'no_of_ctn',
             '`no_of_ctn`',
             '`no_of_ctn`',
-            200,
-            255,
+            3,
+            11,
             -1,
             false,
             '`no_of_ctn`',
@@ -306,6 +283,7 @@ class OssManualOnline extends DbTable
         $this->no_of_ctn->Required = true; // Required field
         $this->no_of_ctn->UseFilter = true; // Table header filter
         $this->no_of_ctn->Lookup = new Lookup('no_of_ctn', 'oss_manual_online', true, 'no_of_ctn', ["no_of_ctn","","",""], [], [], [], [], [], [], '', '', "");
+        $this->no_of_ctn->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['no_of_ctn'] = &$this->no_of_ctn;
 
         // ctn_no
@@ -727,9 +705,6 @@ class OssManualOnline extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -789,8 +764,8 @@ class OssManualOnline extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('sscc', $rs)) {
+                AddFilter($where, QuotedName('sscc', $this->Dbid) . '=' . QuotedValue($rs['sscc'], $this->sscc->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -814,7 +789,6 @@ class OssManualOnline extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
         $this->date->DbValue = $row['date'];
         $this->sscc->DbValue = $row['sscc'];
         $this->order_no->DbValue = $row['order_no'];
@@ -837,14 +811,14 @@ class OssManualOnline extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`sscc` = '@sscc@'";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->sscc->CurrentValue : $this->sscc->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -860,9 +834,9 @@ class OssManualOnline extends DbTable
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->sscc->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->sscc->OldValue = $keys[0];
             }
         }
     }
@@ -872,17 +846,14 @@ class OssManualOnline extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('sscc', $row) ? $row['sscc'] : null;
         } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
-        }
-        if (!is_numeric($val)) {
-            return "0=1"; // Invalid key
+            $val = $this->sscc->OldValue !== null ? $this->sscc->OldValue : $this->sscc->CurrentValue;
         }
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@sscc@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -1011,7 +982,7 @@ class OssManualOnline extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . JsonEncode($this->id->CurrentValue, "number");
+        $json .= "\"sscc\":" . JsonEncode($this->sscc->CurrentValue, "string");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -1022,8 +993,8 @@ class OssManualOnline extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->sscc->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->sscc->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -1084,7 +1055,7 @@ class OssManualOnline extends DbTable
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("sscc") ?? Route("sscc")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1098,9 +1069,6 @@ class OssManualOnline extends DbTable
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
-                    continue;
-                }
                 $ar[] = $key;
             }
         }
@@ -1117,9 +1085,9 @@ class OssManualOnline extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->sscc->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->sscc->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1144,7 +1112,6 @@ class OssManualOnline extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
         $this->sscc->setDbValue($row['sscc']);
         $this->order_no->setDbValue($row['order_no']);
@@ -1167,9 +1134,6 @@ class OssManualOnline extends DbTable
         $this->rowRendering();
 
         // Common render codes
-
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
@@ -1204,10 +1168,6 @@ class OssManualOnline extends DbTable
         // shift
         $this->shift->CellCssStyle = "white-space: nowrap;";
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
-
         // date
         $this->date->ViewValue = $this->date->CurrentValue;
         $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
@@ -1235,10 +1195,12 @@ class OssManualOnline extends DbTable
 
         // item_in_ctn
         $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+        $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
         $this->item_in_ctn->ViewCustomAttributes = "";
 
         // no_of_ctn
         $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+        $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
         $this->no_of_ctn->ViewCustomAttributes = "";
 
         // ctn_no
@@ -1256,11 +1218,6 @@ class OssManualOnline extends DbTable
             $this->shift->ViewValue = null;
         }
         $this->shift->ViewCustomAttributes = "";
-
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
 
         // date
         $this->date->LinkCustomAttributes = "";
@@ -1332,12 +1289,6 @@ class OssManualOnline extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
-
         // date
         $this->date->setupEditAttributes();
         $this->date->EditCustomAttributes = 'disabled';
@@ -1392,20 +1343,20 @@ class OssManualOnline extends DbTable
         // item_in_ctn
         $this->item_in_ctn->setupEditAttributes();
         $this->item_in_ctn->EditCustomAttributes = "";
-        if (!$this->item_in_ctn->Raw) {
-            $this->item_in_ctn->CurrentValue = HtmlDecode($this->item_in_ctn->CurrentValue);
-        }
         $this->item_in_ctn->EditValue = $this->item_in_ctn->CurrentValue;
         $this->item_in_ctn->PlaceHolder = RemoveHtml($this->item_in_ctn->caption());
+        if (strval($this->item_in_ctn->EditValue) != "" && is_numeric($this->item_in_ctn->EditValue)) {
+            $this->item_in_ctn->EditValue = FormatNumber($this->item_in_ctn->EditValue, null);
+        }
 
         // no_of_ctn
         $this->no_of_ctn->setupEditAttributes();
         $this->no_of_ctn->EditCustomAttributes = "";
-        if (!$this->no_of_ctn->Raw) {
-            $this->no_of_ctn->CurrentValue = HtmlDecode($this->no_of_ctn->CurrentValue);
-        }
         $this->no_of_ctn->EditValue = $this->no_of_ctn->CurrentValue;
         $this->no_of_ctn->PlaceHolder = RemoveHtml($this->no_of_ctn->caption());
+        if (strval($this->no_of_ctn->EditValue) != "" && is_numeric($this->no_of_ctn->EditValue)) {
+            $this->no_of_ctn->EditValue = FormatNumber($this->no_of_ctn->EditValue, null);
+        }
 
         // ctn_no
         $this->ctn_no->setupEditAttributes();
@@ -1458,7 +1409,6 @@ class OssManualOnline extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
                     $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->order_no);
@@ -1471,7 +1421,6 @@ class OssManualOnline extends DbTable
                     $doc->exportCaption($this->checker);
                     $doc->exportCaption($this->shift);
                 } else {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->date);
                     $doc->exportCaption($this->sscc);
                     $doc->exportCaption($this->order_no);
@@ -1512,7 +1461,6 @@ class OssManualOnline extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->date);
                         $doc->exportField($this->sscc);
                         $doc->exportField($this->order_no);
@@ -1525,7 +1473,6 @@ class OssManualOnline extends DbTable
                         $doc->exportField($this->checker);
                         $doc->exportField($this->shift);
                     } else {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->date);
                         $doc->exportField($this->sscc);
                         $doc->exportField($this->order_no);

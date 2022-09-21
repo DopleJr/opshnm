@@ -390,7 +390,7 @@ class OssManualOnlineAdd extends OssManualOnline
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['sscc'];
         }
         return $key;
     }
@@ -498,7 +498,6 @@ class OssManualOnlineAdd extends OssManualOnline
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
         $this->date->setVisibility();
         $this->sscc->setVisibility();
         $this->order_no->setVisibility();
@@ -549,8 +548,8 @@ class OssManualOnlineAdd extends OssManualOnline
             $postBack = true;
         } else {
             // Load key values from QueryString
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                $this->id->setQueryStringValue($keyValue);
+            if (($keyValue = Get("sscc") ?? Route("sscc")) !== null) {
+                $this->sscc->setQueryStringValue($keyValue);
             }
             $this->OldKey = $this->getKey(true); // Get from CurrentValue
             $this->CopyRecord = !EmptyValue($this->OldKey);
@@ -752,7 +751,7 @@ class OssManualOnlineAdd extends OssManualOnline
             if (IsApi() && $val === null) {
                 $this->item_in_ctn->Visible = false; // Disable update for API request
             } else {
-                $this->item_in_ctn->setFormValue($val);
+                $this->item_in_ctn->setFormValue($val, true, $validate);
             }
         }
 
@@ -762,7 +761,7 @@ class OssManualOnlineAdd extends OssManualOnline
             if (IsApi() && $val === null) {
                 $this->no_of_ctn->Visible = false; // Disable update for API request
             } else {
-                $this->no_of_ctn->setFormValue($val);
+                $this->no_of_ctn->setFormValue($val, true, $validate);
             }
         }
 
@@ -795,9 +794,6 @@ class OssManualOnlineAdd extends OssManualOnline
                 $this->shift->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
@@ -865,7 +861,6 @@ class OssManualOnlineAdd extends OssManualOnline
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
         $this->sscc->setDbValue($row['sscc']);
         $this->order_no->setDbValue($row['order_no']);
@@ -883,7 +878,6 @@ class OssManualOnlineAdd extends OssManualOnline
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
         $row['sscc'] = $this->sscc->DefaultValue;
         $row['order_no'] = $this->order_no->DefaultValue;
@@ -926,9 +920,6 @@ class OssManualOnlineAdd extends OssManualOnline
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
-
         // date
         $this->date->RowCssClass = "row";
 
@@ -964,10 +955,6 @@ class OssManualOnlineAdd extends OssManualOnline
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // date
             $this->date->ViewValue = $this->date->CurrentValue;
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
@@ -995,10 +982,12 @@ class OssManualOnlineAdd extends OssManualOnline
 
             // item_in_ctn
             $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
             $this->item_in_ctn->ViewCustomAttributes = "";
 
             // no_of_ctn
             $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
             $this->no_of_ctn->ViewCustomAttributes = "";
 
             // ctn_no
@@ -1115,20 +1104,20 @@ class OssManualOnlineAdd extends OssManualOnline
             // item_in_ctn
             $this->item_in_ctn->setupEditAttributes();
             $this->item_in_ctn->EditCustomAttributes = "";
-            if (!$this->item_in_ctn->Raw) {
-                $this->item_in_ctn->CurrentValue = HtmlDecode($this->item_in_ctn->CurrentValue);
-            }
             $this->item_in_ctn->EditValue = HtmlEncode($this->item_in_ctn->CurrentValue);
             $this->item_in_ctn->PlaceHolder = RemoveHtml($this->item_in_ctn->caption());
+            if (strval($this->item_in_ctn->EditValue) != "" && is_numeric($this->item_in_ctn->EditValue)) {
+                $this->item_in_ctn->EditValue = FormatNumber($this->item_in_ctn->EditValue, null);
+            }
 
             // no_of_ctn
             $this->no_of_ctn->setupEditAttributes();
             $this->no_of_ctn->EditCustomAttributes = "";
-            if (!$this->no_of_ctn->Raw) {
-                $this->no_of_ctn->CurrentValue = HtmlDecode($this->no_of_ctn->CurrentValue);
-            }
             $this->no_of_ctn->EditValue = HtmlEncode($this->no_of_ctn->CurrentValue);
             $this->no_of_ctn->PlaceHolder = RemoveHtml($this->no_of_ctn->caption());
+            if (strval($this->no_of_ctn->EditValue) != "" && is_numeric($this->no_of_ctn->EditValue)) {
+                $this->no_of_ctn->EditValue = FormatNumber($this->no_of_ctn->EditValue, null);
+            }
 
             // ctn_no
             $this->ctn_no->setupEditAttributes();
@@ -1268,10 +1257,16 @@ class OssManualOnlineAdd extends OssManualOnline
                 $this->item_in_ctn->addErrorMessage(str_replace("%s", $this->item_in_ctn->caption(), $this->item_in_ctn->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->item_in_ctn->FormValue)) {
+            $this->item_in_ctn->addErrorMessage($this->item_in_ctn->getErrorMessage(false));
+        }
         if ($this->no_of_ctn->Required) {
             if (!$this->no_of_ctn->IsDetailKey && EmptyValue($this->no_of_ctn->FormValue)) {
                 $this->no_of_ctn->addErrorMessage(str_replace("%s", $this->no_of_ctn->caption(), $this->no_of_ctn->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->no_of_ctn->FormValue)) {
+            $this->no_of_ctn->addErrorMessage($this->no_of_ctn->getErrorMessage(false));
         }
         if ($this->ctn_no->Required) {
             if (!$this->ctn_no->IsDetailKey && EmptyValue($this->ctn_no->FormValue)) {
@@ -1316,7 +1311,7 @@ class OssManualOnlineAdd extends OssManualOnline
         $this->date->setDbValueDef($rsnew, UnFormatDateTime($this->date->CurrentValue, $this->date->formatPattern()), null, false);
 
         // sscc
-        $this->sscc->setDbValueDef($rsnew, $this->sscc->CurrentValue, null, false);
+        $this->sscc->setDbValueDef($rsnew, $this->sscc->CurrentValue, "", false);
 
         // order_no
         $this->order_no->setDbValueDef($rsnew, $this->order_no->CurrentValue, null, false);
@@ -1354,6 +1349,23 @@ class OssManualOnlineAdd extends OssManualOnline
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['sscc']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         if ($insertRow) {
             $addRow = $this->insert($rsnew);
             if ($addRow) {

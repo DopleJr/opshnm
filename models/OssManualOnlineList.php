@@ -439,7 +439,7 @@ class OssManualOnlineList extends OssManualOnline
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['sscc'];
         }
         return $key;
     }
@@ -451,9 +451,6 @@ class OssManualOnlineList extends OssManualOnline
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -616,7 +613,6 @@ class OssManualOnlineList extends OssManualOnline
 
         // Setup export options
         $this->setupExportOptions();
-        $this->id->setVisibility();
         $this->date->setVisibility();
         $this->sscc->setVisibility();
         $this->order_no->setVisibility();
@@ -1258,7 +1254,6 @@ class OssManualOnlineList extends OssManualOnline
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->date); // date
             $this->updateSort($this->sscc); // sscc
             $this->updateSort($this->order_no); // order_no
@@ -1294,7 +1289,6 @@ class OssManualOnlineList extends OssManualOnline
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
                 $this->date->setSort("");
                 $this->sscc->setSort("");
                 $this->order_no->setSort("");
@@ -1415,7 +1409,7 @@ class OssManualOnlineList extends OssManualOnline
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->sscc->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1449,7 +1443,6 @@ class OssManualOnlineList extends OssManualOnline
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $option->add("id", $this->createColumnOption("id"));
             $option->add("date", $this->createColumnOption("date"));
             $option->add("sscc", $this->createColumnOption("sscc"));
             $option->add("order_no", $this->createColumnOption("order_no"));
@@ -1818,7 +1811,6 @@ class OssManualOnlineList extends OssManualOnline
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
         $this->date->setDbValue($row['date']);
         $this->sscc->setDbValue($row['sscc']);
         $this->order_no->setDbValue($row['order_no']);
@@ -1836,7 +1828,6 @@ class OssManualOnlineList extends OssManualOnline
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
         $row['date'] = $this->date->DefaultValue;
         $row['sscc'] = $this->sscc->DefaultValue;
         $row['order_no'] = $this->order_no->DefaultValue;
@@ -1885,9 +1876,6 @@ class OssManualOnlineList extends OssManualOnline
 
         // Common render codes for all row types
 
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
-
         // date
         $this->date->CellCssStyle = "white-space: nowrap;";
 
@@ -1923,10 +1911,6 @@ class OssManualOnlineList extends OssManualOnline
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // date
             $this->date->ViewValue = $this->date->CurrentValue;
             $this->date->ViewValue = FormatDateTime($this->date->ViewValue, $this->date->formatPattern());
@@ -1954,10 +1938,12 @@ class OssManualOnlineList extends OssManualOnline
 
             // item_in_ctn
             $this->item_in_ctn->ViewValue = $this->item_in_ctn->CurrentValue;
+            $this->item_in_ctn->ViewValue = FormatNumber($this->item_in_ctn->ViewValue, $this->item_in_ctn->formatPattern());
             $this->item_in_ctn->ViewCustomAttributes = "";
 
             // no_of_ctn
             $this->no_of_ctn->ViewValue = $this->no_of_ctn->CurrentValue;
+            $this->no_of_ctn->ViewValue = FormatNumber($this->no_of_ctn->ViewValue, $this->no_of_ctn->formatPattern());
             $this->no_of_ctn->ViewCustomAttributes = "";
 
             // ctn_no
@@ -1975,11 +1961,6 @@ class OssManualOnlineList extends OssManualOnline
                 $this->shift->ViewValue = null;
             }
             $this->shift->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // date
             $this->date->LinkCustomAttributes = "";
@@ -2036,12 +2017,6 @@ class OssManualOnlineList extends OssManualOnline
             $this->shift->HrefValue = "";
             $this->shift->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->AdvancedSearch->SearchValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // date
             if ($this->date->UseFilter && !EmptyValue($this->date->AdvancedSearch->SearchValue)) {
                 if (is_array($this->date->AdvancedSearch->SearchValue)) {

@@ -31,6 +31,9 @@ loadjs.ready(["wrapper", "head"], function () {
     foss_manuallist.lists.ctn_no = <?= $Page->ctn_no->toClientList($Page) ?>;
     foss_manuallist.lists.checker = <?= $Page->checker->toClientList($Page) ?>;
     foss_manuallist.lists.shift = <?= $Page->shift->toClientList($Page) ?>;
+    foss_manuallist.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    foss_manuallist.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
+    foss_manuallist.lists.time_updated = <?= $Page->time_updated->toClientList($Page) ?>;
     loadjs.done("foss_manuallist");
 });
 var foss_manualsrch, currentSearchForm, currentAdvancedSearchForm;
@@ -43,7 +46,6 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     foss_manualsrch.addFields([
-        ["id", [], fields.id.isInvalid],
         ["date", [], fields.date.isInvalid],
         ["y_date", [ew.Validators.between], false],
         ["sscc", [], fields.sscc.isInvalid],
@@ -55,7 +57,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["no_of_ctn", [], fields.no_of_ctn.isInvalid],
         ["ctn_no", [], fields.ctn_no.isInvalid],
         ["checker", [], fields.checker.isInvalid],
-        ["shift", [], fields.shift.isInvalid]
+        ["shift", [], fields.shift.isInvalid],
+        ["status", [], fields.status.isInvalid],
+        ["date_updated", [], fields.date_updated.isInvalid],
+        ["time_updated", [], fields.time_updated.isInvalid]
     ]);
 
     // Validate form
@@ -88,6 +93,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Dynamic selection lists
     foss_manualsrch.lists.date = <?= $Page->date->toClientList($Page) ?>;
     foss_manualsrch.lists.sscc = <?= $Page->sscc->toClientList($Page) ?>;
+    foss_manualsrch.lists.scan = <?= $Page->scan->toClientList($Page) ?>;
     foss_manualsrch.lists.shipment = <?= $Page->shipment->toClientList($Page) ?>;
     foss_manualsrch.lists.pallet_no = <?= $Page->pallet_no->toClientList($Page) ?>;
     foss_manualsrch.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
@@ -97,6 +103,9 @@ loadjs.ready(["wrapper", "head"], function () {
     foss_manualsrch.lists.ctn_no = <?= $Page->ctn_no->toClientList($Page) ?>;
     foss_manualsrch.lists.checker = <?= $Page->checker->toClientList($Page) ?>;
     foss_manualsrch.lists.shift = <?= $Page->shift->toClientList($Page) ?>;
+    foss_manualsrch.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    foss_manualsrch.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
+    foss_manualsrch.lists.time_updated = <?= $Page->time_updated->toClientList($Page) ?>;
 
     // Filters
     foss_manualsrch.filterList = <?= $Page->getFilterList() ?>;
@@ -211,6 +220,43 @@ if (!$Page->sscc->UseFilter) {
                 ajax: { id: "x_sscc", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.sscc.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->scan->Visible) { // scan ?>
+<?php
+if (!$Page->scan->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_scan" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->scan->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_scan"
+            name="x_scan[]"
+            class="form-control ew-select<?= $Page->scan->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_scan"
+            data-table="oss_manual"
+            data-field="x_scan"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->scan->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->scan->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->scan->getPlaceHolder()) ?>"
+            <?= $Page->scan->editAttributes() ?>>
+            <?= $Page->scan->selectOptionListHtml("x_scan", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->scan->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_scan",
+                selectId: "foss_manualsrch_x_scan",
+                ajax: { id: "x_scan", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.scan.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -549,6 +595,117 @@ if (!$Page->shift->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+<?php
+if (!$Page->status->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_status" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->status->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_status"
+            name="x_status[]"
+            class="form-control ew-select<?= $Page->status->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_status"
+            data-table="oss_manual"
+            data-field="x_status"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->status->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+            <?= $Page->status->editAttributes() ?>>
+            <?= $Page->status->selectOptionListHtml("x_status", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->status->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_status",
+                selectId: "foss_manualsrch_x_status",
+                ajax: { id: "x_status", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.status.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+<?php
+if (!$Page->date_updated->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date_updated" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_updated->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date_updated"
+            name="x_date_updated[]"
+            class="form-control ew-select<?= $Page->date_updated->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_date_updated"
+            data-table="oss_manual"
+            data-field="x_date_updated"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_updated->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date_updated->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date_updated->getPlaceHolder()) ?>"
+            <?= $Page->date_updated->editAttributes() ?>>
+            <?= $Page->date_updated->selectOptionListHtml("x_date_updated", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date_updated->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_date_updated",
+                selectId: "foss_manualsrch_x_date_updated",
+                ajax: { id: "x_date_updated", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.date_updated.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+<?php
+if (!$Page->time_updated->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_time_updated" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->time_updated->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_time_updated"
+            name="x_time_updated[]"
+            class="form-control ew-select<?= $Page->time_updated->isInvalidClass() ?>"
+            data-select2-id="foss_manualsrch_x_time_updated"
+            data-table="oss_manual"
+            data-field="x_time_updated"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->time_updated->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->time_updated->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->time_updated->getPlaceHolder()) ?>"
+            <?= $Page->time_updated->editAttributes() ?>>
+            <?= $Page->time_updated->selectOptionListHtml("x_time_updated", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->time_updated->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("foss_manualsrch", function() {
+            var options = {
+                name: "x_time_updated",
+                selectId: "foss_manualsrch_x_time_updated",
+                ajax: { id: "x_time_updated", form: "foss_manualsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.oss_manual.fields.time_updated.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
 </div><!-- /.row -->
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
@@ -614,9 +771,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_id" class="oss_manual_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->date->Visible) { // date ?>
         <th data-name="date" class="<?= $Page->date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_date" class="oss_manual_date"><?= $Page->renderFieldHeader($Page->date) ?></div></th>
 <?php } ?>
@@ -649,6 +803,15 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->shift->Visible) { // shift ?>
         <th data-name="shift" class="<?= $Page->shift->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_shift" class="oss_manual_shift"><?= $Page->renderFieldHeader($Page->shift) ?></div></th>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_status" class="oss_manual_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_date_updated" class="oss_manual_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <th data-name="time_updated" class="<?= $Page->time_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_time_updated" class="oss_manual_time_updated"><?= $Page->renderFieldHeader($Page->time_updated) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -725,14 +888,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_id" class="el_oss_manual_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->date->Visible) { // date ?>
         <td data-name="date"<?= $Page->date->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_oss_manual_date" class="el_oss_manual_date">
@@ -818,6 +973,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_oss_manual_shift" class="el_oss_manual_shift">
 <span<?= $Page->shift->viewAttributes() ?>>
 <?= $Page->shift->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status"<?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_status" class="el_oss_manual_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_date_updated" class="el_oss_manual_date_updated">
+<span<?= $Page->date_updated->viewAttributes() ?>>
+<?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <td data-name="time_updated"<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_oss_manual_time_updated" class="el_oss_manual_time_updated">
+<span<?= $Page->time_updated->viewAttributes() ?>>
+<?= $Page->time_updated->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -60,7 +60,7 @@ class MasterArticle2 extends DbTable
         // Update Table
         $this->UpdateTable = "`master_article2`";
         $this->Dbid = 'DB';
-        $this->ExportAll = false;
+        $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
         $this->ExportPageOrientation = "portrait"; // Page orientation (PDF only)
         $this->ExportPageSize = "a4"; // Page size (PDF only)

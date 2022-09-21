@@ -43,7 +43,6 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     foss_manual_onlinesrch.addFields([
-        ["id", [], fields.id.isInvalid],
         ["date", [], fields.date.isInvalid],
         ["y_date", [ew.Validators.between], false],
         ["sscc", [], fields.sscc.isInvalid],
@@ -614,9 +613,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_id" class="oss_manual_online_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->date->Visible) { // date ?>
         <th data-name="date" class="<?= $Page->date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_online_date" class="oss_manual_online_date"><?= $Page->renderFieldHeader($Page->date) ?></div></th>
 <?php } ?>
@@ -725,14 +721,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_online_id" class="el_oss_manual_online_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->date->Visible) { // date ?>
         <td data-name="date"<?= $Page->date->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_oss_manual_online_date" class="el_oss_manual_online_date">

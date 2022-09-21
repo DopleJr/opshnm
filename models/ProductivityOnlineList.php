@@ -614,6 +614,7 @@ class ProductivityOnlineList extends ProductivityOnline
         $this->setupExportOptions();
         $this->picking_date->setVisibility();
         $this->picker->setVisibility();
+        $this->total_bin->setVisibility();
         $this->total->setVisibility();
         $this->picked->setVisibility();
         $this->variance->setVisibility();
@@ -944,6 +945,7 @@ class ProductivityOnlineList extends ProductivityOnline
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->picking_date->AdvancedSearch->toJson(), ","); // Field picking_date
+        $filterList = Concat($filterList, $this->total_bin->AdvancedSearch->toJson(), ","); // Field total_bin
         $filterList = Concat($filterList, $this->total->AdvancedSearch->toJson(), ","); // Field total
         $filterList = Concat($filterList, $this->picked->AdvancedSearch->toJson(), ","); // Field picked
         $filterList = Concat($filterList, $this->variance->AdvancedSearch->toJson(), ","); // Field variance
@@ -995,6 +997,14 @@ class ProductivityOnlineList extends ProductivityOnline
         $this->picking_date->AdvancedSearch->SearchOperator2 = @$filter["w_picking_date"];
         $this->picking_date->AdvancedSearch->save();
 
+        // Field total_bin
+        $this->total_bin->AdvancedSearch->SearchValue = @$filter["x_total_bin"];
+        $this->total_bin->AdvancedSearch->SearchOperator = @$filter["z_total_bin"];
+        $this->total_bin->AdvancedSearch->SearchCondition = @$filter["v_total_bin"];
+        $this->total_bin->AdvancedSearch->SearchValue2 = @$filter["y_total_bin"];
+        $this->total_bin->AdvancedSearch->SearchOperator2 = @$filter["w_total_bin"];
+        $this->total_bin->AdvancedSearch->save();
+
         // Field total
         $this->total->AdvancedSearch->SearchValue = @$filter["x_total"];
         $this->total->AdvancedSearch->SearchOperator = @$filter["z_total"];
@@ -1032,6 +1042,7 @@ class ProductivityOnlineList extends ProductivityOnline
         }
         $this->buildSearchSql($where, $this->picking_date, $default, true); // picking_date
         $this->buildSearchSql($where, $this->picker, $default, true); // picker
+        $this->buildSearchSql($where, $this->total_bin, $default, true); // total_bin
         $this->buildSearchSql($where, $this->total, $default, true); // total
         $this->buildSearchSql($where, $this->picked, $default, true); // picked
         $this->buildSearchSql($where, $this->variance, $default, true); // variance
@@ -1042,6 +1053,7 @@ class ProductivityOnlineList extends ProductivityOnline
         }
         if (!$default && $this->Command == "search") {
             $this->picking_date->AdvancedSearch->save(); // picking_date
+            $this->total_bin->AdvancedSearch->save(); // total_bin
             $this->total->AdvancedSearch->save(); // total
             $this->picked->AdvancedSearch->save(); // picked
             $this->variance->AdvancedSearch->save(); // variance
@@ -1155,6 +1167,9 @@ class ProductivityOnlineList extends ProductivityOnline
         if ($this->picker->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->total_bin->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->total->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1198,6 +1213,7 @@ class ProductivityOnlineList extends ProductivityOnline
     {
         $this->picking_date->AdvancedSearch->unsetSession();
         $this->picker->AdvancedSearch->unsetSession();
+        $this->total_bin->AdvancedSearch->unsetSession();
         $this->total->AdvancedSearch->unsetSession();
         $this->picked->AdvancedSearch->unsetSession();
         $this->variance->AdvancedSearch->unsetSession();
@@ -1214,6 +1230,7 @@ class ProductivityOnlineList extends ProductivityOnline
         // Restore advanced search values
         $this->picking_date->AdvancedSearch->load();
         $this->picker->AdvancedSearch->load();
+        $this->total_bin->AdvancedSearch->load();
         $this->total->AdvancedSearch->load();
         $this->picked->AdvancedSearch->load();
         $this->variance->AdvancedSearch->load();
@@ -1239,6 +1256,7 @@ class ProductivityOnlineList extends ProductivityOnline
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->picking_date, $ctrl); // picking_date
             $this->updateSort($this->picker, $ctrl); // picker
+            $this->updateSort($this->total_bin, $ctrl); // total_bin
             $this->updateSort($this->total, $ctrl); // total
             $this->updateSort($this->picked, $ctrl); // picked
             $this->updateSort($this->variance, $ctrl); // variance
@@ -1268,6 +1286,7 @@ class ProductivityOnlineList extends ProductivityOnline
                 $this->setSessionOrderBy($orderBy);
                 $this->picking_date->setSort("");
                 $this->picker->setSort("");
+                $this->total_bin->setSort("");
                 $this->total->setSort("");
                 $this->picked->setSort("");
                 $this->variance->setSort("");
@@ -1420,6 +1439,7 @@ class ProductivityOnlineList extends ProductivityOnline
             $item->Visible = $this->UseColumnVisibility;
             $option->add("picking_date", $this->createColumnOption("picking_date"));
             $option->add("picker", $this->createColumnOption("picker"));
+            $option->add("total_bin", $this->createColumnOption("total_bin"));
             $option->add("total", $this->createColumnOption("total"));
             $option->add("picked", $this->createColumnOption("picked"));
             $option->add("variance", $this->createColumnOption("variance"));
@@ -1621,6 +1641,14 @@ class ProductivityOnlineList extends ProductivityOnline
             }
         }
 
+        // total_bin
+        if ($this->total_bin->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->total_bin->AdvancedSearch->SearchValue != "" || $this->total_bin->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // total
         if ($this->total->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1734,6 +1762,7 @@ class ProductivityOnlineList extends ProductivityOnline
         $this->rowSelected($row);
         $this->picking_date->setDbValue($row['picking_date']);
         $this->picker->setDbValue($row['picker']);
+        $this->total_bin->setDbValue($row['total_bin']);
         $this->total->setDbValue($row['total']);
         $this->picked->setDbValue($row['picked']);
         $this->variance->setDbValue($row['variance']);
@@ -1745,6 +1774,7 @@ class ProductivityOnlineList extends ProductivityOnline
         $row = [];
         $row['picking_date'] = $this->picking_date->DefaultValue;
         $row['picker'] = $this->picker->DefaultValue;
+        $row['total_bin'] = $this->total_bin->DefaultValue;
         $row['total'] = $this->total->DefaultValue;
         $row['picked'] = $this->picked->DefaultValue;
         $row['variance'] = $this->variance->DefaultValue;
@@ -1782,6 +1812,9 @@ class ProductivityOnlineList extends ProductivityOnline
         // picker
         $this->picker->CellCssStyle = "white-space: nowrap;";
 
+        // total_bin
+        $this->total_bin->CellCssStyle = "white-space: nowrap;";
+
         // total
         $this->total->CellCssStyle = "white-space: nowrap;";
 
@@ -1794,6 +1827,9 @@ class ProductivityOnlineList extends ProductivityOnline
         // Accumulate aggregate value
         if ($this->RowType != ROWTYPE_AGGREGATEINIT && $this->RowType != ROWTYPE_AGGREGATE && $this->RowType != ROWTYPE_PREVIEW_FIELD) {
             $this->picker->Count++; // Increment count
+            if (is_numeric($this->total_bin->CurrentValue)) {
+                $this->total_bin->Total += $this->total_bin->CurrentValue; // Accumulate total
+            }
             if (is_numeric($this->total->CurrentValue)) {
                 $this->total->Total += $this->total->CurrentValue; // Accumulate total
             }
@@ -1815,6 +1851,11 @@ class ProductivityOnlineList extends ProductivityOnline
             // picker
             $this->picker->ViewValue = $this->picker->CurrentValue;
             $this->picker->ViewCustomAttributes = "";
+
+            // total_bin
+            $this->total_bin->ViewValue = $this->total_bin->CurrentValue;
+            $this->total_bin->ViewValue = FormatNumber($this->total_bin->ViewValue, $this->total_bin->formatPattern());
+            $this->total_bin->ViewCustomAttributes = "";
 
             // total
             $this->total->ViewValue = $this->total->CurrentValue;
@@ -1840,6 +1881,11 @@ class ProductivityOnlineList extends ProductivityOnline
             $this->picker->LinkCustomAttributes = "";
             $this->picker->HrefValue = "";
             $this->picker->TooltipValue = "";
+
+            // total_bin
+            $this->total_bin->LinkCustomAttributes = "";
+            $this->total_bin->HrefValue = "";
+            $this->total_bin->TooltipValue = "";
 
             // total
             $this->total->LinkCustomAttributes = "";
@@ -1876,6 +1922,14 @@ class ProductivityOnlineList extends ProductivityOnline
                 $this->picker->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->picker->AdvancedSearch->SearchValue);
             }
 
+            // total_bin
+            if ($this->total_bin->UseFilter && !EmptyValue($this->total_bin->AdvancedSearch->SearchValue)) {
+                if (is_array($this->total_bin->AdvancedSearch->SearchValue)) {
+                    $this->total_bin->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->total_bin->AdvancedSearch->SearchValue);
+                }
+                $this->total_bin->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->total_bin->AdvancedSearch->SearchValue);
+            }
+
             // total
             if ($this->total->UseFilter && !EmptyValue($this->total->AdvancedSearch->SearchValue)) {
                 if (is_array($this->total->AdvancedSearch->SearchValue)) {
@@ -1901,6 +1955,7 @@ class ProductivityOnlineList extends ProductivityOnline
             }
         } elseif ($this->RowType == ROWTYPE_AGGREGATEINIT) { // Initialize aggregate row
                 $this->picker->Count = 0; // Initialize count
+                    $this->total_bin->Total = 0; // Initialize total
                     $this->total->Total = 0; // Initialize total
                     $this->picked->Total = 0; // Initialize total
                     $this->variance->Total = 0; // Initialize total
@@ -1909,6 +1964,11 @@ class ProductivityOnlineList extends ProductivityOnline
             $this->picker->ViewValue = $this->picker->CurrentValue;
             $this->picker->ViewCustomAttributes = "";
             $this->picker->HrefValue = ""; // Clear href value
+            $this->total_bin->CurrentValue = $this->total_bin->Total;
+            $this->total_bin->ViewValue = $this->total_bin->CurrentValue;
+            $this->total_bin->ViewValue = FormatNumber($this->total_bin->ViewValue, $this->total_bin->formatPattern());
+            $this->total_bin->ViewCustomAttributes = "";
+            $this->total_bin->HrefValue = ""; // Clear href value
             $this->total->CurrentValue = $this->total->Total;
             $this->total->ViewValue = $this->total->CurrentValue;
             $this->total->ViewValue = FormatNumber($this->total->ViewValue, $this->total->formatPattern());
@@ -1956,6 +2016,7 @@ class ProductivityOnlineList extends ProductivityOnline
     public function loadAdvancedSearch()
     {
         $this->picking_date->AdvancedSearch->load();
+        $this->total_bin->AdvancedSearch->load();
         $this->total->AdvancedSearch->load();
         $this->picked->AdvancedSearch->load();
         $this->variance->AdvancedSearch->load();

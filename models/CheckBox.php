@@ -8,9 +8,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
- * Table class for job_control
+ * Table class for check_box
  */
-class JobControl extends DbTable
+class CheckBox extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -31,14 +31,18 @@ class JobControl extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $id;
-    public $job_category;
-    public $aisle;
-    public $user;
-    public $status;
-    public $date_created;
-    public $date_updated;
-    public $bb;
+    public $creation_date;
+    public $store_id;
+    public $store_name;
+    public $article;
+    public $size_desc;
+    public $color_code;
+    public $picked_qty;
+    public $variance_qty;
+    public $confirmation_date;
+    public $confirmation_time;
+    public $box_code;
+    public $picker;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -51,12 +55,12 @@ class JobControl extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'job_control';
-        $this->TableName = 'job_control';
-        $this->TableType = 'TABLE';
+        $this->TableVar = 'check_box';
+        $this->TableName = 'check_box';
+        $this->TableType = 'VIEW';
 
         // Update Table
-        $this->UpdateTable = "`job_control`";
+        $this->UpdateTable = "`check_box`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -77,209 +81,301 @@ class JobControl extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // id
-        $this->id = new DbField(
-            'job_control',
-            'job_control',
-            'x_id',
-            'id',
-            '`id`',
-            '`id`',
+        // creation_date
+        $this->creation_date = new DbField(
+            'check_box',
+            'check_box',
+            'x_creation_date',
+            'creation_date',
+            '`creation_date`',
+            CastDateFieldForLike("`creation_date`", "MM/dd/yyyy", "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`creation_date`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->creation_date->InputTextType = "text";
+        $this->creation_date->FormatPattern = "MM/dd/yyyy"; // Format pattern
+        $this->creation_date->UseFilter = true; // Table header filter
+        $this->creation_date->Lookup = new Lookup('creation_date', 'check_box', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
+        $this->creation_date->DefaultErrorMessage = str_replace("%s", "MM/dd/yyyy", $Language->phrase("IncorrectDate"));
+        $this->Fields['creation_date'] = &$this->creation_date;
+
+        // store_id
+        $this->store_id = new DbField(
+            'check_box',
+            'check_box',
+            'x_store_id',
+            'store_id',
+            '`store_id`',
+            '`store_id`',
+            200,
+            255,
+            -1,
+            false,
+            '`store_id`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->store_id->InputTextType = "text";
+        $this->store_id->UseFilter = true; // Table header filter
+        $this->store_id->Lookup = new Lookup('store_id', 'check_box', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['store_id'] = &$this->store_id;
+
+        // store_name
+        $this->store_name = new DbField(
+            'check_box',
+            'check_box',
+            'x_store_name',
+            'store_name',
+            '`store_name`',
+            '`store_name`',
+            200,
+            255,
+            -1,
+            false,
+            '`store_name`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->store_name->InputTextType = "text";
+        $this->store_name->UseFilter = true; // Table header filter
+        $this->store_name->Lookup = new Lookup('store_name', 'check_box', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['store_name'] = &$this->store_name;
+
+        // article
+        $this->article = new DbField(
+            'check_box',
+            'check_box',
+            'x_article',
+            'article',
+            '`article`',
+            '`article`',
+            200,
+            255,
+            -1,
+            false,
+            '`article`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->article->InputTextType = "text";
+        $this->article->UseFilter = true; // Table header filter
+        $this->article->Lookup = new Lookup('article', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['article'] = &$this->article;
+
+        // size_desc
+        $this->size_desc = new DbField(
+            'check_box',
+            'check_box',
+            'x_size_desc',
+            'size_desc',
+            '`size_desc`',
+            '`size_desc`',
+            200,
+            255,
+            -1,
+            false,
+            '`size_desc`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->size_desc->InputTextType = "text";
+        $this->size_desc->UseFilter = true; // Table header filter
+        $this->size_desc->Lookup = new Lookup('size_desc', 'check_box', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['size_desc'] = &$this->size_desc;
+
+        // color_code
+        $this->color_code = new DbField(
+            'check_box',
+            'check_box',
+            'x_color_code',
+            'color_code',
+            '`color_code`',
+            '`color_code`',
+            200,
+            255,
+            -1,
+            false,
+            '`color_code`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->color_code->InputTextType = "text";
+        $this->color_code->UseFilter = true; // Table header filter
+        $this->color_code->Lookup = new Lookup('color_code', 'check_box', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['color_code'] = &$this->color_code;
+
+        // picked_qty
+        $this->picked_qty = new DbField(
+            'check_box',
+            'check_box',
+            'x_picked_qty',
+            'picked_qty',
+            '`picked_qty`',
+            '`picked_qty`',
             3,
             11,
             -1,
             false,
-            '`id`',
+            '`picked_qty`',
             false,
             false,
             false,
             'FORMATTED TEXT',
-            'NO'
+            'TEXT'
         );
-        $this->id->InputTextType = "text";
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'job_control', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Fields['id'] = &$this->id;
+        $this->picked_qty->InputTextType = "text";
+        $this->picked_qty->UseFilter = true; // Table header filter
+        $this->picked_qty->Lookup = new Lookup('picked_qty', 'check_box', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+        $this->picked_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['picked_qty'] = &$this->picked_qty;
 
-        // job_category
-        $this->job_category = new DbField(
-            'job_control',
-            'job_control',
-            'x_job_category',
-            'job_category',
-            '`job_category`',
-            '`job_category`',
-            200,
-            255,
+        // variance_qty
+        $this->variance_qty = new DbField(
+            'check_box',
+            'check_box',
+            'x_variance_qty',
+            'variance_qty',
+            '`variance_qty`',
+            '`variance_qty`',
+            3,
+            11,
             -1,
             false,
-            '`job_category`',
+            '`variance_qty`',
             false,
             false,
             false,
             'FORMATTED TEXT',
-            'SELECT'
+            'TEXT'
         );
-        $this->job_category->InputTextType = "text";
-        $this->job_category->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->job_category->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->job_category->UseFilter = true; // Table header filter
-        $this->job_category->Lookup = new Lookup('job_category', 'job_control', true, 'job_category', ["job_category","","",""], [], [], [], [], [], [], '', '', "");
-        $this->job_category->OptionCount = 2;
-        $this->Fields['job_category'] = &$this->job_category;
+        $this->variance_qty->InputTextType = "text";
+        $this->variance_qty->UseFilter = true; // Table header filter
+        $this->variance_qty->Lookup = new Lookup('variance_qty', 'check_box', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+        $this->variance_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['variance_qty'] = &$this->variance_qty;
 
-        // aisle
-        $this->aisle = new DbField(
-            'job_control',
-            'job_control',
-            'x_aisle',
-            'aisle',
-            '`aisle`',
-            '`aisle`',
-            200,
-            255,
-            -1,
-            false,
-            '`aisle`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'CHECKBOX'
-        );
-        $this->aisle->InputTextType = "text";
-        $this->aisle->UseFilter = true; // Table header filter
-        $this->aisle->Lookup = new Lookup('aisle', 'bin_to_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "`source_location`");
-        $this->Fields['aisle'] = &$this->aisle;
-
-        // user
-        $this->user = new DbField(
-            'job_control',
-            'job_control',
-            'x_user',
-            'user',
-            '`user`',
-            '`user`',
-            200,
-            255,
-            -1,
-            false,
-            '`user`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'SELECT'
-        );
-        $this->user->InputTextType = "text";
-        $this->user->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->user->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
-        $this->Fields['user'] = &$this->user;
-
-        // status
-        $this->status = new DbField(
-            'job_control',
-            'job_control',
-            'x_status',
-            'status',
-            '`status`',
-            '`status`',
-            200,
-            255,
-            -1,
-            false,
-            '`status`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'SELECT'
-        );
-        $this->status->InputTextType = "text";
-        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'job_control', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
-        $this->status->OptionCount = 2;
-        $this->Fields['status'] = &$this->status;
-
-        // date_created
-        $this->date_created = new DbField(
-            'job_control',
-            'job_control',
-            'x_date_created',
-            'date_created',
-            '`date_created`',
-            CastDateFieldForLike("`date_created`", 0, "DB"),
-            135,
-            19,
+        // confirmation_date
+        $this->confirmation_date = new DbField(
+            'check_box',
+            'check_box',
+            'x_confirmation_date',
+            'confirmation_date',
+            '`confirmation_date`',
+            CastDateFieldForLike("`confirmation_date`", "yyyyMMdd", "DB"),
+            133,
+            10,
             0,
             false,
-            '`date_created`',
+            '`confirmation_date`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->date_created->InputTextType = "text";
-        $this->date_created->Required = true; // Required field
-        $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'job_control', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
-        $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->Fields['date_created'] = &$this->date_created;
+        $this->confirmation_date->InputTextType = "text";
+        $this->confirmation_date->FormatPattern = "yyyyMMdd"; // Format pattern
+        $this->confirmation_date->UseFilter = true; // Table header filter
+        $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'check_box', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+        $this->confirmation_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
+        $this->Fields['confirmation_date'] = &$this->confirmation_date;
 
-        // date_updated
-        $this->date_updated = new DbField(
-            'job_control',
-            'job_control',
-            'x_date_updated',
-            'date_updated',
-            '`date_updated`',
-            CastDateFieldForLike("`date_updated`", 0, "DB"),
-            135,
-            19,
-            0,
+        // confirmation_time
+        $this->confirmation_time = new DbField(
+            'check_box',
+            'check_box',
+            'x_confirmation_time',
+            'confirmation_time',
+            '`confirmation_time`',
+            CastDateFieldForLike("`confirmation_time`", 3, "DB"),
+            134,
+            10,
+            3,
             false,
-            '`date_updated`',
+            '`confirmation_time`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->date_updated->InputTextType = "text";
-        $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'job_control', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
-        $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->Fields['date_updated'] = &$this->date_updated;
+        $this->confirmation_time->InputTextType = "text";
+        $this->confirmation_time->UseFilter = true; // Table header filter
+        $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'check_box', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+        $this->confirmation_time->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
+        $this->Fields['confirmation_time'] = &$this->confirmation_time;
 
-        // bb
-        $this->bb = new DbField(
-            'job_control',
-            'job_control',
-            'x_bb',
-            'bb',
-            '`bb`',
-            '`bb`',
+        // box_code
+        $this->box_code = new DbField(
+            'check_box',
+            'check_box',
+            'x_box_code',
+            'box_code',
+            '`box_code`',
+            '`box_code`',
             200,
             255,
             -1,
             false,
-            '`bb`',
+            '`box_code`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->bb->InputTextType = "text";
-        $this->Fields['bb'] = &$this->bb;
+        $this->box_code->InputTextType = "text";
+        $this->box_code->IsPrimaryKey = true; // Primary key field
+        $this->box_code->UseFilter = true; // Table header filter
+        $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['box_code'] = &$this->box_code;
+
+        // picker
+        $this->picker = new DbField(
+            'check_box',
+            'check_box',
+            'x_picker',
+            'picker',
+            '`picker`',
+            '`picker`',
+            200,
+            255,
+            -1,
+            false,
+            '`picker`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->picker->InputTextType = "text";
+        $this->picker->UseFilter = true; // Table header filter
+        $this->picker->Lookup = new Lookup('picker', 'check_box', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['picker'] = &$this->picker;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -339,7 +435,7 @@ class JobControl extends DbTable
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`job_control`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`check_box`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -624,9 +720,6 @@ class JobControl extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -686,8 +779,8 @@ class JobControl extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('box_code', $rs)) {
+                AddFilter($where, QuotedName('box_code', $this->Dbid) . '=' . QuotedValue($rs['box_code'], $this->box_code->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -711,14 +804,18 @@ class JobControl extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
-        $this->job_category->DbValue = $row['job_category'];
-        $this->aisle->DbValue = $row['aisle'];
-        $this->user->DbValue = $row['user'];
-        $this->status->DbValue = $row['status'];
-        $this->date_created->DbValue = $row['date_created'];
-        $this->date_updated->DbValue = $row['date_updated'];
-        $this->bb->DbValue = $row['bb'];
+        $this->creation_date->DbValue = $row['creation_date'];
+        $this->store_id->DbValue = $row['store_id'];
+        $this->store_name->DbValue = $row['store_name'];
+        $this->article->DbValue = $row['article'];
+        $this->size_desc->DbValue = $row['size_desc'];
+        $this->color_code->DbValue = $row['color_code'];
+        $this->picked_qty->DbValue = $row['picked_qty'];
+        $this->variance_qty->DbValue = $row['variance_qty'];
+        $this->confirmation_date->DbValue = $row['confirmation_date'];
+        $this->confirmation_time->DbValue = $row['confirmation_time'];
+        $this->box_code->DbValue = $row['box_code'];
+        $this->picker->DbValue = $row['picker'];
     }
 
     // Delete uploaded files
@@ -730,14 +827,14 @@ class JobControl extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`box_code` = '@box_code@'";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->box_code->CurrentValue : $this->box_code->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -753,9 +850,9 @@ class JobControl extends DbTable
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->box_code->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->box_code->OldValue = $keys[0];
             }
         }
     }
@@ -765,17 +862,14 @@ class JobControl extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('box_code', $row) ? $row['box_code'] : null;
         } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
-        }
-        if (!is_numeric($val)) {
-            return "0=1"; // Invalid key
+            $val = $this->box_code->OldValue !== null ? $this->box_code->OldValue : $this->box_code->CurrentValue;
         }
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@box_code@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -790,7 +884,7 @@ class JobControl extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("jobcontrollist");
+        return $_SESSION[$name] ?? GetUrl("checkboxlist");
     }
 
     // Set return page URL
@@ -803,11 +897,11 @@ class JobControl extends DbTable
     public function getModalCaption($pageName)
     {
         global $Language;
-        if ($pageName == "jobcontrolview") {
+        if ($pageName == "checkboxview") {
             return $Language->phrase("View");
-        } elseif ($pageName == "jobcontroledit") {
+        } elseif ($pageName == "checkboxedit") {
             return $Language->phrase("Edit");
-        } elseif ($pageName == "jobcontroladd") {
+        } elseif ($pageName == "checkboxadd") {
             return $Language->phrase("Add");
         } else {
             return "";
@@ -819,15 +913,15 @@ class JobControl extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "JobControlView";
+                return "CheckBoxView";
             case Config("API_ADD_ACTION"):
-                return "JobControlAdd";
+                return "CheckBoxAdd";
             case Config("API_EDIT_ACTION"):
-                return "JobControlEdit";
+                return "CheckBoxEdit";
             case Config("API_DELETE_ACTION"):
-                return "JobControlDelete";
+                return "CheckBoxDelete";
             case Config("API_LIST_ACTION"):
-                return "JobControlList";
+                return "CheckBoxList";
             default:
                 return "";
         }
@@ -836,16 +930,16 @@ class JobControl extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "jobcontrollist";
+        return "checkboxlist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("jobcontrolview", $this->getUrlParm($parm));
+            $url = $this->keyUrl("checkboxview", $this->getUrlParm($parm));
         } else {
-            $url = $this->keyUrl("jobcontrolview", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+            $url = $this->keyUrl("checkboxview", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
         }
         return $this->addMasterUrl($url);
     }
@@ -854,9 +948,9 @@ class JobControl extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "jobcontroladd?" . $this->getUrlParm($parm);
+            $url = "checkboxadd?" . $this->getUrlParm($parm);
         } else {
-            $url = "jobcontroladd";
+            $url = "checkboxadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -864,7 +958,7 @@ class JobControl extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("jobcontroledit", $this->getUrlParm($parm));
+        $url = $this->keyUrl("checkboxedit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -878,7 +972,7 @@ class JobControl extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("jobcontroladd", $this->getUrlParm($parm));
+        $url = $this->keyUrl("checkboxadd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -892,7 +986,7 @@ class JobControl extends DbTable
     // Delete URL
     public function getDeleteUrl()
     {
-        return $this->keyUrl("jobcontroldelete", $this->getUrlParm());
+        return $this->keyUrl("checkboxdelete", $this->getUrlParm());
     }
 
     // Add master url
@@ -904,7 +998,7 @@ class JobControl extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . JsonEncode($this->id->CurrentValue, "number");
+        $json .= "\"box_code\":" . JsonEncode($this->box_code->CurrentValue, "string");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -915,8 +1009,8 @@ class JobControl extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->box_code->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->box_code->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -977,7 +1071,7 @@ class JobControl extends DbTable
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("box_code") ?? Route("box_code")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
                 $arKeys[] = $keyValue;
@@ -991,9 +1085,6 @@ class JobControl extends DbTable
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
-                    continue;
-                }
                 $ar[] = $key;
             }
         }
@@ -1010,9 +1101,9 @@ class JobControl extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->box_code->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->box_code->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1037,14 +1128,18 @@ class JobControl extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
-        $this->job_category->setDbValue($row['job_category']);
-        $this->aisle->setDbValue($row['aisle']);
-        $this->user->setDbValue($row['user']);
-        $this->status->setDbValue($row['status']);
-        $this->date_created->setDbValue($row['date_created']);
-        $this->date_updated->setDbValue($row['date_updated']);
-        $this->bb->setDbValue($row['bb']);
+        $this->creation_date->setDbValue($row['creation_date']);
+        $this->store_id->setDbValue($row['store_id']);
+        $this->store_name->setDbValue($row['store_name']);
+        $this->article->setDbValue($row['article']);
+        $this->size_desc->setDbValue($row['size_desc']);
+        $this->color_code->setDbValue($row['color_code']);
+        $this->picked_qty->setDbValue($row['picked_qty']);
+        $this->variance_qty->setDbValue($row['variance_qty']);
+        $this->confirmation_date->setDbValue($row['confirmation_date']);
+        $this->confirmation_time->setDbValue($row['confirmation_time']);
+        $this->box_code->setDbValue($row['box_code']);
+        $this->picker->setDbValue($row['picker']);
     }
 
     // Render list row values
@@ -1057,160 +1152,154 @@ class JobControl extends DbTable
 
         // Common render codes
 
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
+        // creation_date
+        $this->creation_date->CellCssStyle = "white-space: nowrap;";
 
-        // job_category
-        $this->job_category->CellCssStyle = "white-space: nowrap;";
+        // store_id
+        $this->store_id->CellCssStyle = "white-space: nowrap;";
 
-        // aisle
+        // store_name
+        $this->store_name->CellCssStyle = "white-space: nowrap;";
 
-        // user
-        $this->user->CellCssStyle = "white-space: nowrap;";
+        // article
+        $this->article->CellCssStyle = "white-space: nowrap;";
 
-        // status
-        $this->status->CellCssStyle = "white-space: nowrap;";
+        // size_desc
+        $this->size_desc->CellCssStyle = "white-space: nowrap;";
 
-        // date_created
-        $this->date_created->CellCssStyle = "white-space: nowrap;";
+        // color_code
+        $this->color_code->CellCssStyle = "white-space: nowrap;";
 
-        // date_updated
-        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+        // picked_qty
+        $this->picked_qty->CellCssStyle = "white-space: nowrap;";
 
-        // bb
+        // variance_qty
+        $this->variance_qty->CellCssStyle = "white-space: nowrap;";
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewValue = FormatNumber($this->id->ViewValue, $this->id->formatPattern());
-        $this->id->ViewCustomAttributes = "";
+        // confirmation_date
+        $this->confirmation_date->CellCssStyle = "white-space: nowrap;";
 
-        // job_category
-        if (strval($this->job_category->CurrentValue) != "") {
-            $this->job_category->ViewValue = $this->job_category->optionCaption($this->job_category->CurrentValue);
-        } else {
-            $this->job_category->ViewValue = null;
-        }
-        $this->job_category->ViewCustomAttributes = "";
+        // confirmation_time
+        $this->confirmation_time->CellCssStyle = "white-space: nowrap;";
 
-        // aisle
-        $curVal = strval($this->aisle->CurrentValue);
-        if ($curVal != "") {
-            $this->aisle->ViewValue = $this->aisle->lookupCacheOption($curVal);
-            if ($this->aisle->ViewValue === null) { // Lookup from database
-                $arwrk = explode(",", $curVal);
-                $filterWrk = "";
-                foreach ($arwrk as $wrk) {
-                    if ($filterWrk != "") {
-                        $filterWrk .= " OR ";
-                    }
-                    $filterWrk .= "`source_location`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                }
-                $sqlWrk = $this->aisle->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $this->aisle->ViewValue = new OptionValues();
-                    foreach ($rswrk as $row) {
-                        $arwrk = $this->aisle->Lookup->renderViewRow($row);
-                        $this->aisle->ViewValue->add($this->aisle->displayValue($arwrk));
-                    }
-                } else {
-                    $this->aisle->ViewValue = $this->aisle->CurrentValue;
-                }
-            }
-        } else {
-            $this->aisle->ViewValue = null;
-        }
-        $this->aisle->ViewCustomAttributes = "";
+        // box_code
+        $this->box_code->CellCssStyle = "white-space: nowrap;";
 
-        // user
-        $curVal = strval($this->user->CurrentValue);
-        if ($curVal != "") {
-            $this->user->ViewValue = $this->user->lookupCacheOption($curVal);
-            if ($this->user->ViewValue === null) { // Lookup from database
-                $filterWrk = "`username`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                $sqlWrk = $this->user->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->user->Lookup->renderViewRow($rswrk[0]);
-                    $this->user->ViewValue = $this->user->displayValue($arwrk);
-                } else {
-                    $this->user->ViewValue = $this->user->CurrentValue;
-                }
-            }
-        } else {
-            $this->user->ViewValue = null;
-        }
-        $this->user->ViewCustomAttributes = "";
+        // picker
+        $this->picker->CellCssStyle = "white-space: nowrap;";
 
-        // status
-        if (strval($this->status->CurrentValue) != "") {
-            $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-        } else {
-            $this->status->ViewValue = null;
-        }
-        $this->status->ViewCustomAttributes = "";
+        // creation_date
+        $this->creation_date->ViewValue = $this->creation_date->CurrentValue;
+        $this->creation_date->ViewValue = FormatDateTime($this->creation_date->ViewValue, $this->creation_date->formatPattern());
+        $this->creation_date->ViewCustomAttributes = "";
 
-        // date_created
-        $this->date_created->ViewValue = $this->date_created->CurrentValue;
-        $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
-        $this->date_created->ViewCustomAttributes = "";
+        // store_id
+        $this->store_id->ViewValue = $this->store_id->CurrentValue;
+        $this->store_id->ViewCustomAttributes = "";
 
-        // date_updated
-        $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
-        $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
-        $this->date_updated->ViewCustomAttributes = "";
+        // store_name
+        $this->store_name->ViewValue = $this->store_name->CurrentValue;
+        $this->store_name->ViewCustomAttributes = "";
 
-        // bb
-        $this->bb->ViewValue = $this->bb->CurrentValue;
-        $this->bb->ViewCustomAttributes = "";
+        // article
+        $this->article->ViewValue = $this->article->CurrentValue;
+        $this->article->ViewCustomAttributes = "";
 
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // size_desc
+        $this->size_desc->ViewValue = $this->size_desc->CurrentValue;
+        $this->size_desc->ViewCustomAttributes = "";
 
-        // job_category
-        $this->job_category->LinkCustomAttributes = "";
-        $this->job_category->HrefValue = "";
-        $this->job_category->TooltipValue = "";
+        // color_code
+        $this->color_code->ViewValue = $this->color_code->CurrentValue;
+        $this->color_code->ViewCustomAttributes = "";
 
-        // aisle
-        $this->aisle->LinkCustomAttributes = "";
-        $this->aisle->HrefValue = "";
-        $this->aisle->TooltipValue = "";
+        // picked_qty
+        $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
+        $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
+        $this->picked_qty->ViewCustomAttributes = "";
 
-        // user
-        $this->user->LinkCustomAttributes = "";
-        $this->user->HrefValue = "";
-        $this->user->TooltipValue = "";
+        // variance_qty
+        $this->variance_qty->ViewValue = $this->variance_qty->CurrentValue;
+        $this->variance_qty->ViewValue = FormatNumber($this->variance_qty->ViewValue, $this->variance_qty->formatPattern());
+        $this->variance_qty->ViewCustomAttributes = "";
 
-        // status
-        $this->status->LinkCustomAttributes = "";
-        $this->status->HrefValue = "";
-        $this->status->TooltipValue = "";
+        // confirmation_date
+        $this->confirmation_date->ViewValue = $this->confirmation_date->CurrentValue;
+        $this->confirmation_date->ViewValue = FormatDateTime($this->confirmation_date->ViewValue, $this->confirmation_date->formatPattern());
+        $this->confirmation_date->ViewCustomAttributes = "";
 
-        // date_created
-        $this->date_created->LinkCustomAttributes = "";
-        $this->date_created->HrefValue = "";
-        $this->date_created->TooltipValue = "";
+        // confirmation_time
+        $this->confirmation_time->ViewValue = $this->confirmation_time->CurrentValue;
+        $this->confirmation_time->ViewValue = FormatDateTime($this->confirmation_time->ViewValue, $this->confirmation_time->formatPattern());
+        $this->confirmation_time->ViewCustomAttributes = "";
 
-        // date_updated
-        $this->date_updated->LinkCustomAttributes = "";
-        $this->date_updated->HrefValue = "";
-        $this->date_updated->TooltipValue = "";
+        // box_code
+        $this->box_code->ViewValue = $this->box_code->CurrentValue;
+        $this->box_code->ViewCustomAttributes = "";
 
-        // bb
-        $this->bb->LinkCustomAttributes = "";
-        $this->bb->HrefValue = "";
-        $this->bb->TooltipValue = "";
+        // picker
+        $this->picker->ViewValue = $this->picker->CurrentValue;
+        $this->picker->ViewCustomAttributes = "";
+
+        // creation_date
+        $this->creation_date->LinkCustomAttributes = "";
+        $this->creation_date->HrefValue = "";
+        $this->creation_date->TooltipValue = "";
+
+        // store_id
+        $this->store_id->LinkCustomAttributes = "";
+        $this->store_id->HrefValue = "";
+        $this->store_id->TooltipValue = "";
+
+        // store_name
+        $this->store_name->LinkCustomAttributes = "";
+        $this->store_name->HrefValue = "";
+        $this->store_name->TooltipValue = "";
+
+        // article
+        $this->article->LinkCustomAttributes = "";
+        $this->article->HrefValue = "";
+        $this->article->TooltipValue = "";
+
+        // size_desc
+        $this->size_desc->LinkCustomAttributes = "";
+        $this->size_desc->HrefValue = "";
+        $this->size_desc->TooltipValue = "";
+
+        // color_code
+        $this->color_code->LinkCustomAttributes = "";
+        $this->color_code->HrefValue = "";
+        $this->color_code->TooltipValue = "";
+
+        // picked_qty
+        $this->picked_qty->LinkCustomAttributes = "";
+        $this->picked_qty->HrefValue = "";
+        $this->picked_qty->TooltipValue = "";
+
+        // variance_qty
+        $this->variance_qty->LinkCustomAttributes = "";
+        $this->variance_qty->HrefValue = "";
+        $this->variance_qty->TooltipValue = "";
+
+        // confirmation_date
+        $this->confirmation_date->LinkCustomAttributes = "";
+        $this->confirmation_date->HrefValue = "";
+        $this->confirmation_date->TooltipValue = "";
+
+        // confirmation_time
+        $this->confirmation_time->LinkCustomAttributes = "";
+        $this->confirmation_time->HrefValue = "";
+        $this->confirmation_time->TooltipValue = "";
+
+        // box_code
+        $this->box_code->LinkCustomAttributes = "";
+        $this->box_code->HrefValue = "";
+        $this->box_code->TooltipValue = "";
+
+        // picker
+        $this->picker->LinkCustomAttributes = "";
+        $this->picker->HrefValue = "";
+        $this->picker->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1227,92 +1316,104 @@ class JobControl extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->EditValue = FormatNumber($this->id->EditValue, $this->id->formatPattern());
-        $this->id->ViewCustomAttributes = "";
+        // creation_date
+        $this->creation_date->setupEditAttributes();
+        $this->creation_date->EditCustomAttributes = "";
+        $this->creation_date->EditValue = FormatDateTime($this->creation_date->CurrentValue, $this->creation_date->formatPattern());
+        $this->creation_date->PlaceHolder = RemoveHtml($this->creation_date->caption());
 
-        // job_category
-        $this->job_category->setupEditAttributes();
-        $this->job_category->EditCustomAttributes = "";
-        $this->job_category->EditValue = $this->job_category->options(true);
-        $this->job_category->PlaceHolder = RemoveHtml($this->job_category->caption());
-
-        // aisle
-        $this->aisle->EditCustomAttributes = "";
-        $curVal = trim(strval($this->aisle->CurrentValue));
-        if ($curVal != "") {
-            $this->aisle->ViewValue = $this->aisle->lookupCacheOption($curVal);
-        } else {
-            $this->aisle->ViewValue = $this->aisle->Lookup !== null && is_array($this->aisle->lookupOptions()) ? $curVal : null;
+        // store_id
+        $this->store_id->setupEditAttributes();
+        $this->store_id->EditCustomAttributes = "";
+        if (!$this->store_id->Raw) {
+            $this->store_id->CurrentValue = HtmlDecode($this->store_id->CurrentValue);
         }
-        if ($this->aisle->ViewValue !== null) { // Load from cache
-            $this->aisle->EditValue = array_values($this->aisle->lookupOptions());
-        } else { // Lookup from database
-            $filterWrk = "";
-            $sqlWrk = $this->aisle->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-            $conn = Conn();
-            $config = $conn->getConfiguration();
-            $config->setResultCacheImpl($this->Cache);
-            $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-            $ari = count($rswrk);
-            $arwrk = $rswrk;
-            $this->aisle->EditValue = $arwrk;
+        $this->store_id->EditValue = $this->store_id->CurrentValue;
+        $this->store_id->PlaceHolder = RemoveHtml($this->store_id->caption());
+
+        // store_name
+        $this->store_name->setupEditAttributes();
+        $this->store_name->EditCustomAttributes = "";
+        if (!$this->store_name->Raw) {
+            $this->store_name->CurrentValue = HtmlDecode($this->store_name->CurrentValue);
         }
-        $this->aisle->PlaceHolder = RemoveHtml($this->aisle->caption());
+        $this->store_name->EditValue = $this->store_name->CurrentValue;
+        $this->store_name->PlaceHolder = RemoveHtml($this->store_name->caption());
 
-        // user
-        $this->user->setupEditAttributes();
-        $this->user->EditCustomAttributes = "";
-        $curVal = trim(strval($this->user->CurrentValue));
-        if ($curVal != "") {
-            $this->user->ViewValue = $this->user->lookupCacheOption($curVal);
-        } else {
-            $this->user->ViewValue = $this->user->Lookup !== null && is_array($this->user->lookupOptions()) ? $curVal : null;
+        // article
+        $this->article->setupEditAttributes();
+        $this->article->EditCustomAttributes = "";
+        if (!$this->article->Raw) {
+            $this->article->CurrentValue = HtmlDecode($this->article->CurrentValue);
         }
-        if ($this->user->ViewValue !== null) { // Load from cache
-            $this->user->EditValue = array_values($this->user->lookupOptions());
-        } else { // Lookup from database
-            $filterWrk = "";
-            $sqlWrk = $this->user->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-            $conn = Conn();
-            $config = $conn->getConfiguration();
-            $config->setResultCacheImpl($this->Cache);
-            $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-            $ari = count($rswrk);
-            $arwrk = $rswrk;
-            $this->user->EditValue = $arwrk;
+        $this->article->EditValue = $this->article->CurrentValue;
+        $this->article->PlaceHolder = RemoveHtml($this->article->caption());
+
+        // size_desc
+        $this->size_desc->setupEditAttributes();
+        $this->size_desc->EditCustomAttributes = "";
+        if (!$this->size_desc->Raw) {
+            $this->size_desc->CurrentValue = HtmlDecode($this->size_desc->CurrentValue);
         }
-        $this->user->PlaceHolder = RemoveHtml($this->user->caption());
+        $this->size_desc->EditValue = $this->size_desc->CurrentValue;
+        $this->size_desc->PlaceHolder = RemoveHtml($this->size_desc->caption());
 
-        // status
-        $this->status->setupEditAttributes();
-        $this->status->EditCustomAttributes = "";
-        $this->status->EditValue = $this->status->options(true);
-        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
-        // date_created
-        $this->date_created->setupEditAttributes();
-        $this->date_created->EditCustomAttributes = "";
-        $this->date_created->EditValue = FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
-
-        // date_updated
-        $this->date_updated->setupEditAttributes();
-        $this->date_updated->EditCustomAttributes = "";
-        $this->date_updated->EditValue = FormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
-        $this->date_updated->PlaceHolder = RemoveHtml($this->date_updated->caption());
-
-        // bb
-        $this->bb->setupEditAttributes();
-        $this->bb->EditCustomAttributes = "";
-        if (!$this->bb->Raw) {
-            $this->bb->CurrentValue = HtmlDecode($this->bb->CurrentValue);
+        // color_code
+        $this->color_code->setupEditAttributes();
+        $this->color_code->EditCustomAttributes = "";
+        if (!$this->color_code->Raw) {
+            $this->color_code->CurrentValue = HtmlDecode($this->color_code->CurrentValue);
         }
-        $this->bb->EditValue = $this->bb->CurrentValue;
-        $this->bb->PlaceHolder = RemoveHtml($this->bb->caption());
+        $this->color_code->EditValue = $this->color_code->CurrentValue;
+        $this->color_code->PlaceHolder = RemoveHtml($this->color_code->caption());
+
+        // picked_qty
+        $this->picked_qty->setupEditAttributes();
+        $this->picked_qty->EditCustomAttributes = "";
+        $this->picked_qty->EditValue = $this->picked_qty->CurrentValue;
+        $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
+        if (strval($this->picked_qty->EditValue) != "" && is_numeric($this->picked_qty->EditValue)) {
+            $this->picked_qty->EditValue = FormatNumber($this->picked_qty->EditValue, null);
+        }
+
+        // variance_qty
+        $this->variance_qty->setupEditAttributes();
+        $this->variance_qty->EditCustomAttributes = "";
+        $this->variance_qty->EditValue = $this->variance_qty->CurrentValue;
+        $this->variance_qty->PlaceHolder = RemoveHtml($this->variance_qty->caption());
+        if (strval($this->variance_qty->EditValue) != "" && is_numeric($this->variance_qty->EditValue)) {
+            $this->variance_qty->EditValue = FormatNumber($this->variance_qty->EditValue, null);
+        }
+
+        // confirmation_date
+        $this->confirmation_date->setupEditAttributes();
+        $this->confirmation_date->EditCustomAttributes = "";
+        $this->confirmation_date->EditValue = FormatDateTime($this->confirmation_date->CurrentValue, $this->confirmation_date->formatPattern());
+        $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+
+        // confirmation_time
+        $this->confirmation_time->setupEditAttributes();
+        $this->confirmation_time->EditCustomAttributes = "";
+        $this->confirmation_time->EditValue = FormatDateTime($this->confirmation_time->CurrentValue, $this->confirmation_time->formatPattern());
+        $this->confirmation_time->PlaceHolder = RemoveHtml($this->confirmation_time->caption());
+
+        // box_code
+        $this->box_code->setupEditAttributes();
+        $this->box_code->EditCustomAttributes = "";
+        if (!$this->box_code->Raw) {
+            $this->box_code->CurrentValue = HtmlDecode($this->box_code->CurrentValue);
+        }
+        $this->box_code->EditValue = $this->box_code->CurrentValue;
+        $this->box_code->PlaceHolder = RemoveHtml($this->box_code->caption());
+
+        // picker
+        $this->picker->setupEditAttributes();
+        $this->picker->EditCustomAttributes = "";
+        if (!$this->picker->Raw) {
+            $this->picker->CurrentValue = HtmlDecode($this->picker->CurrentValue);
+        }
+        $this->picker->EditValue = $this->picker->CurrentValue;
+        $this->picker->PlaceHolder = RemoveHtml($this->picker->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1321,11 +1422,33 @@ class JobControl extends DbTable
     // Aggregate list row values
     public function aggregateListRowValues()
     {
+            $this->article->Count++; // Increment count
+            if (is_numeric($this->picked_qty->CurrentValue)) {
+                $this->picked_qty->Total += $this->picked_qty->CurrentValue; // Accumulate total
+            }
+            if (is_numeric($this->variance_qty->CurrentValue)) {
+                $this->variance_qty->Total += $this->variance_qty->CurrentValue; // Accumulate total
+            }
     }
 
     // Aggregate list row (for rendering)
     public function aggregateListRow()
     {
+            $this->article->CurrentValue = $this->article->Count;
+            $this->article->ViewValue = $this->article->CurrentValue;
+            $this->article->ViewCustomAttributes = "";
+            $this->article->HrefValue = ""; // Clear href value
+            $this->picked_qty->CurrentValue = $this->picked_qty->Total;
+            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
+            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
+            $this->picked_qty->ViewCustomAttributes = "";
+            $this->picked_qty->HrefValue = ""; // Clear href value
+            $this->variance_qty->CurrentValue = $this->variance_qty->Total;
+            $this->variance_qty->ViewValue = $this->variance_qty->CurrentValue;
+            $this->variance_qty->ViewValue = FormatNumber($this->variance_qty->ViewValue, $this->variance_qty->formatPattern());
+            $this->variance_qty->ViewCustomAttributes = "";
+            $this->variance_qty->HrefValue = ""; // Clear href value
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1342,23 +1465,31 @@ class JobControl extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->job_category);
-                    $doc->exportCaption($this->aisle);
-                    $doc->exportCaption($this->user);
-                    $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->date_created);
-                    $doc->exportCaption($this->date_updated);
-                    $doc->exportCaption($this->bb);
+                    $doc->exportCaption($this->creation_date);
+                    $doc->exportCaption($this->store_id);
+                    $doc->exportCaption($this->store_name);
+                    $doc->exportCaption($this->article);
+                    $doc->exportCaption($this->size_desc);
+                    $doc->exportCaption($this->color_code);
+                    $doc->exportCaption($this->picked_qty);
+                    $doc->exportCaption($this->variance_qty);
+                    $doc->exportCaption($this->confirmation_date);
+                    $doc->exportCaption($this->confirmation_time);
+                    $doc->exportCaption($this->box_code);
+                    $doc->exportCaption($this->picker);
                 } else {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->job_category);
-                    $doc->exportCaption($this->aisle);
-                    $doc->exportCaption($this->user);
-                    $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->date_created);
-                    $doc->exportCaption($this->date_updated);
-                    $doc->exportCaption($this->bb);
+                    $doc->exportCaption($this->creation_date);
+                    $doc->exportCaption($this->store_id);
+                    $doc->exportCaption($this->store_name);
+                    $doc->exportCaption($this->article);
+                    $doc->exportCaption($this->size_desc);
+                    $doc->exportCaption($this->color_code);
+                    $doc->exportCaption($this->picked_qty);
+                    $doc->exportCaption($this->variance_qty);
+                    $doc->exportCaption($this->confirmation_date);
+                    $doc->exportCaption($this->confirmation_time);
+                    $doc->exportCaption($this->box_code);
+                    $doc->exportCaption($this->picker);
                 }
                 $doc->endExportRow();
             }
@@ -1380,6 +1511,7 @@ class JobControl extends DbTable
                     }
                 }
                 $this->loadListRowValues($row);
+                $this->aggregateListRowValues(); // Aggregate row values
 
                 // Render row
                 $this->RowType = ROWTYPE_VIEW; // Render view
@@ -1388,23 +1520,31 @@ class JobControl extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->job_category);
-                        $doc->exportField($this->aisle);
-                        $doc->exportField($this->user);
-                        $doc->exportField($this->status);
-                        $doc->exportField($this->date_created);
-                        $doc->exportField($this->date_updated);
-                        $doc->exportField($this->bb);
+                        $doc->exportField($this->creation_date);
+                        $doc->exportField($this->store_id);
+                        $doc->exportField($this->store_name);
+                        $doc->exportField($this->article);
+                        $doc->exportField($this->size_desc);
+                        $doc->exportField($this->color_code);
+                        $doc->exportField($this->picked_qty);
+                        $doc->exportField($this->variance_qty);
+                        $doc->exportField($this->confirmation_date);
+                        $doc->exportField($this->confirmation_time);
+                        $doc->exportField($this->box_code);
+                        $doc->exportField($this->picker);
                     } else {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->job_category);
-                        $doc->exportField($this->aisle);
-                        $doc->exportField($this->user);
-                        $doc->exportField($this->status);
-                        $doc->exportField($this->date_created);
-                        $doc->exportField($this->date_updated);
-                        $doc->exportField($this->bb);
+                        $doc->exportField($this->creation_date);
+                        $doc->exportField($this->store_id);
+                        $doc->exportField($this->store_name);
+                        $doc->exportField($this->article);
+                        $doc->exportField($this->size_desc);
+                        $doc->exportField($this->color_code);
+                        $doc->exportField($this->picked_qty);
+                        $doc->exportField($this->variance_qty);
+                        $doc->exportField($this->confirmation_date);
+                        $doc->exportField($this->confirmation_time);
+                        $doc->exportField($this->box_code);
+                        $doc->exportField($this->picker);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1416,6 +1556,29 @@ class JobControl extends DbTable
                 $this->rowExport($row);
             }
             $recordset->moveNext();
+        }
+
+        // Export aggregates (horizontal format only)
+        if ($doc->Horizontal) {
+            $this->RowType = ROWTYPE_AGGREGATE;
+            $this->resetAttributes();
+            $this->aggregateListRow();
+            if (!$doc->ExportCustom) {
+                $doc->beginExportRow(-1);
+                $doc->exportAggregate($this->creation_date, '');
+                $doc->exportAggregate($this->store_id, '');
+                $doc->exportAggregate($this->store_name, '');
+                $doc->exportAggregate($this->article, 'COUNT');
+                $doc->exportAggregate($this->size_desc, '');
+                $doc->exportAggregate($this->color_code, '');
+                $doc->exportAggregate($this->picked_qty, 'TOTAL');
+                $doc->exportAggregate($this->variance_qty, 'TOTAL');
+                $doc->exportAggregate($this->confirmation_date, '');
+                $doc->exportAggregate($this->confirmation_time, '');
+                $doc->exportAggregate($this->box_code, '');
+                $doc->exportAggregate($this->picker, '');
+                $doc->endExportRow();
+            }
         }
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
@@ -1573,6 +1736,10 @@ class JobControl extends DbTable
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        if ($this->Export <> "") {
+           $this->box_code->ViewValue = "=\"" . $this->box_code->ViewValue . "\"";
+           $this->article->ViewValue = "=\"" . $this->article->ViewValue . "\"";
+         }
     }
 
     // User ID Filtering event

@@ -75,8 +75,10 @@ class PickingPending extends DbTable
     public $aisle2;
     public $store_id2;
     public $scan_article;
+    public $scan_box;
     public $close_totes;
     public $job_id;
+    public $sequence;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -924,6 +926,30 @@ class PickingPending extends DbTable
         $this->scan_article->IsCustom = true; // Custom field
         $this->Fields['scan_article'] = &$this->scan_article;
 
+        // scan_box
+        $this->scan_box = new DbField(
+            'picking_pending',
+            'picking_pending',
+            'x_scan_box',
+            'scan_box',
+            '\'\'',
+            '\'\'',
+            201,
+            65530,
+            -1,
+            false,
+            '\'\'',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->scan_box->InputTextType = "text";
+        $this->scan_box->IsCustom = true; // Custom field
+        $this->scan_box->Required = true; // Required field
+        $this->Fields['scan_box'] = &$this->scan_box;
+
         // close_totes
         $this->close_totes = new DbField(
             'picking_pending',
@@ -968,6 +994,28 @@ class PickingPending extends DbTable
         $this->job_id->InputTextType = "text";
         $this->Fields['job_id'] = &$this->job_id;
 
+        // sequence
+        $this->sequence = new DbField(
+            'picking_pending',
+            'picking_pending',
+            'x_sequence',
+            'sequence',
+            '`sequence`',
+            '`sequence`',
+            200,
+            255,
+            -1,
+            false,
+            '`sequence`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->sequence->InputTextType = "text";
+        $this->Fields['sequence'] = &$this->sequence;
+
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
         $this->CacheProfile = new \Doctrine\DBAL\Cache\QueryCacheProfile(0, $this->TableVar);
@@ -991,8 +1039,8 @@ class PickingPending extends DbTable
         }
     }
 
-    // Multiple column sort
-    public function updateSort(&$fld, $ctrl)
+    // Single column sort
+    public function updateSort(&$fld)
     {
         if ($this->CurrentOrder == $fld->Name) {
             $sortField = $fld->Expression;
@@ -1002,29 +1050,8 @@ class PickingPending extends DbTable
             } else {
                 $curSort = $lastSort;
             }
-            $lastOrderBy = in_array($lastSort, ["ASC", "DESC"]) ? $sortField . " " . $lastSort : "";
-            $curOrderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
-            if ($ctrl) {
-                $orderBy = $this->getSessionOrderBy();
-                $arOrderBy = !empty($orderBy) ? explode(", ", $orderBy) : [];
-                if ($lastOrderBy != "" && in_array($lastOrderBy, $arOrderBy)) {
-                    foreach ($arOrderBy as $key => $val) {
-                        if ($val == $lastOrderBy) {
-                            if ($curOrderBy == "") {
-                                unset($arOrderBy[$key]);
-                            } else {
-                                $arOrderBy[$key] = $curOrderBy;
-                            }
-                        }
-                    }
-                } elseif ($curOrderBy != "") {
-                    $arOrderBy[] = $curOrderBy;
-                }
-                $orderBy = implode(", ", $arOrderBy);
-                $this->setSessionOrderBy($orderBy); // Save to Session
-            } else {
-                $this->setSessionOrderBy($curOrderBy); // Save to Session
-            }
+            $orderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
+            $this->setSessionOrderBy($orderBy); // Save to Session
         }
     }
 
@@ -1062,7 +1089,7 @@ class PickingPending extends DbTable
 
     public function getSqlSelect() // Select
     {
-        return $this->SqlSelect ?? $this->getQueryBuilder()->select("*, '' AS `scan_article`");
+        return $this->SqlSelect ?? $this->getQueryBuilder()->select("*, '' AS `scan_article`, '' AS `scan_box`");
     }
 
     public function sqlSelect() // For backward compatibility
@@ -1474,8 +1501,10 @@ class PickingPending extends DbTable
         $this->aisle2->DbValue = $row['aisle2'];
         $this->store_id2->DbValue = $row['store_id2'];
         $this->scan_article->DbValue = $row['scan_article'];
+        $this->scan_box->DbValue = $row['scan_box'];
         $this->close_totes->DbValue = $row['close_totes'];
         $this->job_id->DbValue = $row['job_id'];
+        $this->sequence->DbValue = $row['sequence'];
     }
 
     // Delete uploaded files
@@ -1691,7 +1720,7 @@ class PickingPending extends DbTable
         $attrs = "";
         if ($fld->Sortable) {
             $sortUrl = $this->sortUrl($fld);
-            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="2"';
+            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="1"';
         }
         $html = '<div class="ew-table-header-caption"' . $attrs . '>' . $fld->caption() . '</div>';
         if ($sortUrl) {
@@ -1830,8 +1859,10 @@ class PickingPending extends DbTable
         $this->aisle2->setDbValue($row['aisle2']);
         $this->store_id2->setDbValue($row['store_id2']);
         $this->scan_article->setDbValue($row['scan_article']);
+        $this->scan_box->setDbValue($row['scan_box']);
         $this->close_totes->setDbValue($row['close_totes']);
         $this->job_id->setDbValue($row['job_id']);
+        $this->sequence->setDbValue($row['sequence']);
     }
 
     // Render list row values
@@ -1916,9 +1947,13 @@ class PickingPending extends DbTable
 
         // scan_article
 
+        // scan_box
+
         // close_totes
 
         // job_id
+
+        // sequence
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -2075,6 +2110,10 @@ class PickingPending extends DbTable
         $this->scan_article->ViewValue = $this->scan_article->CurrentValue;
         $this->scan_article->ViewCustomAttributes = "";
 
+        // scan_box
+        $this->scan_box->ViewValue = $this->scan_box->CurrentValue;
+        $this->scan_box->ViewCustomAttributes = "";
+
         // close_totes
         $this->close_totes->ViewValue = $this->close_totes->CurrentValue;
         $this->close_totes->ViewCustomAttributes = "";
@@ -2082,6 +2121,10 @@ class PickingPending extends DbTable
         // job_id
         $this->job_id->ViewValue = $this->job_id->CurrentValue;
         $this->job_id->ViewCustomAttributes = "";
+
+        // sequence
+        $this->sequence->ViewValue = $this->sequence->CurrentValue;
+        $this->sequence->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -2263,6 +2306,11 @@ class PickingPending extends DbTable
         $this->scan_article->HrefValue = "";
         $this->scan_article->TooltipValue = "";
 
+        // scan_box
+        $this->scan_box->LinkCustomAttributes = "";
+        $this->scan_box->HrefValue = "";
+        $this->scan_box->TooltipValue = "";
+
         // close_totes
         $this->close_totes->LinkCustomAttributes = "";
         $this->close_totes->HrefValue = "";
@@ -2272,6 +2320,11 @@ class PickingPending extends DbTable
         $this->job_id->LinkCustomAttributes = "";
         $this->job_id->HrefValue = "";
         $this->job_id->TooltipValue = "";
+
+        // sequence
+        $this->sequence->LinkCustomAttributes = "";
+        $this->sequence->HrefValue = "";
+        $this->sequence->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2576,6 +2629,15 @@ class PickingPending extends DbTable
         $this->scan_article->EditValue = $this->scan_article->CurrentValue;
         $this->scan_article->PlaceHolder = RemoveHtml($this->scan_article->caption());
 
+        // scan_box
+        $this->scan_box->setupEditAttributes();
+        $this->scan_box->EditCustomAttributes = "";
+        if (!$this->scan_box->Raw) {
+            $this->scan_box->CurrentValue = HtmlDecode($this->scan_box->CurrentValue);
+        }
+        $this->scan_box->EditValue = $this->scan_box->CurrentValue;
+        $this->scan_box->PlaceHolder = RemoveHtml($this->scan_box->caption());
+
         // close_totes
         $this->close_totes->setupEditAttributes();
         $this->close_totes->EditCustomAttributes = "";
@@ -2593,6 +2655,15 @@ class PickingPending extends DbTable
         }
         $this->job_id->EditValue = $this->job_id->CurrentValue;
         $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
+
+        // sequence
+        $this->sequence->setupEditAttributes();
+        $this->sequence->EditCustomAttributes = "";
+        if (!$this->sequence->Raw) {
+            $this->sequence->CurrentValue = HtmlDecode($this->sequence->CurrentValue);
+        }
+        $this->sequence->EditValue = $this->sequence->CurrentValue;
+        $this->sequence->PlaceHolder = RemoveHtml($this->sequence->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2658,8 +2729,10 @@ class PickingPending extends DbTable
                     $doc->exportCaption($this->aisle2);
                     $doc->exportCaption($this->store_id2);
                     $doc->exportCaption($this->scan_article);
+                    $doc->exportCaption($this->scan_box);
                     $doc->exportCaption($this->close_totes);
                     $doc->exportCaption($this->job_id);
+                    $doc->exportCaption($this->sequence);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->po_no);
@@ -2698,6 +2771,7 @@ class PickingPending extends DbTable
                     $doc->exportCaption($this->store_id2);
                     $doc->exportCaption($this->close_totes);
                     $doc->exportCaption($this->job_id);
+                    $doc->exportCaption($this->sequence);
                 }
                 $doc->endExportRow();
             }
@@ -2763,8 +2837,10 @@ class PickingPending extends DbTable
                         $doc->exportField($this->aisle2);
                         $doc->exportField($this->store_id2);
                         $doc->exportField($this->scan_article);
+                        $doc->exportField($this->scan_box);
                         $doc->exportField($this->close_totes);
                         $doc->exportField($this->job_id);
+                        $doc->exportField($this->sequence);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->po_no);
@@ -2803,6 +2879,7 @@ class PickingPending extends DbTable
                         $doc->exportField($this->store_id2);
                         $doc->exportField($this->close_totes);
                         $doc->exportField($this->job_id);
+                        $doc->exportField($this->sequence);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -3072,7 +3149,13 @@ class PickingPending extends DbTable
     {
         // Enter your code here
         // To cancel, set return value to false
+        if ( $rsnew["scan_box"] !== $rsnew["box_code"] ) {
+        	$this->setFailureMessage("BOX SALAH");
+        	return FALSE;
+        	}
+        else {
         return true;
+        }
     }
 
     // Row Updated event
@@ -3101,7 +3184,7 @@ class PickingPending extends DbTable
         if($hasil !== 0 && $_closetotes == 1 ){    
         $sql3 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
         $_result3 = ExecuteStatement($sql3);
-        $boxupdate3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `to_no` LIMIT 1 ";
+        $boxupdate3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
         $result3 = ExecuteStatement($boxupdate3);
         //$this->setSuccessMessage("Confirmed");
         //Log("No Close Totes 1");
@@ -3119,7 +3202,7 @@ class PickingPending extends DbTable
         if($hasil == 0 && $_closetotes == 1 ){    
         $sql6 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
         $_result6 = ExecuteStatement($sql6);
-        $boxupdate6 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `to_no` LIMIT 1 ";
+        $boxupdate6 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
         $result6 = ExecuteStatement($boxupdate6);
         //$this->setSuccessMessage("Confirmed");
         //Log("No Close Totes 2");

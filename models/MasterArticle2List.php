@@ -2666,7 +2666,7 @@ class MasterArticle2List extends MasterArticle2
         // Export to CSV
         $item = &$this->ExportOptions->add("csv");
         $item->Body = $this->getExportTag("csv");
-        $item->Visible = false;
+        $item->Visible = true;
 
         // Export to PDF
         $item = &$this->ExportOptions->add("pdf");

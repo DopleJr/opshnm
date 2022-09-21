@@ -1284,6 +1284,24 @@ class MasterArticleEdit extends MasterArticle
         // Update current values
         $this->setCurrentValues($rsnew);
 
+        // Check field with unique index (gtin)
+        if ($this->gtin->CurrentValue != "") {
+            $filterChk = "(`gtin` = '" . AdjustSql($this->gtin->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->gtin->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->gtin->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
+        }
+
         // Call Row Updating event
         $updateRow = $this->rowUpdating($rsold, $rsnew);
         if ($updateRow) {

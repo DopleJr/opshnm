@@ -413,7 +413,7 @@ class JobControlCopy1Delete extends JobControlCopy1
         $this->picked_qty->setVisibility();
         $this->status->setVisibility();
         $this->date_created->setVisibility();
-        $this->date_updated->setVisibility();
+        $this->date_updated->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -658,7 +658,6 @@ class JobControlCopy1Delete extends JobControlCopy1
         $this->area->CellCssStyle = "white-space: nowrap;";
 
         // aisle
-        $this->aisle->CellCssStyle = "white-space: nowrap;";
 
         // user
         $this->user->CellCssStyle = "white-space: nowrap;";
@@ -667,7 +666,7 @@ class JobControlCopy1Delete extends JobControlCopy1
         $this->target_qty->CellCssStyle = "white-space: nowrap;";
 
         // picked_qty
-        $this->picked_qty->CellCssStyle = "white-space: nowrap;";
+        $this->picked_qty->CellCssStyle = "min-width: 10rem; white-space: nowrap;";
 
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
@@ -915,11 +914,6 @@ class JobControlCopy1Delete extends JobControlCopy1
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
             $this->date_created->TooltipValue = "";
-
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
-            $this->date_updated->TooltipValue = "";
         }
 
         // Call Row Rendered event

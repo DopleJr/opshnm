@@ -1050,6 +1050,24 @@ class LocationsEdit extends Locations
         // Update current values
         $this->setCurrentValues($rsnew);
 
+        // Check field with unique index (location)
+        if ($this->location->CurrentValue != "") {
+            $filterChk = "(`location` = '" . AdjustSql($this->location->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->location->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->location->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
+        }
+
         // Call Row Updating event
         $updateRow = $this->rowUpdating($rsold, $rsnew);
         if ($updateRow) {

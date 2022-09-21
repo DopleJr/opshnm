@@ -33,6 +33,7 @@ class ProductivityOnline extends DbTable
     // Fields
     public $picking_date;
     public $picker;
+    public $total_bin;
     public $total;
     public $picked;
     public $variance;
@@ -94,6 +95,7 @@ class ProductivityOnline extends DbTable
             'TEXT'
         );
         $this->picking_date->InputTextType = "text";
+        $this->picking_date->Sortable = false; // Allow sort
         $this->picking_date->UseFilter = true; // Table header filter
         $this->picking_date->Lookup = new Lookup('picking_date', 'productivity_online', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
@@ -119,9 +121,37 @@ class ProductivityOnline extends DbTable
             'TEXT'
         );
         $this->picker->InputTextType = "text";
+        $this->picker->Sortable = false; // Allow sort
         $this->picker->UseFilter = true; // Table header filter
         $this->picker->Lookup = new Lookup('picker', 'productivity_online', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['picker'] = &$this->picker;
+
+        // total_bin
+        $this->total_bin = new DbField(
+            'productivity_online',
+            'productivity_online',
+            'x_total_bin',
+            'total_bin',
+            '`total_bin`',
+            '`total_bin`',
+            20,
+            21,
+            -1,
+            false,
+            '`total_bin`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->total_bin->InputTextType = "text";
+        $this->total_bin->Nullable = false; // NOT NULL field
+        $this->total_bin->Sortable = false; // Allow sort
+        $this->total_bin->UseFilter = true; // Table header filter
+        $this->total_bin->Lookup = new Lookup('total_bin', 'productivity_online', true, 'total_bin', ["total_bin","","",""], [], [], [], [], [], [], '', '', "");
+        $this->total_bin->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['total_bin'] = &$this->total_bin;
 
         // total
         $this->total = new DbField(
@@ -143,6 +173,7 @@ class ProductivityOnline extends DbTable
             'TEXT'
         );
         $this->total->InputTextType = "text";
+        $this->total->Sortable = false; // Allow sort
         $this->total->UseFilter = true; // Table header filter
         $this->total->Lookup = new Lookup('total', 'productivity_online', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
         $this->total->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -168,6 +199,7 @@ class ProductivityOnline extends DbTable
             'TEXT'
         );
         $this->picked->InputTextType = "text";
+        $this->picked->Sortable = false; // Allow sort
         $this->picked->UseFilter = true; // Table header filter
         $this->picked->Lookup = new Lookup('picked', 'productivity_online', true, 'picked', ["picked","","",""], [], [], [], [], [], [], '', '', "");
         $this->picked->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -193,6 +225,7 @@ class ProductivityOnline extends DbTable
             'TEXT'
         );
         $this->variance->InputTextType = "text";
+        $this->variance->Sortable = false; // Allow sort
         $this->variance->UseFilter = true; // Table header filter
         $this->variance->Lookup = new Lookup('variance', 'productivity_online', true, 'variance', ["variance","","",""], [], [], [], [], [], [], '', '', "");
         $this->variance->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -645,6 +678,7 @@ class ProductivityOnline extends DbTable
         }
         $this->picking_date->DbValue = $row['picking_date'];
         $this->picker->DbValue = $row['picker'];
+        $this->total_bin->DbValue = $row['total_bin'];
         $this->total->DbValue = $row['total'];
         $this->picked->DbValue = $row['picked'];
         $this->variance->DbValue = $row['variance'];
@@ -922,6 +956,7 @@ class ProductivityOnline extends DbTable
         }
         $this->picking_date->setDbValue($row['picking_date']);
         $this->picker->setDbValue($row['picker']);
+        $this->total_bin->setDbValue($row['total_bin']);
         $this->total->setDbValue($row['total']);
         $this->picked->setDbValue($row['picked']);
         $this->variance->setDbValue($row['variance']);
@@ -943,6 +978,9 @@ class ProductivityOnline extends DbTable
         // picker
         $this->picker->CellCssStyle = "white-space: nowrap;";
 
+        // total_bin
+        $this->total_bin->CellCssStyle = "white-space: nowrap;";
+
         // total
         $this->total->CellCssStyle = "white-space: nowrap;";
 
@@ -960,6 +998,11 @@ class ProductivityOnline extends DbTable
         // picker
         $this->picker->ViewValue = $this->picker->CurrentValue;
         $this->picker->ViewCustomAttributes = "";
+
+        // total_bin
+        $this->total_bin->ViewValue = $this->total_bin->CurrentValue;
+        $this->total_bin->ViewValue = FormatNumber($this->total_bin->ViewValue, $this->total_bin->formatPattern());
+        $this->total_bin->ViewCustomAttributes = "";
 
         // total
         $this->total->ViewValue = $this->total->CurrentValue;
@@ -985,6 +1028,11 @@ class ProductivityOnline extends DbTable
         $this->picker->LinkCustomAttributes = "";
         $this->picker->HrefValue = "";
         $this->picker->TooltipValue = "";
+
+        // total_bin
+        $this->total_bin->LinkCustomAttributes = "";
+        $this->total_bin->HrefValue = "";
+        $this->total_bin->TooltipValue = "";
 
         // total
         $this->total->LinkCustomAttributes = "";
@@ -1031,6 +1079,15 @@ class ProductivityOnline extends DbTable
         $this->picker->EditValue = $this->picker->CurrentValue;
         $this->picker->PlaceHolder = RemoveHtml($this->picker->caption());
 
+        // total_bin
+        $this->total_bin->setupEditAttributes();
+        $this->total_bin->EditCustomAttributes = "";
+        $this->total_bin->EditValue = $this->total_bin->CurrentValue;
+        $this->total_bin->PlaceHolder = RemoveHtml($this->total_bin->caption());
+        if (strval($this->total_bin->EditValue) != "" && is_numeric($this->total_bin->EditValue)) {
+            $this->total_bin->EditValue = FormatNumber($this->total_bin->EditValue, null);
+        }
+
         // total
         $this->total->setupEditAttributes();
         $this->total->EditCustomAttributes = "";
@@ -1066,6 +1123,9 @@ class ProductivityOnline extends DbTable
     public function aggregateListRowValues()
     {
             $this->picker->Count++; // Increment count
+            if (is_numeric($this->total_bin->CurrentValue)) {
+                $this->total_bin->Total += $this->total_bin->CurrentValue; // Accumulate total
+            }
             if (is_numeric($this->total->CurrentValue)) {
                 $this->total->Total += $this->total->CurrentValue; // Accumulate total
             }
@@ -1084,6 +1144,11 @@ class ProductivityOnline extends DbTable
             $this->picker->ViewValue = $this->picker->CurrentValue;
             $this->picker->ViewCustomAttributes = "";
             $this->picker->HrefValue = ""; // Clear href value
+            $this->total_bin->CurrentValue = $this->total_bin->Total;
+            $this->total_bin->ViewValue = $this->total_bin->CurrentValue;
+            $this->total_bin->ViewValue = FormatNumber($this->total_bin->ViewValue, $this->total_bin->formatPattern());
+            $this->total_bin->ViewCustomAttributes = "";
+            $this->total_bin->HrefValue = ""; // Clear href value
             $this->total->CurrentValue = $this->total->Total;
             $this->total->ViewValue = $this->total->CurrentValue;
             $this->total->ViewValue = FormatNumber($this->total->ViewValue, $this->total->formatPattern());
@@ -1118,12 +1183,14 @@ class ProductivityOnline extends DbTable
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->picking_date);
                     $doc->exportCaption($this->picker);
+                    $doc->exportCaption($this->total_bin);
                     $doc->exportCaption($this->total);
                     $doc->exportCaption($this->picked);
                     $doc->exportCaption($this->variance);
                 } else {
                     $doc->exportCaption($this->picking_date);
                     $doc->exportCaption($this->picker);
+                    $doc->exportCaption($this->total_bin);
                     $doc->exportCaption($this->total);
                     $doc->exportCaption($this->picked);
                     $doc->exportCaption($this->variance);
@@ -1159,12 +1226,14 @@ class ProductivityOnline extends DbTable
                     if ($exportPageType == "view") {
                         $doc->exportField($this->picking_date);
                         $doc->exportField($this->picker);
+                        $doc->exportField($this->total_bin);
                         $doc->exportField($this->total);
                         $doc->exportField($this->picked);
                         $doc->exportField($this->variance);
                     } else {
                         $doc->exportField($this->picking_date);
                         $doc->exportField($this->picker);
+                        $doc->exportField($this->total_bin);
                         $doc->exportField($this->total);
                         $doc->exportField($this->picked);
                         $doc->exportField($this->variance);
@@ -1190,6 +1259,7 @@ class ProductivityOnline extends DbTable
                 $doc->beginExportRow(-1);
                 $doc->exportAggregate($this->picking_date, '');
                 $doc->exportAggregate($this->picker, 'COUNT');
+                $doc->exportAggregate($this->total_bin, 'TOTAL');
                 $doc->exportAggregate($this->total, 'TOTAL');
                 $doc->exportAggregate($this->picked, 'TOTAL');
                 $doc->exportAggregate($this->variance, 'TOTAL');

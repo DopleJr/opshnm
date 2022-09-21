@@ -60,8 +60,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["aisle2", [], fields.aisle2.isInvalid],
         ["store_id2", [], fields.store_id2.isInvalid],
         ["scan_article", [], fields.scan_article.isInvalid],
+        ["scan_box", [], fields.scan_box.isInvalid],
         ["close_totes", [], fields.close_totes.isInvalid],
-        ["job_id", [], fields.job_id.isInvalid]
+        ["job_id", [], fields.job_id.isInvalid],
+        ["sequence", [], fields.sequence.isInvalid]
     ]);
 
     // Validate form
@@ -865,6 +867,24 @@ loadjs.ready(["fpicking_pendingsearch", "datetimepicker"], function () {
         </div>
     </div>
 <?php } ?>
+<?php if ($Page->scan_box->Visible) { // scan_box ?>
+    <div id="r_scan_box"<?= $Page->scan_box->rowAttributes() ?>>
+        <label for="x_scan_box" class="<?= $Page->LeftColumnClass ?>"><span id="elh_picking_pending_scan_box"><?= $Page->scan_box->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_scan_box" id="z_scan_box" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->scan_box->cellAttributes() ?>>
+            <span id="el_picking_pending_scan_box" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->scan_box->getInputTextType() ?>" name="x_scan_box" id="x_scan_box" data-table="picking_pending" data-field="x_scan_box" value="<?= $Page->scan_box->EditValue ?>" placeholder="<?= HtmlEncode($Page->scan_box->getPlaceHolder()) ?>"<?= $Page->scan_box->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->scan_box->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
 <?php if ($Page->close_totes->Visible) { // close_totes ?>
     <div id="r_close_totes"<?= $Page->close_totes->rowAttributes() ?>>
         <label for="x_close_totes" class="<?= $Page->LeftColumnClass ?>"><span id="elh_picking_pending_close_totes"><?= $Page->close_totes->caption() ?></span>
@@ -896,6 +916,24 @@ loadjs.ready(["fpicking_pendingsearch", "datetimepicker"], function () {
             <span id="el_picking_pending_job_id" class="ew-search-field ew-search-field-single">
 <input type="<?= $Page->job_id->getInputTextType() ?>" name="x_job_id" id="x_job_id" data-table="picking_pending" data-field="x_job_id" value="<?= $Page->job_id->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->job_id->getPlaceHolder()) ?>"<?= $Page->job_id->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->job_id->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->sequence->Visible) { // sequence ?>
+    <div id="r_sequence"<?= $Page->sequence->rowAttributes() ?>>
+        <label for="x_sequence" class="<?= $Page->LeftColumnClass ?>"><span id="elh_picking_pending_sequence"><?= $Page->sequence->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_sequence" id="z_sequence" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->sequence->cellAttributes() ?>>
+            <span id="el_picking_pending_sequence" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->sequence->getInputTextType() ?>" name="x_sequence" id="x_sequence" data-table="picking_pending" data-field="x_sequence" value="<?= $Page->sequence->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->sequence->getPlaceHolder()) ?>"<?= $Page->sequence->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->sequence->getErrorMessage(false) ?></div>
 </span>
             </div>
         </div>

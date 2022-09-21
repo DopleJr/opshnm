@@ -56,8 +56,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["aisle2", [fields.aisle2.visible && fields.aisle2.required ? ew.Validators.required(fields.aisle2.caption) : null], fields.aisle2.isInvalid],
         ["store_id2", [fields.store_id2.visible && fields.store_id2.required ? ew.Validators.required(fields.store_id2.caption) : null], fields.store_id2.isInvalid],
         ["scan_article", [fields.scan_article.visible && fields.scan_article.required ? ew.Validators.required(fields.scan_article.caption) : null], fields.scan_article.isInvalid],
+        ["scan_box", [fields.scan_box.visible && fields.scan_box.required ? ew.Validators.required(fields.scan_box.caption) : null], fields.scan_box.isInvalid],
         ["close_totes", [fields.close_totes.visible && fields.close_totes.required ? ew.Validators.required(fields.close_totes.caption) : null], fields.close_totes.isInvalid],
-        ["job_id", [fields.job_id.visible && fields.job_id.required ? ew.Validators.required(fields.job_id.caption) : null], fields.job_id.isInvalid]
+        ["job_id", [fields.job_id.visible && fields.job_id.required ? ew.Validators.required(fields.job_id.caption) : null], fields.job_id.isInvalid],
+        ["sequence", [fields.sequence.visible && fields.sequence.required ? ew.Validators.required(fields.sequence.caption) : null], fields.sequence.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -83,6 +85,7 @@ loadjs.ready("head", function () {
     $(".text-muted").hide();
     $(".ew-breadcrumbs").hide();// atribut text
     $(".sweet-alert" ).remove();
+    $("#x_box_type" ).hide();
     });
 });
 </script>
@@ -646,6 +649,18 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->scan_box->Visible) { // scan_box ?>
+    <div id="r_scan_box"<?= $Page->scan_box->rowAttributes() ?>>
+        <label id="elh_picking_pending_scan_box" for="x_scan_box" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_scan_box"><?= $Page->scan_box->caption() ?><?= $Page->scan_box->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->scan_box->cellAttributes() ?>>
+<template id="tpx_picking_pending_scan_box"><span id="el_picking_pending_scan_box">
+<input type="<?= $Page->scan_box->getInputTextType() ?>" name="x_scan_box" id="x_scan_box" data-table="picking_pending" data-field="x_scan_box" value="<?= $Page->scan_box->EditValue ?>" placeholder="<?= HtmlEncode($Page->scan_box->getPlaceHolder()) ?>"<?= $Page->scan_box->editAttributes() ?> aria-describedby="x_scan_box_help">
+<?= $Page->scan_box->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->scan_box->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->close_totes->Visible) { // close_totes ?>
     <div id="r_close_totes"<?= $Page->close_totes->rowAttributes() ?>>
         <label id="elh_picking_pending_close_totes" for="x_close_totes" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_close_totes"><?= $Page->close_totes->caption() ?><?= $Page->close_totes->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
@@ -670,6 +685,18 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->sequence->Visible) { // sequence ?>
+    <div id="r_sequence"<?= $Page->sequence->rowAttributes() ?>>
+        <label id="elh_picking_pending_sequence" for="x_sequence" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_sequence"><?= $Page->sequence->caption() ?><?= $Page->sequence->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->sequence->cellAttributes() ?>>
+<template id="tpx_picking_pending_sequence"><span id="el_picking_pending_sequence">
+<input type="<?= $Page->sequence->getInputTextType() ?>" name="x_sequence" id="x_sequence" data-table="picking_pending" data-field="x_sequence" value="<?= $Page->sequence->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->sequence->getPlaceHolder()) ?>"<?= $Page->sequence->editAttributes() ?> aria-describedby="x_sequence_help">
+<?= $Page->sequence->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->sequence->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <div id="tpd_picking_pendingedit" class="ew-custom-template"></div>
 <template id="tpm_picking_pendingedit">
@@ -689,7 +716,7 @@ $("body").on("keydown", "input, select", function (e) {
       focusable,
       next;
     focusable = form
-      .find("a,select,textarea,button")
+      .find("a,text,select,textarea,button")
       .filter(":input:not([readonly])", ".scan-article");
     next = focusable.eq(focusable.index(this) + 1);
     if (next.length) {
@@ -698,7 +725,7 @@ $("body").on("keydown", "input, select", function (e) {
     } else {
       form.submit(function () {
         //alert('Shortpick');
-        return false;
+        return true;
       });
     }
     return false;
@@ -712,11 +739,11 @@ $("#x_scan_article").on("keydown", function (e) {
     if (element.readOnly) {
       console.log("✅ element is read-only");
       $("#x_scan_article").blur();
-      $("#x_box_code").focus();
+      $("#x_scan_box").focus();
     }
   }
 });
-$("#x_box_code").on("keydown", function (e) {
+$("#x_scan_box").on("keydown", function (e) {
   if (e.which == 13 || e.keycode == 13) {
     $("#x_box_type").focus();
   }
@@ -727,6 +754,11 @@ $("#x_pick_quantity").change(function () {
 });
 </script>
 <style>
+	html {
+	display: block !important;
+	height: 100% !important;
+	width: 100% !important;
+	}
     .main-frame {
         display: flex !important;
         justify-content: center !important;
@@ -756,6 +788,7 @@ $("#x_pick_quantity").change(function () {
         display: block !important;
         width: auto !important;
         box-sizing: border-box !important;
+        font-size: 22px !important;
     }
     .col-sm-10{
         display: block !important;
@@ -968,7 +1001,11 @@ $("#x_pick_quantity").change(function () {
                  <label for="x_variance_qty" class="col-sm-2 col-form-label"><?= $Page->variance_qty->caption() ?></label>
                   <div class="col-sm-10"><slot class="ew-slot" name="tpx_picking_pending_variance_qty"></slot></div>
             </div>
-            <div id="r_box_code" class="formbuilder-item">
+            <div id="r_scan_box" class="formbuilder-item">
+                 <label for="x_scan_box" class="col-sm-2 col-form-label"><?= $Page->scan_box->caption() ?></label>
+                  <div class="col-sm-10"><slot class="ew-slot" name="tpx_picking_pending_scan_box"></slot></div>
+            </div>
+            <div id="r_box_code" class="formbuilder-item" hidden>
                  <label for="x_box_code" class="col-sm-2 col-form-label"><?= $Page->box_code->caption() ?></label>
                   <div class="col-sm-10"><slot class="ew-slot" name="tpx_picking_pending_box_code"></slot></div>
             </div>
@@ -1209,8 +1246,8 @@ loadjs.ready("load", function () {
               if (result2 == 0) {
                   Swal.fire("Confirmed! "+picked+" Pcs", "For Store ID :" + store, "success").then((result) => {
                       if (result.isConfirmed) {
-                      $("#x_box_code").focus();
-                      console.log('focus to box code');
+                      $("#x_scan_box").focus();
+                      //console.log('focus to box code');
                       }
                   });
                 }
@@ -1227,8 +1264,8 @@ loadjs.ready("load", function () {
                 if (result.isConfirmed) {
                   Swal.fire("Shortpicked! " +result2+" Pcs", "For Store ID :" + store, "success").then((result) => {
                       if (result.isConfirmed) {
-                          $("#x_box_code").focus();
-                          console.log('focus to box code');
+                          $("#x_scan_box").focus();
+                          //console.log('focus to box code');
                       }
                   });
                 } else if (
@@ -1245,18 +1282,68 @@ loadjs.ready("load", function () {
             }
           });
         });
-      $(document).ready(function () {
-        $("#btn-action").on("focus", function () {
-        });
+    $(document).ready(function () {
+      $("#x_scan_box").on("input", function () {
+        var scanbox = $("#x_scan_box").val();
+        var boxcode = $("#x_box_code").val();
+        if (scanbox == boxcode) {
+          Swal.fire({
+            title: "Box: " + boxcode + " Match!",
+            //text: "New SSCC has been scanned",
+            icon: "success",
+            showCancelButton: false,
+            showDenyButton: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              $("#x_box_type").focus();
+            }
+          });
+        }
+        if (scanbox !== boxcode && boxcode !== "") {
+          Swal.fire({
+            //position: 'top-end',
+            icon: "error",
+            title: "Box: " + scanbox + " Unmatch!",
+            text: "Recently Box Code " + boxcode,
+            showConfirmButton: false,
+            showCancelButton: false,
+            showDenyButton: false,
+            timer: 2500,
+            didClose: (e) => {
+              // focus your element
+              $("#x_scan_box").val("");
+              $("#x_scan_box").focus();
+            },
+          });
+        }
+        if (scanbox !== boxcode && boxcode == "") {
+          Swal.fire({
+            title: "New Box Code :" + boxcode,
+            //text: "New SSCC has been scanned",
+            icon: "warning",
+            showConfirmButton: false,
+            showCancelButton: false,
+            showDenyButton: false,
+            timer: 1300,
+            didClose: (e) => {
+              // focus your element
+              $("#x_box_code").val(scanbox);
+              $("#x_box_type").focus();
+            },
+          });
+        }
       });
-      $(".swal2-confirm").click(function () {
-        $("#x_box_code").focus();
-      });
+    });
       $("#x_box_code").change(function () {
         $("#x_box_type").focus();
       });
       $("#x_box_type").change(function () {
         $("#x_box_type").focus();
+      });
+      $(document).ready(function () {
+        $("#btn-action").on("focus", function () {
+        this.form.submit();
+        });
       });
     });
 });

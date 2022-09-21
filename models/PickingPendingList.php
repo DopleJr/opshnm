@@ -663,8 +663,10 @@ class PickingPendingList extends PickingPending
         $this->aisle2->setVisibility();
         $this->store_id2->setVisibility();
         $this->scan_article->Visible = false;
+        $this->scan_box->Visible = false;
         $this->close_totes->setVisibility();
         $this->job_id->setVisibility();
+        $this->sequence->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -1051,8 +1053,10 @@ class PickingPendingList extends PickingPending
         $filterList = Concat($filterList, $this->aisle2->AdvancedSearch->toJson(), ","); // Field aisle2
         $filterList = Concat($filterList, $this->store_id2->AdvancedSearch->toJson(), ","); // Field store_id2
         $filterList = Concat($filterList, $this->scan_article->AdvancedSearch->toJson(), ","); // Field scan_article
+        $filterList = Concat($filterList, $this->scan_box->AdvancedSearch->toJson(), ","); // Field scan_box
         $filterList = Concat($filterList, $this->close_totes->AdvancedSearch->toJson(), ","); // Field close_totes
         $filterList = Concat($filterList, $this->job_id->AdvancedSearch->toJson(), ","); // Field job_id
+        $filterList = Concat($filterList, $this->sequence->AdvancedSearch->toJson(), ","); // Field sequence
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1381,6 +1385,14 @@ class PickingPendingList extends PickingPending
         $this->scan_article->AdvancedSearch->SearchOperator2 = @$filter["w_scan_article"];
         $this->scan_article->AdvancedSearch->save();
 
+        // Field scan_box
+        $this->scan_box->AdvancedSearch->SearchValue = @$filter["x_scan_box"];
+        $this->scan_box->AdvancedSearch->SearchOperator = @$filter["z_scan_box"];
+        $this->scan_box->AdvancedSearch->SearchCondition = @$filter["v_scan_box"];
+        $this->scan_box->AdvancedSearch->SearchValue2 = @$filter["y_scan_box"];
+        $this->scan_box->AdvancedSearch->SearchOperator2 = @$filter["w_scan_box"];
+        $this->scan_box->AdvancedSearch->save();
+
         // Field close_totes
         $this->close_totes->AdvancedSearch->SearchValue = @$filter["x_close_totes"];
         $this->close_totes->AdvancedSearch->SearchOperator = @$filter["z_close_totes"];
@@ -1396,6 +1408,14 @@ class PickingPendingList extends PickingPending
         $this->job_id->AdvancedSearch->SearchValue2 = @$filter["y_job_id"];
         $this->job_id->AdvancedSearch->SearchOperator2 = @$filter["w_job_id"];
         $this->job_id->AdvancedSearch->save();
+
+        // Field sequence
+        $this->sequence->AdvancedSearch->SearchValue = @$filter["x_sequence"];
+        $this->sequence->AdvancedSearch->SearchOperator = @$filter["z_sequence"];
+        $this->sequence->AdvancedSearch->SearchCondition = @$filter["v_sequence"];
+        $this->sequence->AdvancedSearch->SearchValue2 = @$filter["y_sequence"];
+        $this->sequence->AdvancedSearch->SearchOperator2 = @$filter["w_sequence"];
+        $this->sequence->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1444,8 +1464,10 @@ class PickingPendingList extends PickingPending
         $this->buildSearchSql($where, $this->aisle2, $default, false); // aisle2
         $this->buildSearchSql($where, $this->store_id2, $default, false); // store_id2
         $this->buildSearchSql($where, $this->scan_article, $default, false); // scan_article
+        $this->buildSearchSql($where, $this->scan_box, $default, false); // scan_box
         $this->buildSearchSql($where, $this->close_totes, $default, false); // close_totes
         $this->buildSearchSql($where, $this->job_id, $default, false); // job_id
+        $this->buildSearchSql($where, $this->sequence, $default, false); // sequence
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1488,8 +1510,10 @@ class PickingPendingList extends PickingPending
             $this->aisle2->AdvancedSearch->save(); // aisle2
             $this->store_id2->AdvancedSearch->save(); // store_id2
             $this->scan_article->AdvancedSearch->save(); // scan_article
+            $this->scan_box->AdvancedSearch->save(); // scan_box
             $this->close_totes->AdvancedSearch->save(); // close_totes
             $this->job_id->AdvancedSearch->save(); // job_id
+            $this->sequence->AdvancedSearch->save(); // sequence
         }
         return $where;
     }
@@ -1596,8 +1620,10 @@ class PickingPendingList extends PickingPending
         $searchFlds[] = &$this->aisle2;
         $searchFlds[] = &$this->store_id2;
         $searchFlds[] = &$this->scan_article;
+        $searchFlds[] = &$this->scan_box;
         $searchFlds[] = &$this->close_totes;
         $searchFlds[] = &$this->job_id;
+        $searchFlds[] = &$this->sequence;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1731,10 +1757,16 @@ class PickingPendingList extends PickingPending
         if ($this->scan_article->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->scan_box->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->close_totes->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->job_id->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->sequence->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1805,8 +1837,10 @@ class PickingPendingList extends PickingPending
         $this->aisle2->AdvancedSearch->unsetSession();
         $this->store_id2->AdvancedSearch->unsetSession();
         $this->scan_article->AdvancedSearch->unsetSession();
+        $this->scan_box->AdvancedSearch->unsetSession();
         $this->close_totes->AdvancedSearch->unsetSession();
         $this->job_id->AdvancedSearch->unsetSession();
+        $this->sequence->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1854,8 +1888,10 @@ class PickingPendingList extends PickingPending
         $this->aisle2->AdvancedSearch->load();
         $this->store_id2->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
+        $this->scan_box->AdvancedSearch->load();
         $this->close_totes->AdvancedSearch->load();
         $this->job_id->AdvancedSearch->load();
+        $this->sequence->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1863,56 +1899,54 @@ class PickingPendingList extends PickingPending
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->job_id->Expression . " ASC" . ", " . $this->source_storage_bin->Expression . " ASC"; // Set up default sort
+            $defaultSort = $this->job_id->Expression . " ASC" . ", " . $this->sequence->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
         }
 
-        // Check for Ctrl pressed
-        $ctrl = Get("ctrl") !== null;
-
         // Check for "order" parameter
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id, $ctrl); // id
-            $this->updateSort($this->po_no, $ctrl); // po_no
-            $this->updateSort($this->to_no, $ctrl); // to_no
-            $this->updateSort($this->to_order_item, $ctrl); // to_order_item
-            $this->updateSort($this->to_priority, $ctrl); // to_priority
-            $this->updateSort($this->to_priority_code, $ctrl); // to_priority_code
-            $this->updateSort($this->source_storage_type, $ctrl); // source_storage_type
-            $this->updateSort($this->source_storage_bin, $ctrl); // source_storage_bin
-            $this->updateSort($this->carton_number, $ctrl); // carton_number
-            $this->updateSort($this->creation_date, $ctrl); // creation_date
-            $this->updateSort($this->gr_number, $ctrl); // gr_number
-            $this->updateSort($this->gr_date, $ctrl); // gr_date
-            $this->updateSort($this->delivery, $ctrl); // delivery
-            $this->updateSort($this->store_id, $ctrl); // store_id
-            $this->updateSort($this->store_name, $ctrl); // store_name
-            $this->updateSort($this->article, $ctrl); // article
-            $this->updateSort($this->size_code, $ctrl); // size_code
-            $this->updateSort($this->size_desc, $ctrl); // size_desc
-            $this->updateSort($this->color_code, $ctrl); // color_code
-            $this->updateSort($this->color_desc, $ctrl); // color_desc
-            $this->updateSort($this->concept, $ctrl); // concept
-            $this->updateSort($this->target_qty, $ctrl); // target_qty
-            $this->updateSort($this->picked_qty, $ctrl); // picked_qty
-            $this->updateSort($this->variance_qty, $ctrl); // variance_qty
-            $this->updateSort($this->confirmation_date, $ctrl); // confirmation_date
-            $this->updateSort($this->confirmation_time, $ctrl); // confirmation_time
-            $this->updateSort($this->box_code, $ctrl); // box_code
-            $this->updateSort($this->box_type, $ctrl); // box_type
-            $this->updateSort($this->picker, $ctrl); // picker
-            $this->updateSort($this->status, $ctrl); // status
-            $this->updateSort($this->remarks, $ctrl); // remarks
-            $this->updateSort($this->aisle, $ctrl); // aisle
-            $this->updateSort($this->area, $ctrl); // area
-            $this->updateSort($this->aisle2, $ctrl); // aisle2
-            $this->updateSort($this->store_id2, $ctrl); // store_id2
-            $this->updateSort($this->close_totes, $ctrl); // close_totes
-            $this->updateSort($this->job_id, $ctrl); // job_id
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->po_no); // po_no
+            $this->updateSort($this->to_no); // to_no
+            $this->updateSort($this->to_order_item); // to_order_item
+            $this->updateSort($this->to_priority); // to_priority
+            $this->updateSort($this->to_priority_code); // to_priority_code
+            $this->updateSort($this->source_storage_type); // source_storage_type
+            $this->updateSort($this->source_storage_bin); // source_storage_bin
+            $this->updateSort($this->carton_number); // carton_number
+            $this->updateSort($this->creation_date); // creation_date
+            $this->updateSort($this->gr_number); // gr_number
+            $this->updateSort($this->gr_date); // gr_date
+            $this->updateSort($this->delivery); // delivery
+            $this->updateSort($this->store_id); // store_id
+            $this->updateSort($this->store_name); // store_name
+            $this->updateSort($this->article); // article
+            $this->updateSort($this->size_code); // size_code
+            $this->updateSort($this->size_desc); // size_desc
+            $this->updateSort($this->color_code); // color_code
+            $this->updateSort($this->color_desc); // color_desc
+            $this->updateSort($this->concept); // concept
+            $this->updateSort($this->target_qty); // target_qty
+            $this->updateSort($this->picked_qty); // picked_qty
+            $this->updateSort($this->variance_qty); // variance_qty
+            $this->updateSort($this->confirmation_date); // confirmation_date
+            $this->updateSort($this->confirmation_time); // confirmation_time
+            $this->updateSort($this->box_code); // box_code
+            $this->updateSort($this->box_type); // box_type
+            $this->updateSort($this->picker); // picker
+            $this->updateSort($this->status); // status
+            $this->updateSort($this->remarks); // remarks
+            $this->updateSort($this->aisle); // aisle
+            $this->updateSort($this->area); // area
+            $this->updateSort($this->aisle2); // aisle2
+            $this->updateSort($this->store_id2); // store_id2
+            $this->updateSort($this->close_totes); // close_totes
+            $this->updateSort($this->job_id); // job_id
+            $this->updateSort($this->sequence); // sequence
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1973,8 +2007,10 @@ class PickingPendingList extends PickingPending
                 $this->aisle2->setSort("");
                 $this->store_id2->setSort("");
                 $this->scan_article->setSort("");
+                $this->scan_box->setSort("");
                 $this->close_totes->setSort("");
                 $this->job_id->setSort("");
+                $this->sequence->setSort("");
             }
 
             // Reset start position
@@ -2162,6 +2198,7 @@ class PickingPendingList extends PickingPending
             $option->add("store_id2", $this->createColumnOption("store_id2"));
             $option->add("close_totes", $this->createColumnOption("close_totes"));
             $option->add("job_id", $this->createColumnOption("job_id"));
+            $option->add("sequence", $this->createColumnOption("sequence"));
         }
 
         // Set up options default
@@ -2632,6 +2669,14 @@ class PickingPendingList extends PickingPending
             }
         }
 
+        // scan_box
+        if ($this->scan_box->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->scan_box->AdvancedSearch->SearchValue != "" || $this->scan_box->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // close_totes
         if ($this->close_totes->AdvancedSearch->get()) {
             $hasValue = true;
@@ -2644,6 +2689,14 @@ class PickingPendingList extends PickingPending
         if ($this->job_id->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->job_id->AdvancedSearch->SearchValue != "" || $this->job_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // sequence
+        if ($this->sequence->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->sequence->AdvancedSearch->SearchValue != "" || $this->sequence->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -2771,8 +2824,10 @@ class PickingPendingList extends PickingPending
         $this->aisle2->setDbValue($row['aisle2']);
         $this->store_id2->setDbValue($row['store_id2']);
         $this->scan_article->setDbValue($row['scan_article']);
+        $this->scan_box->setDbValue($row['scan_box']);
         $this->close_totes->setDbValue($row['close_totes']);
         $this->job_id->setDbValue($row['job_id']);
+        $this->sequence->setDbValue($row['sequence']);
     }
 
     // Return a row with default values
@@ -2815,8 +2870,10 @@ class PickingPendingList extends PickingPending
         $row['aisle2'] = $this->aisle2->DefaultValue;
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['scan_article'] = $this->scan_article->DefaultValue;
+        $row['scan_box'] = $this->scan_box->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
         $row['job_id'] = $this->job_id->DefaultValue;
+        $row['sequence'] = $this->sequence->DefaultValue;
         return $row;
     }
 
@@ -2926,9 +2983,13 @@ class PickingPendingList extends PickingPending
 
         // scan_article
 
+        // scan_box
+
         // close_totes
 
         // job_id
+
+        // sequence
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -3090,6 +3151,10 @@ class PickingPendingList extends PickingPending
             // job_id
             $this->job_id->ViewValue = $this->job_id->CurrentValue;
             $this->job_id->ViewCustomAttributes = "";
+
+            // sequence
+            $this->sequence->ViewValue = $this->sequence->CurrentValue;
+            $this->sequence->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -3275,6 +3340,11 @@ class PickingPendingList extends PickingPending
             $this->job_id->LinkCustomAttributes = "";
             $this->job_id->HrefValue = "";
             $this->job_id->TooltipValue = "";
+
+            // sequence
+            $this->sequence->LinkCustomAttributes = "";
+            $this->sequence->HrefValue = "";
+            $this->sequence->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
             $this->id->setupEditAttributes();
@@ -3579,6 +3649,15 @@ class PickingPendingList extends PickingPending
             }
             $this->job_id->EditValue = HtmlEncode($this->job_id->AdvancedSearch->SearchValue);
             $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
+
+            // sequence
+            $this->sequence->setupEditAttributes();
+            $this->sequence->EditCustomAttributes = "";
+            if (!$this->sequence->Raw) {
+                $this->sequence->AdvancedSearch->SearchValue = HtmlDecode($this->sequence->AdvancedSearch->SearchValue);
+            }
+            $this->sequence->EditValue = HtmlEncode($this->sequence->AdvancedSearch->SearchValue);
+            $this->sequence->PlaceHolder = RemoveHtml($this->sequence->caption());
         }
 
         // Call Row Rendered event
@@ -3980,8 +4059,10 @@ class PickingPendingList extends PickingPending
         $this->aisle2->AdvancedSearch->load();
         $this->store_id2->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
+        $this->scan_box->AdvancedSearch->load();
         $this->close_totes->AdvancedSearch->load();
         $this->job_id->AdvancedSearch->load();
+        $this->sequence->AdvancedSearch->load();
     }
 
     // Get export HTML tag

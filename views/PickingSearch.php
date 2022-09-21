@@ -26,8 +26,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fpickingsearch.addFields([
         ["creation_date", [ew.Validators.datetime(fields.creation_date.clientFormatPattern)], fields.creation_date.isInvalid],
         ["y_creation_date", [ew.Validators.between], false],
-        ["confirmation_date", [ew.Validators.datetime(fields.confirmation_date.clientFormatPattern)], fields.confirmation_date.isInvalid],
-        ["y_confirmation_date", [ew.Validators.between], false]
+        ["status", [], fields.status.isInvalid]
     ]);
 
     // Validate form
@@ -58,6 +57,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fpickingsearch.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
+    fpickingsearch.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("fpickingsearch");
 });
 </script>
@@ -95,7 +95,7 @@ $Page->showMessage();
 <?php if (!$Page->creation_date->ReadOnly && !$Page->creation_date->Disabled && !isset($Page->creation_date->EditAttrs["readonly"]) && !isset($Page->creation_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingsearch", "datetimepicker"], function () {
-    let format = "<?= "yyyyMMdd" ?>",
+    let format = "<?= "MM/dd/yyyy" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -128,7 +128,7 @@ loadjs.ready(["fpickingsearch", "datetimepicker"], function () {
 <?php if (!$Page->creation_date->ReadOnly && !$Page->creation_date->Disabled && !isset($Page->creation_date->EditAttrs["readonly"]) && !isset($Page->creation_date->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpickingsearch", "datetimepicker"], function () {
-    let format = "<?= "yyyyMMdd" ?>",
+    let format = "<?= "MM/dd/yyyy" ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -158,80 +158,45 @@ loadjs.ready(["fpickingsearch", "datetimepicker"], function () {
         </div>
     </div>
 <?php } ?>
-<?php if ($Page->confirmation_date->Visible) { // confirmation_date ?>
-    <div id="r_confirmation_date"<?= $Page->confirmation_date->rowAttributes() ?>>
-        <label for="x_confirmation_date" class="<?= $Page->LeftColumnClass ?>"><span id="elh_picking_confirmation_date"><?= $Page->confirmation_date->caption() ?></span>
+<?php if ($Page->status->Visible) { // status ?>
+    <div id="r_status"<?= $Page->status->rowAttributes() ?>>
+        <label for="x_status" class="<?= $Page->LeftColumnClass ?>"><span id="elh_picking_status"><?= $Page->status->caption() ?></span>
         <span class="ew-search-operator">
-<?= $Language->phrase("BETWEEN") ?>
-<input type="hidden" name="z_confirmation_date" id="z_confirmation_date" value="BETWEEN">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_status" id="z_status" value="=">
 </span>
         </label>
         <div class="<?= $Page->RightColumnClass ?>">
-            <div<?= $Page->confirmation_date->cellAttributes() ?>>
-            <span id="el_picking_confirmation_date" class="ew-search-field">
-<input type="<?= $Page->confirmation_date->getInputTextType() ?>" name="x_confirmation_date" id="x_confirmation_date" data-table="picking" data-field="x_confirmation_date" value="<?= $Page->confirmation_date->EditValue ?>" placeholder="<?= HtmlEncode($Page->confirmation_date->getPlaceHolder()) ?>"<?= $Page->confirmation_date->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->confirmation_date->getErrorMessage(false) ?></div>
-<?php if (!$Page->confirmation_date->ReadOnly && !$Page->confirmation_date->Disabled && !isset($Page->confirmation_date->EditAttrs["readonly"]) && !isset($Page->confirmation_date->EditAttrs["disabled"])) { ?>
+            <div<?= $Page->status->cellAttributes() ?>>
+            <span id="el_picking_status" class="ew-search-field ew-search-field-single">
+    <select
+        id="x_status"
+        name="x_status"
+        class="form-select ew-select<?= $Page->status->isInvalidClass() ?>"
+        data-select2-id="fpickingsearch_x_status"
+        data-table="picking"
+        data-field="x_status"
+        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+        <?= $Page->status->editAttributes() ?>>
+        <?= $Page->status->selectOptionListHtml("x_status") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Page->status->getErrorMessage(false) ?></div>
 <script>
-loadjs.ready(["fpickingsearch", "datetimepicker"], function () {
-    let format = "<?= "yyyyMMdd" ?>",
-        options = {
-            localization: {
-                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
-            },
-            display: {
-                icons: {
-                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
-                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
-                },
-                components: {
-                    hours: !!format.match(/h/i),
-                    minutes: !!format.match(/m/),
-                    seconds: !!format.match(/s/i),
-                    useTwentyfourHour: !!format.match(/H/)
-                }
-            },
-            meta: {
-                format
-            }
-        };
-    ew.createDateTimePicker("fpickingsearch", "x_confirmation_date", ew.deepAssign({"useCurrent":false}, options));
+loadjs.ready("fpickingsearch", function() {
+    var options = { name: "x_status", selectId: "fpickingsearch_x_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpickingsearch.lists.status.lookupOptions.length) {
+        options.data = { id: "x_status", form: "fpickingsearch" };
+    } else {
+        options.ajax = { id: "x_status", form: "fpickingsearch", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.picking.fields.status.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?php } ?>
-</span>
-                <span class="ew-search-and"><label><?= $Language->phrase("AND") ?></label></span>
-                <span id="el2_picking_confirmation_date" class="ew-search-field2">
-<input type="<?= $Page->confirmation_date->getInputTextType() ?>" name="y_confirmation_date" id="y_confirmation_date" data-table="picking" data-field="x_confirmation_date" value="<?= $Page->confirmation_date->EditValue2 ?>" placeholder="<?= HtmlEncode($Page->confirmation_date->getPlaceHolder()) ?>"<?= $Page->confirmation_date->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->confirmation_date->getErrorMessage(false) ?></div>
-<?php if (!$Page->confirmation_date->ReadOnly && !$Page->confirmation_date->Disabled && !isset($Page->confirmation_date->EditAttrs["readonly"]) && !isset($Page->confirmation_date->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["fpickingsearch", "datetimepicker"], function () {
-    let format = "<?= "yyyyMMdd" ?>",
-        options = {
-            localization: {
-                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
-            },
-            display: {
-                icons: {
-                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
-                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
-                },
-                components: {
-                    hours: !!format.match(/h/i),
-                    minutes: !!format.match(/m/),
-                    seconds: !!format.match(/s/i),
-                    useTwentyfourHour: !!format.match(/H/)
-                }
-            },
-            meta: {
-                format
-            }
-        };
-    ew.createDateTimePicker("fpickingsearch", "y_confirmation_date", ew.deepAssign({"useCurrent":false}, options));
-});
-</script>
-<?php } ?>
 </span>
             </div>
         </div>

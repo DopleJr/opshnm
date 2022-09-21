@@ -26,8 +26,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["shipment", [fields.shipment.visible && fields.shipment.required ? ew.Validators.required(fields.shipment.caption) : null], fields.shipment.isInvalid],
         ["pallet_no", [fields.pallet_no.visible && fields.pallet_no.required ? ew.Validators.required(fields.pallet_no.caption) : null], fields.pallet_no.isInvalid],
         ["idw", [fields.idw.visible && fields.idw.required ? ew.Validators.required(fields.idw.caption) : null, ew.Validators.integer], fields.idw.isInvalid],
-        ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null], fields.item_in_ctn.isInvalid],
-        ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null], fields.no_of_ctn.isInvalid],
+        ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null, ew.Validators.integer], fields.item_in_ctn.isInvalid],
+        ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null, ew.Validators.integer], fields.no_of_ctn.isInvalid],
         ["ctn_no", [fields.ctn_no.visible && fields.ctn_no.required ? ew.Validators.required(fields.ctn_no.caption) : null, ew.Validators.integer], fields.ctn_no.isInvalid],
         ["checker", [fields.checker.visible && fields.checker.required ? ew.Validators.required(fields.checker.caption) : null], fields.checker.isInvalid],
         ["shift", [fields.shift.visible && fields.shift.required ? ew.Validators.required(fields.shift.caption) : null], fields.shift.isInvalid]
@@ -155,7 +155,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_online_item_in_ctn" for="x_item_in_ctn" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_online_item_in_ctn"><?= $Page->item_in_ctn->caption() ?><?= $Page->item_in_ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->item_in_ctn->cellAttributes() ?>>
 <template id="tpx_oss_manual_online_item_in_ctn"><span id="el_oss_manual_online_item_in_ctn">
-<input type="<?= $Page->item_in_ctn->getInputTextType() ?>" name="x_item_in_ctn" id="x_item_in_ctn" data-table="oss_manual_online" data-field="x_item_in_ctn" value="<?= $Page->item_in_ctn->EditValue ?>" size="4" maxlength="255" placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"<?= $Page->item_in_ctn->editAttributes() ?> aria-describedby="x_item_in_ctn_help">
+<input type="<?= $Page->item_in_ctn->getInputTextType() ?>" name="x_item_in_ctn" id="x_item_in_ctn" data-table="oss_manual_online" data-field="x_item_in_ctn" value="<?= $Page->item_in_ctn->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"<?= $Page->item_in_ctn->editAttributes() ?> aria-describedby="x_item_in_ctn_help">
 <?= $Page->item_in_ctn->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->item_in_ctn->getErrorMessage() ?></div>
 </span></template>
@@ -167,7 +167,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_online_no_of_ctn" for="x_no_of_ctn" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_oss_manual_online_no_of_ctn"><?= $Page->no_of_ctn->caption() ?><?= $Page->no_of_ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->no_of_ctn->cellAttributes() ?>>
 <template id="tpx_oss_manual_online_no_of_ctn"><span id="el_oss_manual_online_no_of_ctn">
-<input type="<?= $Page->no_of_ctn->getInputTextType() ?>" name="x_no_of_ctn" id="x_no_of_ctn" data-table="oss_manual_online" data-field="x_no_of_ctn" value="<?= $Page->no_of_ctn->EditValue ?>" size="4" maxlength="255" placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"<?= $Page->no_of_ctn->editAttributes() ?> aria-describedby="x_no_of_ctn_help">
+<input type="<?= $Page->no_of_ctn->getInputTextType() ?>" name="x_no_of_ctn" id="x_no_of_ctn" data-table="oss_manual_online" data-field="x_no_of_ctn" value="<?= $Page->no_of_ctn->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"<?= $Page->no_of_ctn->editAttributes() ?> aria-describedby="x_no_of_ctn_help">
 <?= $Page->no_of_ctn->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->no_of_ctn->getErrorMessage() ?></div>
 </span></template>
@@ -321,8 +321,8 @@ loadjs.ready("foss_manual_onlineadd", function() {
 }
 </style>
 <div id="r_id" class="mb-3 row" hidden>
-    <label for="x_id" class="col-sm-3 col-form-label"><?= $Page->id->caption() ?></label>
-    <div class="col-sm-10"><slot class="ew-slot" name="tpx_oss_manual_online_id"></slot></div>
+    <label for="x_id" class="col-sm-3 col-form-label"><slot class="ew-slot" name="tpcaption_id"></slot></label>
+    <div class="col-sm-10"><slot class="ew-slot" name="tpx_id"></slot></div>
 </div>
 <div id="r_date" class="mb-3 row">
     <label for="x_date" class="col-sm-3 col-form-label"><?= $Page->date->caption() ?></label>

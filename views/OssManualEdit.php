@@ -20,18 +20,21 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     foss_manualedit.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
         ["date", [fields.date.visible && fields.date.required ? ew.Validators.required(fields.date.caption) : null, ew.Validators.datetime(fields.date.clientFormatPattern)], fields.date.isInvalid],
-        ["sscc", [fields.sscc.visible && fields.sscc.required ? ew.Validators.required(fields.sscc.caption) : null], fields.sscc.isInvalid],
-        ["shipment", [fields.shipment.visible && fields.shipment.required ? ew.Validators.required(fields.shipment.caption) : null], fields.shipment.isInvalid],
+        ["sscc", [fields.sscc.visible && fields.sscc.required ? ew.Validators.required(fields.sscc.caption) : null, ew.Validators.integer], fields.sscc.isInvalid],
+        ["scan", [fields.scan.visible && fields.scan.required ? ew.Validators.required(fields.scan.caption) : null], fields.scan.isInvalid],
+        ["shipment", [fields.shipment.visible && fields.shipment.required ? ew.Validators.required(fields.shipment.caption) : null, ew.Validators.integer], fields.shipment.isInvalid],
         ["pallet_no", [fields.pallet_no.visible && fields.pallet_no.required ? ew.Validators.required(fields.pallet_no.caption) : null], fields.pallet_no.isInvalid],
-        ["idw", [fields.idw.visible && fields.idw.required ? ew.Validators.required(fields.idw.caption) : null, ew.Validators.integer], fields.idw.isInvalid],
+        ["idw", [fields.idw.visible && fields.idw.required ? ew.Validators.required(fields.idw.caption) : null], fields.idw.isInvalid],
         ["order_no", [fields.order_no.visible && fields.order_no.required ? ew.Validators.required(fields.order_no.caption) : null, ew.Validators.integer], fields.order_no.isInvalid],
-        ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null], fields.item_in_ctn.isInvalid],
-        ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null], fields.no_of_ctn.isInvalid],
+        ["item_in_ctn", [fields.item_in_ctn.visible && fields.item_in_ctn.required ? ew.Validators.required(fields.item_in_ctn.caption) : null, ew.Validators.integer], fields.item_in_ctn.isInvalid],
+        ["no_of_ctn", [fields.no_of_ctn.visible && fields.no_of_ctn.required ? ew.Validators.required(fields.no_of_ctn.caption) : null, ew.Validators.integer], fields.no_of_ctn.isInvalid],
         ["ctn_no", [fields.ctn_no.visible && fields.ctn_no.required ? ew.Validators.required(fields.ctn_no.caption) : null, ew.Validators.integer], fields.ctn_no.isInvalid],
         ["checker", [fields.checker.visible && fields.checker.required ? ew.Validators.required(fields.checker.caption) : null], fields.checker.isInvalid],
-        ["shift", [fields.shift.visible && fields.shift.required ? ew.Validators.required(fields.shift.caption) : null], fields.shift.isInvalid]
+        ["shift", [fields.shift.visible && fields.shift.required ? ew.Validators.required(fields.shift.caption) : null], fields.shift.isInvalid],
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null, ew.Validators.datetime(fields.date_updated.clientFormatPattern)], fields.date_updated.isInvalid],
+        ["time_updated", [fields.time_updated.visible && fields.time_updated.required ? ew.Validators.required(fields.time_updated.caption) : null, ew.Validators.time(fields.time_updated.clientFormatPattern)], fields.time_updated.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -44,7 +47,9 @@ loadjs.ready(["wrapper", "head"], function () {
     foss_manualedit.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
+    foss_manualedit.lists.idw = <?= $Page->idw->toClientList($Page) ?>;
     foss_manualedit.lists.shift = <?= $Page->shift->toClientList($Page) ?>;
+    foss_manualedit.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("foss_manualedit");
 });
 </script>
@@ -67,18 +72,6 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_oss_manual_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_oss_manual_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="oss_manual" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->date->Visible) { // date ?>
     <div id="r_date"<?= $Page->date->rowAttributes() ?>>
         <label id="elh_oss_manual_date" for="x_date" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date->caption() ?><?= $Page->date->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -99,6 +92,19 @@ $Page->showMessage();
 <input type="<?= $Page->sscc->getInputTextType() ?>" name="x_sscc" id="x_sscc" data-table="oss_manual" data-field="x_sscc" value="<?= $Page->sscc->EditValue ?>" size="50" maxlength="255" placeholder="<?= HtmlEncode($Page->sscc->getPlaceHolder()) ?>"<?= $Page->sscc->editAttributes() ?> aria-describedby="x_sscc_help">
 <?= $Page->sscc->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->sscc->getErrorMessage() ?></div>
+<input type="hidden" data-table="oss_manual" data-field="x_sscc" data-hidden="1" name="o_sscc" id="o_sscc" value="<?= HtmlEncode($Page->sscc->OldValue ?? $Page->sscc->CurrentValue) ?>">
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->scan->Visible) { // scan ?>
+    <div id="r_scan"<?= $Page->scan->rowAttributes() ?>>
+        <label id="elh_oss_manual_scan" for="x_scan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->scan->caption() ?><?= $Page->scan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->scan->cellAttributes() ?>>
+<span id="el_oss_manual_scan">
+<input type="<?= $Page->scan->getInputTextType() ?>" name="x_scan" id="x_scan" data-table="oss_manual" data-field="x_scan" value="<?= $Page->scan->EditValue ?>" size="50" maxlength="255" placeholder="<?= HtmlEncode($Page->scan->getPlaceHolder()) ?>"<?= $Page->scan->editAttributes() ?> aria-describedby="x_scan_help">
+<?= $Page->scan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->scan->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -129,12 +135,49 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->idw->Visible) { // idw ?>
     <div id="r_idw"<?= $Page->idw->rowAttributes() ?>>
-        <label id="elh_oss_manual_idw" for="x_idw" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idw->caption() ?><?= $Page->idw->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_oss_manual_idw" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idw->caption() ?><?= $Page->idw->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->idw->cellAttributes() ?>>
 <span id="el_oss_manual_idw">
-<input type="<?= $Page->idw->getInputTextType() ?>" name="x_idw" id="x_idw" data-table="oss_manual" data-field="x_idw" value="<?= $Page->idw->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"<?= $Page->idw->editAttributes() ?> aria-describedby="x_idw_help">
-<?= $Page->idw->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idw->getErrorMessage() ?></div>
+    <select
+        id="x_idw"
+        name="x_idw"
+        class="form-select ew-select<?= $Page->idw->isInvalidClass() ?>"
+        data-select2-id="foss_manualedit_x_idw"
+        data-table="oss_manual"
+        data-field="x_idw"
+        data-dropdown
+        data-value-separator="<?= $Page->idw->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idw->getPlaceHolder()) ?>"
+        <?= $Page->idw->editAttributes() ?>>
+        <?= $Page->idw->selectOptionListHtml("x_idw") ?>
+    </select>
+    <?= $Page->idw->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idw->getErrorMessage() ?></div>
+<style>oss_manual-x_idw-dropdown { max-height: 100px !important; overflow-y: auto; min-width: 158px !important }</style>
+<script>
+loadjs.ready("foss_manualedit", function() {
+    var options = { name: "x_idw", selectId: "foss_manualedit_x_idw" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.columns = el.dataset.repeatcolumn || 5;
+    options.dropdown = !ew.IS_MOBILE && options.columns > 0; // Use custom dropdown
+    el.dataset.dropdown = options.dropdown;
+    if (options.dropdown) {
+        options.dropdownAutoWidth = true;
+        options.dropdownCssClass = "ew-select-dropdown ew-select-one oss_manual-x_idw-dropdown";
+        if (options.columns > 1)
+            options.dropdownCssClass += " ew-repeat-column";
+    }
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (foss_manualedit.lists.idw.lookupOptions.length) {
+        options.data = { id: "x_idw", form: "foss_manualedit" };
+    } else {
+        options.ajax = { id: "x_idw", form: "foss_manualedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.oss_manual.fields.idw.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -156,7 +199,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_item_in_ctn" for="x_item_in_ctn" class="<?= $Page->LeftColumnClass ?>"><?= $Page->item_in_ctn->caption() ?><?= $Page->item_in_ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->item_in_ctn->cellAttributes() ?>>
 <span id="el_oss_manual_item_in_ctn">
-<input type="<?= $Page->item_in_ctn->getInputTextType() ?>" name="x_item_in_ctn" id="x_item_in_ctn" data-table="oss_manual" data-field="x_item_in_ctn" value="<?= $Page->item_in_ctn->EditValue ?>" size="6" maxlength="255" placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"<?= $Page->item_in_ctn->editAttributes() ?> aria-describedby="x_item_in_ctn_help">
+<input type="<?= $Page->item_in_ctn->getInputTextType() ?>" name="x_item_in_ctn" id="x_item_in_ctn" data-table="oss_manual" data-field="x_item_in_ctn" value="<?= $Page->item_in_ctn->EditValue ?>" size="4" maxlength="4" placeholder="<?= HtmlEncode($Page->item_in_ctn->getPlaceHolder()) ?>"<?= $Page->item_in_ctn->editAttributes() ?> aria-describedby="x_item_in_ctn_help">
 <?= $Page->item_in_ctn->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->item_in_ctn->getErrorMessage() ?></div>
 </span>
@@ -168,7 +211,7 @@ $Page->showMessage();
         <label id="elh_oss_manual_no_of_ctn" for="x_no_of_ctn" class="<?= $Page->LeftColumnClass ?>"><?= $Page->no_of_ctn->caption() ?><?= $Page->no_of_ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->no_of_ctn->cellAttributes() ?>>
 <span id="el_oss_manual_no_of_ctn">
-<input type="<?= $Page->no_of_ctn->getInputTextType() ?>" name="x_no_of_ctn" id="x_no_of_ctn" data-table="oss_manual" data-field="x_no_of_ctn" value="<?= $Page->no_of_ctn->EditValue ?>" size="4" maxlength="255" placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"<?= $Page->no_of_ctn->editAttributes() ?> aria-describedby="x_no_of_ctn_help">
+<input type="<?= $Page->no_of_ctn->getInputTextType() ?>" name="x_no_of_ctn" id="x_no_of_ctn" data-table="oss_manual" data-field="x_no_of_ctn" value="<?= $Page->no_of_ctn->EditValue ?>" size="4" maxlength="4" placeholder="<?= HtmlEncode($Page->no_of_ctn->getPlaceHolder()) ?>"<?= $Page->no_of_ctn->editAttributes() ?> aria-describedby="x_no_of_ctn_help">
 <?= $Page->no_of_ctn->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->no_of_ctn->getErrorMessage() ?></div>
 </span>
@@ -219,6 +262,7 @@ $Page->showMessage();
     </select>
     <?= $Page->shift->getCustomMessage() ?>
     <div class="invalid-feedback"><?= $Page->shift->getErrorMessage() ?></div>
+<style>oss_manual-x_shift-dropdown { max-height: 100px !important; overflow-y: auto; min-width: 158px !important }</style>
 <script>
 loadjs.ready("foss_manualedit", function() {
     var options = { name: "x_shift", selectId: "foss_manualedit_x_shift" },
@@ -243,6 +287,96 @@ loadjs.ready("foss_manualedit", function() {
     ew.createSelect(options);
 });
 </script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <div id="r_status"<?= $Page->status->rowAttributes() ?>>
+        <label id="elh_oss_manual_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
+<span id="el_oss_manual_status">
+    <select
+        id="x_status"
+        name="x_status"
+        class="form-select ew-select<?= $Page->status->isInvalidClass() ?>"
+        data-select2-id="foss_manualedit_x_status"
+        data-table="oss_manual"
+        data-field="x_status"
+        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+        <?= $Page->status->editAttributes() ?>>
+        <?= $Page->status->selectOptionListHtml("x_status") ?>
+    </select>
+    <?= $Page->status->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("foss_manualedit", function() {
+    var options = { name: "x_status", selectId: "foss_manualedit_x_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (foss_manualedit.lists.status.lookupOptions.length) {
+        options.data = { id: "x_status", form: "foss_manualedit" };
+    } else {
+        options.ajax = { id: "x_status", form: "foss_manualedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.oss_manual.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+    <div id="r_date_updated"<?= $Page->date_updated->rowAttributes() ?>>
+        <label id="elh_oss_manual_date_updated" for="x_date_updated" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_updated->caption() ?><?= $Page->date_updated->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el_oss_manual_date_updated">
+<input type="<?= $Page->date_updated->getInputTextType() ?>" name="x_date_updated" id="x_date_updated" data-table="oss_manual" data-field="x_date_updated" value="<?= $Page->date_updated->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_updated->getPlaceHolder()) ?>"<?= $Page->date_updated->editAttributes() ?> aria-describedby="x_date_updated_help">
+<?= $Page->date_updated->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->date_updated->getErrorMessage() ?></div>
+<?php if (!$Page->date_updated->ReadOnly && !$Page->date_updated->Disabled && !isset($Page->date_updated->EditAttrs["readonly"]) && !isset($Page->date_updated->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["foss_manualedit", "datetimepicker"], function () {
+    let format = "<?= DateFormat(0) ?>",
+        options = {
+            localization: {
+                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
+            },
+            display: {
+                icons: {
+                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                },
+                components: {
+                    hours: !!format.match(/h/i),
+                    minutes: !!format.match(/m/),
+                    seconds: !!format.match(/s/i),
+                    useTwentyfourHour: !!format.match(/H/)
+                }
+            },
+            meta: {
+                format
+            }
+        };
+    ew.createDateTimePicker("foss_manualedit", "x_date_updated", ew.deepAssign({"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+    <div id="r_time_updated"<?= $Page->time_updated->rowAttributes() ?>>
+        <label id="elh_oss_manual_time_updated" for="x_time_updated" class="<?= $Page->LeftColumnClass ?>"><?= $Page->time_updated->caption() ?><?= $Page->time_updated->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el_oss_manual_time_updated">
+<input type="<?= $Page->time_updated->getInputTextType() ?>" name="x_time_updated" id="x_time_updated" data-table="oss_manual" data-field="x_time_updated" value="<?= $Page->time_updated->EditValue ?>" placeholder="<?= HtmlEncode($Page->time_updated->getPlaceHolder()) ?>"<?= $Page->time_updated->editAttributes() ?> aria-describedby="x_time_updated_help">
+<?= $Page->time_updated->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->time_updated->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

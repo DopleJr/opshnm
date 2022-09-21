@@ -68,6 +68,7 @@ class Picking extends DbTable
     public $store_id2;
     public $close_totes;
     public $job_id;
+    public $sequence;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -106,7 +107,7 @@ class Picking extends DbTable
         $this->UseColumnVisibility = true;
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
-        $this->BasicSearch->TypeDefault = "AND";
+        $this->BasicSearch->TypeDefault = "OR";
 
         // id
         $this->id = new DbField(
@@ -335,7 +336,7 @@ class Picking extends DbTable
             'x_creation_date',
             'creation_date',
             '`creation_date`',
-            CastDateFieldForLike("`creation_date`", "yyyyMMdd", "DB"),
+            CastDateFieldForLike("`creation_date`", "MM/dd/yyyy", "DB"),
             133,
             10,
             0,
@@ -348,10 +349,10 @@ class Picking extends DbTable
             'TEXT'
         );
         $this->creation_date->InputTextType = "text";
-        $this->creation_date->FormatPattern = "yyyyMMdd"; // Format pattern
+        $this->creation_date->FormatPattern = "MM/dd/yyyy"; // Format pattern
         $this->creation_date->UseFilter = true; // Table header filter
         $this->creation_date->Lookup = new Lookup('creation_date', 'picking', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
-        $this->creation_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
+        $this->creation_date->DefaultErrorMessage = str_replace("%s", "MM/dd/yyyy", $Language->phrase("IncorrectDate"));
         $this->Fields['creation_date'] = &$this->creation_date;
 
         // gr_number
@@ -385,7 +386,7 @@ class Picking extends DbTable
             'x_gr_date',
             'gr_date',
             '`gr_date`',
-            CastDateFieldForLike("`gr_date`", "yyyyMMdd", "DB"),
+            CastDateFieldForLike("`gr_date`", "MM/dd/yyyy", "DB"),
             133,
             10,
             0,
@@ -398,10 +399,10 @@ class Picking extends DbTable
             'TEXT'
         );
         $this->gr_date->InputTextType = "text";
-        $this->gr_date->FormatPattern = "yyyyMMdd"; // Format pattern
+        $this->gr_date->FormatPattern = "MM/dd/yyyy"; // Format pattern
         $this->gr_date->UseFilter = true; // Table header filter
         $this->gr_date->Lookup = new Lookup('gr_date', 'picking', true, 'gr_date', ["gr_date","","",""], [], [], [], [], [], [], '', '', "");
-        $this->gr_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
+        $this->gr_date->DefaultErrorMessage = str_replace("%s", "MM/dd/yyyy", $Language->phrase("IncorrectDate"));
         $this->Fields['gr_date'] = &$this->gr_date;
 
         // delivery
@@ -835,11 +836,14 @@ class Picking extends DbTable
             false,
             false,
             'FORMATTED TEXT',
-            'TEXT'
+            'SELECT'
         );
         $this->status->InputTextType = "text";
+        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
         $this->status->Lookup = new Lookup('status', 'picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        $this->status->OptionCount = 3;
         $this->Fields['status'] = &$this->status;
 
         // remarks
@@ -1003,6 +1007,29 @@ class Picking extends DbTable
         $this->job_id->InputTextType = "text";
         $this->job_id->Sortable = false; // Allow sort
         $this->Fields['job_id'] = &$this->job_id;
+
+        // sequence
+        $this->sequence = new DbField(
+            'picking',
+            'picking',
+            'x_sequence',
+            'sequence',
+            '`sequence`',
+            '`sequence`',
+            200,
+            255,
+            -1,
+            false,
+            '`sequence`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->sequence->InputTextType = "text";
+        $this->sequence->Sortable = false; // Allow sort
+        $this->Fields['sequence'] = &$this->sequence;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -1492,6 +1519,7 @@ class Picking extends DbTable
         $this->store_id2->DbValue = $row['store_id2'];
         $this->close_totes->DbValue = $row['close_totes'];
         $this->job_id->DbValue = $row['job_id'];
+        $this->sequence->DbValue = $row['sequence'];
     }
 
     // Delete uploaded files
@@ -1847,6 +1875,7 @@ class Picking extends DbTable
         $this->store_id2->setDbValue($row['store_id2']);
         $this->close_totes->setDbValue($row['close_totes']);
         $this->job_id->setDbValue($row['job_id']);
+        $this->sequence->setDbValue($row['sequence']);
     }
 
     // Render list row values
@@ -1969,6 +1998,9 @@ class Picking extends DbTable
 
         // job_id
         $this->job_id->CellCssStyle = "white-space: nowrap;";
+
+        // sequence
+        $this->sequence->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -2095,7 +2127,11 @@ class Picking extends DbTable
         $this->picker->ViewCustomAttributes = "";
 
         // status
-        $this->status->ViewValue = $this->status->CurrentValue;
+        if (strval($this->status->CurrentValue) != "") {
+            $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+        } else {
+            $this->status->ViewValue = null;
+        }
         $this->status->ViewCustomAttributes = "";
 
         // remarks
@@ -2125,6 +2161,10 @@ class Picking extends DbTable
         // job_id
         $this->job_id->ViewValue = $this->job_id->CurrentValue;
         $this->job_id->ViewCustomAttributes = "";
+
+        // sequence
+        $this->sequence->ViewValue = $this->sequence->CurrentValue;
+        $this->sequence->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -2310,6 +2350,11 @@ class Picking extends DbTable
         $this->job_id->LinkCustomAttributes = "";
         $this->job_id->HrefValue = "";
         $this->job_id->TooltipValue = "";
+
+        // sequence
+        $this->sequence->LinkCustomAttributes = "";
+        $this->sequence->HrefValue = "";
+        $this->sequence->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2576,10 +2621,7 @@ class Picking extends DbTable
         // status
         $this->status->setupEditAttributes();
         $this->status->EditCustomAttributes = "";
-        if (!$this->status->Raw) {
-            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-        }
-        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->EditValue = $this->status->options(true);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // remarks
@@ -2644,6 +2686,15 @@ class Picking extends DbTable
         }
         $this->job_id->EditValue = $this->job_id->CurrentValue;
         $this->job_id->PlaceHolder = RemoveHtml($this->job_id->caption());
+
+        // sequence
+        $this->sequence->setupEditAttributes();
+        $this->sequence->EditCustomAttributes = "";
+        if (!$this->sequence->Raw) {
+            $this->sequence->CurrentValue = HtmlDecode($this->sequence->CurrentValue);
+        }
+        $this->sequence->EditValue = $this->sequence->CurrentValue;
+        $this->sequence->PlaceHolder = RemoveHtml($this->sequence->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2903,30 +2954,6 @@ class Picking extends DbTable
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $currentDate = CurrentDate();
-        $_id = $rsnew["id"];
-        $_location = $rsnew["source_storage_bin"];
-        $store = $rsnew["store_id"];
-        $_status = "Pending";
-        $_quote= "\'";
-        //Area
-        $area = "SELECT `area` FROM `locations` WHERE `location` =  '$_location' ";
-        $_area = ExecuteScalar($area);
-        //$area2 = "SELECT `area` FROM `locations` WHERE `location` =  '$_location' ";
-        //$_area2 = ExecuteScalar($area2);
-        //$_area3 = $_quote . $_area2 . $_quote ;   
-        //Aisle
-        $aisle = "SELECT left(`source_storage_bin`,2) FROM `picking` WHERE `source_storage_bin` =  '$_location' ";
-        $_aisle = ExecuteScalar($aisle);
-        $aisle2 = "SELECT left(`source_storage_bin`,2) FROM `picking` WHERE `source_storage_bin` =  '$_location' ";
-        $_aisle2 = ExecuteScalar($aisle2);
-        $_aisle3 =$_quote . $_aisle2 . $_quote;
-        //Store
-        $store2 = "SELECT `store_id` FROM `picking` WHERE `store_id` =  '$store' ";
-        $_store2 = ExecuteScalar($store2);
-        $_store3 = $_quote . $_store2 . $_quote;
-        $update = "UPDATE picking SET `area` = '$_area',`aisle` = '$_aisle', `aisle2` = '".$_aisle3."',`store_id2` = '".$_store3."', `status` = '$_status' WHERE `id` = '$_id' ";
-        $result = ExecuteStatement($update);
     }
 
     // Row Updating event
@@ -3020,8 +3047,10 @@ class Picking extends DbTable
         //var_dump($this-><FieldName>);
         if ($this->Export <> "" && $this->status->ViewValue == "Done" ) {
            $this->box_code->ViewValue = "=\"" . $this->box_code->ViewValue . "\"";
+           $this->article->ViewValue = "=\"" . $this->article->ViewValue . "\"";
          }
         if ($this->Export <> "" && $this->status->ViewValue == "Pending" ) {
+           $this->article->ViewValue = "=\"" . $this->article->ViewValue . "\"";
            $this->box_code->ViewValue = "";
            $this->box_type->ViewValue = "";
            $this->picker->ViewValue = "";

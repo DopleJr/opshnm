@@ -74,9 +74,6 @@ $Page->showMessage();
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <th class="<?= $Page->date_created->headerCellClass() ?>"><span id="elh_job_control_copy1_date_created" class="job_control_copy1_date_created"><?= $Page->date_created->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->date_updated->Visible) { // date_updated ?>
-        <th class="<?= $Page->date_updated->headerCellClass() ?>"><span id="elh_job_control_copy1_date_updated" class="job_control_copy1_date_updated"><?= $Page->date_updated->caption() ?></span></th>
-<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -175,14 +172,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_job_control_copy1_date_created" class="el_job_control_copy1_date_created">
 <span<?= $Page->date_created->viewAttributes() ?>>
 <?= $Page->date_created->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->date_updated->Visible) { // date_updated ?>
-        <td<?= $Page->date_updated->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_job_control_copy1_date_updated" class="el_job_control_copy1_date_updated">
-<span<?= $Page->date_updated->viewAttributes() ?>>
-<?= $Page->date_updated->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

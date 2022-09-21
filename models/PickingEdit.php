@@ -528,6 +528,7 @@ class PickingEdit extends Picking
         $this->store_id2->Visible = false;
         $this->close_totes->Visible = false;
         $this->job_id->Visible = false;
+        $this->sequence->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -544,6 +545,7 @@ class PickingEdit extends Picking
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->status);
 
         // Check modal
         if ($this->IsModal) {
@@ -1149,6 +1151,7 @@ class PickingEdit extends Picking
         $this->store_id2->setDbValue($row['store_id2']);
         $this->close_totes->setDbValue($row['close_totes']);
         $this->job_id->setDbValue($row['job_id']);
+        $this->sequence->setDbValue($row['sequence']);
     }
 
     // Return a row with default values
@@ -1192,6 +1195,7 @@ class PickingEdit extends Picking
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
         $row['job_id'] = $this->job_id->DefaultValue;
+        $row['sequence'] = $this->sequence->DefaultValue;
         return $row;
     }
 
@@ -1334,6 +1338,9 @@ class PickingEdit extends Picking
         // job_id
         $this->job_id->RowCssClass = "row";
 
+        // sequence
+        $this->sequence->RowCssClass = "row";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
@@ -1461,7 +1468,11 @@ class PickingEdit extends Picking
             $this->picker->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // remarks
@@ -1842,10 +1853,7 @@ class PickingEdit extends Picking
             // status
             $this->status->setupEditAttributes();
             $this->status->EditCustomAttributes = "";
-            if (!$this->status->Raw) {
-                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-            }
-            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->EditValue = $this->status->options(true);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // remarks
@@ -2372,6 +2380,8 @@ class PickingEdit extends Picking
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_status":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

@@ -541,7 +541,7 @@ class PickingList extends Picking
     public $SearchWhere = ""; // Search WHERE clause
     public $SearchPanelClass = "ew-search-panel collapse show"; // Search Panel class
     public $SearchColumnCount = 0; // For extended search
-    public $SearchFieldsPerRow = 1; // For extended search
+    public $SearchFieldsPerRow = 2; // For extended search
     public $RecordCount = 0; // Record count
     public $EditRowCount;
     public $StartRowCount = 1;
@@ -656,6 +656,7 @@ class PickingList extends Picking
         $this->store_id2->Visible = false;
         $this->close_totes->Visible = false;
         $this->job_id->Visible = false;
+        $this->sequence->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -680,6 +681,7 @@ class PickingList extends Picking
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->status);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -999,7 +1001,7 @@ class PickingList extends Picking
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->creation_date->AdvancedSearch->toJson(), ","); // Field creation_date
-        $filterList = Concat($filterList, $this->confirmation_date->AdvancedSearch->toJson(), ","); // Field confirmation_date
+        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1048,13 +1050,13 @@ class PickingList extends Picking
         $this->creation_date->AdvancedSearch->SearchOperator2 = @$filter["w_creation_date"];
         $this->creation_date->AdvancedSearch->save();
 
-        // Field confirmation_date
-        $this->confirmation_date->AdvancedSearch->SearchValue = @$filter["x_confirmation_date"];
-        $this->confirmation_date->AdvancedSearch->SearchOperator = @$filter["z_confirmation_date"];
-        $this->confirmation_date->AdvancedSearch->SearchCondition = @$filter["v_confirmation_date"];
-        $this->confirmation_date->AdvancedSearch->SearchValue2 = @$filter["y_confirmation_date"];
-        $this->confirmation_date->AdvancedSearch->SearchOperator2 = @$filter["w_confirmation_date"];
-        $this->confirmation_date->AdvancedSearch->save();
+        // Field status
+        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
+        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
+        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
+        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
+        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
+        $this->status->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1105,7 +1107,7 @@ class PickingList extends Picking
         }
         if (!$default && $this->Command == "search") {
             $this->creation_date->AdvancedSearch->save(); // creation_date
-            $this->confirmation_date->AdvancedSearch->save(); // confirmation_date
+            $this->status->AdvancedSearch->save(); // status
         }
         return $where;
     }
@@ -1190,6 +1192,7 @@ class PickingList extends Picking
         $searchFlds[] = &$this->source_storage_type;
         $searchFlds[] = &$this->source_storage_bin;
         $searchFlds[] = &$this->carton_number;
+        $searchFlds[] = &$this->creation_date;
         $searchFlds[] = &$this->gr_number;
         $searchFlds[] = &$this->delivery;
         $searchFlds[] = &$this->store_id;
@@ -1435,7 +1438,7 @@ class PickingList extends Picking
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = ""; // Set up default sort
+            $defaultSort = $this->confirmation_date->Expression . " ASC" . ", " . $this->confirmation_time->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1539,6 +1542,7 @@ class PickingList extends Picking
                 $this->store_id2->setSort("");
                 $this->close_totes->setSort("");
                 $this->job_id->setSort("");
+                $this->sequence->setSort("");
             }
 
             // Reset start position
@@ -2280,6 +2284,7 @@ class PickingList extends Picking
         $this->store_id2->setDbValue($row['store_id2']);
         $this->close_totes->setDbValue($row['close_totes']);
         $this->job_id->setDbValue($row['job_id']);
+        $this->sequence->setDbValue($row['sequence']);
     }
 
     // Return a row with default values
@@ -2323,6 +2328,7 @@ class PickingList extends Picking
         $row['store_id2'] = $this->store_id2->DefaultValue;
         $row['close_totes'] = $this->close_totes->DefaultValue;
         $row['job_id'] = $this->job_id->DefaultValue;
+        $row['sequence'] = $this->sequence->DefaultValue;
         return $row;
     }
 
@@ -2471,6 +2477,9 @@ class PickingList extends Picking
         // job_id
         $this->job_id->CellCssStyle = "white-space: nowrap;";
 
+        // sequence
+        $this->sequence->CellCssStyle = "white-space: nowrap;";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
@@ -2598,7 +2607,11 @@ class PickingList extends Picking
             $this->picker->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // remarks
@@ -3368,7 +3381,7 @@ class PickingList extends Picking
     public function loadAdvancedSearch()
     {
         $this->creation_date->AdvancedSearch->load();
-        $this->confirmation_date->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -3442,7 +3455,7 @@ class PickingList extends Picking
         // Export to CSV
         $item = &$this->ExportOptions->add("csv");
         $item->Body = $this->getExportTag("csv");
-        $item->Visible = false;
+        $item->Visible = true;
 
         // Export to PDF
         $item = &$this->ExportOptions->add("pdf");
@@ -3667,6 +3680,8 @@ class PickingList extends Picking
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_status":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;
