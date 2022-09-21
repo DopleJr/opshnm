@@ -1370,29 +1370,26 @@ class JobControlCopy1List extends JobControlCopy1
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->status->Expression . " DESC" . ", " . $this->picked_qty->Expression . " DESC" . ", " . $this->id->Expression . " DESC"; // Set up default sort
+            $defaultSort = $this->status->Expression . " DESC" . ", " . $this->date_created->Expression . " DESC" . ", " . $this->picked_qty->Expression . " DESC" . ", " . $this->id->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
         }
 
-        // Check for Ctrl pressed
-        $ctrl = Get("ctrl") !== null;
-
         // Check for "order" parameter
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id, $ctrl); // id
-            $this->updateSort($this->creation_date, $ctrl); // creation_date
-            $this->updateSort($this->store_id, $ctrl); // store_id
-            $this->updateSort($this->area, $ctrl); // area
-            $this->updateSort($this->aisle, $ctrl); // aisle
-            $this->updateSort($this->user, $ctrl); // user
-            $this->updateSort($this->target_qty, $ctrl); // target_qty
-            $this->updateSort($this->picked_qty, $ctrl); // picked_qty
-            $this->updateSort($this->status, $ctrl); // status
-            $this->updateSort($this->date_created, $ctrl); // date_created
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->creation_date); // creation_date
+            $this->updateSort($this->store_id); // store_id
+            $this->updateSort($this->area); // area
+            $this->updateSort($this->aisle); // aisle
+            $this->updateSort($this->user); // user
+            $this->updateSort($this->target_qty); // target_qty
+            $this->updateSort($this->picked_qty); // picked_qty
+            $this->updateSort($this->status); // status
+            $this->updateSort($this->date_created); // date_created
             $this->setStartRecordNumber(1); // Reset start position
         }
 
