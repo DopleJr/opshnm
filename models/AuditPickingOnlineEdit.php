@@ -1186,7 +1186,7 @@ class AuditPickingOnlineEdit extends AuditPickingOnline
 
             // scan_qty
             $this->scan_qty->setupEditAttributes();
-            $this->scan_qty->EditCustomAttributes = "";
+            $this->scan_qty->EditCustomAttributes = 'readonly';
             if (!$this->scan_qty->Raw) {
                 $this->scan_qty->CurrentValue = HtmlDecode($this->scan_qty->CurrentValue);
             }

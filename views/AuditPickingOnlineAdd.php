@@ -455,7 +455,7 @@ loadjs.ready("load", function () {
         }
       });
       $(document).on("input", "#x_scan", function () {
-      var scan = $("#x_scan_qty").val();
+      var scan = $("#x_scan_qty").val('0');
       var picked = $("#x_picked_qty").val();
       var actual = 1;
       var result = parseInt(scan) + parseInt(actual);
