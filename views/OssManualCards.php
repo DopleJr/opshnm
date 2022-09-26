@@ -304,6 +304,25 @@ $Page->ListOptions->render("body", $Page->MultiColumnListOptionsPosition, $Page-
         </div>
         <?php } ?>
     <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <?php if ($Page->RowType == ROWTYPE_VIEW) { // View record ?>
+        <div class="row oss_manual_status">
+            <div class="col col-sm-4 oss_manual_status" style="white-space: nowrap;"><?= $Page->renderFieldHeader($Page->status) ?></div>
+            <div class="col col-sm-8"><div<?= $Page->status->cellAttributes() ?>>
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</div></div>
+        </div>
+        <?php } else { // Add/edit record ?>
+        <div class="row oss_manual_status">
+            <label class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?></label>
+            <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</div></div>
+        </div>
+        <?php } ?>
+    <?php } ?>
     <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <?php if ($Page->RowType == ROWTYPE_VIEW) { // View record ?>
         <div class="row oss_manual_date_updated">

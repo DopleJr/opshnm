@@ -1001,6 +1001,7 @@ class PickingList extends Picking
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->creation_date->AdvancedSearch->toJson(), ","); // Field creation_date
+        $filterList = Concat($filterList, $this->confirmation_date->AdvancedSearch->toJson(), ","); // Field confirmation_date
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1049,6 +1050,14 @@ class PickingList extends Picking
         $this->creation_date->AdvancedSearch->SearchValue2 = @$filter["y_creation_date"];
         $this->creation_date->AdvancedSearch->SearchOperator2 = @$filter["w_creation_date"];
         $this->creation_date->AdvancedSearch->save();
+
+        // Field confirmation_date
+        $this->confirmation_date->AdvancedSearch->SearchValue = @$filter["x_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchOperator = @$filter["z_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchCondition = @$filter["v_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchValue2 = @$filter["y_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchOperator2 = @$filter["w_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->save();
 
         // Field status
         $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
@@ -1107,6 +1116,7 @@ class PickingList extends Picking
         }
         if (!$default && $this->Command == "search") {
             $this->creation_date->AdvancedSearch->save(); // creation_date
+            $this->confirmation_date->AdvancedSearch->save(); // confirmation_date
             $this->status->AdvancedSearch->save(); // status
         }
         return $where;
@@ -3381,6 +3391,7 @@ class PickingList extends Picking
     public function loadAdvancedSearch()
     {
         $this->creation_date->AdvancedSearch->load();
+        $this->confirmation_date->AdvancedSearch->load();
         $this->status->AdvancedSearch->load();
     }
 

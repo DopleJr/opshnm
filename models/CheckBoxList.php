@@ -439,7 +439,6 @@ class CheckBoxList extends CheckBox
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['box_code'];
         }
         return $key;
     }
@@ -538,7 +537,7 @@ class CheckBoxList extends CheckBox
     public $SearchWhere = ""; // Search WHERE clause
     public $SearchPanelClass = "ew-search-panel collapse show"; // Search Panel class
     public $SearchColumnCount = 0; // For extended search
-    public $SearchFieldsPerRow = 1; // For extended search
+    public $SearchFieldsPerRow = 2; // For extended search
     public $RecordCount = 0; // Record count
     public $EditRowCount;
     public $StartRowCount = 1;
@@ -613,7 +612,7 @@ class CheckBoxList extends CheckBox
 
         // Setup export options
         $this->setupExportOptions();
-        $this->creation_date->setVisibility();
+        $this->box_code->setVisibility();
         $this->store_id->setVisibility();
         $this->store_name->setVisibility();
         $this->article->setVisibility();
@@ -623,7 +622,6 @@ class CheckBoxList extends CheckBox
         $this->variance_qty->setVisibility();
         $this->confirmation_date->setVisibility();
         $this->confirmation_time->setVisibility();
-        $this->box_code->setVisibility();
         $this->picker->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -791,10 +789,6 @@ class CheckBoxList extends CheckBox
         }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-        if ($filter == "") {
-            $filter = "0=101";
-            $this->SearchWhere = $filter;
-        }
 
         // Set up filter
         if ($this->Command == "json") {
@@ -955,6 +949,8 @@ class CheckBoxList extends CheckBox
         // Initialize
         $filterList = "";
         $savedFilterList = "";
+        $filterList = Concat($filterList, $this->box_code->AdvancedSearch->toJson(), ","); // Field box_code
+        $filterList = Concat($filterList, $this->article->AdvancedSearch->toJson(), ","); // Field article
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -994,6 +990,22 @@ class CheckBoxList extends CheckBox
         }
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
+
+        // Field box_code
+        $this->box_code->AdvancedSearch->SearchValue = @$filter["x_box_code"];
+        $this->box_code->AdvancedSearch->SearchOperator = @$filter["z_box_code"];
+        $this->box_code->AdvancedSearch->SearchCondition = @$filter["v_box_code"];
+        $this->box_code->AdvancedSearch->SearchValue2 = @$filter["y_box_code"];
+        $this->box_code->AdvancedSearch->SearchOperator2 = @$filter["w_box_code"];
+        $this->box_code->AdvancedSearch->save();
+
+        // Field article
+        $this->article->AdvancedSearch->SearchValue = @$filter["x_article"];
+        $this->article->AdvancedSearch->SearchOperator = @$filter["z_article"];
+        $this->article->AdvancedSearch->SearchCondition = @$filter["v_article"];
+        $this->article->AdvancedSearch->SearchValue2 = @$filter["y_article"];
+        $this->article->AdvancedSearch->SearchOperator2 = @$filter["w_article"];
+        $this->article->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1006,7 +1018,7 @@ class CheckBoxList extends CheckBox
         if (!$Security->canSearch()) {
             return "";
         }
-        $this->buildSearchSql($where, $this->creation_date, $default, true); // creation_date
+        $this->buildSearchSql($where, $this->box_code, $default, true); // box_code
         $this->buildSearchSql($where, $this->store_id, $default, true); // store_id
         $this->buildSearchSql($where, $this->store_name, $default, true); // store_name
         $this->buildSearchSql($where, $this->article, $default, true); // article
@@ -1016,7 +1028,6 @@ class CheckBoxList extends CheckBox
         $this->buildSearchSql($where, $this->variance_qty, $default, true); // variance_qty
         $this->buildSearchSql($where, $this->confirmation_date, $default, true); // confirmation_date
         $this->buildSearchSql($where, $this->confirmation_time, $default, true); // confirmation_time
-        $this->buildSearchSql($where, $this->box_code, $default, true); // box_code
         $this->buildSearchSql($where, $this->picker, $default, true); // picker
 
         // Set up search parm
@@ -1024,6 +1035,8 @@ class CheckBoxList extends CheckBox
             $this->Command = "search";
         }
         if (!$default && $this->Command == "search") {
+            $this->box_code->AdvancedSearch->save(); // box_code
+            $this->article->AdvancedSearch->save(); // article
         }
         return $where;
     }
@@ -1102,8 +1115,8 @@ class CheckBoxList extends CheckBox
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->article;
         $searchFlds[] = &$this->box_code;
+        $searchFlds[] = &$this->article;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1129,7 +1142,7 @@ class CheckBoxList extends CheckBox
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
-        if ($this->creation_date->AdvancedSearch->issetSession()) {
+        if ($this->box_code->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->store_id->AdvancedSearch->issetSession()) {
@@ -1157,9 +1170,6 @@ class CheckBoxList extends CheckBox
             return true;
         }
         if ($this->confirmation_time->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->box_code->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->picker->AdvancedSearch->issetSession()) {
@@ -1197,7 +1207,7 @@ class CheckBoxList extends CheckBox
     // Clear all advanced search parameters
     protected function resetAdvancedSearchParms()
     {
-        $this->creation_date->AdvancedSearch->unsetSession();
+        $this->box_code->AdvancedSearch->unsetSession();
         $this->store_id->AdvancedSearch->unsetSession();
         $this->store_name->AdvancedSearch->unsetSession();
         $this->article->AdvancedSearch->unsetSession();
@@ -1207,7 +1217,6 @@ class CheckBoxList extends CheckBox
         $this->variance_qty->AdvancedSearch->unsetSession();
         $this->confirmation_date->AdvancedSearch->unsetSession();
         $this->confirmation_time->AdvancedSearch->unsetSession();
-        $this->box_code->AdvancedSearch->unsetSession();
         $this->picker->AdvancedSearch->unsetSession();
     }
 
@@ -1220,7 +1229,7 @@ class CheckBoxList extends CheckBox
         $this->BasicSearch->load();
 
         // Restore advanced search values
-        $this->creation_date->AdvancedSearch->load();
+        $this->box_code->AdvancedSearch->load();
         $this->store_id->AdvancedSearch->load();
         $this->store_name->AdvancedSearch->load();
         $this->article->AdvancedSearch->load();
@@ -1230,7 +1239,6 @@ class CheckBoxList extends CheckBox
         $this->variance_qty->AdvancedSearch->load();
         $this->confirmation_date->AdvancedSearch->load();
         $this->confirmation_time->AdvancedSearch->load();
-        $this->box_code->AdvancedSearch->load();
         $this->picker->AdvancedSearch->load();
     }
 
@@ -1239,7 +1247,7 @@ class CheckBoxList extends CheckBox
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->confirmation_date->Expression . " ASC" . ", " . $this->confirmation_time->Expression . " ASC"; // Set up default sort
+            $defaultSort = $this->box_code->Expression . " ASC" . ", " . $this->confirmation_date->Expression . " ASC" . ", " . $this->confirmation_time->Expression . " ASC" . ", " . $this->picker->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1249,7 +1257,7 @@ class CheckBoxList extends CheckBox
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->creation_date); // creation_date
+            $this->updateSort($this->box_code); // box_code
             $this->updateSort($this->store_id); // store_id
             $this->updateSort($this->store_name); // store_name
             $this->updateSort($this->article); // article
@@ -1259,7 +1267,6 @@ class CheckBoxList extends CheckBox
             $this->updateSort($this->variance_qty); // variance_qty
             $this->updateSort($this->confirmation_date); // confirmation_date
             $this->updateSort($this->confirmation_time); // confirmation_time
-            $this->updateSort($this->box_code); // box_code
             $this->updateSort($this->picker); // picker
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1285,7 +1292,7 @@ class CheckBoxList extends CheckBox
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->creation_date->setSort("");
+                $this->box_code->setSort("");
                 $this->store_id->setSort("");
                 $this->store_name->setSort("");
                 $this->article->setSort("");
@@ -1295,7 +1302,6 @@ class CheckBoxList extends CheckBox
                 $this->variance_qty->setSort("");
                 $this->confirmation_date->setSort("");
                 $this->confirmation_time->setSort("");
-                $this->box_code->setSort("");
                 $this->picker->setSort("");
             }
 
@@ -1418,7 +1424,6 @@ class CheckBoxList extends CheckBox
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->box_code->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1445,7 +1450,7 @@ class CheckBoxList extends CheckBox
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $option->add("creation_date", $this->createColumnOption("creation_date"));
+            $option->add("box_code", $this->createColumnOption("box_code"));
             $option->add("store_id", $this->createColumnOption("store_id"));
             $option->add("store_name", $this->createColumnOption("store_name"));
             $option->add("article", $this->createColumnOption("article"));
@@ -1455,7 +1460,6 @@ class CheckBoxList extends CheckBox
             $option->add("variance_qty", $this->createColumnOption("variance_qty"));
             $option->add("confirmation_date", $this->createColumnOption("confirmation_date"));
             $option->add("confirmation_time", $this->createColumnOption("confirmation_time"));
-            $option->add("box_code", $this->createColumnOption("box_code"));
             $option->add("picker", $this->createColumnOption("picker"));
         }
 
@@ -1639,10 +1643,10 @@ class CheckBoxList extends CheckBox
         // Load search values
         $hasValue = false;
 
-        // creation_date
-        if ($this->creation_date->AdvancedSearch->get()) {
+        // box_code
+        if ($this->box_code->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->creation_date->AdvancedSearch->SearchValue != "" || $this->creation_date->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->box_code->AdvancedSearch->SearchValue != "" || $this->box_code->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1715,14 +1719,6 @@ class CheckBoxList extends CheckBox
         if ($this->confirmation_time->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->confirmation_time->AdvancedSearch->SearchValue != "" || $this->confirmation_time->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // box_code
-        if ($this->box_code->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->box_code->AdvancedSearch->SearchValue != "" || $this->box_code->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1822,7 +1818,7 @@ class CheckBoxList extends CheckBox
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->creation_date->setDbValue($row['creation_date']);
+        $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
         $this->article->setDbValue($row['article']);
@@ -1832,7 +1828,6 @@ class CheckBoxList extends CheckBox
         $this->variance_qty->setDbValue($row['variance_qty']);
         $this->confirmation_date->setDbValue($row['confirmation_date']);
         $this->confirmation_time->setDbValue($row['confirmation_time']);
-        $this->box_code->setDbValue($row['box_code']);
         $this->picker->setDbValue($row['picker']);
     }
 
@@ -1840,7 +1835,7 @@ class CheckBoxList extends CheckBox
     protected function newRow()
     {
         $row = [];
-        $row['creation_date'] = $this->creation_date->DefaultValue;
+        $row['box_code'] = $this->box_code->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
         $row['article'] = $this->article->DefaultValue;
@@ -1850,7 +1845,6 @@ class CheckBoxList extends CheckBox
         $row['variance_qty'] = $this->variance_qty->DefaultValue;
         $row['confirmation_date'] = $this->confirmation_date->DefaultValue;
         $row['confirmation_time'] = $this->confirmation_time->DefaultValue;
-        $row['box_code'] = $this->box_code->DefaultValue;
         $row['picker'] = $this->picker->DefaultValue;
         return $row;
     }
@@ -1858,17 +1852,8 @@ class CheckBoxList extends CheckBox
     // Load old record
     protected function loadOldRecord()
     {
-        // Load old record
-        $this->OldRecordset = null;
-        $validKey = $this->OldKey != "";
-        if ($validKey) {
-            $this->CurrentFilter = $this->getRecordFilter();
-            $sql = $this->getCurrentSql();
-            $conn = $this->getConnection();
-            $this->OldRecordset = LoadRecordset($sql, $conn);
-        }
-        $this->loadRowValues($this->OldRecordset); // Load row values
-        return $validKey;
+        $this->loadRowValues(); // Load default row values
+        return false;
     }
 
     // Render row values based on field settings
@@ -1889,8 +1874,8 @@ class CheckBoxList extends CheckBox
 
         // Common render codes for all row types
 
-        // creation_date
-        $this->creation_date->CellCssStyle = "white-space: nowrap;";
+        // box_code
+        $this->box_code->CellCssStyle = "white-space: nowrap;";
 
         // store_id
         $this->store_id->CellCssStyle = "white-space: nowrap;";
@@ -1919,9 +1904,6 @@ class CheckBoxList extends CheckBox
         // confirmation_time
         $this->confirmation_time->CellCssStyle = "white-space: nowrap;";
 
-        // box_code
-        $this->box_code->CellCssStyle = "white-space: nowrap;";
-
         // picker
         $this->picker->CellCssStyle = "white-space: nowrap;";
 
@@ -1938,10 +1920,9 @@ class CheckBoxList extends CheckBox
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // creation_date
-            $this->creation_date->ViewValue = $this->creation_date->CurrentValue;
-            $this->creation_date->ViewValue = FormatDateTime($this->creation_date->ViewValue, $this->creation_date->formatPattern());
-            $this->creation_date->ViewCustomAttributes = "";
+            // box_code
+            $this->box_code->ViewValue = $this->box_code->CurrentValue;
+            $this->box_code->ViewCustomAttributes = "";
 
             // store_id
             $this->store_id->ViewValue = $this->store_id->CurrentValue;
@@ -1983,18 +1964,14 @@ class CheckBoxList extends CheckBox
             $this->confirmation_time->ViewValue = FormatDateTime($this->confirmation_time->ViewValue, $this->confirmation_time->formatPattern());
             $this->confirmation_time->ViewCustomAttributes = "";
 
-            // box_code
-            $this->box_code->ViewValue = $this->box_code->CurrentValue;
-            $this->box_code->ViewCustomAttributes = "";
-
             // picker
             $this->picker->ViewValue = $this->picker->CurrentValue;
             $this->picker->ViewCustomAttributes = "";
 
-            // creation_date
-            $this->creation_date->LinkCustomAttributes = "";
-            $this->creation_date->HrefValue = "";
-            $this->creation_date->TooltipValue = "";
+            // box_code
+            $this->box_code->LinkCustomAttributes = "";
+            $this->box_code->HrefValue = "";
+            $this->box_code->TooltipValue = "";
 
             // store_id
             $this->store_id->LinkCustomAttributes = "";
@@ -2041,27 +2018,18 @@ class CheckBoxList extends CheckBox
             $this->confirmation_time->HrefValue = "";
             $this->confirmation_time->TooltipValue = "";
 
-            // box_code
-            $this->box_code->LinkCustomAttributes = "";
-            $this->box_code->HrefValue = "";
-            $this->box_code->TooltipValue = "";
-
             // picker
             $this->picker->LinkCustomAttributes = "";
             $this->picker->HrefValue = "";
             $this->picker->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // creation_date
-            if ($this->creation_date->UseFilter && !EmptyValue($this->creation_date->AdvancedSearch->SearchValue)) {
-                if (is_array($this->creation_date->AdvancedSearch->SearchValue)) {
-                    $this->creation_date->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->creation_date->AdvancedSearch->SearchValue);
+            // box_code
+            if ($this->box_code->UseFilter && !EmptyValue($this->box_code->AdvancedSearch->SearchValue)) {
+                if (is_array($this->box_code->AdvancedSearch->SearchValue)) {
+                    $this->box_code->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_code->AdvancedSearch->SearchValue);
                 }
-                $this->creation_date->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->creation_date->AdvancedSearch->SearchValue);
+                $this->box_code->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_code->AdvancedSearch->SearchValue);
             }
-            $this->creation_date->setupEditAttributes();
-            $this->creation_date->EditCustomAttributes = "";
-            $this->creation_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->creation_date->AdvancedSearch->SearchValue2, $this->creation_date->formatPattern()), $this->creation_date->formatPattern()));
-            $this->creation_date->PlaceHolder = RemoveHtml($this->creation_date->caption());
 
             // store_id
             if ($this->store_id->UseFilter && !EmptyValue($this->store_id->AdvancedSearch->SearchValue)) {
@@ -2139,14 +2107,6 @@ class CheckBoxList extends CheckBox
                 $this->confirmation_time->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->confirmation_time->AdvancedSearch->SearchValue);
             }
 
-            // box_code
-            if ($this->box_code->UseFilter && !EmptyValue($this->box_code->AdvancedSearch->SearchValue)) {
-                if (is_array($this->box_code->AdvancedSearch->SearchValue)) {
-                    $this->box_code->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_code->AdvancedSearch->SearchValue);
-                }
-                $this->box_code->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_code->AdvancedSearch->SearchValue);
-            }
-
             // picker
             if ($this->picker->UseFilter && !EmptyValue($this->picker->AdvancedSearch->SearchValue)) {
                 if (is_array($this->picker->AdvancedSearch->SearchValue)) {
@@ -2204,6 +2164,8 @@ class CheckBoxList extends CheckBox
     // Load advanced search
     public function loadAdvancedSearch()
     {
+        $this->box_code->AdvancedSearch->load();
+        $this->article->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -2318,8 +2280,17 @@ class CheckBoxList extends CheckBox
 
         // Show all button
         $item = &$this->SearchOptions->add("showall");
-        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ResetSearch") . "\" data-caption=\"" . $Language->phrase("ResetSearch") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ResetSearchBtn") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
         $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
+
+        // Advanced search button
+        $item = &$this->SearchOptions->add("advancedsearch");
+        if (IsMobile()) {
+            $item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"checkboxsearch\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+        } else {
+            $item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-table=\"check_box\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" data-ew-action=\"modal\" data-url=\"checkboxsearch\" data-btn=\"SearchBtn\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+        }
+        $item->Visible = true;
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;

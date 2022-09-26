@@ -31,7 +31,7 @@ class CheckBox extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $creation_date;
+    public $box_code;
     public $store_id;
     public $store_name;
     public $article;
@@ -41,7 +41,6 @@ class CheckBox extends DbTable
     public $variance_qty;
     public $confirmation_date;
     public $confirmation_time;
-    public $box_code;
     public $picker;
 
     // Page ID
@@ -74,38 +73,36 @@ class CheckBox extends DbTable
         $this->ExportWordColumnWidth = null; // Cell width (PHPWord only)
         $this->DetailAdd = false; // Allow detail add
         $this->DetailEdit = false; // Allow detail edit
-        $this->DetailView = false; // Allow detail view
+        $this->DetailView = true; // Allow detail view
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // creation_date
-        $this->creation_date = new DbField(
+        // box_code
+        $this->box_code = new DbField(
             'check_box',
             'check_box',
-            'x_creation_date',
-            'creation_date',
-            '`creation_date`',
-            CastDateFieldForLike("`creation_date`", "MM/dd/yyyy", "DB"),
-            133,
-            10,
-            0,
+            'x_box_code',
+            'box_code',
+            '`box_code`',
+            '`box_code`',
+            200,
+            255,
+            -1,
             false,
-            '`creation_date`',
+            '`box_code`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->creation_date->InputTextType = "text";
-        $this->creation_date->FormatPattern = "MM/dd/yyyy"; // Format pattern
-        $this->creation_date->UseFilter = true; // Table header filter
-        $this->creation_date->Lookup = new Lookup('creation_date', 'check_box', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
-        $this->creation_date->DefaultErrorMessage = str_replace("%s", "MM/dd/yyyy", $Language->phrase("IncorrectDate"));
-        $this->Fields['creation_date'] = &$this->creation_date;
+        $this->box_code->InputTextType = "text";
+        $this->box_code->UseFilter = true; // Table header filter
+        $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+        $this->Fields['box_code'] = &$this->box_code;
 
         // store_id
         $this->store_id = new DbField(
@@ -327,31 +324,6 @@ class CheckBox extends DbTable
         $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'check_box', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
         $this->confirmation_time->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
         $this->Fields['confirmation_time'] = &$this->confirmation_time;
-
-        // box_code
-        $this->box_code = new DbField(
-            'check_box',
-            'check_box',
-            'x_box_code',
-            'box_code',
-            '`box_code`',
-            '`box_code`',
-            200,
-            255,
-            -1,
-            false,
-            '`box_code`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->box_code->InputTextType = "text";
-        $this->box_code->IsPrimaryKey = true; // Primary key field
-        $this->box_code->UseFilter = true; // Table header filter
-        $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
-        $this->Fields['box_code'] = &$this->box_code;
 
         // picker
         $this->picker = new DbField(
@@ -779,9 +751,6 @@ class CheckBox extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('box_code', $rs)) {
-                AddFilter($where, QuotedName('box_code', $this->Dbid) . '=' . QuotedValue($rs['box_code'], $this->box_code->DataType, $this->Dbid));
-            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -804,7 +773,7 @@ class CheckBox extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->creation_date->DbValue = $row['creation_date'];
+        $this->box_code->DbValue = $row['box_code'];
         $this->store_id->DbValue = $row['store_id'];
         $this->store_name->DbValue = $row['store_name'];
         $this->article->DbValue = $row['article'];
@@ -814,7 +783,6 @@ class CheckBox extends DbTable
         $this->variance_qty->DbValue = $row['variance_qty'];
         $this->confirmation_date->DbValue = $row['confirmation_date'];
         $this->confirmation_time->DbValue = $row['confirmation_time'];
-        $this->box_code->DbValue = $row['box_code'];
         $this->picker->DbValue = $row['picker'];
     }
 
@@ -827,19 +795,13 @@ class CheckBox extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`box_code` = '@box_code@'";
+        return "";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->box_code->CurrentValue : $this->box_code->OldValue;
-        if (EmptyValue($val)) {
-            return "";
-        } else {
-            $keys[] = $val;
-        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -848,12 +810,7 @@ class CheckBox extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
-            if ($current) {
-                $this->box_code->CurrentValue = $keys[0];
-            } else {
-                $this->box_code->OldValue = $keys[0];
-            }
+        if (count($keys) == 0) {
         }
     }
 
@@ -861,16 +818,6 @@ class CheckBox extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
-        if (is_array($row)) {
-            $val = array_key_exists('box_code', $row) ? $row['box_code'] : null;
-        } else {
-            $val = $this->box_code->OldValue !== null ? $this->box_code->OldValue : $this->box_code->CurrentValue;
-        }
-        if ($val === null) {
-            return "0=1"; // Invalid key
-        } else {
-            $keyFilter = str_replace("@box_code@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
-        }
         return $keyFilter;
     }
 
@@ -998,7 +945,6 @@ class CheckBox extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"box_code\":" . JsonEncode($this->box_code->CurrentValue, "string");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -1009,11 +955,6 @@ class CheckBox extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->box_code->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->box_code->CurrentValue);
-        } else {
-            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
-        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -1071,14 +1012,6 @@ class CheckBox extends DbTable
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("box_code") ?? Route("box_code")) !== null) {
-                $arKeys[] = $keyValue;
-            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
-            } else {
-                $arKeys = null; // Do not setup
-            }
-
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
@@ -1099,11 +1032,6 @@ class CheckBox extends DbTable
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
-            }
-            if ($setCurrent) {
-                $this->box_code->CurrentValue = $key;
-            } else {
-                $this->box_code->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1128,7 +1056,7 @@ class CheckBox extends DbTable
         } else {
             return;
         }
-        $this->creation_date->setDbValue($row['creation_date']);
+        $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
         $this->article->setDbValue($row['article']);
@@ -1138,7 +1066,6 @@ class CheckBox extends DbTable
         $this->variance_qty->setDbValue($row['variance_qty']);
         $this->confirmation_date->setDbValue($row['confirmation_date']);
         $this->confirmation_time->setDbValue($row['confirmation_time']);
-        $this->box_code->setDbValue($row['box_code']);
         $this->picker->setDbValue($row['picker']);
     }
 
@@ -1152,8 +1079,8 @@ class CheckBox extends DbTable
 
         // Common render codes
 
-        // creation_date
-        $this->creation_date->CellCssStyle = "white-space: nowrap;";
+        // box_code
+        $this->box_code->CellCssStyle = "white-space: nowrap;";
 
         // store_id
         $this->store_id->CellCssStyle = "white-space: nowrap;";
@@ -1182,16 +1109,12 @@ class CheckBox extends DbTable
         // confirmation_time
         $this->confirmation_time->CellCssStyle = "white-space: nowrap;";
 
-        // box_code
-        $this->box_code->CellCssStyle = "white-space: nowrap;";
-
         // picker
         $this->picker->CellCssStyle = "white-space: nowrap;";
 
-        // creation_date
-        $this->creation_date->ViewValue = $this->creation_date->CurrentValue;
-        $this->creation_date->ViewValue = FormatDateTime($this->creation_date->ViewValue, $this->creation_date->formatPattern());
-        $this->creation_date->ViewCustomAttributes = "";
+        // box_code
+        $this->box_code->ViewValue = $this->box_code->CurrentValue;
+        $this->box_code->ViewCustomAttributes = "";
 
         // store_id
         $this->store_id->ViewValue = $this->store_id->CurrentValue;
@@ -1233,18 +1156,14 @@ class CheckBox extends DbTable
         $this->confirmation_time->ViewValue = FormatDateTime($this->confirmation_time->ViewValue, $this->confirmation_time->formatPattern());
         $this->confirmation_time->ViewCustomAttributes = "";
 
-        // box_code
-        $this->box_code->ViewValue = $this->box_code->CurrentValue;
-        $this->box_code->ViewCustomAttributes = "";
-
         // picker
         $this->picker->ViewValue = $this->picker->CurrentValue;
         $this->picker->ViewCustomAttributes = "";
 
-        // creation_date
-        $this->creation_date->LinkCustomAttributes = "";
-        $this->creation_date->HrefValue = "";
-        $this->creation_date->TooltipValue = "";
+        // box_code
+        $this->box_code->LinkCustomAttributes = "";
+        $this->box_code->HrefValue = "";
+        $this->box_code->TooltipValue = "";
 
         // store_id
         $this->store_id->LinkCustomAttributes = "";
@@ -1291,11 +1210,6 @@ class CheckBox extends DbTable
         $this->confirmation_time->HrefValue = "";
         $this->confirmation_time->TooltipValue = "";
 
-        // box_code
-        $this->box_code->LinkCustomAttributes = "";
-        $this->box_code->HrefValue = "";
-        $this->box_code->TooltipValue = "";
-
         // picker
         $this->picker->LinkCustomAttributes = "";
         $this->picker->HrefValue = "";
@@ -1316,11 +1230,14 @@ class CheckBox extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // creation_date
-        $this->creation_date->setupEditAttributes();
-        $this->creation_date->EditCustomAttributes = "";
-        $this->creation_date->EditValue = FormatDateTime($this->creation_date->CurrentValue, $this->creation_date->formatPattern());
-        $this->creation_date->PlaceHolder = RemoveHtml($this->creation_date->caption());
+        // box_code
+        $this->box_code->setupEditAttributes();
+        $this->box_code->EditCustomAttributes = "";
+        if (!$this->box_code->Raw) {
+            $this->box_code->CurrentValue = HtmlDecode($this->box_code->CurrentValue);
+        }
+        $this->box_code->EditValue = $this->box_code->CurrentValue;
+        $this->box_code->PlaceHolder = RemoveHtml($this->box_code->caption());
 
         // store_id
         $this->store_id->setupEditAttributes();
@@ -1397,15 +1314,6 @@ class CheckBox extends DbTable
         $this->confirmation_time->EditValue = FormatDateTime($this->confirmation_time->CurrentValue, $this->confirmation_time->formatPattern());
         $this->confirmation_time->PlaceHolder = RemoveHtml($this->confirmation_time->caption());
 
-        // box_code
-        $this->box_code->setupEditAttributes();
-        $this->box_code->EditCustomAttributes = "";
-        if (!$this->box_code->Raw) {
-            $this->box_code->CurrentValue = HtmlDecode($this->box_code->CurrentValue);
-        }
-        $this->box_code->EditValue = $this->box_code->CurrentValue;
-        $this->box_code->PlaceHolder = RemoveHtml($this->box_code->caption());
-
         // picker
         $this->picker->setupEditAttributes();
         $this->picker->EditCustomAttributes = "";
@@ -1465,7 +1373,7 @@ class CheckBox extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->creation_date);
+                    $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->store_id);
                     $doc->exportCaption($this->store_name);
                     $doc->exportCaption($this->article);
@@ -1475,10 +1383,9 @@ class CheckBox extends DbTable
                     $doc->exportCaption($this->variance_qty);
                     $doc->exportCaption($this->confirmation_date);
                     $doc->exportCaption($this->confirmation_time);
-                    $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->picker);
                 } else {
-                    $doc->exportCaption($this->creation_date);
+                    $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->store_id);
                     $doc->exportCaption($this->store_name);
                     $doc->exportCaption($this->article);
@@ -1488,7 +1395,6 @@ class CheckBox extends DbTable
                     $doc->exportCaption($this->variance_qty);
                     $doc->exportCaption($this->confirmation_date);
                     $doc->exportCaption($this->confirmation_time);
-                    $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->picker);
                 }
                 $doc->endExportRow();
@@ -1520,7 +1426,7 @@ class CheckBox extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->creation_date);
+                        $doc->exportField($this->box_code);
                         $doc->exportField($this->store_id);
                         $doc->exportField($this->store_name);
                         $doc->exportField($this->article);
@@ -1530,10 +1436,9 @@ class CheckBox extends DbTable
                         $doc->exportField($this->variance_qty);
                         $doc->exportField($this->confirmation_date);
                         $doc->exportField($this->confirmation_time);
-                        $doc->exportField($this->box_code);
                         $doc->exportField($this->picker);
                     } else {
-                        $doc->exportField($this->creation_date);
+                        $doc->exportField($this->box_code);
                         $doc->exportField($this->store_id);
                         $doc->exportField($this->store_name);
                         $doc->exportField($this->article);
@@ -1543,7 +1448,6 @@ class CheckBox extends DbTable
                         $doc->exportField($this->variance_qty);
                         $doc->exportField($this->confirmation_date);
                         $doc->exportField($this->confirmation_time);
-                        $doc->exportField($this->box_code);
                         $doc->exportField($this->picker);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1565,7 +1469,7 @@ class CheckBox extends DbTable
             $this->aggregateListRow();
             if (!$doc->ExportCustom) {
                 $doc->beginExportRow(-1);
-                $doc->exportAggregate($this->creation_date, '');
+                $doc->exportAggregate($this->box_code, '');
                 $doc->exportAggregate($this->store_id, '');
                 $doc->exportAggregate($this->store_name, '');
                 $doc->exportAggregate($this->article, 'COUNT');
@@ -1575,7 +1479,6 @@ class CheckBox extends DbTable
                 $doc->exportAggregate($this->variance_qty, 'TOTAL');
                 $doc->exportAggregate($this->confirmation_date, '');
                 $doc->exportAggregate($this->confirmation_time, '');
-                $doc->exportAggregate($this->box_code, '');
                 $doc->exportAggregate($this->picker, '');
                 $doc->endExportRow();
             }

@@ -271,49 +271,88 @@ return ExecuteStatement("UPDATE finding_shortpick SET `pick_quantity` = '0',`act
 function LastStore()
 {
 	$_picker = CurrentUserName();
-	return ExecuteScalar("SELECT `store_code` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation time` DESC ");
+	return ExecuteScalar("SELECT `store_code` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation_time` DESC ");
 }
 
 function GetBoxCode()
 {
 	$_storecode = $this->store_code->ViewValue;
 	$_picker = CurrentUserName();
-	return ExecuteScalar("SELECT `box_code` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation time` DESC ");
+	return ExecuteScalar("SELECT `box_code` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation_time` DESC ");
 }
 
 function GetBoxType()
 {
 	$_storecode = $this->store_code->ViewValue;
 	$_picker = CurrentUserName();
-	return ExecuteScalar("SELECT `box_type` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation time` DESC ");
+	return ExecuteScalar("SELECT `box_type` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation_time` DESC ");
 }
 
 function GetShipment()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `shipment` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
+	return ExecuteScalar("SELECT `shipment` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated` desc,`time_updated` desc LIMIT 1 ");
 }
 
 function GetPallet()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `pallet_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `pallet_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated` desc,`time_updated` desc LIMIT 1 ");
 }
 
 function GetShift()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `shift` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `shift` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated` desc,`time_updated` desc LIMIT 1 ");
 }
 
 function GetOrder()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `order_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `order_no` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated` desc,`time_updated` desc LIMIT 1 ");
 }
 
 function GetIdw()
 {
 	$_checker = CurrentUserName();
-return ExecuteScalar("SELECT `idw` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated`,`time_updated` desc LIMIT 1 ");
+return ExecuteScalar("SELECT `idw` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated` desc,`time_updated` desc LIMIT 1 ");
+}
+
+//audit picking online
+function LastBoxCode()
+{
+	$_checker = CurrentUserName();
+	return ExecuteScalar("SELECT `box_code` FROM audit_picking_online WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC ");
+}
+
+function LastStoreID()
+{
+	$_checker = CurrentUserName();
+	return ExecuteScalar("SELECT `store_id` FROM audit_picking_online WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC ");
+}
+
+function LastStoreName()
+{
+	$_checker = CurrentUserName();
+	return ExecuteScalar("SELECT `store_name` FROM audit_picking_online WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC ");
+}
+
+function StoreName()
+{
+	return ExecuteScalar("SELECT `store_name` FROM `print_label` ORDER BY `id` DESC");
+}
+
+function Priority()
+{
+	return ExecuteScalar("SELECT `priority` FROM `print_label` ORDER BY `id` DESC");
+}
+
+function StoreCode()
+{
+	return ExecuteScalar("SELECT `store_code` FROM `print_label` ORDER BY `id` DESC");
+}
+
+function barcode_label()
+{
+	return ExecuteScalar("SELECT `barcode` FROM `print_label` ORDER BY `id` DESC");
 }

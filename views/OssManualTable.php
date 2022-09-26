@@ -24,7 +24,7 @@ namespace PHPMaker2022\opsmezzanineupload;
 <input type="hidden" name="t" value="oss_manual">
 <div id="gmp_oss_manual" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_oss_manuallist" class="table table-bordered table-hover table-sm ew-table"><!-- .ew-table -->
+<table id="tbl_oss_manuallist" class="table table-bordered table-hover table-sm ew-table d-none"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -35,7 +35,7 @@ $Page->RowType = ROWTYPE_HEADER;
 $Page->renderListOptions();
 
 // Render list options (header, left)
-$Page->ListOptions->render("header", "left");
+$Page->ListOptions->render("header", "left", "", "block", $Page->TableVar, "oss_manuallist");
 ?>
 <?php if ($Page->date->Visible) { // date ?>
         <th data-name="date" class="<?= $Page->date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_date" class="oss_manual_date"><?= $Page->renderFieldHeader($Page->date) ?></div></th>
@@ -70,6 +70,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->shift->Visible) { // shift ?>
         <th data-name="shift" class="<?= $Page->shift->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_shift" class="oss_manual_shift"><?= $Page->renderFieldHeader($Page->shift) ?></div></th>
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_status" class="oss_manual_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
+<?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_oss_manual_date_updated" class="oss_manual_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
 <?php } ?>
@@ -78,7 +81,7 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php
 // Render list options (header, right)
-$Page->ListOptions->render("header", "right");
+$Page->ListOptions->render("header", "right", "", "block", $Page->TableVar, "oss_manuallist");
 ?>
     </tr>
 </thead>
@@ -145,119 +148,131 @@ while ($Page->RecordCount < $Page->StopRecord) {
 
         // Render list options
         $Page->renderListOptions();
+
+        // Save row and cell attributes
+        $Page->Attrs[$Page->RowCount] = ["row_attrs" => $Page->rowAttributes(), "cell_attrs" => []];
+        $Page->Attrs[$Page->RowCount]["cell_attrs"] = $Page->fieldCellAttributes();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
 <?php
 // Render list options (body, left)
-$Page->ListOptions->render("body", "left", $Page->RowCount);
+$Page->ListOptions->render("body", "left", $Page->RowCount, "block", $Page->TableVar, "oss_manuallist");
 ?>
     <?php if ($Page->date->Visible) { // date ?>
         <td data-name="date"<?= $Page->date->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_date" class="el_oss_manual_date">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_date"><span id="el<?= $Page->RowCount ?>_oss_manual_date" class="el_oss_manual_date">
 <span<?= $Page->date->viewAttributes() ?>>
 <?= $Page->date->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->sscc->Visible) { // sscc ?>
         <td data-name="sscc"<?= $Page->sscc->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_sscc" class="el_oss_manual_sscc">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_sscc"><span id="el<?= $Page->RowCount ?>_oss_manual_sscc" class="el_oss_manual_sscc">
 <span<?= $Page->sscc->viewAttributes() ?>>
 <?= $Page->sscc->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->shipment->Visible) { // shipment ?>
         <td data-name="shipment"<?= $Page->shipment->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_shipment" class="el_oss_manual_shipment">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_shipment"><span id="el<?= $Page->RowCount ?>_oss_manual_shipment" class="el_oss_manual_shipment">
 <span<?= $Page->shipment->viewAttributes() ?>>
 <?= $Page->shipment->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->pallet_no->Visible) { // pallet_no ?>
         <td data-name="pallet_no"<?= $Page->pallet_no->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_pallet_no" class="el_oss_manual_pallet_no">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_pallet_no"><span id="el<?= $Page->RowCount ?>_oss_manual_pallet_no" class="el_oss_manual_pallet_no">
 <span<?= $Page->pallet_no->viewAttributes() ?>>
 <?= $Page->pallet_no->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->idw->Visible) { // idw ?>
         <td data-name="idw"<?= $Page->idw->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_idw" class="el_oss_manual_idw">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_idw"><span id="el<?= $Page->RowCount ?>_oss_manual_idw" class="el_oss_manual_idw">
 <span<?= $Page->idw->viewAttributes() ?>>
 <?= $Page->idw->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->order_no->Visible) { // order_no ?>
         <td data-name="order_no"<?= $Page->order_no->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_order_no" class="el_oss_manual_order_no">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_order_no"><span id="el<?= $Page->RowCount ?>_oss_manual_order_no" class="el_oss_manual_order_no">
 <span<?= $Page->order_no->viewAttributes() ?>>
 <?= $Page->order_no->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->item_in_ctn->Visible) { // item_in_ctn ?>
         <td data-name="item_in_ctn"<?= $Page->item_in_ctn->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_item_in_ctn" class="el_oss_manual_item_in_ctn">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_item_in_ctn"><span id="el<?= $Page->RowCount ?>_oss_manual_item_in_ctn" class="el_oss_manual_item_in_ctn">
 <span<?= $Page->item_in_ctn->viewAttributes() ?>>
 <?= $Page->item_in_ctn->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->no_of_ctn->Visible) { // no_of_ctn ?>
         <td data-name="no_of_ctn"<?= $Page->no_of_ctn->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_no_of_ctn" class="el_oss_manual_no_of_ctn">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_no_of_ctn"><span id="el<?= $Page->RowCount ?>_oss_manual_no_of_ctn" class="el_oss_manual_no_of_ctn">
 <span<?= $Page->no_of_ctn->viewAttributes() ?>>
 <?= $Page->no_of_ctn->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->ctn_no->Visible) { // ctn_no ?>
         <td data-name="ctn_no"<?= $Page->ctn_no->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_ctn_no" class="el_oss_manual_ctn_no">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_ctn_no"><span id="el<?= $Page->RowCount ?>_oss_manual_ctn_no" class="el_oss_manual_ctn_no">
 <span<?= $Page->ctn_no->viewAttributes() ?>>
 <?= $Page->ctn_no->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->checker->Visible) { // checker ?>
         <td data-name="checker"<?= $Page->checker->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_checker" class="el_oss_manual_checker">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_checker"><span id="el<?= $Page->RowCount ?>_oss_manual_checker" class="el_oss_manual_checker">
 <span<?= $Page->checker->viewAttributes() ?>>
 <?= $Page->checker->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->shift->Visible) { // shift ?>
         <td data-name="shift"<?= $Page->shift->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_shift" class="el_oss_manual_shift">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_shift"><span id="el<?= $Page->RowCount ?>_oss_manual_shift" class="el_oss_manual_shift">
 <span<?= $Page->shift->viewAttributes() ?>>
 <?= $Page->shift->getViewValue() ?></span>
-</span>
+</span></template>
+</td>
+    <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status"<?= $Page->status->cellAttributes() ?>>
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_status"><span id="el<?= $Page->RowCount ?>_oss_manual_status" class="el_oss_manual_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_date_updated" class="el_oss_manual_date_updated">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_date_updated"><span id="el<?= $Page->RowCount ?>_oss_manual_date_updated" class="el_oss_manual_date_updated">
 <span<?= $Page->date_updated->viewAttributes() ?>>
 <?= $Page->date_updated->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
     <?php if ($Page->time_updated->Visible) { // time_updated ?>
         <td data-name="time_updated"<?= $Page->time_updated->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_oss_manual_time_updated" class="el_oss_manual_time_updated">
+<template id="tpx<?= $Page->RowCount ?>_oss_manual_time_updated"><span id="el<?= $Page->RowCount ?>_oss_manual_time_updated" class="el_oss_manual_time_updated">
 <span<?= $Page->time_updated->viewAttributes() ?>>
 <?= $Page->time_updated->getViewValue() ?></span>
-</span>
+</span></template>
 </td>
     <?php } ?>
 <?php
 // Render list options (body, right)
-$Page->ListOptions->render("body", "right", $Page->RowCount);
+$Page->ListOptions->render("body", "right", $Page->RowCount, "block", $Page->TableVar, "oss_manuallist");
 ?>
     </tr>
 <?php
@@ -270,6 +285,79 @@ $Page->ListOptions->render("body", "right", $Page->RowCount);
 </tbody>
 </table><!-- /.ew-table -->
 <?php } ?>
+<div id="tpd_oss_manuallist" class="ew-custom-template"></div>
+<template id="tpm_oss_manuallist">
+<div id="ct_OssManualList"><?php if ($Page->RowCount > 0) { ?>
+<table class="ewTable">
+    <tbody>
+<?php for ($i = $Page->StartRowCount; $i <= $Page->RowCount; $i++) { ?>
+<table class="table table-striped table-sm ew-view-table">
+    <tr id="r_date">
+        <td class="w-col-2"><?= $Page->date->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_date"></slot></td>
+    </tr>
+    <tr id="r_sscc">
+        <td class="w-col-2"><?= $Page->sscc->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_sscc"></slot></td>
+    </tr>
+    <tr id="r_scan">
+        <td class="w-col-2"><?= $Page->scan->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_scan"></slot></td>
+    </tr>
+    <tr id="r_shipment">
+        <td class="w-col-2"><?= $Page->shipment->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_shipment"></slot></td>
+    </tr>
+    <tr id="r_pallet_no">
+        <td class="w-col-2"><?= $Page->pallet_no->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_pallet_no"></slot></td>
+    </tr>
+    <tr id="r_idw">
+        <td class="w-col-2"><?= $Page->idw->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_idw"></slot></td>
+    </tr>
+    <tr id="r_order_no">
+        <td class="w-col-2"><?= $Page->order_no->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_order_no"></slot></td>
+    </tr>
+    <tr id="r_item_in_ctn">
+        <td class="w-col-2"><?= $Page->item_in_ctn->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_item_in_ctn"></slot></td>
+    </tr>
+    <tr id="r_no_of_ctn">
+        <td class="w-col-2"><?= $Page->no_of_ctn->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_no_of_ctn"></slot></td>
+    </tr>
+    <tr id="r_ctn_no">
+        <td class="w-col-2"><?= $Page->ctn_no->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_ctn_no"></slot></td>
+    </tr>
+    <tr id="r_checker">
+        <td class="w-col-2"><?= $Page->checker->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_checker"></slot></td>
+    </tr>
+    <tr id="r_shift">
+        <td class="w-col-2"><?= $Page->shift->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_shift"></slot></td>
+    </tr>
+    <tr id="r_status">
+        <td class="w-col-2"><?= $Page->status->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_status"></slot></td>
+    </tr>
+    <tr id="r_date_updated">
+        <td class="w-col-2"><?= $Page->date_updated->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_date_updated"></slot></td>
+    </tr>
+    <tr id="r_time_updated">
+        <td class="w-col-2"><?= $Page->time_updated->caption() ?></td>
+        <td><slot class="ew-slot" name="tpx<?= $i ?>_oss_manual_time_updated"></slot></td>
+    </tr>
+</table>
+<?php } ?>
+</tbody></table>
+<?php } ?>
+</div>
+</template>
 </div><!-- /.ew-grid-middle-panel -->
 <?php if (!$Page->CurrentAction) { ?>
 <input type="hidden" name="action" id="action" value="">
@@ -282,4 +370,11 @@ if ($Page->Recordset) {
 }
 ?>
 </div><!-- /.ew-grid -->
+<script class="ew-apply-template">
+loadjs.ready(ew.applyTemplateId, function() {
+    ew.templateData = { rows: <?= JsonEncode($Page->Rows) ?> };
+    ew.applyTemplate("tpd_oss_manuallist", "tpm_oss_manuallist", "oss_manuallist", "<?= $Page->CustomExport ?>", ew.templateData);
+    loadjs.done("customtemplate");
+});
+</script>
 </div><!-- /.ew-multi-column-grid -->

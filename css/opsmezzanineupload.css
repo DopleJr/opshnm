@@ -2218,4 +2218,18 @@ img.ew-barcode {
   vertical-align: middle;
 }
 
+.ew-pager-form {
+  display: inline-block;
+}
+
+.ew-list-option-body {
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+
+.ew-desktop .ew-desktop-table > tbody > tr > td:first-of-type {
+  text-align: center;
+  padding-right: 0.75rem;
+}
+
 /*END_USER_STYLES*/

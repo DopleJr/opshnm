@@ -38,7 +38,7 @@ class JobControl extends DbTable
     public $status;
     public $date_created;
     public $date_updated;
-    public $bb;
+    public $x;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -259,27 +259,27 @@ class JobControl extends DbTable
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 
-        // bb
-        $this->bb = new DbField(
+        // x
+        $this->x = new DbField(
             'job_control',
             'job_control',
-            'x_bb',
-            'bb',
-            '`bb`',
-            '`bb`',
+            'x_x',
+            'x',
+            '`x`',
+            '`x`',
             200,
             255,
             -1,
             false,
-            '`bb`',
+            '`x`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->bb->InputTextType = "text";
-        $this->Fields['bb'] = &$this->bb;
+        $this->x->InputTextType = "text";
+        $this->Fields['x'] = &$this->x;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -718,7 +718,7 @@ class JobControl extends DbTable
         $this->status->DbValue = $row['status'];
         $this->date_created->DbValue = $row['date_created'];
         $this->date_updated->DbValue = $row['date_updated'];
-        $this->bb->DbValue = $row['bb'];
+        $this->x->DbValue = $row['x'];
     }
 
     // Delete uploaded files
@@ -1044,7 +1044,7 @@ class JobControl extends DbTable
         $this->status->setDbValue($row['status']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
-        $this->bb->setDbValue($row['bb']);
+        $this->x->setDbValue($row['x']);
     }
 
     // Render list row values
@@ -1077,7 +1077,7 @@ class JobControl extends DbTable
         // date_updated
         $this->date_updated->CellCssStyle = "white-space: nowrap;";
 
-        // bb
+        // x
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1168,9 +1168,9 @@ class JobControl extends DbTable
         $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
         $this->date_updated->ViewCustomAttributes = "";
 
-        // bb
-        $this->bb->ViewValue = $this->bb->CurrentValue;
-        $this->bb->ViewCustomAttributes = "";
+        // x
+        $this->x->ViewValue = $this->x->CurrentValue;
+        $this->x->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1207,10 +1207,10 @@ class JobControl extends DbTable
         $this->date_updated->HrefValue = "";
         $this->date_updated->TooltipValue = "";
 
-        // bb
-        $this->bb->LinkCustomAttributes = "";
-        $this->bb->HrefValue = "";
-        $this->bb->TooltipValue = "";
+        // x
+        $this->x->LinkCustomAttributes = "";
+        $this->x->HrefValue = "";
+        $this->x->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1305,14 +1305,14 @@ class JobControl extends DbTable
         $this->date_updated->EditValue = FormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
         $this->date_updated->PlaceHolder = RemoveHtml($this->date_updated->caption());
 
-        // bb
-        $this->bb->setupEditAttributes();
-        $this->bb->EditCustomAttributes = "";
-        if (!$this->bb->Raw) {
-            $this->bb->CurrentValue = HtmlDecode($this->bb->CurrentValue);
+        // x
+        $this->x->setupEditAttributes();
+        $this->x->EditCustomAttributes = "";
+        if (!$this->x->Raw) {
+            $this->x->CurrentValue = HtmlDecode($this->x->CurrentValue);
         }
-        $this->bb->EditValue = $this->bb->CurrentValue;
-        $this->bb->PlaceHolder = RemoveHtml($this->bb->caption());
+        $this->x->EditValue = $this->x->CurrentValue;
+        $this->x->PlaceHolder = RemoveHtml($this->x->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1349,7 +1349,7 @@ class JobControl extends DbTable
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
-                    $doc->exportCaption($this->bb);
+                    $doc->exportCaption($this->x);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->job_category);
@@ -1358,7 +1358,7 @@ class JobControl extends DbTable
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
-                    $doc->exportCaption($this->bb);
+                    $doc->exportCaption($this->x);
                 }
                 $doc->endExportRow();
             }
@@ -1395,7 +1395,7 @@ class JobControl extends DbTable
                         $doc->exportField($this->status);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
-                        $doc->exportField($this->bb);
+                        $doc->exportField($this->x);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->job_category);
@@ -1404,7 +1404,7 @@ class JobControl extends DbTable
                         $doc->exportField($this->status);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
-                        $doc->exportField($this->bb);
+                        $doc->exportField($this->x);
                     }
                     $doc->endExportRow($rowCnt);
                 }

@@ -3128,6 +3128,15 @@ class PickingPending extends DbTable
     public function rowSelected(&$rs)
     {
         //Log("Row Selected");
+        $_storeid = $this->store_id->CurrentValue;
+        $_picker = CurrentUsername();
+        $store1 = "SELECT `store_id` FROM picking WHERE `picker` = '$_picker' AND `status`= 'Done' ORDER BY `confirmation_date` DESC, `confirmation_time` DESC LIMIT 1";
+        $_store1 = ExecuteScalar($store1);
+        $store2 = "SELECT `store_id` FROM picking WHERE `picker` = '$_picker' AND `status`= 'Pending' ORDER BY `job_id` ASC, `sequence` ASC LIMIT 1";
+        $_store2 = ExecuteScalar($store2);
+        if($_store1 !== $_store2){
+        	echo "<script>alert('Store saat ini : $_store2');</script>";
+        }
     }
 
     // Row Inserting event

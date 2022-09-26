@@ -213,6 +213,7 @@ ew.createChart = function (args) {
     });
 };
 </script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Navbar -->
 <script type="text/html" id="navbar-menu-items" class="ew-js-template" data-name="navbar" data-seq="10" data-data="navbar" data-method="appendTo" data-target="#ew-navbar">
 {{if items}}
@@ -336,6 +337,8 @@ ew.createChart = function (args) {
 {{/if}}
 </script>
 <?php } ?>
+<link rel="shortcut icon" type="image/x-icon" href="<?= BasePath() ?>/favicon.ico">
+<link rel="icon" type="image/x-icon" href="<?= BasePath() ?>/favicon.ico">
 <meta name="generator" content="PHPMaker 2022.12.0">
 </head>
 <body class="<?= Config("BODY_CLASS") ?>">
@@ -351,7 +354,7 @@ ew.createChart = function (args) {
                 <li class="nav-item d-block">
                     <a class="nav-link" data-widget="pushmenu" data-enable-remember="true" data-ew-action="none"><i class="fas fa-bars ew-icon"></i></a>
                 </li>
-                <a class="navbar-brand d-none" href="#" data-ew-action="none">
+                <a class="navbar-brand d-none" href="./images/favicon.png">
                     <span class="brand-text">OPS HNM 2022</span>
                 </a>
             </ul>
@@ -364,7 +367,7 @@ ew.createChart = function (args) {
     <aside class="<?= Config("SIDEBAR_CLASS") ?>">
         <div class="brand-container">
             <!-- Brand Logo //** Note: Only licensed users are allowed to change the logo ** -->
-            <a href="#" class="brand-link">
+            <a href="./images/favicon.png" class="brand-link">
                 <span class="brand-text">OPS HNM 2022</span>
             </a>
             <?php if (preg_match('/\bsidebar-mini\b/', Config("BODY_CLASS"))) { ?>

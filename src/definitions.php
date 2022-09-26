@@ -96,6 +96,7 @@ return [
     "oss_manual" => \DI\create(OssManual::class),
     "productivity_online" => \DI\create(ProductivityOnline::class),
     "check_box" => \DI\create(CheckBox::class),
+    "audit_picking_online" => \DI\create(AuditPickingOnline::class),
 
     // User table
     "usertable" => \DI\get("user"),

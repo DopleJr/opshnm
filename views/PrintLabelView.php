@@ -116,14 +116,19 @@ $Page->showMessage();
 <div id="tpd_print_labelview" class="ew-custom-template"></div>
 <template id="tpm_print_labelview">
 <div id="ct_PrintLabelView"><script>
+$(document).ready(function() {
   window.onload = function(){
   	window.print();
-  	window.onafterprint = back;
+  	window.onafterprint =
+  	function() {
+  	window.close = back();
+  	 };
   }
 
   function back() {
     window.history.back();
   }
+});
 </script>
 <!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
 <html xmlns:v="urn:schemas-microsoft-com:vml"

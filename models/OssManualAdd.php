@@ -1662,6 +1662,12 @@ class OssManualAdd extends OssManual
     public function pageLoad()
     {
         //Log("Page Load");
+        SetClientVar("GetShipment",GetShipment() );
+        SetClientVar("GetPallet",GetPallet() );
+        SetClientVar("GetShift",GetShift() );
+        SetClientVar("GetOrder",GetOrder() );
+        SetClientVar("GetIdw",GetIdw() );
+        SetClientVar("GetShipment",GetShipment() );
     }
 
     // Page Unload event

@@ -644,6 +644,12 @@ class PrintLabelAdd extends PrintLabel
     {
         $this->box_id->DefaultValue = generateLabel();
         $this->box_id->OldValue = $this->box_id->DefaultValue;
+        $this->priority->DefaultValue = Priority();
+        $this->priority->OldValue = $this->priority->DefaultValue;
+        $this->store_code->DefaultValue = StoreCode();
+        $this->store_code->OldValue = $this->store_code->DefaultValue;
+        $this->store_name->DefaultValue = StoreName();
+        $this->store_name->OldValue = $this->store_name->DefaultValue;
     }
 
     // Load form values
@@ -1128,6 +1134,7 @@ class PrintLabelAdd extends PrintLabel
     public function pageLoad()
     {
         //Log("Page Load");
+        Language()->setPhrase("AddSuccess", "");
     }
 
     // Page Unload event

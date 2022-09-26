@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/21">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/26">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -1012,6 +1012,9 @@
     </menu>
     <menu id="316">
       <phrase id="menutext" value="Data Picking Online" />
+    </menu>
+    <menu id="483">
+      <phrase id="menutext" value="Audit Picking Online" />
     </menu>
     <menu id="43">
       <phrase id="menutext" value="Mezzanine" />
@@ -2324,8 +2327,8 @@
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
       </field>
-      <field id="bb">
-        <phrase id="fldcaption" value="bb" />
+      <field id="x">
+        <phrase id="fldcaption" value="x" />
       </field>
     </table>
     <table id="shortpick_by_area">
@@ -2826,8 +2829,8 @@
     </table>
     <table id="check_box">
       <phrase id="tblcaption" value="Check Box" />
-      <field id="creation_date">
-        <phrase id="fldcaption" value="Creation Date" />
+      <field id="box_code">
+        <phrase id="fldcaption" value="Box Code" />
       </field>
       <field id="store_id">
         <phrase id="fldcaption" value="Store ID" />
@@ -2856,11 +2859,47 @@
       <field id="confirmation_time">
         <phrase id="fldcaption" value="Confirmation Time" />
       </field>
+      <field id="picker">
+        <phrase id="fldcaption" value="Picker" />
+      </field>
+    </table>
+    <table id="audit_picking_online">
+      <phrase id="tblcaption" value="Audit Picking Online" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
       <field id="box_code">
         <phrase id="fldcaption" value="Box Code" />
       </field>
-      <field id="picker">
-        <phrase id="fldcaption" value="Picker" />
+      <field id="store_id">
+        <phrase id="fldcaption" value="Store ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="scan">
+        <phrase id="fldcaption" value="Scan" />
+      </field>
+      <field id="article">
+        <phrase id="fldcaption" value="Article" />
+      </field>
+      <field id="picked_qty">
+        <phrase id="fldcaption" value="Picked Qty" />
+      </field>
+      <field id="scan_qty">
+        <phrase id="fldcaption" value="Scan Qty" />
+      </field>
+      <field id="checker">
+        <phrase id="fldcaption" value="Checker" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="status" />
+      </field>
+      <field id="date_update">
+        <phrase id="fldcaption" value="Date Update" />
+      </field>
+      <field id="time_update">
+        <phrase id="fldcaption" value="Time Update" />
       </field>
     </table>
   </project>

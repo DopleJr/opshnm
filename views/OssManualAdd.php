@@ -398,30 +398,6 @@ loadjs.ready(["foss_manualadd", "datetimepicker"], function () {
 <template id="tpm_oss_manualadd">
 <div id="ct_OssManualAdd"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript">
-
-function reset_shipment() {
-  $("#x_shipment").val("");
-  $("#x_pallet_no").val("");
-  $("#x_order_no").val("");
-  $("#x_shipment").attr("readonly", false);
-  $("#x_pallet_no").attr("readonly", false);
-  $("#x_order_no").attr("readonly", false);
-  $("#x_shipment").focus();
-}
-
-function reset_pallet() {
-  $("#x_pallet_no").val("");
-  $("#x_order_no").val("");
-  $("#x_pallet_no").attr("readonly", false);
-  $("#x_order_no").attr("readonly", false);
-  $("x_pallet_no").focus();
-}
-
-function reset_on() {
-  $("#x_order_no").val("");
-  $("#x_order_no").attr("readonly", false);
-  $("x_order_no").focus();
-}
 $("body").on("keydown", "input, select", function (e) {
   // ganti enter jadi tab di setiap input
   if (e.which == 13 || e.keycode == 13) {
@@ -461,6 +437,8 @@ $(document).ready(function () {
         var ctnno = row["ctn_no"];
         var idw = row["idw"];
         var scan = $("#x_scan").val();
+
+        //update record
         $("#x_sscc").val(scan + "_1");
         $("#x_shipment").val(shipment);
         $("#x_pallet_no").val(palletno);
@@ -479,14 +457,24 @@ $(document).ready(function () {
           width: 200,
           height: 180,
           didClose: (e) => {
+          	//Old Record
+          	var GetShipment = ew.vars.GetShipment;
+          	var GetPallet = ew.vars.GetPallet;
+          	var GetOrder = ew.vars.GetOrder;
+          	var GetIdw = ew.vars.GetIdw;
             // focus your element
+            $("#x_shipment").val(GetShipment);
+            $("#x_pallet_no").val(GetPallet);
+            $("#x_order_no").val(GetOrder);
+            $("#x_idw").val(GetIdw);
+            //
             $("#x_sscc").val($("#x_scan").val());
             $("#x_scan").attr("readonly", true);
             $("#x_date").attr("disabled", false);
             $("#x_date").attr("readonly", true);
             $("#x_idw").attr('readonly', false);
             $("#x_scan").blur();
-            $("#x_shipment").focus();
+            $("#x_item_in_ctn").focus();
           },
         });
       }

@@ -1619,6 +1619,26 @@ class AuditPicking extends DbTable
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        if ($this->status->ViewValue == "Match"){ 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: green
+                ";}
+         elseif ($this->status->ViewValue == "Unmatch") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: grey
+                ";}
+         elseif ($this->status->ViewValue == "Quarantine") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: red
+                ";}
+         elseif ($this->status->ViewValue == "Scanned") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: orange
+                ";}
     }
 
     // User ID Filtering event

@@ -510,8 +510,8 @@ class OssManual extends DbTable
         }
     }
 
-    // Multiple column sort
-    public function updateSort(&$fld, $ctrl)
+    // Single column sort
+    public function updateSort(&$fld)
     {
         if ($this->CurrentOrder == $fld->Name) {
             $sortField = $fld->Expression;
@@ -521,29 +521,8 @@ class OssManual extends DbTable
             } else {
                 $curSort = $lastSort;
             }
-            $lastOrderBy = in_array($lastSort, ["ASC", "DESC"]) ? $sortField . " " . $lastSort : "";
-            $curOrderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
-            if ($ctrl) {
-                $orderBy = $this->getSessionOrderBy();
-                $arOrderBy = !empty($orderBy) ? explode(", ", $orderBy) : [];
-                if ($lastOrderBy != "" && in_array($lastOrderBy, $arOrderBy)) {
-                    foreach ($arOrderBy as $key => $val) {
-                        if ($val == $lastOrderBy) {
-                            if ($curOrderBy == "") {
-                                unset($arOrderBy[$key]);
-                            } else {
-                                $arOrderBy[$key] = $curOrderBy;
-                            }
-                        }
-                    }
-                } elseif ($curOrderBy != "") {
-                    $arOrderBy[] = $curOrderBy;
-                }
-                $orderBy = implode(", ", $arOrderBy);
-                $this->setSessionOrderBy($orderBy); // Save to Session
-            } else {
-                $this->setSessionOrderBy($curOrderBy); // Save to Session
-            }
+            $orderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
+            $this->setSessionOrderBy($orderBy); // Save to Session
         }
     }
 
@@ -1162,7 +1141,7 @@ class OssManual extends DbTable
         $attrs = "";
         if ($fld->Sortable) {
             $sortUrl = $this->sortUrl($fld);
-            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="2"';
+            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="1"';
         }
         $html = '<div class="ew-table-header-caption"' . $attrs . '>' . $fld->caption() . '</div>';
         if ($sortUrl) {

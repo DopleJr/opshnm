@@ -663,6 +663,8 @@ class ReportOutboundAdd extends ReportOutbound
     {
         $this->date_created->DefaultValue = CurrentDate();
         $this->date_created->OldValue = $this->date_created->DefaultValue;
+        $this->date_updated->DefaultValue = CurrentUserName();
+        $this->date_updated->OldValue = $this->date_updated->DefaultValue;
     }
 
     // Load form values

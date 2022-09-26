@@ -20,7 +20,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fcheck_boxlist.formKeyCountName = "<?= $Page->FormKeyCountName ?>";
 
     // Dynamic selection lists
-    fcheck_boxlist.lists.creation_date = <?= $Page->creation_date->toClientList($Page) ?>;
+    fcheck_boxlist.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
     fcheck_boxlist.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
     fcheck_boxlist.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
     fcheck_boxlist.lists.article = <?= $Page->article->toClientList($Page) ?>;
@@ -30,7 +30,6 @@ loadjs.ready(["wrapper", "head"], function () {
     fcheck_boxlist.lists.variance_qty = <?= $Page->variance_qty->toClientList($Page) ?>;
     fcheck_boxlist.lists.confirmation_date = <?= $Page->confirmation_date->toClientList($Page) ?>;
     fcheck_boxlist.lists.confirmation_time = <?= $Page->confirmation_time->toClientList($Page) ?>;
-    fcheck_boxlist.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
     fcheck_boxlist.lists.picker = <?= $Page->picker->toClientList($Page) ?>;
     loadjs.done("fcheck_boxlist");
 });
@@ -44,8 +43,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     fcheck_boxsrch.addFields([
-        ["creation_date", [], fields.creation_date.isInvalid],
-        ["y_creation_date", [ew.Validators.between], false],
+        ["box_code", [], fields.box_code.isInvalid],
         ["store_id", [], fields.store_id.isInvalid],
         ["store_name", [], fields.store_name.isInvalid],
         ["article", [], fields.article.isInvalid],
@@ -56,7 +54,6 @@ loadjs.ready(["wrapper", "head"], function () {
         ["confirmation_date", [], fields.confirmation_date.isInvalid],
         ["y_confirmation_date", [ew.Validators.between], false],
         ["confirmation_time", [], fields.confirmation_time.isInvalid],
-        ["box_code", [], fields.box_code.isInvalid],
         ["picker", [], fields.picker.isInvalid]
     ]);
 
@@ -88,7 +85,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fcheck_boxsrch.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
-    fcheck_boxsrch.lists.creation_date = <?= $Page->creation_date->toClientList($Page) ?>;
+    fcheck_boxsrch.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
     fcheck_boxsrch.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
     fcheck_boxsrch.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
     fcheck_boxsrch.lists.article = <?= $Page->article->toClientList($Page) ?>;
@@ -98,7 +95,6 @@ loadjs.ready(["wrapper", "head"], function () {
     fcheck_boxsrch.lists.variance_qty = <?= $Page->variance_qty->toClientList($Page) ?>;
     fcheck_boxsrch.lists.confirmation_date = <?= $Page->confirmation_date->toClientList($Page) ?>;
     fcheck_boxsrch.lists.confirmation_time = <?= $Page->confirmation_time->toClientList($Page) ?>;
-    fcheck_boxsrch.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
     fcheck_boxsrch.lists.picker = <?= $Page->picker->toClientList($Page) ?>;
 
     // Filters
@@ -108,11 +104,7 @@ loadjs.ready(["wrapper", "head"], function () {
 </script>
 <script>
 loadjs.ready("head", function () {
-    // Client script
-    $(document).on('focus','input[type=search]',function(){
-        		this.select();
-        		$(".ew-basic-search").focus();
-        		});
+    // Write your table-specific client script here, no need to add script tags.
 });
 </script>
 <?php } ?>
@@ -149,38 +141,38 @@ $Page->RowType = ROWTYPE_SEARCH;
 $Page->resetAttributes();
 $Page->renderRow();
 ?>
-<?php if ($Page->creation_date->Visible) { // creation_date ?>
+<?php if ($Page->box_code->Visible) { // box_code ?>
 <?php
-if (!$Page->creation_date->UseFilter) {
+if (!$Page->box_code->UseFilter) {
     $Page->SearchColumnCount++;
 }
 ?>
-    <div id="xs_creation_date" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->creation_date->UseFilter ? " ew-filter-field" : "" ?>">
+    <div id="xs_box_code" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->box_code->UseFilter ? " ew-filter-field" : "" ?>">
         <select
-            id="x_creation_date"
-            name="x_creation_date[]"
-            class="form-control ew-select<?= $Page->creation_date->isInvalidClass() ?>"
-            data-select2-id="fcheck_boxsrch_x_creation_date"
+            id="x_box_code"
+            name="x_box_code[]"
+            class="form-control ew-select<?= $Page->box_code->isInvalidClass() ?>"
+            data-select2-id="fcheck_boxsrch_x_box_code"
             data-table="check_box"
-            data-field="x_creation_date"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->creation_date->caption())) ?>"
+            data-field="x_box_code"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->box_code->caption())) ?>"
             data-filter="true"
             multiple
             size="1"
-            data-value-separator="<?= $Page->creation_date->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->creation_date->getPlaceHolder()) ?>"
-            <?= $Page->creation_date->editAttributes() ?>>
-            <?= $Page->creation_date->selectOptionListHtml("x_creation_date", true) ?>
+            data-value-separator="<?= $Page->box_code->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->box_code->getPlaceHolder()) ?>"
+            <?= $Page->box_code->editAttributes() ?>>
+            <?= $Page->box_code->selectOptionListHtml("x_box_code", true) ?>
         </select>
-        <div class="invalid-feedback"><?= $Page->creation_date->getErrorMessage(false) ?></div>
+        <div class="invalid-feedback"><?= $Page->box_code->getErrorMessage(false) ?></div>
         <script>
         loadjs.ready("fcheck_boxsrch", function() {
             var options = {
-                name: "x_creation_date",
-                selectId: "fcheck_boxsrch_x_creation_date",
-                ajax: { id: "x_creation_date", form: "fcheck_boxsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+                name: "x_box_code",
+                selectId: "fcheck_boxsrch_x_box_code",
+                ajax: { id: "x_box_code", form: "fcheck_boxsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.check_box.fields.creation_date.filterOptions);
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.check_box.fields.box_code.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -519,43 +511,6 @@ if (!$Page->confirmation_time->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
-<?php if ($Page->box_code->Visible) { // box_code ?>
-<?php
-if (!$Page->box_code->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_box_code" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->box_code->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_box_code"
-            name="x_box_code[]"
-            class="form-control ew-select<?= $Page->box_code->isInvalidClass() ?>"
-            data-select2-id="fcheck_boxsrch_x_box_code"
-            data-table="check_box"
-            data-field="x_box_code"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->box_code->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->box_code->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->box_code->getPlaceHolder()) ?>"
-            <?= $Page->box_code->editAttributes() ?>>
-            <?= $Page->box_code->selectOptionListHtml("x_box_code", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->box_code->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fcheck_boxsrch", function() {
-            var options = {
-                name: "x_box_code",
-                selectId: "fcheck_boxsrch_x_box_code",
-                ajax: { id: "x_box_code", form: "fcheck_boxsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.check_box.fields.box_code.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
 <?php if ($Page->picker->Visible) { // picker ?>
 <?php
 if (!$Page->picker->UseFilter) {
@@ -658,8 +613,8 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->creation_date->Visible) { // creation_date ?>
-        <th data-name="creation_date" class="<?= $Page->creation_date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_creation_date" class="check_box_creation_date"><?= $Page->renderFieldHeader($Page->creation_date) ?></div></th>
+<?php if ($Page->box_code->Visible) { // box_code ?>
+        <th data-name="box_code" class="<?= $Page->box_code->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_box_code" class="check_box_box_code"><?= $Page->renderFieldHeader($Page->box_code) ?></div></th>
 <?php } ?>
 <?php if ($Page->store_id->Visible) { // store_id ?>
         <th data-name="store_id" class="<?= $Page->store_id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_store_id" class="check_box_store_id"><?= $Page->renderFieldHeader($Page->store_id) ?></div></th>
@@ -687,9 +642,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->confirmation_time->Visible) { // confirmation_time ?>
         <th data-name="confirmation_time" class="<?= $Page->confirmation_time->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_confirmation_time" class="check_box_confirmation_time"><?= $Page->renderFieldHeader($Page->confirmation_time) ?></div></th>
-<?php } ?>
-<?php if ($Page->box_code->Visible) { // box_code ?>
-        <th data-name="box_code" class="<?= $Page->box_code->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_box_code" class="check_box_box_code"><?= $Page->renderFieldHeader($Page->box_code) ?></div></th>
 <?php } ?>
 <?php if ($Page->picker->Visible) { // picker ?>
         <th data-name="picker" class="<?= $Page->picker->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_picker" class="check_box_picker"><?= $Page->renderFieldHeader($Page->picker) ?></div></th>
@@ -769,11 +721,11 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->creation_date->Visible) { // creation_date ?>
-        <td data-name="creation_date"<?= $Page->creation_date->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_check_box_creation_date" class="el_check_box_creation_date">
-<span<?= $Page->creation_date->viewAttributes() ?>>
-<?= $Page->creation_date->getViewValue() ?></span>
+    <?php if ($Page->box_code->Visible) { // box_code ?>
+        <td data-name="box_code"<?= $Page->box_code->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_check_box_box_code" class="el_check_box_box_code">
+<span<?= $Page->box_code->viewAttributes() ?>>
+<?= $Page->box_code->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -849,14 +801,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->box_code->Visible) { // box_code ?>
-        <td data-name="box_code"<?= $Page->box_code->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_check_box_box_code" class="el_check_box_box_code">
-<span<?= $Page->box_code->viewAttributes() ?>>
-<?= $Page->box_code->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->picker->Visible) { // picker ?>
         <td data-name="picker"<?= $Page->picker->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_check_box_picker" class="el_check_box_picker">
@@ -894,8 +838,8 @@ $Page->renderListOptions();
 // Render list options (footer, left)
 $Page->ListOptions->render("footer", "left");
 ?>
-    <?php if ($Page->creation_date->Visible) { // creation_date ?>
-        <td data-name="creation_date" class="<?= $Page->creation_date->footerCellClass() ?>"><span id="elf_check_box_creation_date" class="check_box_creation_date">
+    <?php if ($Page->box_code->Visible) { // box_code ?>
+        <td data-name="box_code" class="<?= $Page->box_code->footerCellClass() ?>"><span id="elf_check_box_box_code" class="check_box_box_code">
         </span></td>
     <?php } ?>
     <?php if ($Page->store_id->Visible) { // store_id ?>
@@ -938,10 +882,6 @@ $Page->ListOptions->render("footer", "left");
     <?php } ?>
     <?php if ($Page->confirmation_time->Visible) { // confirmation_time ?>
         <td data-name="confirmation_time" class="<?= $Page->confirmation_time->footerCellClass() ?>"><span id="elf_check_box_confirmation_time" class="check_box_confirmation_time">
-        </span></td>
-    <?php } ?>
-    <?php if ($Page->box_code->Visible) { // box_code ?>
-        <td data-name="box_code" class="<?= $Page->box_code->footerCellClass() ?>"><span id="elf_check_box_box_code" class="check_box_box_code">
         </span></td>
     <?php } ?>
     <?php if ($Page->picker->Visible) { // picker ?>

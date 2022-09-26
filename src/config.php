@@ -146,7 +146,7 @@ $CONFIG = [
 
     // General
     "UNFORMAT_YEAR" => 50, // Unformat year
-    "RANDOM_KEY" => '58xxhZSz05I1u3U8', // Random key for encryption
+    "RANDOM_KEY" => 'uq5ilU5XWL4BNqD3', // Random key for encryption
     "ENCRYPTION_KEY" => '', // Encryption key for data protection
     "PROJECT_STYLESHEET_FILENAME" => "css/opsmezzanineupload.css", // Project stylesheet file name
     "USE_COMPRESSED_STYLESHEET" => true, // Compressed stylesheet
@@ -983,10 +983,10 @@ $CONFIG = [
      * 2 - AND all multi values
      * 3 - OR all multi values
     */
-    "SEARCH_MULTI_VALUE_OPTION" => 1,
+    "SEARCH_MULTI_VALUE_OPTION" => 3,
 
     // Advanced search
-    "SEARCH_OPTION" => "AUTO",
+    "SEARCH_OPTION" => "OR",
 
     // Quick search
     "BASIC_SEARCH_IGNORE_PATTERN" => "/[\?,\.\^\*\(\)\[\]\\\"]/", // Ignore special characters

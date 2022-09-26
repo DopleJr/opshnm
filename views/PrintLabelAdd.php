@@ -177,6 +177,9 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
+    // Startup script
     // Write your table-specific startup script here, no need to add script tags.
+    $(".ew-toast").hide();
+    $('a.ew-export-link.ew-print').attr('target','_blank');
 });
 </script>

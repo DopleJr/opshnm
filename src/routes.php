@@ -564,11 +564,28 @@ return function (App $app) {
     );
 
     // check_box
-    $app->map(["GET","POST","OPTIONS"], '/checkboxlist[/{box_code:.*}]', CheckBoxController::class . ':list')->add(PermissionMiddleware::class)->setName('checkboxlist-check_box-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/checkboxlist', CheckBoxController::class . ':list')->add(PermissionMiddleware::class)->setName('checkboxlist-check_box-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/checkboxsearch', CheckBoxController::class . ':search')->add(PermissionMiddleware::class)->setName('checkboxsearch-check_box-search'); // search
     $app->group(
         '/check_box',
         function (RouteCollectorProxy $group) {
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{box_code:.*}]', CheckBoxController::class . ':list')->add(PermissionMiddleware::class)->setName('check_box/list-check_box-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '', CheckBoxController::class . ':list')->add(PermissionMiddleware::class)->setName('check_box/list-check_box-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("SEARCH_ACTION") . '', CheckBoxController::class . ':search')->add(PermissionMiddleware::class)->setName('check_box/search-check_box-search-2'); // search
+        }
+    );
+
+    // audit_picking_online
+    $app->map(["GET","POST","OPTIONS"], '/auditpickingonlinelist[/{id}]', AuditPickingOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('auditpickingonlinelist-audit_picking_online-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/auditpickingonlineadd[/{id}]', AuditPickingOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('auditpickingonlineadd-audit_picking_online-add'); // add
+    $app->map(["GET","POST","OPTIONS"], '/auditpickingonlineview[/{id}]', AuditPickingOnlineController::class . ':view')->add(PermissionMiddleware::class)->setName('auditpickingonlineview-audit_picking_online-view'); // view
+    $app->map(["GET","POST","OPTIONS"], '/auditpickingonlineedit[/{id}]', AuditPickingOnlineController::class . ':edit')->add(PermissionMiddleware::class)->setName('auditpickingonlineedit-audit_picking_online-edit'); // edit
+    $app->group(
+        '/audit_picking_online',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('audit_picking_online/list-audit_picking_online-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('audit_picking_online/add-audit_picking_online-add-2'); // add
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':view')->add(PermissionMiddleware::class)->setName('audit_picking_online/view-audit_picking_online-view-2'); // view
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':edit')->add(PermissionMiddleware::class)->setName('audit_picking_online/edit-audit_picking_online-edit-2'); // edit
         }
     );
 

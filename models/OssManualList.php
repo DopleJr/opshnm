@@ -1304,27 +1304,24 @@ class OssManualList extends OssManual
             }
         }
 
-        // Check for Ctrl pressed
-        $ctrl = Get("ctrl") !== null;
-
         // Check for "order" parameter
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->date, $ctrl); // date
-            $this->updateSort($this->sscc, $ctrl); // sscc
-            $this->updateSort($this->shipment, $ctrl); // shipment
-            $this->updateSort($this->pallet_no, $ctrl); // pallet_no
-            $this->updateSort($this->idw, $ctrl); // idw
-            $this->updateSort($this->order_no, $ctrl); // order_no
-            $this->updateSort($this->item_in_ctn, $ctrl); // item_in_ctn
-            $this->updateSort($this->no_of_ctn, $ctrl); // no_of_ctn
-            $this->updateSort($this->ctn_no, $ctrl); // ctn_no
-            $this->updateSort($this->checker, $ctrl); // checker
-            $this->updateSort($this->shift, $ctrl); // shift
-            $this->updateSort($this->status, $ctrl); // status
-            $this->updateSort($this->date_updated, $ctrl); // date_updated
-            $this->updateSort($this->time_updated, $ctrl); // time_updated
+            $this->updateSort($this->date); // date
+            $this->updateSort($this->sscc); // sscc
+            $this->updateSort($this->shipment); // shipment
+            $this->updateSort($this->pallet_no); // pallet_no
+            $this->updateSort($this->idw); // idw
+            $this->updateSort($this->order_no); // order_no
+            $this->updateSort($this->item_in_ctn); // item_in_ctn
+            $this->updateSort($this->no_of_ctn); // no_of_ctn
+            $this->updateSort($this->ctn_no); // ctn_no
+            $this->updateSort($this->checker); // checker
+            $this->updateSort($this->shift); // shift
+            $this->updateSort($this->status); // status
+            $this->updateSort($this->date_updated); // date_updated
+            $this->updateSort($this->time_updated); // time_updated
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1451,7 +1448,11 @@ class OssManualList extends OssManual
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView()) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+                if (IsMobile()) {
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+                } else {
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"oss_manual\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
+                }
             } else {
                 $opt->Body = "";
             }
