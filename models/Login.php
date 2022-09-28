@@ -527,6 +527,9 @@ class Login extends User
     {
         // Example:
         //$url = "your URL";
+        if (IsLoggedIn()) {
+        	$url = "/dashboard2"; // fetch db default page for currentUserId()
+        } 
     }
 
     // Message Showing event
