@@ -22,10 +22,9 @@ loadjs.ready(["wrapper", "head"], function () {
     // Dynamic selection lists
     fuserlist.lists.id = <?= $Page->id->toClientList($Page) ?>;
     fuserlist.lists._username = <?= $Page->_username->toClientList($Page) ?>;
-    fuserlist.lists._password = <?= $Page->_password->toClientList($Page) ?>;
-    fuserlist.lists._email = <?= $Page->_email->toClientList($Page) ?>;
     fuserlist.lists.ip_loggedin = <?= $Page->ip_loggedin->toClientList($Page) ?>;
     fuserlist.lists.role = <?= $Page->role->toClientList($Page) ?>;
+    fuserlist.lists._userLevel = <?= $Page->_userLevel->toClientList($Page) ?>;
     fuserlist.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
     fuserlist.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
     loadjs.done("fuserlist");
@@ -42,10 +41,9 @@ loadjs.ready(["wrapper", "head"], function () {
     fusersrch.addFields([
         ["id", [], fields.id.isInvalid],
         ["_username", [], fields._username.isInvalid],
-        ["_password", [], fields._password.isInvalid],
-        ["_email", [], fields._email.isInvalid],
         ["ip_loggedin", [], fields.ip_loggedin.isInvalid],
         ["role", [], fields.role.isInvalid],
+        ["_userLevel", [], fields._userLevel.isInvalid],
         ["date_created", [], fields.date_created.isInvalid],
         ["date_updated", [], fields.date_updated.isInvalid]
     ]);
@@ -84,6 +82,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fusersrch.lists._email = <?= $Page->_email->toClientList($Page) ?>;
     fusersrch.lists.ip_loggedin = <?= $Page->ip_loggedin->toClientList($Page) ?>;
     fusersrch.lists.role = <?= $Page->role->toClientList($Page) ?>;
+    fusersrch.lists._userLevel = <?= $Page->_userLevel->toClientList($Page) ?>;
     fusersrch.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
     fusersrch.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
 
@@ -353,6 +352,43 @@ if (!$Page->role->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+<?php
+if (!$Page->_userLevel->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs__userLevel" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->_userLevel->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x__userLevel"
+            name="x__userLevel[]"
+            class="form-control ew-select<?= $Page->_userLevel->isInvalidClass() ?>"
+            data-select2-id="fusersrch_x__userLevel"
+            data-table="user"
+            data-field="x__userLevel"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->_userLevel->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->_userLevel->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->_userLevel->getPlaceHolder()) ?>"
+            <?= $Page->_userLevel->editAttributes() ?>>
+            <?= $Page->_userLevel->selectOptionListHtml("x__userLevel", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->_userLevel->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fusersrch", function() {
+            var options = {
+                name: "x__userLevel",
+                selectId: "fusersrch_x__userLevel",
+                ajax: { id: "x__userLevel", form: "fusersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.user.fields._userLevel.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
 <?php
 if (!$Page->date_created->UseFilter) {
@@ -493,28 +529,25 @@ $Page->renderListOptions();
 $Page->ListOptions->render("header", "left");
 ?>
 <?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_user_id" class="user_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user_id" class="user_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
 <?php } ?>
 <?php if ($Page->_username->Visible) { // username ?>
-        <th data-name="_username" class="<?= $Page->_username->headerCellClass() ?>"><div id="elh_user__username" class="user__username"><?= $Page->renderFieldHeader($Page->_username) ?></div></th>
-<?php } ?>
-<?php if ($Page->_password->Visible) { // password ?>
-        <th data-name="_password" class="<?= $Page->_password->headerCellClass() ?>"><div id="elh_user__password" class="user__password"><?= $Page->renderFieldHeader($Page->_password) ?></div></th>
-<?php } ?>
-<?php if ($Page->_email->Visible) { // email ?>
-        <th data-name="_email" class="<?= $Page->_email->headerCellClass() ?>"><div id="elh_user__email" class="user__email"><?= $Page->renderFieldHeader($Page->_email) ?></div></th>
+        <th data-name="_username" class="<?= $Page->_username->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user__username" class="user__username"><?= $Page->renderFieldHeader($Page->_username) ?></div></th>
 <?php } ?>
 <?php if ($Page->ip_loggedin->Visible) { // ip_loggedin ?>
-        <th data-name="ip_loggedin" class="<?= $Page->ip_loggedin->headerCellClass() ?>"><div id="elh_user_ip_loggedin" class="user_ip_loggedin"><?= $Page->renderFieldHeader($Page->ip_loggedin) ?></div></th>
+        <th data-name="ip_loggedin" class="<?= $Page->ip_loggedin->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user_ip_loggedin" class="user_ip_loggedin"><?= $Page->renderFieldHeader($Page->ip_loggedin) ?></div></th>
 <?php } ?>
 <?php if ($Page->role->Visible) { // role ?>
-        <th data-name="role" class="<?= $Page->role->headerCellClass() ?>"><div id="elh_user_role" class="user_role"><?= $Page->renderFieldHeader($Page->role) ?></div></th>
+        <th data-name="role" class="<?= $Page->role->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user_role" class="user_role"><?= $Page->renderFieldHeader($Page->role) ?></div></th>
+<?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+        <th data-name="_userLevel" class="<?= $Page->_userLevel->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user__userLevel" class="user__userLevel"><?= $Page->renderFieldHeader($Page->_userLevel) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
-        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>"><div id="elh_user_date_created" class="user_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
+        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user_date_created" class="user_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
-        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>"><div id="elh_user_date_updated" class="user_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
+        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_user_date_updated" class="user_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -607,22 +640,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->_password->Visible) { // password ?>
-        <td data-name="_password"<?= $Page->_password->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_user__password" class="el_user__password">
-<span<?= $Page->_password->viewAttributes() ?>>
-<?= $Page->_password->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->_email->Visible) { // email ?>
-        <td data-name="_email"<?= $Page->_email->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_user__email" class="el_user__email">
-<span<?= $Page->_email->viewAttributes() ?>>
-<?= $Page->_email->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->ip_loggedin->Visible) { // ip_loggedin ?>
         <td data-name="ip_loggedin"<?= $Page->ip_loggedin->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_user_ip_loggedin" class="el_user_ip_loggedin">
@@ -636,6 +653,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_user_role" class="el_user_role">
 <span<?= $Page->role->viewAttributes() ?>>
 <?= $Page->role->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->_userLevel->Visible) { // userLevel ?>
+        <td data-name="_userLevel"<?= $Page->_userLevel->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_user__userLevel" class="el_user__userLevel">
+<span<?= $Page->_userLevel->viewAttributes() ?>>
+<?= $Page->_userLevel->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

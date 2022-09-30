@@ -19,6 +19,9 @@ echo $topMenu->toScript();
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
 $sideMenu->addMenuItem(108, "mi_Dashboard2", $MenuLanguage->MenuPhrase("108", "MenuText"), $MenuRelativePath . "dashboard2", -1, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}Dashboard'), false, false, "", "", false, true);
+$sideMenu->addMenuItem(671, "mci_Stock_Count", $MenuLanguage->MenuPhrase("671", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
+$sideMenu->addMenuItem(607, "mci_Data_Stock_Count", $MenuLanguage->MenuPhrase("607", "MenuText"), $MenuRelativePath . "stockcountlist", 671, "", IsLoggedIn(), false, true, "", "", false, true);
+$sideMenu->addMenuItem(608, "mi_summary_stock_count", $MenuLanguage->MenuPhrase("608", "MenuText"), $MenuRelativePath . "summarystockcountlist", 671, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}summary_stock_count'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(62, "mci_KPI", $MenuLanguage->MenuPhrase("62", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
 $sideMenu->addMenuItem(63, "mi_monitor_kpi", $MenuLanguage->MenuPhrase("63", "MenuText"), $MenuRelativePath . "monitorkpilist", 62, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}monitor_kpi'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(44, "mi_disposition_location", $MenuLanguage->MenuPhrase("44", "MenuText"), $MenuRelativePath . "dispositionlocationlist", 62, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}disposition_location'), false, false, "", "", false, true);
@@ -71,6 +74,9 @@ $sideMenu->addMenuItem(224, "mi_locations", $MenuLanguage->MenuPhrase("224", "Me
 $sideMenu->addMenuItem(85, "mi_master_article", $MenuLanguage->MenuPhrase("85", "MenuText"), $MenuRelativePath . "masterarticlelist", 23, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}master_article'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(226, "mi_master_article2", $MenuLanguage->MenuPhrase("226", "MenuText"), $MenuRelativePath . "masterarticle2list", 23, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}master_article2'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(225, "mi_mb51", $MenuLanguage->MenuPhrase("225", "MenuText"), $MenuRelativePath . "mb51list", 23, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}mb51'), false, false, "", "", false, true);
-$sideMenu->addMenuItem(21, "mi_user", $MenuLanguage->MenuPhrase("21", "MenuText"), $MenuRelativePath . "userlist", -1, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}user'), false, false, "", "", false, true);
+$sideMenu->addMenuItem(544, "mci_User_Management", $MenuLanguage->MenuPhrase("544", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
+$sideMenu->addMenuItem(21, "mi_user", $MenuLanguage->MenuPhrase("21", "MenuText"), $MenuRelativePath . "userlist", 544, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}user'), false, false, "", "", false, true);
+$sideMenu->addMenuItem(484, "mi_userlevelpermissions", $MenuLanguage->MenuPhrase("484", "MenuText"), $MenuRelativePath . "userlevelpermissionslist", 544, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}userlevelpermissions'), false, false, "", "", false, true);
+$sideMenu->addMenuItem(485, "mi_userlevels", $MenuLanguage->MenuPhrase("485", "MenuText"), $MenuRelativePath . "userlevelslist", 544, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}userlevels'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(2, "mi_audittrail", $MenuLanguage->MenuPhrase("2", "MenuText"), $MenuRelativePath . "audittraillist", -1, "", AllowListMenu('{82E0F641-A651-4BB1-8010-BEBF3749166D}audittrail'), false, false, "", "", false, true);
 echo $sideMenu->toScript();

@@ -25,7 +25,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["_password", [fields._password.visible && fields._password.required ? ew.Validators.required(fields._password.caption) : null], fields._password.isInvalid],
         ["_email", [fields._email.visible && fields._email.required ? ew.Validators.required(fields._email.caption) : null], fields._email.isInvalid],
         ["ip_loggedin", [fields.ip_loggedin.visible && fields.ip_loggedin.required ? ew.Validators.required(fields.ip_loggedin.caption) : null], fields.ip_loggedin.isInvalid],
-        ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
+        ["role", [fields.role.visible && fields.role.required ? ew.Validators.required(fields.role.caption) : null], fields.role.isInvalid],
+        ["_userLevel", [fields._userLevel.visible && fields._userLevel.required ? ew.Validators.required(fields._userLevel.caption) : null], fields._userLevel.isInvalid],
         ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid]
     ]);
 
@@ -39,6 +40,8 @@ loadjs.ready(["wrapper", "head"], function () {
     fuseredit.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
+    fuseredit.lists.role = <?= $Page->role->toClientList($Page) ?>;
+    fuseredit.lists._userLevel = <?= $Page->_userLevel->toClientList($Page) ?>;
     loadjs.done("fuseredit");
 });
 </script>
@@ -115,43 +118,88 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->date_created->Visible) { // date_created ?>
-    <div id="r_date_created"<?= $Page->date_created->rowAttributes() ?>>
-        <label id="elh_user_date_created" for="x_date_created" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_created->caption() ?><?= $Page->date_created->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_created->cellAttributes() ?>>
-<span id="el_user_date_created">
-<input type="<?= $Page->date_created->getInputTextType() ?>" name="x_date_created" id="x_date_created" data-table="user" data-field="x_date_created" value="<?= $Page->date_created->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_created->getPlaceHolder()) ?>"<?= $Page->date_created->editAttributes() ?> aria-describedby="x_date_created_help">
-<?= $Page->date_created->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->date_created->getErrorMessage() ?></div>
-<?php if (!$Page->date_created->ReadOnly && !$Page->date_created->Disabled && !isset($Page->date_created->EditAttrs["readonly"]) && !isset($Page->date_created->EditAttrs["disabled"])) { ?>
+<?php if ($Page->role->Visible) { // role ?>
+    <div id="r_role"<?= $Page->role->rowAttributes() ?>>
+        <label id="elh_user_role" for="x_role" class="<?= $Page->LeftColumnClass ?>"><?= $Page->role->caption() ?><?= $Page->role->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->role->cellAttributes() ?>>
+<span id="el_user_role">
+<?php $Page->role->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_role"
+        name="x_role"
+        class="form-select ew-select<?= $Page->role->isInvalidClass() ?>"
+        data-select2-id="fuseredit_x_role"
+        data-table="user"
+        data-field="x_role"
+        data-value-separator="<?= $Page->role->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->role->getPlaceHolder()) ?>"
+        <?= $Page->role->editAttributes() ?>>
+        <?= $Page->role->selectOptionListHtml("x_role") ?>
+    </select>
+    <?= $Page->role->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->role->getErrorMessage() ?></div>
+<?= $Page->role->Lookup->getParamTag($Page, "p_x_role") ?>
 <script>
-loadjs.ready(["fuseredit", "datetimepicker"], function () {
-    let format = "<?= DateFormat(0) ?>",
-        options = {
-            localization: {
-                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
-            },
-            display: {
-                icons: {
-                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
-                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
-                },
-                components: {
-                    hours: !!format.match(/h/i),
-                    minutes: !!format.match(/m/),
-                    seconds: !!format.match(/s/i),
-                    useTwentyfourHour: !!format.match(/H/)
-                }
-            },
-            meta: {
-                format
-            }
-        };
-    ew.createDateTimePicker("fuseredit", "x_date_created", ew.deepAssign({"useCurrent":false}, options));
+loadjs.ready("fuseredit", function() {
+    var options = { name: "x_role", selectId: "fuseredit_x_role" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fuseredit.lists.role.lookupOptions.length) {
+        options.data = { id: "x_role", form: "fuseredit" };
+    } else {
+        options.ajax = { id: "x_role", form: "fuseredit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.user.fields.role.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?php } ?>
 </span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+    <div id="r__userLevel"<?= $Page->_userLevel->rowAttributes() ?>>
+        <label id="elh_user__userLevel" for="x__userLevel" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_userLevel->caption() ?><?= $Page->_userLevel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_userLevel->cellAttributes() ?>>
+<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
+<span id="el_user__userLevel">
+<span class="form-control-plaintext"><?= $Page->_userLevel->getDisplayValue($Page->_userLevel->EditValue) ?></span>
+</span>
+<?php } else { ?>
+<span id="el_user__userLevel">
+    <select
+        id="x__userLevel"
+        name="x__userLevel"
+        class="form-select ew-select<?= $Page->_userLevel->isInvalidClass() ?>"
+        data-select2-id="fuseredit_x__userLevel"
+        data-table="user"
+        data-field="x__userLevel"
+        data-value-separator="<?= $Page->_userLevel->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->_userLevel->getPlaceHolder()) ?>"
+        <?= $Page->_userLevel->editAttributes() ?>>
+        <?= $Page->_userLevel->selectOptionListHtml("x__userLevel") ?>
+    </select>
+    <?= $Page->_userLevel->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->_userLevel->getErrorMessage() ?></div>
+<?= $Page->_userLevel->Lookup->getParamTag($Page, "p_x__userLevel") ?>
+<script>
+loadjs.ready("fuseredit", function() {
+    var options = { name: "x__userLevel", selectId: "fuseredit_x__userLevel" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fuseredit.lists._userLevel.lookupOptions.length) {
+        options.data = { id: "x__userLevel", form: "fuseredit" };
+    } else {
+        options.ajax = { id: "x__userLevel", form: "fuseredit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.user.fields._userLevel.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
 </div></div>
     </div>
 <?php } ?>

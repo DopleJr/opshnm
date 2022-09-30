@@ -97,6 +97,10 @@ return [
     "productivity_online" => \DI\create(ProductivityOnline::class),
     "check_box" => \DI\create(CheckBox::class),
     "audit_picking_online" => \DI\create(AuditPickingOnline::class),
+    "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
+    "userlevels" => \DI\create(Userlevels::class),
+    "stock_count" => \DI\create(StockCount::class),
+    "summary_stock_count" => \DI\create(SummaryStockCount::class),
 
     // User table
     "usertable" => \DI\get("user"),

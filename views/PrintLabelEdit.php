@@ -23,7 +23,10 @@ loadjs.ready(["wrapper", "head"], function () {
         ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["box_id", [fields.box_id.visible && fields.box_id.required ? ew.Validators.required(fields.box_id.caption) : null], fields.box_id.isInvalid],
         ["priority", [fields.priority.visible && fields.priority.required ? ew.Validators.required(fields.priority.caption) : null], fields.priority.isInvalid],
-        ["store_code", [fields.store_code.visible && fields.store_code.required ? ew.Validators.required(fields.store_code.caption) : null], fields.store_code.isInvalid]
+        ["store_code", [fields.store_code.visible && fields.store_code.required ? ew.Validators.required(fields.store_code.caption) : null], fields.store_code.isInvalid],
+        ["user", [fields.user.visible && fields.user.required ? ew.Validators.required(fields.user.caption) : null], fields.user.isInvalid],
+        ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null], fields.date_created.isInvalid],
+        ["time_created", [fields.time_created.visible && fields.time_created.required ? ew.Validators.required(fields.time_created.caption) : null], fields.time_created.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -150,6 +153,42 @@ loadjs.ready("fprint_labeledit", function() {
     ew.createSelect(options);
 });
 </script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+    <div id="r_user"<?= $Page->user->rowAttributes() ?>>
+        <label id="elh_print_label_user" for="x_user" class="<?= $Page->LeftColumnClass ?>"><?= $Page->user->caption() ?><?= $Page->user->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->user->cellAttributes() ?>>
+<span id="el_print_label_user">
+<span<?= $Page->user->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->user->getDisplayValue($Page->user->EditValue))) ?>"></span>
+<input type="hidden" data-table="print_label" data-field="x_user" data-hidden="1" name="x_user" id="x_user" value="<?= HtmlEncode($Page->user->CurrentValue) ?>">
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->date_created->Visible) { // date_created ?>
+    <div id="r_date_created"<?= $Page->date_created->rowAttributes() ?>>
+        <label id="elh_print_label_date_created" for="x_date_created" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_created->caption() ?><?= $Page->date_created->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_created->cellAttributes() ?>>
+<span id="el_print_label_date_created">
+<span<?= $Page->date_created->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->date_created->getDisplayValue($Page->date_created->EditValue))) ?>"></span>
+<input type="hidden" data-table="print_label" data-field="x_date_created" data-hidden="1" name="x_date_created" id="x_date_created" value="<?= HtmlEncode($Page->date_created->CurrentValue) ?>">
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->time_created->Visible) { // time_created ?>
+    <div id="r_time_created"<?= $Page->time_created->rowAttributes() ?>>
+        <label id="elh_print_label_time_created" for="x_time_created" class="<?= $Page->LeftColumnClass ?>"><?= $Page->time_created->caption() ?><?= $Page->time_created->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->time_created->cellAttributes() ?>>
+<span id="el_print_label_time_created">
+<span<?= $Page->time_created->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->time_created->getDisplayValue($Page->time_created->EditValue))) ?>"></span>
+<input type="hidden" data-table="print_label" data-field="x_time_created" data-hidden="1" name="x_time_created" id="x_time_created" value="<?= HtmlEncode($Page->time_created->CurrentValue) ?>">
 </span>
 </div></div>
     </div>

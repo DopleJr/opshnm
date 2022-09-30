@@ -627,13 +627,13 @@ class UserList extends User
         $this->setupImportOptions();
         $this->id->setVisibility();
         $this->_username->setVisibility();
-        $this->_password->setVisibility();
-        $this->_email->setVisibility();
+        $this->_password->Visible = false;
+        $this->_email->Visible = false;
         $this->ip_loggedin->setVisibility();
         $this->role->setVisibility();
+        $this->_userLevel->setVisibility();
         $this->date_created->setVisibility();
         $this->date_updated->setVisibility();
-        $this->_userLevel->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -659,6 +659,7 @@ class UserList extends User
 
         // Set up lookup cache
         $this->setupLookupOptions($this->role);
+        $this->setupLookupOptions($this->_userLevel);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -983,6 +984,7 @@ class UserList extends User
         $filterList = Concat($filterList, $this->_email->AdvancedSearch->toJson(), ","); // Field email
         $filterList = Concat($filterList, $this->ip_loggedin->AdvancedSearch->toJson(), ","); // Field ip_loggedin
         $filterList = Concat($filterList, $this->role->AdvancedSearch->toJson(), ","); // Field role
+        $filterList = Concat($filterList, $this->_userLevel->AdvancedSearch->toJson(), ","); // Field userLevel
         $filterList = Concat($filterList, $this->date_created->AdvancedSearch->toJson(), ","); // Field date_created
         $filterList = Concat($filterList, $this->date_updated->AdvancedSearch->toJson(), ","); // Field date_updated
         if ($this->BasicSearch->Keyword != "") {
@@ -1073,6 +1075,14 @@ class UserList extends User
         $this->role->AdvancedSearch->SearchOperator2 = @$filter["w_role"];
         $this->role->AdvancedSearch->save();
 
+        // Field userLevel
+        $this->_userLevel->AdvancedSearch->SearchValue = @$filter["x__userLevel"];
+        $this->_userLevel->AdvancedSearch->SearchOperator = @$filter["z__userLevel"];
+        $this->_userLevel->AdvancedSearch->SearchCondition = @$filter["v__userLevel"];
+        $this->_userLevel->AdvancedSearch->SearchValue2 = @$filter["y__userLevel"];
+        $this->_userLevel->AdvancedSearch->SearchOperator2 = @$filter["w__userLevel"];
+        $this->_userLevel->AdvancedSearch->save();
+
         // Field date_created
         $this->date_created->AdvancedSearch->SearchValue = @$filter["x_date_created"];
         $this->date_created->AdvancedSearch->SearchOperator = @$filter["z_date_created"];
@@ -1106,6 +1116,7 @@ class UserList extends User
         $this->buildSearchSql($where, $this->_email, $default, true); // email
         $this->buildSearchSql($where, $this->ip_loggedin, $default, true); // ip_loggedin
         $this->buildSearchSql($where, $this->role, $default, true); // role
+        $this->buildSearchSql($where, $this->_userLevel, $default, true); // userLevel
         $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
         $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
 
@@ -1120,6 +1131,7 @@ class UserList extends User
             $this->_email->AdvancedSearch->save(); // email
             $this->ip_loggedin->AdvancedSearch->save(); // ip_loggedin
             $this->role->AdvancedSearch->save(); // role
+            $this->_userLevel->AdvancedSearch->save(); // userLevel
             $this->date_created->AdvancedSearch->save(); // date_created
             $this->date_updated->AdvancedSearch->save(); // date_updated
         }
@@ -1205,6 +1217,7 @@ class UserList extends User
         $searchFlds[] = &$this->_email;
         $searchFlds[] = &$this->ip_loggedin;
         $searchFlds[] = &$this->role;
+        $searchFlds[] = &$this->_userLevel;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1246,6 +1259,9 @@ class UserList extends User
             return true;
         }
         if ($this->role->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->_userLevel->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->date_created->AdvancedSearch->issetSession()) {
@@ -1292,6 +1308,7 @@ class UserList extends User
         $this->_email->AdvancedSearch->unsetSession();
         $this->ip_loggedin->AdvancedSearch->unsetSession();
         $this->role->AdvancedSearch->unsetSession();
+        $this->_userLevel->AdvancedSearch->unsetSession();
         $this->date_created->AdvancedSearch->unsetSession();
         $this->date_updated->AdvancedSearch->unsetSession();
     }
@@ -1311,6 +1328,7 @@ class UserList extends User
         $this->_email->AdvancedSearch->load();
         $this->ip_loggedin->AdvancedSearch->load();
         $this->role->AdvancedSearch->load();
+        $this->_userLevel->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();
     }
@@ -1332,10 +1350,9 @@ class UserList extends User
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->id); // id
             $this->updateSort($this->_username); // username
-            $this->updateSort($this->_password); // password
-            $this->updateSort($this->_email); // email
             $this->updateSort($this->ip_loggedin); // ip_loggedin
             $this->updateSort($this->role); // role
+            $this->updateSort($this->_userLevel); // userLevel
             $this->updateSort($this->date_created); // date_created
             $this->updateSort($this->date_updated); // date_updated
             $this->setStartRecordNumber(1); // Reset start position
@@ -1368,9 +1385,9 @@ class UserList extends User
                 $this->_email->setSort("");
                 $this->ip_loggedin->setSort("");
                 $this->role->setSort("");
+                $this->_userLevel->setSort("");
                 $this->date_created->setSort("");
                 $this->date_updated->setSort("");
-                $this->_userLevel->setSort("");
             }
 
             // Reset start position
@@ -1565,10 +1582,9 @@ class UserList extends User
             $item->Visible = $this->UseColumnVisibility;
             $option->add("id", $this->createColumnOption("id"));
             $option->add("username", $this->createColumnOption("username"));
-            $option->add("password", $this->createColumnOption("password"));
-            $option->add("email", $this->createColumnOption("email"));
             $option->add("ip_loggedin", $this->createColumnOption("ip_loggedin"));
             $option->add("role", $this->createColumnOption("role"));
+            $option->add("userLevel", $this->createColumnOption("userLevel"));
             $option->add("date_created", $this->createColumnOption("date_created"));
             $option->add("date_updated", $this->createColumnOption("date_updated"));
         }
@@ -1818,6 +1834,14 @@ class UserList extends User
             }
         }
 
+        // userLevel
+        if ($this->_userLevel->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->_userLevel->AdvancedSearch->SearchValue != "" || $this->_userLevel->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // date_created
         if ($this->date_created->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1927,9 +1951,9 @@ class UserList extends User
         $this->_email->setDbValue($row['email']);
         $this->ip_loggedin->setDbValue($row['ip_loggedin']);
         $this->role->setDbValue($row['role']);
+        $this->_userLevel->setDbValue($row['userLevel']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
-        $this->_userLevel->setDbValue($row['userLevel']);
     }
 
     // Return a row with default values
@@ -1942,9 +1966,9 @@ class UserList extends User
         $row['email'] = $this->_email->DefaultValue;
         $row['ip_loggedin'] = $this->ip_loggedin->DefaultValue;
         $row['role'] = $this->role->DefaultValue;
+        $row['userLevel'] = $this->_userLevel->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
-        $row['userLevel'] = $this->_userLevel->DefaultValue;
         return $row;
     }
 
@@ -1983,23 +2007,31 @@ class UserList extends User
         // Common render codes for all row types
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // username
+        $this->_username->CellCssStyle = "white-space: nowrap;";
 
         // password
+        $this->_password->CellCssStyle = "white-space: nowrap;";
 
         // email
+        $this->_email->CellCssStyle = "white-space: nowrap;";
 
         // ip_loggedin
+        $this->ip_loggedin->CellCssStyle = "white-space: nowrap;";
 
         // role
-
-        // date_created
-
-        // date_updated
+        $this->role->CellCssStyle = "white-space: nowrap;";
 
         // userLevel
         $this->_userLevel->CellCssStyle = "white-space: nowrap;";
+
+        // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -2024,16 +2056,60 @@ class UserList extends User
             $this->ip_loggedin->ViewCustomAttributes = "";
 
             // role
-            if ($Security->canAdmin()) { // System admin
-                if (strval($this->role->CurrentValue) != "") {
-                    $this->role->ViewValue = $this->role->optionCaption($this->role->CurrentValue);
-                } else {
-                    $this->role->ViewValue = null;
+            $curVal = strval($this->role->CurrentValue);
+            if ($curVal != "") {
+                $this->role->ViewValue = $this->role->lookupCacheOption($curVal);
+                if ($this->role->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`userlevelname`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $lookupFilter = function() {
+                        return "`userlevelname` = 'User' ";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->role->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->role->Lookup->renderViewRow($rswrk[0]);
+                        $this->role->ViewValue = $this->role->displayValue($arwrk);
+                    } else {
+                        $this->role->ViewValue = $this->role->CurrentValue;
+                    }
                 }
             } else {
-                $this->role->ViewValue = $Language->phrase("PasswordMask");
+                $this->role->ViewValue = null;
             }
             $this->role->ViewCustomAttributes = "";
+
+            // userLevel
+            if ($Security->canAdmin()) { // System admin
+                $curVal = strval($this->_userLevel->CurrentValue);
+                if ($curVal != "") {
+                    $this->_userLevel->ViewValue = $this->_userLevel->lookupCacheOption($curVal);
+                    if ($this->_userLevel->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->_userLevel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $conn = Conn();
+                        $config = $conn->getConfiguration();
+                        $config->setResultCacheImpl($this->Cache);
+                        $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->_userLevel->Lookup->renderViewRow($rswrk[0]);
+                            $this->_userLevel->ViewValue = $this->_userLevel->displayValue($arwrk);
+                        } else {
+                            $this->_userLevel->ViewValue = FormatNumber($this->_userLevel->CurrentValue, $this->_userLevel->formatPattern());
+                        }
+                    }
+                } else {
+                    $this->_userLevel->ViewValue = null;
+                }
+            } else {
+                $this->_userLevel->ViewValue = $Language->phrase("PasswordMask");
+            }
+            $this->_userLevel->ViewCustomAttributes = "";
 
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
@@ -2055,16 +2131,6 @@ class UserList extends User
             $this->_username->HrefValue = "";
             $this->_username->TooltipValue = "";
 
-            // password
-            $this->_password->LinkCustomAttributes = "";
-            $this->_password->HrefValue = "";
-            $this->_password->TooltipValue = "";
-
-            // email
-            $this->_email->LinkCustomAttributes = "";
-            $this->_email->HrefValue = "";
-            $this->_email->TooltipValue = "";
-
             // ip_loggedin
             $this->ip_loggedin->LinkCustomAttributes = "";
             $this->ip_loggedin->HrefValue = "";
@@ -2074,6 +2140,11 @@ class UserList extends User
             $this->role->LinkCustomAttributes = "";
             $this->role->HrefValue = "";
             $this->role->TooltipValue = "";
+
+            // userLevel
+            $this->_userLevel->LinkCustomAttributes = "";
+            $this->_userLevel->HrefValue = "";
+            $this->_userLevel->TooltipValue = "";
 
             // date_created
             $this->date_created->LinkCustomAttributes = "";
@@ -2101,22 +2172,6 @@ class UserList extends User
                 $this->_username->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_username->AdvancedSearch->SearchValue);
             }
 
-            // password
-            if ($this->_password->UseFilter && !EmptyValue($this->_password->AdvancedSearch->SearchValue)) {
-                if (is_array($this->_password->AdvancedSearch->SearchValue)) {
-                    $this->_password->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_password->AdvancedSearch->SearchValue);
-                }
-                $this->_password->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_password->AdvancedSearch->SearchValue);
-            }
-
-            // email
-            if ($this->_email->UseFilter && !EmptyValue($this->_email->AdvancedSearch->SearchValue)) {
-                if (is_array($this->_email->AdvancedSearch->SearchValue)) {
-                    $this->_email->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_email->AdvancedSearch->SearchValue);
-                }
-                $this->_email->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_email->AdvancedSearch->SearchValue);
-            }
-
             // ip_loggedin
             if ($this->ip_loggedin->UseFilter && !EmptyValue($this->ip_loggedin->AdvancedSearch->SearchValue)) {
                 if (is_array($this->ip_loggedin->AdvancedSearch->SearchValue)) {
@@ -2131,6 +2186,14 @@ class UserList extends User
                     $this->role->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->role->AdvancedSearch->SearchValue);
                 }
                 $this->role->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->role->AdvancedSearch->SearchValue);
+            }
+
+            // userLevel
+            if ($this->_userLevel->UseFilter && !EmptyValue($this->_userLevel->AdvancedSearch->SearchValue)) {
+                if (is_array($this->_userLevel->AdvancedSearch->SearchValue)) {
+                    $this->_userLevel->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_userLevel->AdvancedSearch->SearchValue);
+                }
+                $this->_userLevel->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->_userLevel->AdvancedSearch->SearchValue);
             }
 
             // date_created
@@ -2519,6 +2582,7 @@ class UserList extends User
         $this->_email->AdvancedSearch->load();
         $this->ip_loggedin->AdvancedSearch->load();
         $this->role->AdvancedSearch->load();
+        $this->_userLevel->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();
     }
@@ -2821,6 +2885,12 @@ class UserList extends User
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_role":
+                    $lookupFilter = function () {
+                        return "`userlevelname` = 'User' ";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x__userLevel":
                     break;
                 default:
                     $lookupFilter = "";

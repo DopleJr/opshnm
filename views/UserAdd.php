@@ -24,8 +24,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["_password", [fields._password.visible && fields._password.required ? ew.Validators.required(fields._password.caption) : null], fields._password.isInvalid],
         ["_email", [fields._email.visible && fields._email.required ? ew.Validators.required(fields._email.caption) : null], fields._email.isInvalid],
         ["role", [fields.role.visible && fields.role.required ? ew.Validators.required(fields.role.caption) : null], fields.role.isInvalid],
-        ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
-        ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid]
+        ["_userLevel", [fields._userLevel.visible && fields._userLevel.required ? ew.Validators.required(fields._userLevel.caption) : null], fields._userLevel.isInvalid],
+        ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -39,6 +39,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
     // Dynamic selection lists
     fuseradd.lists.role = <?= $Page->role->toClientList($Page) ?>;
+    fuseradd.lists._userLevel = <?= $Page->_userLevel->toClientList($Page) ?>;
     loadjs.done("fuseradd");
 });
 </script>
@@ -107,12 +108,8 @@ $Page->showMessage();
     <div id="r_role"<?= $Page->role->rowAttributes() ?>>
         <label id="elh_user_role" for="x_role" class="<?= $Page->LeftColumnClass ?>"><?= $Page->role->caption() ?><?= $Page->role->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->role->cellAttributes() ?>>
-<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
 <span id="el_user_role">
-<span class="form-control-plaintext"><?= $Page->role->getDisplayValue($Page->role->EditValue) ?></span>
-</span>
-<?php } else { ?>
-<span id="el_user_role">
+<?php $Page->role->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x_role"
         name="x_role"
@@ -127,6 +124,7 @@ $Page->showMessage();
     </select>
     <?= $Page->role->getCustomMessage() ?>
     <div class="invalid-feedback"><?= $Page->role->getErrorMessage() ?></div>
+<?= $Page->role->Lookup->getParamTag($Page, "p_x_role") ?>
 <script>
 loadjs.ready("fuseradd", function() {
     var options = { name: "x_role", selectId: "fuseradd_x_role" },
@@ -139,6 +137,50 @@ loadjs.ready("fuseradd", function() {
     }
     options.minimumResultsForSearch = Infinity;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.user.fields.role.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+    <div id="r__userLevel"<?= $Page->_userLevel->rowAttributes() ?>>
+        <label id="elh_user__userLevel" for="x__userLevel" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_userLevel->caption() ?><?= $Page->_userLevel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_userLevel->cellAttributes() ?>>
+<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
+<span id="el_user__userLevel">
+<span class="form-control-plaintext"><?= $Page->_userLevel->getDisplayValue($Page->_userLevel->EditValue) ?></span>
+</span>
+<?php } else { ?>
+<span id="el_user__userLevel">
+    <select
+        id="x__userLevel"
+        name="x__userLevel"
+        class="form-select ew-select<?= $Page->_userLevel->isInvalidClass() ?>"
+        data-select2-id="fuseradd_x__userLevel"
+        data-table="user"
+        data-field="x__userLevel"
+        data-value-separator="<?= $Page->_userLevel->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->_userLevel->getPlaceHolder()) ?>"
+        <?= $Page->_userLevel->editAttributes() ?>>
+        <?= $Page->_userLevel->selectOptionListHtml("x__userLevel") ?>
+    </select>
+    <?= $Page->_userLevel->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->_userLevel->getErrorMessage() ?></div>
+<?= $Page->_userLevel->Lookup->getParamTag($Page, "p_x__userLevel") ?>
+<script>
+loadjs.ready("fuseradd", function() {
+    var options = { name: "x__userLevel", selectId: "fuseradd_x__userLevel" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fuseradd.lists._userLevel.lookupOptions.length) {
+        options.data = { id: "x__userLevel", form: "fuseradd" };
+    } else {
+        options.ajax = { id: "x__userLevel", form: "fuseradd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.user.fields._userLevel.selectOptions);
     ew.createSelect(options);
 });
 </script>

@@ -88,15 +88,15 @@ body{margin-top:0px;}
 .item-box .item-mask {
   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.9);
   position: absolute;
-  transition: all 0.5s ease-in-out 0s;
-  -moz-transition: all 0.5s ease-in-out 0s;
-  -webkit-transition: all 0.5s ease-in-out 0s;
-  -o-transition: all 0.5s ease-in-out 0s;
-  top: 5px;
-  left: 5px;
-  bottom: 5px;
-  right: 5px;
-  opacity: 0;
+  transition: all 0s ease-in-out 0s;
+  -moz-transition: all 0s ease-in-out 0s;
+  -webkit-transition: all 0s ease-in-out 0s;
+  -o-transition: all 0s ease-in-out 0s;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  opacity: 1;
   visibility: hidden;
   overflow: hidden;
   text-align: center;
@@ -124,8 +124,8 @@ body{margin-top:0px;}
 .col-lg-4 {
     flex: auto;
     width: 31.33333333%;
-    min-width: 110px;
-    min-height: 220px;
+    max-width: 110px;
+    min-height: 205px;
     background-color: #F7FFB0;
     border-radius: 0.75rem;
 }
@@ -139,7 +139,7 @@ body{margin-top:0px;}
 }
 .p-4 {
     padding: 1rem!important;
-    margin: 1px 1px 1px 1px;
+    margin: 1.5px 1.5px 1.5px 1.5px;
 }
 .content-header {
     display: none !important;
@@ -191,14 +191,43 @@ $(document).ready( function imagearranger() {
         </div>
         <div class="port portfolio-masonry mt-4">
             <div class="portfolioContainer row photo">
+            	<div class="col-lg-4 p-4 *">
+                    <div class="item-box" href="./stockcountadd">
+                        <a class="mfp-image" href="./stockcountadd" title="Project H&M">
+                            <img class="item-container img-fluid" src="./images/menu/warehouse.png" alt="work-img">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <p class="text-dark mb-0">Stock Count</p>
+                                </div>
+                            </div>
+                            <span class="detail-info">
+                            Stock Count Online
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            	<div class="col-lg-4 p-4 *">
+                    <div class="item-box" href="./printlabeladd">
+                        <a class="mfp-image" href="./printlabeladd" title="Project Name">
+                            <img class="item-container img-fluid" src="./images/menu/paper.png" alt="work-img">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <p class="text-dark mb-0">Print Label</p>
+                                </div>
+                            </div>
+                            <span class="detail-info">
+                            Print Label Picking
+                            </span>
+                        </a>
+                    </div>
+                </div>
                 <div class="col-lg-4 p-4 inbound">
-                    <div class="item-box">
+                    <div class="item-box" href="./ossmanualadd" >
                         <a class="mfp-image" href="./ossmanualadd" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/clipboard.png  " alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">OSS Manual</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Input OSS Manual</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -208,13 +237,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 online">
-                    <div class="item-box">
+                    <div class="item-box" href="./pickingpendinglist" >
                         <a class="mfp-image" href="./pickingpendinglist" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/box2.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Picking Online</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Picking Online</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -224,13 +252,27 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 online">
-                    <div class="item-box">
+                    <div class="item-box" href="./checkboxlist" >
+                        <a class="mfp-image" href="./checkboxlist" title="Project Name">
+                            <img class="item-container img-fluid" src="./images/menu/box2.png" alt="work-img">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <p class="text-dark mb-0">Check Box Online</p>
+                                </div>
+                            </div>
+                            <span class="detail-info">
+                            Check Box Online
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 p-4 online">
+                    <div class="item-box" href="./boxresultlist" >
                         <a class="mfp-image" href="./boxresultlist" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/box.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Box Result</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Box Result Online</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -240,13 +282,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 online">
-                    <div class="item-box">
+                    <div class="item-box" href="./jobcontrolcopy1list">
                         <a class="mfp-image" href="./jobcontrolcopy1list" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/clipboard.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Job Control</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Job Control Picking Online</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -256,13 +297,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 mezzanine">
-                    <div class="item-box">
+                    <div class="item-box" href="./auditpickingadd">
                         <a class="mfp-image" href="./auditpickingadd" title="Project Name">
-                            <img class="item-container img-fluid" src="./images/menu/cardboard.png" alt="work-img">
+                            <img class="item-container img-fluid" src="./images/menu/box.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Audit Picking</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Audit Picking Mezzanine</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -272,13 +312,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 outbound">
-                    <div class="item-box">
+                    <div class="item-box" href="./auditstaginglist">
                         <a class="mfp-image" href="./auditstaginglist" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/warehouse.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Audit Staging</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Audit Staging Outbound</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -288,13 +327,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 inventory">
-                    <div class="item-box">
+                    <div class="item-box" href="./cyclecountadd">
                         <a class="mfp-image" href="./cyclecountadd" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/box.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Cycle Count</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Cycle Count Online</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -304,13 +342,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 inventory">
-                    <div class="item-box">
+                    <div class="item-box" href="./cyclecountofflineadd">
                         <a class="mfp-image" href="./cyclecountofflineadd" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/box.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Cycle Count</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Cycle Count Offline</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -320,13 +357,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 inventory">
-                    <div class="item-box">
+                    <div class="item-box" href="./blankcountsheetadd">
                         <a class="mfp-image" href="./blankcountsheetadd" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/paper.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">Blank Count Sheet</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">Blank Count Sheet Inventory</h6>
                                 </div>
                             </div>
                             <span class="detail-info">
@@ -336,13 +372,12 @@ $(document).ready( function imagearranger() {
                     </div>
                 </div>
                 <div class="col-lg-4 p-4 ">
-                    <div class="item-box">
+                    <div class="item-box" href="./userlist">
                         <a class="mfp-image" href="./userlist" title="Project Name">
                             <img class="item-container img-fluid" src="./images/menu/delivery-boy.png" alt="work-img">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <p class="text-dark mb-0">User</p>
-                                    <h6 class="text-dark mt-1 text-uppercase">USER LIST</h6>
                                 </div>
                             </div>
                             <span class="detail-info">

@@ -39,10 +39,10 @@ class OthersController extends ControllerBase
         return $this->runPage($request, $response, $args, "ChangePassword");
     }
 
-    // register
-    public function register(Request $request, Response $response, array $args): Response
+    // userpriv
+    public function userpriv(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "Register");
+        return $this->runPage($request, $response, $args, "Userpriv");
     }
 
     // logout

@@ -110,6 +110,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+    <tr id="r__userLevel"<?= $Page->_userLevel->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_user__userLevel"><?= $Page->_userLevel->caption() ?></span></td>
+        <td data-name="_userLevel"<?= $Page->_userLevel->cellAttributes() ?>>
+<span id="el_user__userLevel">
+<span<?= $Page->_userLevel->viewAttributes() ?>>
+<?= $Page->_userLevel->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
     <tr id="r_date_created"<?= $Page->date_created->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_user_date_created"><?= $Page->date_created->caption() ?></span></td>

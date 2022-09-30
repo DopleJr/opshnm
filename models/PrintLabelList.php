@@ -622,6 +622,9 @@ class PrintLabelList extends PrintLabel
         $this->store_code->setVisibility();
         $this->store_name->Visible = false;
         $this->_barcode->Visible = false;
+        $this->user->setVisibility();
+        $this->date_created->setVisibility();
+        $this->time_created->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -699,23 +702,14 @@ class PrintLabelList extends PrintLabel
 
             // Get default search criteria
             AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
-            AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
 
             // Get basic search values
             $this->loadBasicSearchValues();
-
-            // Get and validate search values for advanced search
-            if (EmptyValue($this->UserAction)) { // Skip if user action
-                $this->loadSearchValues();
-            }
 
             // Process filter list
             if ($this->processFilterList()) {
                 $this->terminate();
                 return;
-            }
-            if (!$this->validateSearch()) {
-                // Nothing to do
             }
 
             // Restore search parms from Session if not searching / reset / export
@@ -732,11 +726,6 @@ class PrintLabelList extends PrintLabel
             // Get basic search criteria
             if (!$this->hasInvalidFields()) {
                 $srchBasic = $this->basicSearchWhere();
-            }
-
-            // Get search criteria for advanced search
-            if (!$this->hasInvalidFields()) {
-                $srchAdvanced = $this->advancedSearchWhere();
             }
         }
 
@@ -755,16 +744,6 @@ class PrintLabelList extends PrintLabel
             if ($this->BasicSearch->Keyword != "") {
                 $srchBasic = $this->basicSearchWhere();
             }
-
-            // Load advanced search from default
-            if ($this->loadAdvancedSearchDefault()) {
-                $srchAdvanced = $this->advancedSearchWhere();
-            }
-        }
-
-        // Restore search settings from Session
-        if (!$this->hasInvalidFields()) {
-            $this->loadAdvancedSearch();
         }
 
         // Build search criteria
@@ -949,6 +928,9 @@ class PrintLabelList extends PrintLabel
         $filterList = Concat($filterList, $this->store_code->AdvancedSearch->toJson(), ","); // Field store_code
         $filterList = Concat($filterList, $this->store_name->AdvancedSearch->toJson(), ","); // Field store_name
         $filterList = Concat($filterList, $this->_barcode->AdvancedSearch->toJson(), ","); // Field barcode
+        $filterList = Concat($filterList, $this->user->AdvancedSearch->toJson(), ","); // Field user
+        $filterList = Concat($filterList, $this->date_created->AdvancedSearch->toJson(), ","); // Field date_created
+        $filterList = Concat($filterList, $this->time_created->AdvancedSearch->toJson(), ","); // Field time_created
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1036,101 +1018,32 @@ class PrintLabelList extends PrintLabel
         $this->_barcode->AdvancedSearch->SearchValue2 = @$filter["y__barcode"];
         $this->_barcode->AdvancedSearch->SearchOperator2 = @$filter["w__barcode"];
         $this->_barcode->AdvancedSearch->save();
+
+        // Field user
+        $this->user->AdvancedSearch->SearchValue = @$filter["x_user"];
+        $this->user->AdvancedSearch->SearchOperator = @$filter["z_user"];
+        $this->user->AdvancedSearch->SearchCondition = @$filter["v_user"];
+        $this->user->AdvancedSearch->SearchValue2 = @$filter["y_user"];
+        $this->user->AdvancedSearch->SearchOperator2 = @$filter["w_user"];
+        $this->user->AdvancedSearch->save();
+
+        // Field date_created
+        $this->date_created->AdvancedSearch->SearchValue = @$filter["x_date_created"];
+        $this->date_created->AdvancedSearch->SearchOperator = @$filter["z_date_created"];
+        $this->date_created->AdvancedSearch->SearchCondition = @$filter["v_date_created"];
+        $this->date_created->AdvancedSearch->SearchValue2 = @$filter["y_date_created"];
+        $this->date_created->AdvancedSearch->SearchOperator2 = @$filter["w_date_created"];
+        $this->date_created->AdvancedSearch->save();
+
+        // Field time_created
+        $this->time_created->AdvancedSearch->SearchValue = @$filter["x_time_created"];
+        $this->time_created->AdvancedSearch->SearchOperator = @$filter["z_time_created"];
+        $this->time_created->AdvancedSearch->SearchCondition = @$filter["v_time_created"];
+        $this->time_created->AdvancedSearch->SearchValue2 = @$filter["y_time_created"];
+        $this->time_created->AdvancedSearch->SearchOperator2 = @$filter["w_time_created"];
+        $this->time_created->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
-    }
-
-    // Advanced search WHERE clause based on QueryString
-    protected function advancedSearchWhere($default = false)
-    {
-        global $Security;
-        $where = "";
-        if (!$Security->canSearch()) {
-            return "";
-        }
-        $this->buildSearchSql($where, $this->id, $default, true); // id
-        $this->buildSearchSql($where, $this->box_id, $default, true); // box_id
-        $this->buildSearchSql($where, $this->priority, $default, true); // priority
-        $this->buildSearchSql($where, $this->store_code, $default, true); // store_code
-        $this->buildSearchSql($where, $this->store_name, $default, true); // store_name
-        $this->buildSearchSql($where, $this->_barcode, $default, true); // barcode
-
-        // Set up search parm
-        if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
-            $this->Command = "search";
-        }
-        if (!$default && $this->Command == "search") {
-            $this->id->AdvancedSearch->save(); // id
-            $this->box_id->AdvancedSearch->save(); // box_id
-            $this->priority->AdvancedSearch->save(); // priority
-            $this->store_code->AdvancedSearch->save(); // store_code
-            $this->store_name->AdvancedSearch->save(); // store_name
-            $this->_barcode->AdvancedSearch->save(); // barcode
-        }
-        return $where;
-    }
-
-    // Build search SQL
-    protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
-    {
-        $fldParm = $fld->Param;
-        $fldVal = $default ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
-        $fldOpr = $default ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
-        $fldCond = $default ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
-        $fldVal2 = $default ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
-        $fldOpr2 = $default ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
-        $wrk = "";
-        if (is_array($fldVal)) {
-            $fldVal = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal);
-        }
-        if (is_array($fldVal2)) {
-            $fldVal2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal2);
-        }
-        $fldOpr = strtoupper(trim($fldOpr ?? ""));
-        if ($fldOpr == "") {
-            $fldOpr = "=";
-        }
-        $fldOpr2 = strtoupper(trim($fldOpr2 ?? ""));
-        if ($fldOpr2 == "") {
-            $fldOpr2 = "=";
-        }
-        if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 && !$fld->UseFilter || !IsMultiSearchOperator($fldOpr)) {
-            $multiValue = false;
-        }
-        if ($multiValue) {
-            $wrk = $fldVal != "" ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
-            $wrk2 = $fldVal2 != "" ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
-            AddFilter($wrk, $wrk2, $fldCond);
-        } else {
-            $fldVal = $this->convertSearchValue($fld, $fldVal);
-            $fldVal2 = $this->convertSearchValue($fld, $fldVal2);
-            $wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
-        }
-        if ($this->SearchOption == "AUTO" && in_array($this->BasicSearch->getType(), ["AND", "OR"])) {
-            $cond = $this->BasicSearch->getType();
-        } else {
-            $cond = SameText($this->SearchOption, "OR") ? "OR" : "AND";
-        }
-        AddFilter($where, $wrk, $cond);
-    }
-
-    // Convert search value
-    protected function convertSearchValue(&$fld, $fldVal)
-    {
-        if ($fldVal == Config("NULL_VALUE") || $fldVal == Config("NOT_NULL_VALUE")) {
-            return $fldVal;
-        }
-        $value = $fldVal;
-        if ($fld->isBoolean()) {
-            if ($fldVal != "") {
-                $value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
-            }
-        } elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
-            if ($fldVal != "") {
-                $value = UnFormatDateTime($fldVal, $fld->formatPattern());
-            }
-        }
-        return $value;
     }
 
     // Return basic search WHERE clause based on search keyword and type
@@ -1149,6 +1062,7 @@ class PrintLabelList extends PrintLabel
         $searchFlds[] = &$this->store_code;
         $searchFlds[] = &$this->store_name;
         $searchFlds[] = &$this->_barcode;
+        $searchFlds[] = &$this->user;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1174,24 +1088,6 @@ class PrintLabelList extends PrintLabel
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
-        if ($this->id->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->box_id->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->priority->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->store_code->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->store_name->AdvancedSearch->issetSession()) {
-            return true;
-        }
-        if ($this->_barcode->AdvancedSearch->issetSession()) {
-            return true;
-        }
         return false;
     }
 
@@ -1204,9 +1100,6 @@ class PrintLabelList extends PrintLabel
 
         // Clear basic search parameters
         $this->resetBasicSearchParms();
-
-        // Clear advanced search parameters
-        $this->resetAdvancedSearchParms();
     }
 
     // Load advanced search default values
@@ -1221,17 +1114,6 @@ class PrintLabelList extends PrintLabel
         $this->BasicSearch->unsetSession();
     }
 
-    // Clear all advanced search parameters
-    protected function resetAdvancedSearchParms()
-    {
-        $this->id->AdvancedSearch->unsetSession();
-        $this->box_id->AdvancedSearch->unsetSession();
-        $this->priority->AdvancedSearch->unsetSession();
-        $this->store_code->AdvancedSearch->unsetSession();
-        $this->store_name->AdvancedSearch->unsetSession();
-        $this->_barcode->AdvancedSearch->unsetSession();
-    }
-
     // Restore all search parameters
     protected function restoreSearchParms()
     {
@@ -1239,14 +1121,6 @@ class PrintLabelList extends PrintLabel
 
         // Restore basic search values
         $this->BasicSearch->load();
-
-        // Restore advanced search values
-        $this->id->AdvancedSearch->load();
-        $this->box_id->AdvancedSearch->load();
-        $this->priority->AdvancedSearch->load();
-        $this->store_code->AdvancedSearch->load();
-        $this->store_name->AdvancedSearch->load();
-        $this->_barcode->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1254,7 +1128,7 @@ class PrintLabelList extends PrintLabel
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = ""; // Set up default sort
+            $defaultSort = $this->box_id->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1268,6 +1142,9 @@ class PrintLabelList extends PrintLabel
             $this->updateSort($this->box_id); // box_id
             $this->updateSort($this->priority); // priority
             $this->updateSort($this->store_code); // store_code
+            $this->updateSort($this->user); // user
+            $this->updateSort($this->date_created); // date_created
+            $this->updateSort($this->time_created); // time_created
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1298,6 +1175,9 @@ class PrintLabelList extends PrintLabel
                 $this->store_code->setSort("");
                 $this->store_name->setSort("");
                 $this->_barcode->setSort("");
+                $this->user->setSort("");
+                $this->date_created->setSort("");
+                $this->time_created->setSort("");
             }
 
             // Reset start position
@@ -1494,6 +1374,9 @@ class PrintLabelList extends PrintLabel
             $option->add("box_id", $this->createColumnOption("box_id"));
             $option->add("priority", $this->createColumnOption("priority"));
             $option->add("store_code", $this->createColumnOption("store_code"));
+            $option->add("user", $this->createColumnOption("user"));
+            $option->add("date_created", $this->createColumnOption("date_created"));
+            $option->add("time_created", $this->createColumnOption("time_created"));
         }
 
         // Set up options default
@@ -1670,62 +1553,6 @@ class PrintLabelList extends PrintLabel
         $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
-    // Load search values for validation
-    protected function loadSearchValues()
-    {
-        // Load search values
-        $hasValue = false;
-
-        // id
-        if ($this->id->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->id->AdvancedSearch->SearchValue != "" || $this->id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // box_id
-        if ($this->box_id->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->box_id->AdvancedSearch->SearchValue != "" || $this->box_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // priority
-        if ($this->priority->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->priority->AdvancedSearch->SearchValue != "" || $this->priority->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // store_code
-        if ($this->store_code->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->store_code->AdvancedSearch->SearchValue != "" || $this->store_code->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // store_name
-        if ($this->store_name->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->store_name->AdvancedSearch->SearchValue != "" || $this->store_name->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
-        // barcode
-        if ($this->_barcode->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->_barcode->AdvancedSearch->SearchValue != "" || $this->_barcode->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-        return $hasValue;
-    }
-
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1817,6 +1644,9 @@ class PrintLabelList extends PrintLabel
         $this->store_code->setDbValue($row['store_code']);
         $this->store_name->setDbValue($row['store_name']);
         $this->_barcode->setDbValue($row['barcode']);
+        $this->user->setDbValue($row['user']);
+        $this->date_created->setDbValue($row['date_created']);
+        $this->time_created->setDbValue($row['time_created']);
     }
 
     // Return a row with default values
@@ -1829,6 +1659,9 @@ class PrintLabelList extends PrintLabel
         $row['store_code'] = $this->store_code->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
         $row['barcode'] = $this->_barcode->DefaultValue;
+        $row['user'] = $this->user->DefaultValue;
+        $row['date_created'] = $this->date_created->DefaultValue;
+        $row['time_created'] = $this->time_created->DefaultValue;
         return $row;
     }
 
@@ -1884,6 +1717,12 @@ class PrintLabelList extends PrintLabel
         // barcode
         $this->_barcode->CellCssStyle = "white-space: nowrap;";
 
+        // user
+
+        // date_created
+
+        // time_created
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
@@ -1932,7 +1771,22 @@ class PrintLabelList extends PrintLabel
 
             // barcode
             $this->_barcode->ViewValue = $this->_barcode->CurrentValue;
+            $this->_barcode->CssClass = "fw-bold";
             $this->_barcode->ViewCustomAttributes = "";
+
+            // user
+            $this->user->ViewValue = $this->user->CurrentValue;
+            $this->user->ViewCustomAttributes = "";
+
+            // date_created
+            $this->date_created->ViewValue = $this->date_created->CurrentValue;
+            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
+            $this->date_created->ViewCustomAttributes = "";
+
+            // time_created
+            $this->time_created->ViewValue = $this->time_created->CurrentValue;
+            $this->time_created->ViewValue = FormatDateTime($this->time_created->ViewValue, $this->time_created->formatPattern());
+            $this->time_created->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1953,75 +1807,27 @@ class PrintLabelList extends PrintLabel
             $this->store_code->LinkCustomAttributes = "";
             $this->store_code->HrefValue = "";
             $this->store_code->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_SEARCH) {
-            // id
-            if ($this->id->UseFilter && !EmptyValue($this->id->AdvancedSearch->SearchValue)) {
-                if (is_array($this->id->AdvancedSearch->SearchValue)) {
-                    $this->id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
-                }
-                $this->id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
-            }
 
-            // box_id
-            if ($this->box_id->UseFilter && !EmptyValue($this->box_id->AdvancedSearch->SearchValue)) {
-                if (is_array($this->box_id->AdvancedSearch->SearchValue)) {
-                    $this->box_id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_id->AdvancedSearch->SearchValue);
-                }
-                $this->box_id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_id->AdvancedSearch->SearchValue);
-            }
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
+            $this->user->TooltipValue = "";
 
-            // priority
-            if ($this->priority->UseFilter && !EmptyValue($this->priority->AdvancedSearch->SearchValue)) {
-                if (is_array($this->priority->AdvancedSearch->SearchValue)) {
-                    $this->priority->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->priority->AdvancedSearch->SearchValue);
-                }
-                $this->priority->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->priority->AdvancedSearch->SearchValue);
-            }
+            // date_created
+            $this->date_created->LinkCustomAttributes = "";
+            $this->date_created->HrefValue = "";
+            $this->date_created->TooltipValue = "";
 
-            // store_code
-            if ($this->store_code->UseFilter && !EmptyValue($this->store_code->AdvancedSearch->SearchValue)) {
-                if (is_array($this->store_code->AdvancedSearch->SearchValue)) {
-                    $this->store_code->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_code->AdvancedSearch->SearchValue);
-                }
-                $this->store_code->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_code->AdvancedSearch->SearchValue);
-            }
+            // time_created
+            $this->time_created->LinkCustomAttributes = "";
+            $this->time_created->HrefValue = "";
+            $this->time_created->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
-    }
-
-    // Validate search
-    protected function validateSearch()
-    {
-        // Check if validation required
-        if (!Config("SERVER_VALIDATE")) {
-            return true;
-        }
-
-        // Return validate result
-        $validateSearch = !$this->hasInvalidFields();
-
-        // Call Form_CustomValidate event
-        $formCustomError = "";
-        $validateSearch = $validateSearch && $this->formCustomValidate($formCustomError);
-        if ($formCustomError != "") {
-            $this->setFailureMessage($formCustomError);
-        }
-        return $validateSearch;
-    }
-
-    // Load advanced search
-    public function loadAdvancedSearch()
-    {
-        $this->id->AdvancedSearch->load();
-        $this->box_id->AdvancedSearch->load();
-        $this->priority->AdvancedSearch->load();
-        $this->store_code->AdvancedSearch->load();
-        $this->store_name->AdvancedSearch->load();
-        $this->_barcode->AdvancedSearch->load();
     }
 
     // Get export HTML tag

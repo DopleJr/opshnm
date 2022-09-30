@@ -5993,28 +5993,6 @@ function SetupLoginStatus()
     $LoginStatus["loginText"] = $Language->phrase("Login");
     $LoginStatus["canLogin"] = $currentPage != $loginPage && $loginUrl && !IsLoggedIn() && !IsLoggingIn2FA();
 
-    // Register page
-    $registerPage = "register";
-    $registerUrl = GetUrl($registerPage);
-    if ($currentPage != $registerPage) {
-        if (Config("USE_MODAL_REGISTER") && !IsMobile()) {
-            $LoginStatus["register"] = [
-                "ew-action" => "modal",
-                "btn" => "Register",
-                "caption" => $Language->phrase("Register"),
-                "url" => $registerUrl
-            ];
-        } else {
-            $LoginStatus["register"] = [
-                "ew-action" => "redirect",
-                "url" => $registerUrl
-            ];
-        }
-    }
-    $LoginStatus["registerUrl"] = $registerUrl;
-    $LoginStatus["registerText"] = $Language->phrase("Register");
-    $LoginStatus["canRegister"] = $registerUrl && !IsLoggedIn();
-
     // Change password page
     $changePasswordPage = "changepassword";
     $changePasswordUrl = GetUrl($changePasswordPage);

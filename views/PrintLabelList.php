@@ -18,12 +18,6 @@ loadjs.ready(["wrapper", "head"], function () {
     currentPageID = ew.PAGE_ID = "list";
     currentForm = fprint_labellist;
     fprint_labellist.formKeyCountName = "<?= $Page->FormKeyCountName ?>";
-
-    // Dynamic selection lists
-    fprint_labellist.lists.id = <?= $Page->id->toClientList($Page) ?>;
-    fprint_labellist.lists.box_id = <?= $Page->box_id->toClientList($Page) ?>;
-    fprint_labellist.lists.priority = <?= $Page->priority->toClientList($Page) ?>;
-    fprint_labellist.lists.store_code = <?= $Page->store_code->toClientList($Page) ?>;
     loadjs.done("fprint_labellist");
 });
 var fprint_labelsrch, currentSearchForm, currentAdvancedSearchForm;
@@ -33,49 +27,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fprint_labelsrch = new ew.Form("fprint_labelsrch", "list");
     currentSearchForm = fprint_labelsrch;
 
-    // Add fields
-    var fields = currentTable.fields;
-    fprint_labelsrch.addFields([
-        ["id", [], fields.id.isInvalid],
-        ["box_id", [], fields.box_id.isInvalid],
-        ["priority", [], fields.priority.isInvalid],
-        ["store_code", [], fields.store_code.isInvalid]
-    ]);
-
-    // Validate form
-    fprint_labelsrch.validate = function () {
-        if (!this.validateRequired)
-            return true; // Ignore validation
-        var fobj = this.getForm();
-
-        // Validate fields
-        if (!this.validateFields())
-            return false;
-
-        // Call Form_CustomValidate event
-        if (!this.customValidate(fobj)) {
-            this.focus();
-            return false;
-        }
-        return true;
-    }
-
-    // Form_CustomValidate
-    fprint_labelsrch.customValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
-        // Your custom validation code here, return false if invalid.
-        return true;
-    }
-
-    // Use JavaScript validation or not
-    fprint_labelsrch.validateRequired = ew.CLIENT_VALIDATE;
-
     // Dynamic selection lists
-    fprint_labelsrch.lists.id = <?= $Page->id->toClientList($Page) ?>;
-    fprint_labelsrch.lists.box_id = <?= $Page->box_id->toClientList($Page) ?>;
-    fprint_labelsrch.lists.priority = <?= $Page->priority->toClientList($Page) ?>;
-    fprint_labelsrch.lists.store_code = <?= $Page->store_code->toClientList($Page) ?>;
-    fprint_labelsrch.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
-    fprint_labelsrch.lists._barcode = <?= $Page->_barcode->toClientList($Page) ?>;
 
     // Filters
     fprint_labelsrch.filterList = <?= $Page->getFilterList() ?>;
@@ -114,236 +66,6 @@ $Page->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="print_label">
 <div class="ew-extended-search container-fluid">
-<div class="row mb-0<?= ($Page->SearchFieldsPerRow > 0) ? " row-cols-sm-" . $Page->SearchFieldsPerRow : "" ?>">
-<?php
-// Render search row
-$Page->RowType = ROWTYPE_SEARCH;
-$Page->resetAttributes();
-$Page->renderRow();
-?>
-<?php if ($Page->id->Visible) { // id ?>
-<?php
-if (!$Page->id->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_id" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->id->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_id"
-            name="x_id[]"
-            class="form-control ew-select<?= $Page->id->isInvalidClass() ?>"
-            data-select2-id="fprint_labelsrch_x_id"
-            data-table="print_label"
-            data-field="x_id"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->id->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->id->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>"
-            <?= $Page->id->editAttributes() ?>>
-            <?= $Page->id->selectOptionListHtml("x_id", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->id->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fprint_labelsrch", function() {
-            var options = {
-                name: "x_id",
-                selectId: "fprint_labelsrch_x_id",
-                ajax: { id: "x_id", form: "fprint_labelsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.print_label.fields.id.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-<?php if ($Page->box_id->Visible) { // box_id ?>
-<?php
-if (!$Page->box_id->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_box_id" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->box_id->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_box_id"
-            name="x_box_id[]"
-            class="form-control ew-select<?= $Page->box_id->isInvalidClass() ?>"
-            data-select2-id="fprint_labelsrch_x_box_id"
-            data-table="print_label"
-            data-field="x_box_id"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->box_id->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->box_id->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->box_id->getPlaceHolder()) ?>"
-            <?= $Page->box_id->editAttributes() ?>>
-            <?= $Page->box_id->selectOptionListHtml("x_box_id", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->box_id->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fprint_labelsrch", function() {
-            var options = {
-                name: "x_box_id",
-                selectId: "fprint_labelsrch_x_box_id",
-                ajax: { id: "x_box_id", form: "fprint_labelsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.print_label.fields.box_id.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-<?php if ($Page->priority->Visible) { // priority ?>
-<?php
-if (!$Page->priority->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_priority" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->priority->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_priority"
-            name="x_priority[]"
-            class="form-control ew-select<?= $Page->priority->isInvalidClass() ?>"
-            data-select2-id="fprint_labelsrch_x_priority"
-            data-table="print_label"
-            data-field="x_priority"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->priority->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->priority->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->priority->getPlaceHolder()) ?>"
-            <?= $Page->priority->editAttributes() ?>>
-            <?= $Page->priority->selectOptionListHtml("x_priority", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->priority->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fprint_labelsrch", function() {
-            var options = {
-                name: "x_priority",
-                selectId: "fprint_labelsrch_x_priority",
-                ajax: { id: "x_priority", form: "fprint_labelsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.print_label.fields.priority.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-<?php if ($Page->store_code->Visible) { // store_code ?>
-<?php
-if (!$Page->store_code->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_store_code" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->store_code->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_store_code"
-            name="x_store_code[]"
-            class="form-control ew-select<?= $Page->store_code->isInvalidClass() ?>"
-            data-select2-id="fprint_labelsrch_x_store_code"
-            data-table="print_label"
-            data-field="x_store_code"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->store_code->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->store_code->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->store_code->getPlaceHolder()) ?>"
-            <?= $Page->store_code->editAttributes() ?>>
-            <?= $Page->store_code->selectOptionListHtml("x_store_code", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->store_code->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fprint_labelsrch", function() {
-            var options = {
-                name: "x_store_code",
-                selectId: "fprint_labelsrch_x_store_code",
-                ajax: { id: "x_store_code", form: "fprint_labelsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.print_label.fields.store_code.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-<?php if ($Page->store_name->Visible) { // store_name ?>
-<?php
-if (!$Page->store_name->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_store_name" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->store_name->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_store_name"
-            name="x_store_name[]"
-            class="form-control ew-select<?= $Page->store_name->isInvalidClass() ?>"
-            data-select2-id="fprint_labelsrch_x_store_name"
-            data-table="print_label"
-            data-field="x_store_name"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->store_name->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->store_name->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->store_name->getPlaceHolder()) ?>"
-            <?= $Page->store_name->editAttributes() ?>>
-            <?= $Page->store_name->selectOptionListHtml("x_store_name", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->store_name->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fprint_labelsrch", function() {
-            var options = {
-                name: "x_store_name",
-                selectId: "fprint_labelsrch_x_store_name",
-                ajax: { id: "x_store_name", form: "fprint_labelsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.print_label.fields.store_name.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-<?php if ($Page->_barcode->Visible) { // barcode ?>
-<?php
-if (!$Page->_barcode->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs__barcode" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->_barcode->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x__barcode"
-            name="x__barcode[]"
-            class="form-control ew-select<?= $Page->_barcode->isInvalidClass() ?>"
-            data-select2-id="fprint_labelsrch_x__barcode"
-            data-table="print_label"
-            data-field="x__barcode"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->_barcode->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->_barcode->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->_barcode->getPlaceHolder()) ?>"
-            <?= $Page->_barcode->editAttributes() ?>>
-            <?= $Page->_barcode->selectOptionListHtml("x__barcode", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->_barcode->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fprint_labelsrch", function() {
-            var options = {
-                name: "x__barcode",
-                selectId: "fprint_labelsrch_x__barcode",
-                ajax: { id: "x__barcode", form: "fprint_labelsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.print_label.fields._barcode.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
-</div><!-- /.row -->
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
         <div class="ew-basic-search input-group">
@@ -419,6 +141,15 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->store_code->Visible) { // store_code ?>
         <th data-name="store_code" class="<?= $Page->store_code->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_print_label_store_code" class="print_label_store_code"><?= $Page->renderFieldHeader($Page->store_code) ?></div></th>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+        <th data-name="user" class="<?= $Page->user->headerCellClass() ?>"><div id="elh_print_label_user" class="print_label_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
+<?php } ?>
+<?php if ($Page->date_created->Visible) { // date_created ?>
+        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>"><div id="elh_print_label_date_created" class="print_label_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
+<?php } ?>
+<?php if ($Page->time_created->Visible) { // time_created ?>
+        <th data-name="time_created" class="<?= $Page->time_created->headerCellClass() ?>"><div id="elh_print_label_time_created" class="print_label_time_created"><?= $Page->renderFieldHeader($Page->time_created) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -524,6 +255,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_print_label_store_code" class="el_print_label_store_code">
 <span<?= $Page->store_code->viewAttributes() ?>>
 <?= $Page->store_code->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->user->Visible) { // user ?>
+        <td data-name="user"<?= $Page->user->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_print_label_user" class="el_print_label_user">
+<span<?= $Page->user->viewAttributes() ?>>
+<?= $Page->user->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->date_created->Visible) { // date_created ?>
+        <td data-name="date_created"<?= $Page->date_created->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_print_label_date_created" class="el_print_label_date_created">
+<span<?= $Page->date_created->viewAttributes() ?>>
+<?= $Page->date_created->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->time_created->Visible) { // time_created ?>
+        <td data-name="time_created"<?= $Page->time_created->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_print_label_time_created" class="el_print_label_time_created">
+<span<?= $Page->time_created->viewAttributes() ?>>
+<?= $Page->time_created->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

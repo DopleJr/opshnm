@@ -37,9 +37,9 @@ class User extends DbTable
     public $_email;
     public $ip_loggedin;
     public $role;
+    public $_userLevel;
     public $date_created;
     public $date_updated;
-    public $_userLevel;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -230,9 +230,35 @@ class User extends DbTable
         $this->role->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->role->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->role->UseFilter = true; // Table header filter
-        $this->role->Lookup = new Lookup('role', 'user', true, 'role', ["role","","",""], [], [], [], [], [], [], '', '', "");
-        $this->role->OptionCount = 4;
+        $this->role->Lookup = new Lookup('role', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], ["x__userLevel"], [], [], ["userlevelid"], ["x__userLevel"], '', '', "`userlevelname`");
         $this->Fields['role'] = &$this->role;
+
+        // userLevel
+        $this->_userLevel = new DbField(
+            'user',
+            'user',
+            'x__userLevel',
+            'userLevel',
+            '`userLevel`',
+            '`userLevel`',
+            3,
+            11,
+            -1,
+            false,
+            '`userLevel`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'SELECT'
+        );
+        $this->_userLevel->InputTextType = "text";
+        $this->_userLevel->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->_userLevel->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->_userLevel->UseFilter = true; // Table header filter
+        $this->_userLevel->Lookup = new Lookup('userLevel', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], ["x_role"], [], ["userlevelname"], ["x_userlevelname"], ["userlevelname"], ["x_role"], '', '', "`userlevelid`");
+        $this->_userLevel->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['userLevel'] = &$this->_userLevel;
 
         // date_created
         $this->date_created = new DbField(
@@ -283,30 +309,6 @@ class User extends DbTable
         $this->date_updated->Lookup = new Lookup('date_updated', 'user', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
         $this->date_updated->DefaultErrorMessage = str_replace("%s", DateFormat(1), $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
-
-        // userLevel
-        $this->_userLevel = new DbField(
-            'user',
-            'user',
-            'x__userLevel',
-            'userLevel',
-            '`userLevel`',
-            '`userLevel`',
-            3,
-            11,
-            -1,
-            false,
-            '`userLevel`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->_userLevel->InputTextType = "text";
-        $this->_userLevel->Sortable = false; // Allow sort
-        $this->_userLevel->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Fields['userLevel'] = &$this->_userLevel;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -758,9 +760,9 @@ class User extends DbTable
         $this->_email->DbValue = $row['email'];
         $this->ip_loggedin->DbValue = $row['ip_loggedin'];
         $this->role->DbValue = $row['role'];
+        $this->_userLevel->DbValue = $row['userLevel'];
         $this->date_created->DbValue = $row['date_created'];
         $this->date_updated->DbValue = $row['date_updated'];
-        $this->_userLevel->DbValue = $row['userLevel'];
     }
 
     // Delete uploaded files
@@ -1085,9 +1087,9 @@ class User extends DbTable
         $this->_email->setDbValue($row['email']);
         $this->ip_loggedin->setDbValue($row['ip_loggedin']);
         $this->role->setDbValue($row['role']);
+        $this->_userLevel->setDbValue($row['userLevel']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
-        $this->_userLevel->setDbValue($row['userLevel']);
     }
 
     // Render list row values
@@ -1101,23 +1103,31 @@ class User extends DbTable
         // Common render codes
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // username
+        $this->_username->CellCssStyle = "white-space: nowrap;";
 
         // password
+        $this->_password->CellCssStyle = "white-space: nowrap;";
 
         // email
+        $this->_email->CellCssStyle = "white-space: nowrap;";
 
         // ip_loggedin
+        $this->ip_loggedin->CellCssStyle = "white-space: nowrap;";
 
         // role
-
-        // date_created
-
-        // date_updated
+        $this->role->CellCssStyle = "white-space: nowrap;";
 
         // userLevel
         $this->_userLevel->CellCssStyle = "white-space: nowrap;";
+
+        // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1140,16 +1150,60 @@ class User extends DbTable
         $this->ip_loggedin->ViewCustomAttributes = "";
 
         // role
-        if ($Security->canAdmin()) { // System admin
-            if (strval($this->role->CurrentValue) != "") {
-                $this->role->ViewValue = $this->role->optionCaption($this->role->CurrentValue);
-            } else {
-                $this->role->ViewValue = null;
+        $curVal = strval($this->role->CurrentValue);
+        if ($curVal != "") {
+            $this->role->ViewValue = $this->role->lookupCacheOption($curVal);
+            if ($this->role->ViewValue === null) { // Lookup from database
+                $filterWrk = "`userlevelname`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $lookupFilter = function() {
+                    return "`userlevelname` = 'User' ";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->role->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCacheImpl($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->role->Lookup->renderViewRow($rswrk[0]);
+                    $this->role->ViewValue = $this->role->displayValue($arwrk);
+                } else {
+                    $this->role->ViewValue = $this->role->CurrentValue;
+                }
             }
         } else {
-            $this->role->ViewValue = $Language->phrase("PasswordMask");
+            $this->role->ViewValue = null;
         }
         $this->role->ViewCustomAttributes = "";
+
+        // userLevel
+        if ($Security->canAdmin()) { // System admin
+            $curVal = strval($this->_userLevel->CurrentValue);
+            if ($curVal != "") {
+                $this->_userLevel->ViewValue = $this->_userLevel->lookupCacheOption($curVal);
+                if ($this->_userLevel->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->_userLevel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->_userLevel->Lookup->renderViewRow($rswrk[0]);
+                        $this->_userLevel->ViewValue = $this->_userLevel->displayValue($arwrk);
+                    } else {
+                        $this->_userLevel->ViewValue = FormatNumber($this->_userLevel->CurrentValue, $this->_userLevel->formatPattern());
+                    }
+                }
+            } else {
+                $this->_userLevel->ViewValue = null;
+            }
+        } else {
+            $this->_userLevel->ViewValue = $Language->phrase("PasswordMask");
+        }
+        $this->_userLevel->ViewCustomAttributes = "";
 
         // date_created
         $this->date_created->ViewValue = $this->date_created->CurrentValue;
@@ -1160,11 +1214,6 @@ class User extends DbTable
         $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
         $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
         $this->date_updated->ViewCustomAttributes = "";
-
-        // userLevel
-        $this->_userLevel->ViewValue = $this->_userLevel->CurrentValue;
-        $this->_userLevel->ViewValue = FormatNumber($this->_userLevel->ViewValue, $this->_userLevel->formatPattern());
-        $this->_userLevel->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1196,6 +1245,11 @@ class User extends DbTable
         $this->role->HrefValue = "";
         $this->role->TooltipValue = "";
 
+        // userLevel
+        $this->_userLevel->LinkCustomAttributes = "";
+        $this->_userLevel->HrefValue = "";
+        $this->_userLevel->TooltipValue = "";
+
         // date_created
         $this->date_created->LinkCustomAttributes = "";
         $this->date_created->HrefValue = "";
@@ -1205,11 +1259,6 @@ class User extends DbTable
         $this->date_updated->LinkCustomAttributes = "";
         $this->date_updated->HrefValue = "";
         $this->date_updated->TooltipValue = "";
-
-        // userLevel
-        $this->_userLevel->LinkCustomAttributes = "";
-        $this->_userLevel->HrefValue = "";
-        $this->_userLevel->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1270,29 +1319,70 @@ class User extends DbTable
         // role
         $this->role->setupEditAttributes();
         $this->role->EditCustomAttributes = "";
-        if (!$Security->canAdmin()) { // System admin
-            $this->role->EditValue = $Language->phrase("PasswordMask");
+        $curVal = trim(strval($this->role->CurrentValue));
+        if ($curVal != "") {
+            $this->role->ViewValue = $this->role->lookupCacheOption($curVal);
         } else {
-            $this->role->EditValue = $this->role->options(true);
-            $this->role->PlaceHolder = RemoveHtml($this->role->caption());
+            $this->role->ViewValue = $this->role->Lookup !== null && is_array($this->role->lookupOptions()) ? $curVal : null;
+        }
+        if ($this->role->ViewValue !== null) { // Load from cache
+            $this->role->EditValue = array_values($this->role->lookupOptions());
+        } else { // Lookup from database
+            $filterWrk = "";
+            $lookupFilter = function() {
+                return "`userlevelname` = 'User' ";
+            };
+            $lookupFilter = $lookupFilter->bindTo($this);
+            $sqlWrk = $this->role->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+            $conn = Conn();
+            $config = $conn->getConfiguration();
+            $config->setResultCacheImpl($this->Cache);
+            $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+            $ari = count($rswrk);
+            $arwrk = $rswrk;
+            $this->role->EditValue = $arwrk;
+        }
+        $this->role->PlaceHolder = RemoveHtml($this->role->caption());
+
+        // userLevel
+        $this->_userLevel->setupEditAttributes();
+        $this->_userLevel->EditCustomAttributes = "";
+        if (!$Security->canAdmin()) { // System admin
+            $this->_userLevel->EditValue = $Language->phrase("PasswordMask");
+        } else {
+            $curVal = trim(strval($this->_userLevel->CurrentValue));
+            if ($curVal != "") {
+                $this->_userLevel->ViewValue = $this->_userLevel->lookupCacheOption($curVal);
+            } else {
+                $this->_userLevel->ViewValue = $this->_userLevel->Lookup !== null && is_array($this->_userLevel->lookupOptions()) ? $curVal : null;
+            }
+            if ($this->_userLevel->ViewValue !== null) { // Load from cache
+                $this->_userLevel->EditValue = array_values($this->_userLevel->lookupOptions());
+            } else { // Lookup from database
+                $filterWrk = "";
+                $sqlWrk = $this->_userLevel->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCacheImpl($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row) {
+                    $row = $this->_userLevel->Lookup->renderViewRow($row);
+                }
+                $this->_userLevel->EditValue = $arwrk;
+            }
+            $this->_userLevel->PlaceHolder = RemoveHtml($this->_userLevel->caption());
         }
 
         // date_created
         $this->date_created->setupEditAttributes();
         $this->date_created->EditCustomAttributes = "";
-        $this->date_created->EditValue = FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
+        $this->date_created->EditValue = $this->date_created->CurrentValue;
+        $this->date_created->EditValue = FormatDateTime($this->date_created->EditValue, $this->date_created->formatPattern());
+        $this->date_created->ViewCustomAttributes = "";
 
         // date_updated
-
-        // userLevel
-        $this->_userLevel->setupEditAttributes();
-        $this->_userLevel->EditCustomAttributes = "";
-        $this->_userLevel->EditValue = $this->_userLevel->CurrentValue;
-        $this->_userLevel->PlaceHolder = RemoveHtml($this->_userLevel->caption());
-        if (strval($this->_userLevel->EditValue) != "" && is_numeric($this->_userLevel->EditValue)) {
-            $this->_userLevel->EditValue = FormatNumber($this->_userLevel->EditValue, null);
-        }
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1328,6 +1418,7 @@ class User extends DbTable
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->ip_loggedin);
                     $doc->exportCaption($this->role);
+                    $doc->exportCaption($this->_userLevel);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
                 } else {
@@ -1337,6 +1428,7 @@ class User extends DbTable
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->ip_loggedin);
                     $doc->exportCaption($this->role);
+                    $doc->exportCaption($this->_userLevel);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
                 }
@@ -1374,6 +1466,7 @@ class User extends DbTable
                         $doc->exportField($this->_email);
                         $doc->exportField($this->ip_loggedin);
                         $doc->exportField($this->role);
+                        $doc->exportField($this->_userLevel);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
                     } else {
@@ -1383,6 +1476,7 @@ class User extends DbTable
                         $doc->exportField($this->_email);
                         $doc->exportField($this->ip_loggedin);
                         $doc->exportField($this->role);
+                        $doc->exportField($this->_userLevel);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
                     }

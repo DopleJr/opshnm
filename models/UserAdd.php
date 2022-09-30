@@ -492,9 +492,9 @@ class UserAdd extends User
         $this->_email->setVisibility();
         $this->ip_loggedin->Visible = false;
         $this->role->setVisibility();
+        $this->_userLevel->setVisibility();
         $this->date_created->setVisibility();
-        $this->date_updated->setVisibility();
-        $this->_userLevel->Visible = false;
+        $this->date_updated->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -512,6 +512,7 @@ class UserAdd extends User
 
         // Set up lookup cache
         $this->setupLookupOptions($this->role);
+        $this->setupLookupOptions($this->_userLevel);
 
         // Load default values for add
         $this->loadDefaultValues();
@@ -702,6 +703,16 @@ class UserAdd extends User
             }
         }
 
+        // Check field name 'userLevel' first before field var 'x__userLevel'
+        $val = $CurrentForm->hasValue("userLevel") ? $CurrentForm->getValue("userLevel") : $CurrentForm->getValue("x__userLevel");
+        if (!$this->_userLevel->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->_userLevel->Visible = false; // Disable update for API request
+            } else {
+                $this->_userLevel->setFormValue($val);
+            }
+        }
+
         // Check field name 'date_created' first before field var 'x_date_created'
         $val = $CurrentForm->hasValue("date_created") ? $CurrentForm->getValue("date_created") : $CurrentForm->getValue("x_date_created");
         if (!$this->date_created->IsDetailKey) {
@@ -711,17 +722,6 @@ class UserAdd extends User
                 $this->date_created->setFormValue($val, true, $validate);
             }
             $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        }
-
-        // Check field name 'date_updated' first before field var 'x_date_updated'
-        $val = $CurrentForm->hasValue("date_updated") ? $CurrentForm->getValue("date_updated") : $CurrentForm->getValue("x_date_updated");
-        if (!$this->date_updated->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->date_updated->Visible = false; // Disable update for API request
-            } else {
-                $this->date_updated->setFormValue($val);
-            }
-            $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
         }
 
         // Check field name 'id' first before field var 'x_id'
@@ -736,10 +736,9 @@ class UserAdd extends User
         $this->_password->CurrentValue = $this->_password->FormValue;
         $this->_email->CurrentValue = $this->_email->FormValue;
         $this->role->CurrentValue = $this->role->FormValue;
+        $this->_userLevel->CurrentValue = $this->_userLevel->FormValue;
         $this->date_created->CurrentValue = $this->date_created->FormValue;
         $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        $this->date_updated->CurrentValue = $this->date_updated->FormValue;
-        $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
     }
 
     /**
@@ -804,9 +803,9 @@ class UserAdd extends User
         $this->_email->setDbValue($row['email']);
         $this->ip_loggedin->setDbValue($row['ip_loggedin']);
         $this->role->setDbValue($row['role']);
+        $this->_userLevel->setDbValue($row['userLevel']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
-        $this->_userLevel->setDbValue($row['userLevel']);
     }
 
     // Return a row with default values
@@ -819,9 +818,9 @@ class UserAdd extends User
         $row['email'] = $this->_email->DefaultValue;
         $row['ip_loggedin'] = $this->ip_loggedin->DefaultValue;
         $row['role'] = $this->role->DefaultValue;
+        $row['userLevel'] = $this->_userLevel->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
-        $row['userLevel'] = $this->_userLevel->DefaultValue;
         return $row;
     }
 
@@ -871,14 +870,14 @@ class UserAdd extends User
         // role
         $this->role->RowCssClass = "row";
 
+        // userLevel
+        $this->_userLevel->RowCssClass = "row";
+
         // date_created
         $this->date_created->RowCssClass = "row";
 
         // date_updated
         $this->date_updated->RowCssClass = "row";
-
-        // userLevel
-        $this->_userLevel->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -903,16 +902,60 @@ class UserAdd extends User
             $this->ip_loggedin->ViewCustomAttributes = "";
 
             // role
-            if ($Security->canAdmin()) { // System admin
-                if (strval($this->role->CurrentValue) != "") {
-                    $this->role->ViewValue = $this->role->optionCaption($this->role->CurrentValue);
-                } else {
-                    $this->role->ViewValue = null;
+            $curVal = strval($this->role->CurrentValue);
+            if ($curVal != "") {
+                $this->role->ViewValue = $this->role->lookupCacheOption($curVal);
+                if ($this->role->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`userlevelname`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $lookupFilter = function() {
+                        return "`userlevelname` = 'User' ";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->role->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->role->Lookup->renderViewRow($rswrk[0]);
+                        $this->role->ViewValue = $this->role->displayValue($arwrk);
+                    } else {
+                        $this->role->ViewValue = $this->role->CurrentValue;
+                    }
                 }
             } else {
-                $this->role->ViewValue = $Language->phrase("PasswordMask");
+                $this->role->ViewValue = null;
             }
             $this->role->ViewCustomAttributes = "";
+
+            // userLevel
+            if ($Security->canAdmin()) { // System admin
+                $curVal = strval($this->_userLevel->CurrentValue);
+                if ($curVal != "") {
+                    $this->_userLevel->ViewValue = $this->_userLevel->lookupCacheOption($curVal);
+                    if ($this->_userLevel->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->_userLevel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $conn = Conn();
+                        $config = $conn->getConfiguration();
+                        $config->setResultCacheImpl($this->Cache);
+                        $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->_userLevel->Lookup->renderViewRow($rswrk[0]);
+                            $this->_userLevel->ViewValue = $this->_userLevel->displayValue($arwrk);
+                        } else {
+                            $this->_userLevel->ViewValue = FormatNumber($this->_userLevel->CurrentValue, $this->_userLevel->formatPattern());
+                        }
+                    }
+                } else {
+                    $this->_userLevel->ViewValue = null;
+                }
+            } else {
+                $this->_userLevel->ViewValue = $Language->phrase("PasswordMask");
+            }
+            $this->_userLevel->ViewCustomAttributes = "";
 
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
@@ -940,13 +983,14 @@ class UserAdd extends User
             $this->role->LinkCustomAttributes = "";
             $this->role->HrefValue = "";
 
+            // userLevel
+            $this->_userLevel->LinkCustomAttributes = "";
+            $this->_userLevel->HrefValue = "";
+
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
-
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
+            $this->date_created->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // username
             $this->_username->setupEditAttributes();
@@ -984,11 +1028,68 @@ class UserAdd extends User
             // role
             $this->role->setupEditAttributes();
             $this->role->EditCustomAttributes = "";
-            if (!$Security->canAdmin()) { // System admin
-                $this->role->EditValue = $Language->phrase("PasswordMask");
+            $curVal = trim(strval($this->role->CurrentValue));
+            if ($curVal != "") {
+                $this->role->ViewValue = $this->role->lookupCacheOption($curVal);
             } else {
-                $this->role->EditValue = $this->role->options(true);
-                $this->role->PlaceHolder = RemoveHtml($this->role->caption());
+                $this->role->ViewValue = $this->role->Lookup !== null && is_array($this->role->lookupOptions()) ? $curVal : null;
+            }
+            if ($this->role->ViewValue !== null) { // Load from cache
+                $this->role->EditValue = array_values($this->role->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`userlevelname`" . SearchString("=", $this->role->CurrentValue, DATATYPE_STRING, "");
+                }
+                $lookupFilter = function() {
+                    return "`userlevelname` = 'User' ";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->role->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCacheImpl($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->role->EditValue = $arwrk;
+            }
+            $this->role->PlaceHolder = RemoveHtml($this->role->caption());
+
+            // userLevel
+            $this->_userLevel->setupEditAttributes();
+            $this->_userLevel->EditCustomAttributes = "";
+            if (!$Security->canAdmin()) { // System admin
+                $this->_userLevel->EditValue = $Language->phrase("PasswordMask");
+            } else {
+                $curVal = trim(strval($this->_userLevel->CurrentValue));
+                if ($curVal != "") {
+                    $this->_userLevel->ViewValue = $this->_userLevel->lookupCacheOption($curVal);
+                } else {
+                    $this->_userLevel->ViewValue = $this->_userLevel->Lookup !== null && is_array($this->_userLevel->lookupOptions()) ? $curVal : null;
+                }
+                if ($this->_userLevel->ViewValue !== null) { // Load from cache
+                    $this->_userLevel->EditValue = array_values($this->_userLevel->lookupOptions());
+                } else { // Lookup from database
+                    if ($curVal == "") {
+                        $filterWrk = "0=1";
+                    } else {
+                        $filterWrk = "`userlevelid`" . SearchString("=", $this->_userLevel->CurrentValue, DATATYPE_NUMBER, "");
+                    }
+                    $sqlWrk = $this->_userLevel->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    $arwrk = $rswrk;
+                    foreach ($arwrk as &$row) {
+                        $row = $this->_userLevel->Lookup->renderViewRow($row);
+                    }
+                    $this->_userLevel->EditValue = $arwrk;
+                }
+                $this->_userLevel->PlaceHolder = RemoveHtml($this->_userLevel->caption());
             }
 
             // date_created
@@ -996,8 +1097,6 @@ class UserAdd extends User
             $this->date_created->EditCustomAttributes = "";
             $this->date_created->EditValue = HtmlEncode(FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()));
             $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
-
-            // date_updated
 
             // Add refer script
 
@@ -1017,13 +1116,13 @@ class UserAdd extends User
             $this->role->LinkCustomAttributes = "";
             $this->role->HrefValue = "";
 
+            // userLevel
+            $this->_userLevel->LinkCustomAttributes = "";
+            $this->_userLevel->HrefValue = "";
+
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
-
-            // date_updated
-            $this->date_updated->LinkCustomAttributes = "";
-            $this->date_updated->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1071,6 +1170,11 @@ class UserAdd extends User
                 $this->role->addErrorMessage(str_replace("%s", $this->role->caption(), $this->role->RequiredErrorMessage));
             }
         }
+        if ($this->_userLevel->Required) {
+            if (!$this->_userLevel->IsDetailKey && EmptyValue($this->_userLevel->FormValue)) {
+                $this->_userLevel->addErrorMessage(str_replace("%s", $this->_userLevel->caption(), $this->_userLevel->RequiredErrorMessage));
+            }
+        }
         if ($this->date_created->Required) {
             if (!$this->date_created->IsDetailKey && EmptyValue($this->date_created->FormValue)) {
                 $this->date_created->addErrorMessage(str_replace("%s", $this->date_created->caption(), $this->date_created->RequiredErrorMessage));
@@ -1078,11 +1182,6 @@ class UserAdd extends User
         }
         if (!CheckDate($this->date_created->FormValue, $this->date_created->formatPattern())) {
             $this->date_created->addErrorMessage($this->date_created->getErrorMessage(false));
-        }
-        if ($this->date_updated->Required) {
-            if (!$this->date_updated->IsDetailKey && EmptyValue($this->date_updated->FormValue)) {
-                $this->date_updated->addErrorMessage(str_replace("%s", $this->date_updated->caption(), $this->date_updated->RequiredErrorMessage));
-            }
         }
 
         // Return validate result
@@ -1115,16 +1214,15 @@ class UserAdd extends User
         $this->_email->setDbValueDef($rsnew, $this->_email->CurrentValue, "", false);
 
         // role
+        $this->role->setDbValueDef($rsnew, $this->role->CurrentValue, null, false);
+
+        // userLevel
         if ($Security->canAdmin()) { // System admin
-            $this->role->setDbValueDef($rsnew, $this->role->CurrentValue, null, false);
+            $this->_userLevel->setDbValueDef($rsnew, $this->_userLevel->CurrentValue, null, false);
         }
 
         // date_created
         $this->date_created->setDbValueDef($rsnew, UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()), null, false);
-
-        // date_updated
-        $this->date_updated->CurrentValue = CurrentDateTime();
-        $this->date_updated->setDbValueDef($rsnew, $this->date_updated->CurrentValue, null);
 
         // Update current values
         $this->setCurrentValues($rsnew);
@@ -1214,6 +1312,12 @@ class UserAdd extends User
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_role":
+                    $lookupFilter = function () {
+                        return "`userlevelname` = 'User' ";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x__userLevel":
                     break;
                 default:
                     $lookupFilter = "";

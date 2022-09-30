@@ -146,7 +146,7 @@ $CONFIG = [
 
     // General
     "UNFORMAT_YEAR" => 50, // Unformat year
-    "RANDOM_KEY" => '4Mct30Fzhe9pPegv', // Random key for encryption
+    "RANDOM_KEY" => 'toODB7q6hc19VoDE', // Random key for encryption
     "ENCRYPTION_KEY" => '', // Encryption key for data protection
     "PROJECT_STYLESHEET_FILENAME" => "css/opsmezzanineupload.css", // Project stylesheet file name
     "USE_COMPRESSED_STYLESHEET" => true, // Compressed stylesheet
@@ -308,10 +308,29 @@ $CONFIG = [
     "PHPASS_ITERATION_COUNT_LOG2" => [10, 8], // For PasswordHash
     "PASSWORD_HASH" => false, // Use PHP password hashing functions
     "USE_MODAL_LOGIN" => false, // Use modal login
-    "USE_MODAL_REGISTER" => true, // Use modal register
+    "USE_MODAL_REGISTER" => false, // Use modal register
     "USE_MODAL_CHANGE_PASSWORD" => false, // Use modal change password
     "USE_MODAL_RESET_PASSWORD" => false, // Use modal reset password
     "RESET_PASSWORD_TIME_LIMIT" => 60,
+
+    /**
+     * Dynamic User Level settings
+     */
+
+    // User level definition table/field names
+    "USER_LEVEL_DBID" => "DB",
+    "USER_LEVEL_TABLE" => "`userlevels`",
+    "USER_LEVEL_ID_FIELD" => "`userlevelid`",
+    "USER_LEVEL_NAME_FIELD" => "`userlevelname`",
+
+    // User Level privileges table/field names
+    "USER_LEVEL_PRIV_DBID" => "DB",
+    "USER_LEVEL_PRIV_TABLE" => "`userlevelpermissions`",
+    "USER_LEVEL_PRIV_TABLE_NAME_FIELD" => "`tablename`",
+    "USER_LEVEL_PRIV_TABLE_NAME_FIELD_2" => "tablename",
+    "USER_LEVEL_PRIV_TABLE_NAME_FIELD_SIZE" => 191, // Max key length 767/4 = 191 bytes
+    "USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD" => "`userlevelid`",
+    "USER_LEVEL_PRIV_PRIV_FIELD" => "`permission`",
 
     // Default User ID allowed permissions
     "DEFAULT_USER_ID_ALLOW_SECURITY" => 360,
@@ -322,7 +341,7 @@ $CONFIG = [
     "LOGIN_PASSWORD_FIELD_NAME" => "password",
     "USER_ID_FIELD_NAME" => "username",
     "PARENT_USER_ID_FIELD_NAME" => "",
-    "USER_LEVEL_FIELD_NAME" => "role",
+    "USER_LEVEL_FIELD_NAME" => "userLevel",
     "USER_PROFILE_FIELD_NAME" => "",
     "REGISTER_ACTIVATE_FIELD_NAME" => "",
     "USER_EMAIL_FIELD_NAME" => "email",

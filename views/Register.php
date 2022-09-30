@@ -22,7 +22,8 @@ loadjs.ready(["wrapper", "head"], function () {
     fregister.addFields([
         ["_username", [fields._username.visible && fields._username.required ? ew.Validators.required(fields._username.caption) : null, ew.Validators.username(fields._username.raw)], fields._username.isInvalid],
         ["c__password", [ew.Validators.required(ew.language.phrase("ConfirmPassword")), ew.Validators.mismatchPassword], fields._password.isInvalid],
-        ["_password", [fields._password.visible && fields._password.required ? ew.Validators.required(fields._password.caption) : null, ew.Validators.password(fields._password.raw)], fields._password.isInvalid]
+        ["_password", [fields._password.visible && fields._password.required ? ew.Validators.required(fields._password.caption) : null, ew.Validators.password(fields._password.raw)], fields._password.isInvalid],
+        ["_email", [fields._email.visible && fields._email.required ? ew.Validators.required(fields._email.caption) : null], fields._email.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -92,6 +93,18 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->_email->Visible) { // email ?>
+    <div id="r__email"<?= $Page->_email->rowAttributes() ?>>
+        <label id="elh_user__email" for="x__email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_email->caption() ?><?= $Page->_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_email->cellAttributes() ?>>
+<span id="el_user__email">
+<input type="<?= $Page->_email->getInputTextType() ?>" name="x__email" id="x__email" data-table="user" data-field="x__email" value="<?= $Page->_email->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->_email->getPlaceHolder()) ?>"<?= $Page->_email->editAttributes() ?> aria-describedby="x__email_help">
+<?= $Page->_email->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->_email->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <?php if (!$Page->IsModal) { ?>
 <div class="row"><!-- buttons .row -->
@@ -113,6 +126,11 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
+    // Startup script
     // Write your startup script here, no need to add script tags.
+    $(document).ready(function(){
+        $("#x_role").val("User");
+        $("#x_userLevel").val("1");
+        });
 });
 </script>

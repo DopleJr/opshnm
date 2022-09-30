@@ -232,7 +232,21 @@ function GetTotalRecord()
 	$_usercycle = CurrentUserName();
 return ExecuteScalar("SELECT COUNT(`article`) FROM cycle_count WHERE `location` = ('$currentLoc') AND `user` = ('$_usercycle') AND `article` is not null ORDER BY `id` desc LIMIT 1");
 }
+//-------------------------------
+//Stocktake Online
+function GetStockLocation()
+{
+	$_usercycle3 = CurrentUserName();
+return ExecuteScalar("SELECT `location` FROM `stock_count` WHERE `user` = ('$_usercycle3') ORDER BY `id` desc LIMIT 1");
+}
 
+function GetStockRecord()
+{
+	$currentLoc3 = GetStockLocation();
+	$_usercycle3 = CurrentUserName();
+return ExecuteScalar("SELECT COUNT(`article`) FROM `stock_count` WHERE `location` = ('$currentLoc3') AND `user` = ('$_usercycle3') AND `article` is not null ORDER BY `id` desc LIMIT 1");
+}
+//---------------------------------
 function GetLastestLocationXtra()
 {
 	$_usercycle = CurrentUserName();

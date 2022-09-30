@@ -37,6 +37,9 @@ class PrintLabel extends DbTable
     public $store_code;
     public $store_name;
     public $_barcode;
+    public $user;
+    public $date_created;
+    public $time_created;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -97,8 +100,6 @@ class PrintLabel extends DbTable
         $this->id->InputTextType = "text";
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'print_label', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -122,8 +123,8 @@ class PrintLabel extends DbTable
             'TEXT'
         );
         $this->box_id->InputTextType = "text";
-        $this->box_id->UseFilter = true; // Table header filter
-        $this->box_id->Lookup = new Lookup('box_id', 'print_label', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+        $this->box_id->Nullable = false; // NOT NULL field
+        $this->box_id->Required = true; // Required field
         $this->Fields['box_id'] = &$this->box_id;
 
         // priority
@@ -146,9 +147,9 @@ class PrintLabel extends DbTable
             'RADIO'
         );
         $this->priority->InputTextType = "text";
+        $this->priority->Nullable = false; // NOT NULL field
         $this->priority->Required = true; // Required field
-        $this->priority->UseFilter = true; // Table header filter
-        $this->priority->Lookup = new Lookup('priority', 'print_label', true, 'priority', ["priority","","",""], [], [], [], [], [], [], '', '', "");
+        $this->priority->Lookup = new Lookup('priority', 'print_label', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
         $this->priority->OptionCount = 2;
         $this->Fields['priority'] = &$this->priority;
 
@@ -172,11 +173,11 @@ class PrintLabel extends DbTable
             'SELECT'
         );
         $this->store_code->InputTextType = "text";
+        $this->store_code->Nullable = false; // NOT NULL field
         $this->store_code->Required = true; // Required field
         $this->store_code->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->store_code->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'store', true, 'store_code', ["store_code","store_name","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code`', '', "CONCAT(COALESCE(`store_code`, ''),'" . ValueSeparator(1, $this->store_code) . "',COALESCE(`store_name`,''))");
+        $this->store_code->Lookup = new Lookup('store_code', 'store', false, 'store_code', ["store_code","store_name","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code`', '', "CONCAT(COALESCE(`store_code`, ''),'" . ValueSeparator(1, $this->store_code) . "',COALESCE(`store_name`,''))");
         $this->Fields['store_code'] = &$this->store_code;
 
         // store_name
@@ -199,8 +200,8 @@ class PrintLabel extends DbTable
             'TEXT'
         );
         $this->store_name->InputTextType = "text";
-        $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_code', ["store_name","","",""], ["x_store_code"], [], ["store_code"], ["x_store_code"], [], [], '', '', "`store_name`");
+        $this->store_name->Nullable = false; // NOT NULL field
+        $this->store_name->Required = true; // Required field
         $this->Fields['store_name'] = &$this->store_name;
 
         // barcode
@@ -224,9 +225,81 @@ class PrintLabel extends DbTable
         );
         $this->_barcode->InputTextType = "text";
         $this->_barcode->IsCustom = true; // Custom field
-        $this->_barcode->UseFilter = true; // Table header filter
-        $this->_barcode->Lookup = new Lookup('barcode', 'print_label', true, 'barcode', ["barcode","","",""], [], [], [], [], [], [], '', '', "");
         $this->Fields['barcode'] = &$this->_barcode;
+
+        // user
+        $this->user = new DbField(
+            'print_label',
+            'print_label',
+            'x_user',
+            'user',
+            '`user`',
+            '`user`',
+            200,
+            255,
+            -1,
+            false,
+            '`user`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->user->InputTextType = "text";
+        $this->user->Nullable = false; // NOT NULL field
+        $this->user->Required = true; // Required field
+        $this->Fields['user'] = &$this->user;
+
+        // date_created
+        $this->date_created = new DbField(
+            'print_label',
+            'print_label',
+            'x_date_created',
+            'date_created',
+            '`date_created`',
+            CastDateFieldForLike("`date_created`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_created`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_created->InputTextType = "text";
+        $this->date_created->Nullable = false; // NOT NULL field
+        $this->date_created->Required = true; // Required field
+        $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_created'] = &$this->date_created;
+
+        // time_created
+        $this->time_created = new DbField(
+            'print_label',
+            'print_label',
+            'x_time_created',
+            'time_created',
+            '`time_created`',
+            CastDateFieldForLike("`time_created`", 3, "DB"),
+            134,
+            10,
+            3,
+            false,
+            '`time_created`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->time_created->InputTextType = "text";
+        $this->time_created->Nullable = false; // NOT NULL field
+        $this->time_created->Required = true; // Required field
+        $this->time_created->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
+        $this->Fields['time_created'] = &$this->time_created;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -664,6 +737,9 @@ class PrintLabel extends DbTable
         $this->store_code->DbValue = $row['store_code'];
         $this->store_name->DbValue = $row['store_name'];
         $this->_barcode->DbValue = $row['barcode'];
+        $this->user->DbValue = $row['user'];
+        $this->date_created->DbValue = $row['date_created'];
+        $this->time_created->DbValue = $row['time_created'];
     }
 
     // Delete uploaded files
@@ -988,6 +1064,9 @@ class PrintLabel extends DbTable
         $this->store_code->setDbValue($row['store_code']);
         $this->store_name->setDbValue($row['store_name']);
         $this->_barcode->setDbValue($row['barcode']);
+        $this->user->setDbValue($row['user']);
+        $this->date_created->setDbValue($row['date_created']);
+        $this->time_created->setDbValue($row['time_created']);
     }
 
     // Render list row values
@@ -1017,6 +1096,12 @@ class PrintLabel extends DbTable
 
         // barcode
         $this->_barcode->CellCssStyle = "white-space: nowrap;";
+
+        // user
+
+        // date_created
+
+        // time_created
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1064,7 +1149,22 @@ class PrintLabel extends DbTable
 
         // barcode
         $this->_barcode->ViewValue = $this->_barcode->CurrentValue;
+        $this->_barcode->CssClass = "fw-bold";
         $this->_barcode->ViewCustomAttributes = "";
+
+        // user
+        $this->user->ViewValue = $this->user->CurrentValue;
+        $this->user->ViewCustomAttributes = "";
+
+        // date_created
+        $this->date_created->ViewValue = $this->date_created->CurrentValue;
+        $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
+        $this->date_created->ViewCustomAttributes = "";
+
+        // time_created
+        $this->time_created->ViewValue = $this->time_created->CurrentValue;
+        $this->time_created->ViewValue = FormatDateTime($this->time_created->ViewValue, $this->time_created->formatPattern());
+        $this->time_created->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1096,6 +1196,21 @@ class PrintLabel extends DbTable
         $this->_barcode->HrefValue = "";
         $this->_barcode->ExportHrefValue = Barcode()->getHrefValue($this->box_id->CurrentValue, 'CODE128', 60);
         $this->_barcode->TooltipValue = "";
+
+        // user
+        $this->user->LinkCustomAttributes = "";
+        $this->user->HrefValue = "";
+        $this->user->TooltipValue = "";
+
+        // date_created
+        $this->date_created->LinkCustomAttributes = "";
+        $this->date_created->HrefValue = "";
+        $this->date_created->TooltipValue = "";
+
+        // time_created
+        $this->time_created->LinkCustomAttributes = "";
+        $this->time_created->HrefValue = "";
+        $this->time_created->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1131,25 +1246,6 @@ class PrintLabel extends DbTable
 
         // store_code
         $this->store_code->EditCustomAttributes = "";
-        $curVal = trim(strval($this->store_code->CurrentValue));
-        if ($curVal != "") {
-            $this->store_code->ViewValue = $this->store_code->lookupCacheOption($curVal);
-        } else {
-            $this->store_code->ViewValue = $this->store_code->Lookup !== null && is_array($this->store_code->lookupOptions()) ? $curVal : null;
-        }
-        if ($this->store_code->ViewValue !== null) { // Load from cache
-            $this->store_code->EditValue = array_values($this->store_code->lookupOptions());
-        } else { // Lookup from database
-            $filterWrk = "";
-            $sqlWrk = $this->store_code->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-            $conn = Conn();
-            $config = $conn->getConfiguration();
-            $config->setResultCacheImpl($this->Cache);
-            $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-            $ari = count($rswrk);
-            $arwrk = $rswrk;
-            $this->store_code->EditValue = $arwrk;
-        }
         $this->store_code->PlaceHolder = RemoveHtml($this->store_code->caption());
 
         // store_name
@@ -1166,6 +1262,26 @@ class PrintLabel extends DbTable
         }
         $this->_barcode->EditValue = $this->_barcode->CurrentValue;
         $this->_barcode->PlaceHolder = RemoveHtml($this->_barcode->caption());
+
+        // user
+        $this->user->setupEditAttributes();
+        $this->user->EditCustomAttributes = 'readonly';
+        $this->user->EditValue = $this->user->CurrentValue;
+        $this->user->ViewCustomAttributes = "";
+
+        // date_created
+        $this->date_created->setupEditAttributes();
+        $this->date_created->EditCustomAttributes = 'readonly';
+        $this->date_created->EditValue = $this->date_created->CurrentValue;
+        $this->date_created->EditValue = FormatDateTime($this->date_created->EditValue, $this->date_created->formatPattern());
+        $this->date_created->ViewCustomAttributes = "";
+
+        // time_created
+        $this->time_created->setupEditAttributes();
+        $this->time_created->EditCustomAttributes = 'readonly';
+        $this->time_created->EditValue = $this->time_created->CurrentValue;
+        $this->time_created->EditValue = FormatDateTime($this->time_created->EditValue, $this->time_created->formatPattern());
+        $this->time_created->ViewCustomAttributes = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1201,6 +1317,9 @@ class PrintLabel extends DbTable
                     $doc->exportCaption($this->store_code);
                     $doc->exportCaption($this->store_name);
                     $doc->exportCaption($this->_barcode);
+                    $doc->exportCaption($this->user);
+                    $doc->exportCaption($this->date_created);
+                    $doc->exportCaption($this->time_created);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->box_id);
@@ -1208,6 +1327,9 @@ class PrintLabel extends DbTable
                     $doc->exportCaption($this->store_code);
                     $doc->exportCaption($this->store_name);
                     $doc->exportCaption($this->_barcode);
+                    $doc->exportCaption($this->user);
+                    $doc->exportCaption($this->date_created);
+                    $doc->exportCaption($this->time_created);
                 }
                 $doc->endExportRow();
             }
@@ -1243,6 +1365,9 @@ class PrintLabel extends DbTable
                         $doc->exportField($this->store_code);
                         $doc->exportField($this->store_name);
                         $doc->exportField($this->_barcode);
+                        $doc->exportField($this->user);
+                        $doc->exportField($this->date_created);
+                        $doc->exportField($this->time_created);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->box_id);
@@ -1250,6 +1375,9 @@ class PrintLabel extends DbTable
                         $doc->exportField($this->store_code);
                         $doc->exportField($this->store_name);
                         $doc->exportField($this->_barcode);
+                        $doc->exportField($this->user);
+                        $doc->exportField($this->date_created);
+                        $doc->exportField($this->time_created);
                     }
                     $doc->endExportRow($rowCnt);
                 }

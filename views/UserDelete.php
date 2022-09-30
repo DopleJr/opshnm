@@ -50,17 +50,14 @@ $Page->showMessage();
 <?php if ($Page->_username->Visible) { // username ?>
         <th class="<?= $Page->_username->headerCellClass() ?>"><span id="elh_user__username" class="user__username"><?= $Page->_username->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->_password->Visible) { // password ?>
-        <th class="<?= $Page->_password->headerCellClass() ?>"><span id="elh_user__password" class="user__password"><?= $Page->_password->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->_email->Visible) { // email ?>
-        <th class="<?= $Page->_email->headerCellClass() ?>"><span id="elh_user__email" class="user__email"><?= $Page->_email->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->ip_loggedin->Visible) { // ip_loggedin ?>
         <th class="<?= $Page->ip_loggedin->headerCellClass() ?>"><span id="elh_user_ip_loggedin" class="user_ip_loggedin"><?= $Page->ip_loggedin->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->role->Visible) { // role ?>
         <th class="<?= $Page->role->headerCellClass() ?>"><span id="elh_user_role" class="user_role"><?= $Page->role->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+        <th class="<?= $Page->_userLevel->headerCellClass() ?>"><span id="elh_user__userLevel" class="user__userLevel"><?= $Page->_userLevel->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <th class="<?= $Page->date_created->headerCellClass() ?>"><span id="elh_user_date_created" class="user_date_created"><?= $Page->date_created->caption() ?></span></th>
@@ -105,22 +102,6 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->_password->Visible) { // password ?>
-        <td<?= $Page->_password->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_user__password" class="el_user__password">
-<span<?= $Page->_password->viewAttributes() ?>>
-<?= $Page->_password->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->_email->Visible) { // email ?>
-        <td<?= $Page->_email->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_user__email" class="el_user__email">
-<span<?= $Page->_email->viewAttributes() ?>>
-<?= $Page->_email->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->ip_loggedin->Visible) { // ip_loggedin ?>
         <td<?= $Page->ip_loggedin->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_user_ip_loggedin" class="el_user_ip_loggedin">
@@ -134,6 +115,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_user_role" class="el_user_role">
 <span<?= $Page->role->viewAttributes() ?>>
 <?= $Page->role->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->_userLevel->Visible) { // userLevel ?>
+        <td<?= $Page->_userLevel->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_user__userLevel" class="el_user__userLevel">
+<span<?= $Page->_userLevel->viewAttributes() ?>>
+<?= $Page->_userLevel->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

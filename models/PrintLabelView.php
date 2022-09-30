@@ -580,6 +580,9 @@ class PrintLabelView extends PrintLabel
         $this->store_code->setVisibility();
         $this->store_name->setVisibility();
         $this->_barcode->setVisibility();
+        $this->user->setVisibility();
+        $this->date_created->setVisibility();
+        $this->time_created->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -805,6 +808,9 @@ class PrintLabelView extends PrintLabel
         $this->store_code->setDbValue($row['store_code']);
         $this->store_name->setDbValue($row['store_name']);
         $this->_barcode->setDbValue($row['barcode']);
+        $this->user->setDbValue($row['user']);
+        $this->date_created->setDbValue($row['date_created']);
+        $this->time_created->setDbValue($row['time_created']);
     }
 
     // Return a row with default values
@@ -817,6 +823,9 @@ class PrintLabelView extends PrintLabel
         $row['store_code'] = $this->store_code->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
         $row['barcode'] = $this->_barcode->DefaultValue;
+        $row['user'] = $this->user->DefaultValue;
+        $row['date_created'] = $this->date_created->DefaultValue;
+        $row['time_created'] = $this->time_created->DefaultValue;
         return $row;
     }
 
@@ -849,6 +858,12 @@ class PrintLabelView extends PrintLabel
         // store_name
 
         // barcode
+
+        // user
+
+        // date_created
+
+        // time_created
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -898,7 +913,22 @@ class PrintLabelView extends PrintLabel
 
             // barcode
             $this->_barcode->ViewValue = $this->_barcode->CurrentValue;
+            $this->_barcode->CssClass = "fw-bold";
             $this->_barcode->ViewCustomAttributes = "";
+
+            // user
+            $this->user->ViewValue = $this->user->CurrentValue;
+            $this->user->ViewCustomAttributes = "";
+
+            // date_created
+            $this->date_created->ViewValue = $this->date_created->CurrentValue;
+            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
+            $this->date_created->ViewCustomAttributes = "";
+
+            // time_created
+            $this->time_created->ViewValue = $this->time_created->CurrentValue;
+            $this->time_created->ViewValue = FormatDateTime($this->time_created->ViewValue, $this->time_created->formatPattern());
+            $this->time_created->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -930,6 +960,21 @@ class PrintLabelView extends PrintLabel
             $this->_barcode->HrefValue = "";
             $this->_barcode->ExportHrefValue = Barcode()->getHrefValue($this->box_id->CurrentValue, 'CODE128', 60);
             $this->_barcode->TooltipValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
+            $this->user->TooltipValue = "";
+
+            // date_created
+            $this->date_created->LinkCustomAttributes = "";
+            $this->date_created->HrefValue = "";
+            $this->date_created->TooltipValue = "";
+
+            // time_created
+            $this->time_created->LinkCustomAttributes = "";
+            $this->time_created->HrefValue = "";
+            $this->time_created->TooltipValue = "";
         }
 
         // Call Row Rendered event

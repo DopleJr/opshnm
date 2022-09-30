@@ -526,9 +526,9 @@ class UserView extends User
         $this->_email->setVisibility();
         $this->ip_loggedin->setVisibility();
         $this->role->setVisibility();
+        $this->_userLevel->setVisibility();
         $this->date_created->setVisibility();
         $this->date_updated->setVisibility();
-        $this->_userLevel->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -546,6 +546,7 @@ class UserView extends User
 
         // Set up lookup cache
         $this->setupLookupOptions($this->role);
+        $this->setupLookupOptions($this->_userLevel);
 
         // Check modal
         if ($this->IsModal) {
@@ -753,9 +754,9 @@ class UserView extends User
         $this->_email->setDbValue($row['email']);
         $this->ip_loggedin->setDbValue($row['ip_loggedin']);
         $this->role->setDbValue($row['role']);
+        $this->_userLevel->setDbValue($row['userLevel']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
-        $this->_userLevel->setDbValue($row['userLevel']);
     }
 
     // Return a row with default values
@@ -768,9 +769,9 @@ class UserView extends User
         $row['email'] = $this->_email->DefaultValue;
         $row['ip_loggedin'] = $this->ip_loggedin->DefaultValue;
         $row['role'] = $this->role->DefaultValue;
+        $row['userLevel'] = $this->_userLevel->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
-        $row['userLevel'] = $this->_userLevel->DefaultValue;
         return $row;
     }
 
@@ -804,11 +805,11 @@ class UserView extends User
 
         // role
 
+        // userLevel
+
         // date_created
 
         // date_updated
-
-        // userLevel
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -833,16 +834,60 @@ class UserView extends User
             $this->ip_loggedin->ViewCustomAttributes = "";
 
             // role
-            if ($Security->canAdmin()) { // System admin
-                if (strval($this->role->CurrentValue) != "") {
-                    $this->role->ViewValue = $this->role->optionCaption($this->role->CurrentValue);
-                } else {
-                    $this->role->ViewValue = null;
+            $curVal = strval($this->role->CurrentValue);
+            if ($curVal != "") {
+                $this->role->ViewValue = $this->role->lookupCacheOption($curVal);
+                if ($this->role->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`userlevelname`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $lookupFilter = function() {
+                        return "`userlevelname` = 'User' ";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->role->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->role->Lookup->renderViewRow($rswrk[0]);
+                        $this->role->ViewValue = $this->role->displayValue($arwrk);
+                    } else {
+                        $this->role->ViewValue = $this->role->CurrentValue;
+                    }
                 }
             } else {
-                $this->role->ViewValue = $Language->phrase("PasswordMask");
+                $this->role->ViewValue = null;
             }
             $this->role->ViewCustomAttributes = "";
+
+            // userLevel
+            if ($Security->canAdmin()) { // System admin
+                $curVal = strval($this->_userLevel->CurrentValue);
+                if ($curVal != "") {
+                    $this->_userLevel->ViewValue = $this->_userLevel->lookupCacheOption($curVal);
+                    if ($this->_userLevel->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->_userLevel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $conn = Conn();
+                        $config = $conn->getConfiguration();
+                        $config->setResultCacheImpl($this->Cache);
+                        $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->_userLevel->Lookup->renderViewRow($rswrk[0]);
+                            $this->_userLevel->ViewValue = $this->_userLevel->displayValue($arwrk);
+                        } else {
+                            $this->_userLevel->ViewValue = FormatNumber($this->_userLevel->CurrentValue, $this->_userLevel->formatPattern());
+                        }
+                    }
+                } else {
+                    $this->_userLevel->ViewValue = null;
+                }
+            } else {
+                $this->_userLevel->ViewValue = $Language->phrase("PasswordMask");
+            }
+            $this->_userLevel->ViewCustomAttributes = "";
 
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
@@ -883,6 +928,11 @@ class UserView extends User
             $this->role->LinkCustomAttributes = "";
             $this->role->HrefValue = "";
             $this->role->TooltipValue = "";
+
+            // userLevel
+            $this->_userLevel->LinkCustomAttributes = "";
+            $this->_userLevel->HrefValue = "";
+            $this->_userLevel->TooltipValue = "";
 
             // date_created
             $this->date_created->LinkCustomAttributes = "";
@@ -936,6 +986,12 @@ class UserView extends User
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_role":
+                    $lookupFilter = function () {
+                        return "`userlevelname` = 'User' ";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x__userLevel":
                     break;
                 default:
                     $lookupFilter = "";

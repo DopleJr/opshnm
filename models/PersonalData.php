@@ -295,7 +295,7 @@ class PersonalData
     {
         global $UserTable;
         $result = [];
-        $fldNames = ["username", "password"];
+        $fldNames = ["username", "password", "email"];
         $UserTable = Container("usertable");
         $filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"), CurrentUserName());
         $sql = $UserTable->getSql($filter);

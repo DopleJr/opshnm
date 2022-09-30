@@ -203,10 +203,6 @@ $Page->showMessage();
         margin-bottom: 10px;
     }
 </style>
-	<div id="r_get_total" class="mb-3 row">
-        <label for="x_get_total" class="col-sm-2 col-form-label">Total Article</label>
-        <div class="col-sm-10"><slot class="ew-slot" name="tpx_blank_count_sheet_quantity"></slot></div>
-    </div>
     <div id="r_location" class="mb-3 row">
         <label for="x_location" class="col-sm-2 col-form-label"><?= $Page->location->caption() ?></label>
         <div class="col-sm-10"><slot class="ew-slot" name="tpx_blank_count_sheet_location"></slot></div>

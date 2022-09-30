@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/28">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/30">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -962,14 +962,20 @@
   <project>
     <phrase id="bodytitle" value="OPS HNM" />
     <phrase id="footertext" value="Copyright Gofur" />
-    <menu id="222">
-      <phrase id="menutext" value="On Staging" />
-    </menu>
-    <menu id="223">
-      <phrase id="menutext" value="Outbound" />
-    </menu>
     <menu id="108">
       <phrase id="menutext" value="Dashboard" />
+    </menu>
+    <menu id="671">
+      <phrase id="menutext" value="Stock Count" />
+    </menu>
+    <menu id="545">
+      <phrase id="menutext" value="Stock Count" />
+    </menu>
+    <menu id="607">
+      <phrase id="menutext" value="Data Stock Count" />
+    </menu>
+    <menu id="608">
+      <phrase id="menutext" value="Summary Stock Count" />
     </menu>
     <menu id="62">
       <phrase id="menutext" value="KPI" />
@@ -982,6 +988,9 @@
     </menu>
     <menu id="65">
       <phrase id="menutext" value="Empty Box" />
+    </menu>
+    <menu id="222">
+      <phrase id="menutext" value="On Staging" />
     </menu>
     <menu id="477">
       <phrase id="menutext" value="Inbound" />
@@ -1130,11 +1139,23 @@
     <menu id="225">
       <phrase id="menutext" value="Mb51" />
     </menu>
+    <menu id="544">
+      <phrase id="menutext" value="User Management" />
+    </menu>
     <menu id="21">
       <phrase id="menutext" value="Users" />
     </menu>
+    <menu id="484">
+      <phrase id="menutext" value="User Level Permissions" />
+    </menu>
+    <menu id="485">
+      <phrase id="menutext" value="User Levels" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Logs" />
+    </menu>
+    <menu id="223">
+      <phrase id="menutext" value="Outbound" />
     </menu>
     <table id="auditstaging">
       <phrase id="tblcaption" value="Audit Staging" />
@@ -1421,14 +1442,14 @@
         <phrase id="fldtagvalue4" value="1" />
         <phrase id="fldtagcaption4" value="user" />
       </field>
+      <field id="_userlevel">
+        <phrase id="fldcaption" value="User Level" />
+      </field>
       <field id="date_created">
         <phrase id="fldcaption" value="Date Created" />
       </field>
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
-      </field>
-      <field id="_userlevel">
-        <phrase id="fldcaption" value="User Level" />
       </field>
     </table>
     <table id="bintobin">
@@ -1463,6 +1484,15 @@
       </field>
       <field id="_barcode">
         <phrase id="fldcaption" value="Barcode" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="date_created">
+        <phrase id="fldcaption" value="Date Created" />
+      </field>
+      <field id="time_created">
+        <phrase id="fldcaption" value="Time Created" />
       </field>
     </table>
     <table id="store">
@@ -2327,9 +2357,6 @@
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
       </field>
-      <field id="x">
-        <phrase id="fldcaption" value="x" />
-      </field>
     </table>
     <table id="shortpick_by_area">
       <phrase id="tblcaption" value="Shortpick By Area" />
@@ -2900,6 +2927,77 @@
       </field>
       <field id="time_update">
         <phrase id="fldcaption" value="Time Update" />
+      </field>
+    </table>
+    <table id="userlevelpermissions">
+      <phrase id="tblcaption" value="User Level Permissions" />
+      <field id="userlevelid">
+        <phrase id="fldcaption" value="User Level ID" />
+      </field>
+      <field id="_tablename">
+        <phrase id="fldcaption" value="Table Name" />
+      </field>
+      <field id="_permission">
+        <phrase id="fldcaption" value="Permision" />
+      </field>
+    </table>
+    <table id="userlevels">
+      <phrase id="tblcaption" value="User Levels" />
+      <field id="userlevelid">
+        <phrase id="fldcaption" value="User Level ID" />
+      </field>
+      <field id="userlevelname">
+        <phrase id="fldcaption" value="User Level Name" />
+      </field>
+    </table>
+    <table id="stock_count">
+      <phrase id="tblcaption" value="Stock Count" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="location">
+        <phrase id="fldcaption" value="Location" />
+      </field>
+      <field id="scan">
+        <phrase id="fldcaption" value="Scan" />
+      </field>
+      <field id="article">
+        <phrase id="fldcaption" value="Article" />
+        <phrase id="flderrmsg" value="'Salah Scan'" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="divisi">
+        <phrase id="fldcaption" value="Divisi" />
+      </field>
+      <field id="date_created">
+        <phrase id="fldcaption" value="Date Created" />
+      </field>
+      <field id="time_created">
+        <phrase id="fldcaption" value="Time Created" />
+      </field>
+      <field id="get_total">
+        <phrase id="fldcaption" value="Total" />
+      </field>
+    </table>
+    <table id="summary_stock_count">
+      <phrase id="tblcaption" value="Summary Stock Count" />
+      <field id="location">
+        <phrase id="fldcaption" value="Location" />
+      </field>
+      <field id="article">
+        <phrase id="fldcaption" value="Article" />
+        <phrase id="flderrmsg" value="'Salah Scan'" />
+      </field>
+      <field id="total">
+        <phrase id="fldcaption" value="Total" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="datecreated">
+        <phrase id="fldcaption" value="Date Created" />
       </field>
     </table>
   </project>

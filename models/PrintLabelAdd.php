@@ -138,6 +138,9 @@ class PrintLabelAdd extends PrintLabel
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -222,18 +225,25 @@ class PrintLabelAdd extends PrintLabel
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -249,6 +259,11 @@ class PrintLabelAdd extends PrintLabel
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -387,9 +402,6 @@ class PrintLabelAdd extends PrintLabel
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -492,6 +504,9 @@ class PrintLabelAdd extends PrintLabel
         $this->store_code->setVisibility();
         $this->store_name->setVisibility();
         $this->_barcode->Visible = false;
+        $this->user->setVisibility();
+        $this->date_created->setVisibility();
+        $this->time_created->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -650,6 +665,12 @@ class PrintLabelAdd extends PrintLabel
         $this->store_code->OldValue = $this->store_code->DefaultValue;
         $this->store_name->DefaultValue = StoreName();
         $this->store_name->OldValue = $this->store_name->DefaultValue;
+        $this->user->DefaultValue = CurrentUserName();
+        $this->user->OldValue = $this->user->DefaultValue;
+        $this->date_created->DefaultValue = CurrentDate();
+        $this->date_created->OldValue = $this->date_created->DefaultValue;
+        $this->time_created->DefaultValue = CurrentTime();
+        $this->time_created->OldValue = $this->time_created->DefaultValue;
     }
 
     // Load form values
@@ -699,6 +720,38 @@ class PrintLabelAdd extends PrintLabel
             }
         }
 
+        // Check field name 'user' first before field var 'x_user'
+        $val = $CurrentForm->hasValue("user") ? $CurrentForm->getValue("user") : $CurrentForm->getValue("x_user");
+        if (!$this->user->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->user->Visible = false; // Disable update for API request
+            } else {
+                $this->user->setFormValue($val);
+            }
+        }
+
+        // Check field name 'date_created' first before field var 'x_date_created'
+        $val = $CurrentForm->hasValue("date_created") ? $CurrentForm->getValue("date_created") : $CurrentForm->getValue("x_date_created");
+        if (!$this->date_created->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->date_created->Visible = false; // Disable update for API request
+            } else {
+                $this->date_created->setFormValue($val, true, $validate);
+            }
+            $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
+        }
+
+        // Check field name 'time_created' first before field var 'x_time_created'
+        $val = $CurrentForm->hasValue("time_created") ? $CurrentForm->getValue("time_created") : $CurrentForm->getValue("x_time_created");
+        if (!$this->time_created->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->time_created->Visible = false; // Disable update for API request
+            } else {
+                $this->time_created->setFormValue($val, true, $validate);
+            }
+            $this->time_created->CurrentValue = UnFormatDateTime($this->time_created->CurrentValue, $this->time_created->formatPattern());
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -711,6 +764,11 @@ class PrintLabelAdd extends PrintLabel
         $this->priority->CurrentValue = $this->priority->FormValue;
         $this->store_code->CurrentValue = $this->store_code->FormValue;
         $this->store_name->CurrentValue = $this->store_name->FormValue;
+        $this->user->CurrentValue = $this->user->FormValue;
+        $this->date_created->CurrentValue = $this->date_created->FormValue;
+        $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
+        $this->time_created->CurrentValue = $this->time_created->FormValue;
+        $this->time_created->CurrentValue = UnFormatDateTime($this->time_created->CurrentValue, $this->time_created->formatPattern());
     }
 
     /**
@@ -766,6 +824,9 @@ class PrintLabelAdd extends PrintLabel
         $this->store_code->setDbValue($row['store_code']);
         $this->store_name->setDbValue($row['store_name']);
         $this->_barcode->setDbValue($row['barcode']);
+        $this->user->setDbValue($row['user']);
+        $this->date_created->setDbValue($row['date_created']);
+        $this->time_created->setDbValue($row['time_created']);
     }
 
     // Return a row with default values
@@ -778,6 +839,9 @@ class PrintLabelAdd extends PrintLabel
         $row['store_code'] = $this->store_code->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
         $row['barcode'] = $this->_barcode->DefaultValue;
+        $row['user'] = $this->user->DefaultValue;
+        $row['date_created'] = $this->date_created->DefaultValue;
+        $row['time_created'] = $this->time_created->DefaultValue;
         return $row;
     }
 
@@ -827,6 +891,15 @@ class PrintLabelAdd extends PrintLabel
         // barcode
         $this->_barcode->RowCssClass = "row";
 
+        // user
+        $this->user->RowCssClass = "row";
+
+        // date_created
+        $this->date_created->RowCssClass = "row";
+
+        // time_created
+        $this->time_created->RowCssClass = "row";
+
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
@@ -875,7 +948,22 @@ class PrintLabelAdd extends PrintLabel
 
             // barcode
             $this->_barcode->ViewValue = $this->_barcode->CurrentValue;
+            $this->_barcode->CssClass = "fw-bold";
             $this->_barcode->ViewCustomAttributes = "";
+
+            // user
+            $this->user->ViewValue = $this->user->CurrentValue;
+            $this->user->ViewCustomAttributes = "";
+
+            // date_created
+            $this->date_created->ViewValue = $this->date_created->CurrentValue;
+            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
+            $this->date_created->ViewCustomAttributes = "";
+
+            // time_created
+            $this->time_created->ViewValue = $this->time_created->CurrentValue;
+            $this->time_created->ViewValue = FormatDateTime($this->time_created->ViewValue, $this->time_created->formatPattern());
+            $this->time_created->ViewCustomAttributes = "";
 
             // box_id
             $this->box_id->LinkCustomAttributes = "";
@@ -894,6 +982,21 @@ class PrintLabelAdd extends PrintLabel
             $this->store_name->LinkCustomAttributes = "";
             $this->store_name->HrefValue = "";
             $this->store_name->TooltipValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
+            $this->user->TooltipValue = "";
+
+            // date_created
+            $this->date_created->LinkCustomAttributes = "";
+            $this->date_created->HrefValue = "";
+            $this->date_created->TooltipValue = "";
+
+            // time_created
+            $this->time_created->LinkCustomAttributes = "";
+            $this->time_created->HrefValue = "";
+            $this->time_created->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // box_id
             $this->box_id->setupEditAttributes();
@@ -919,6 +1022,9 @@ class PrintLabelAdd extends PrintLabel
             }
             if ($this->store_code->ViewValue !== null) { // Load from cache
                 $this->store_code->EditValue = array_values($this->store_code->lookupOptions());
+                if ($this->store_code->ViewValue == "") {
+                    $this->store_code->ViewValue = $Language->phrase("PleaseSelect");
+                }
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
@@ -931,6 +1037,12 @@ class PrintLabelAdd extends PrintLabel
                 $config->setResultCacheImpl($this->Cache);
                 $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
                 $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->store_code->Lookup->renderViewRow($rswrk[0]);
+                    $this->store_code->ViewValue = $this->store_code->displayValue($arwrk);
+                } else {
+                    $this->store_code->ViewValue = $Language->phrase("PleaseSelect");
+                }
                 $arwrk = $rswrk;
                 $this->store_code->EditValue = $arwrk;
             }
@@ -944,6 +1056,27 @@ class PrintLabelAdd extends PrintLabel
             }
             $this->store_name->EditValue = HtmlEncode($this->store_name->CurrentValue);
             $this->store_name->PlaceHolder = RemoveHtml($this->store_name->caption());
+
+            // user
+            $this->user->setupEditAttributes();
+            $this->user->EditCustomAttributes = 'readonly';
+            if (!$this->user->Raw) {
+                $this->user->CurrentValue = HtmlDecode($this->user->CurrentValue);
+            }
+            $this->user->EditValue = HtmlEncode($this->user->CurrentValue);
+            $this->user->PlaceHolder = RemoveHtml($this->user->caption());
+
+            // date_created
+            $this->date_created->setupEditAttributes();
+            $this->date_created->EditCustomAttributes = 'readonly';
+            $this->date_created->EditValue = HtmlEncode(FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()));
+            $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
+
+            // time_created
+            $this->time_created->setupEditAttributes();
+            $this->time_created->EditCustomAttributes = 'readonly';
+            $this->time_created->EditValue = HtmlEncode(FormatDateTime($this->time_created->CurrentValue, $this->time_created->formatPattern()));
+            $this->time_created->PlaceHolder = RemoveHtml($this->time_created->caption());
 
             // Add refer script
 
@@ -962,6 +1095,18 @@ class PrintLabelAdd extends PrintLabel
             // store_name
             $this->store_name->LinkCustomAttributes = "";
             $this->store_name->HrefValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
+
+            // date_created
+            $this->date_created->LinkCustomAttributes = "";
+            $this->date_created->HrefValue = "";
+
+            // time_created
+            $this->time_created->LinkCustomAttributes = "";
+            $this->time_created->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -970,6 +1115,11 @@ class PrintLabelAdd extends PrintLabel
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 
@@ -1003,6 +1153,27 @@ class PrintLabelAdd extends PrintLabel
                 $this->store_name->addErrorMessage(str_replace("%s", $this->store_name->caption(), $this->store_name->RequiredErrorMessage));
             }
         }
+        if ($this->user->Required) {
+            if (!$this->user->IsDetailKey && EmptyValue($this->user->FormValue)) {
+                $this->user->addErrorMessage(str_replace("%s", $this->user->caption(), $this->user->RequiredErrorMessage));
+            }
+        }
+        if ($this->date_created->Required) {
+            if (!$this->date_created->IsDetailKey && EmptyValue($this->date_created->FormValue)) {
+                $this->date_created->addErrorMessage(str_replace("%s", $this->date_created->caption(), $this->date_created->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->date_created->FormValue, $this->date_created->formatPattern())) {
+            $this->date_created->addErrorMessage($this->date_created->getErrorMessage(false));
+        }
+        if ($this->time_created->Required) {
+            if (!$this->time_created->IsDetailKey && EmptyValue($this->time_created->FormValue)) {
+                $this->time_created->addErrorMessage(str_replace("%s", $this->time_created->caption(), $this->time_created->RequiredErrorMessage));
+            }
+        }
+        if (!CheckTime($this->time_created->FormValue, $this->time_created->formatPattern())) {
+            $this->time_created->addErrorMessage($this->time_created->getErrorMessage(false));
+        }
 
         // Return validate result
         $validateForm = $validateForm && !$this->hasInvalidFields();
@@ -1025,16 +1196,25 @@ class PrintLabelAdd extends PrintLabel
         $rsnew = [];
 
         // box_id
-        $this->box_id->setDbValueDef($rsnew, $this->box_id->CurrentValue, null, false);
+        $this->box_id->setDbValueDef($rsnew, $this->box_id->CurrentValue, "", false);
 
         // priority
-        $this->priority->setDbValueDef($rsnew, $this->priority->CurrentValue, null, false);
+        $this->priority->setDbValueDef($rsnew, $this->priority->CurrentValue, "", false);
 
         // store_code
-        $this->store_code->setDbValueDef($rsnew, $this->store_code->CurrentValue, null, false);
+        $this->store_code->setDbValueDef($rsnew, $this->store_code->CurrentValue, "", false);
 
         // store_name
-        $this->store_name->setDbValueDef($rsnew, $this->store_name->CurrentValue, null, false);
+        $this->store_name->setDbValueDef($rsnew, $this->store_name->CurrentValue, "", false);
+
+        // user
+        $this->user->setDbValueDef($rsnew, $this->user->CurrentValue, "", false);
+
+        // date_created
+        $this->date_created->setDbValueDef($rsnew, UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()), CurrentDate(), false);
+
+        // time_created
+        $this->time_created->setDbValueDef($rsnew, UnFormatDateTime($this->time_created->CurrentValue, $this->time_created->formatPattern()), CurrentTime(), false);
 
         // Update current values
         $this->setCurrentValues($rsnew);

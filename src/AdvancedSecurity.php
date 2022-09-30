@@ -17,6 +17,7 @@ class AdvancedSecurity
     public $CurrentUserLevelID = -2; // User Level (Anonymous by default)
     public $CurrentUserLevel; // Permissions
     public $CurrentUserID;
+    protected $AnoymousUserLevelChecked = false; // Dynamic User Level security
     private $isLoggedIn = false;
     private $isSysAdmin = false;
     private $userName;
@@ -628,13 +629,10 @@ class AdvancedSecurity
         }
     }
 
-    // Static User Level security
+    // Get User Level settings from database
     public function setupUserLevel()
     {
-        // Load user level from user level settings
-        global $USER_LEVELS, $USER_LEVEL_PRIVS;
-        $this->UserLevel = $USER_LEVELS;
-        $this->UserLevelPriv = $USER_LEVEL_PRIVS;
+        $this->setupUserLevelEx(); // Load all user levels
 
         // User Level loaded event
         $this->userLevelLoaded();
@@ -649,7 +647,118 @@ class AdvancedSecurity
     // Get all User Level settings from database
     public function setupUserLevelEx()
     {
-        return false;
+        global $Language, $Page;
+        global $USER_LEVELS, $USER_LEVEL_PRIVS, $USER_LEVEL_TABLES;
+
+        // Load user level from user level settings first
+        $this->UserLevel = $USER_LEVELS;
+        $this->UserLevelPriv = $USER_LEVEL_PRIVS;
+        $arTable = $USER_LEVEL_TABLES;
+
+        // Add Anonymous user level
+        $conn = Conn(Config("USER_LEVEL_DBID"));
+        if (!$this->AnoymousUserLevelChecked) {
+            $sql = "SELECT COUNT(*) FROM " . Config("USER_LEVEL_TABLE") . " WHERE " . Config("USER_LEVEL_ID_FIELD") . " = -2";
+            if (ExecuteScalar($sql, $conn) == 0) {
+                $sql = "INSERT INTO " . Config("USER_LEVEL_TABLE") .
+                    " (" . Config("USER_LEVEL_ID_FIELD") . ", " . Config("USER_LEVEL_NAME_FIELD") . ") VALUES (-2, '" . AdjustSql($Language->phrase("UserAnonymous"), Config("USER_LEVEL_DBID")) . "')";
+                $conn->executeStatement($sql);
+            }
+        }
+
+        // Get the User Level definitions
+        $sql = "SELECT " . Config("USER_LEVEL_ID_FIELD") . ", " . Config("USER_LEVEL_NAME_FIELD") . " FROM " . Config("USER_LEVEL_TABLE");
+        $this->UserLevel = $conn->fetchAllNumeric($sql);
+
+        // Add Anonymous user privileges
+        $conn = Conn(Config("USER_LEVEL_PRIV_DBID"));
+        if (!$this->AnoymousUserLevelChecked) {
+            $sql = "SELECT COUNT(*) FROM " . Config("USER_LEVEL_PRIV_TABLE") . " WHERE " . Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . " = -2";
+            if (ExecuteScalar($sql, $conn) == 0) {
+                $wrkUserLevel = $USER_LEVELS;
+                $wrkUserLevelPriv = $USER_LEVEL_PRIVS;
+                $wrkTable = $USER_LEVEL_TABLES;
+                foreach ($wrkTable as $table) {
+                    $wrkPriv = 0;
+                    foreach ($wrkUserLevelPriv as $userpriv) {
+                        if (@$userpriv[0] == @$table[4] . @$table[0] && @$userpriv[1] == -2) {
+                            $wrkPriv = @$userpriv[2];
+                            break;
+                        }
+                    }
+                    $sql = "INSERT INTO " . Config("USER_LEVEL_PRIV_TABLE") .
+                        " (" . Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . ", " . Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . ", " . Config("USER_LEVEL_PRIV_PRIV_FIELD") .
+                        ") VALUES (-2, '" . AdjustSql(@$table[4] . @$table[0], Config("USER_LEVEL_PRIV_DBID")) . "', " . $wrkPriv . ")";
+                    $conn->executeStatement($sql);
+                }
+            }
+            $this->AnoymousUserLevelChecked = true;
+        }
+
+        // Get the User Level privileges
+        $userPrivSql = "SELECT " . Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . ", " . Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . ", " . Config("USER_LEVEL_PRIV_PRIV_FIELD") . " FROM " . Config("USER_LEVEL_PRIV_TABLE");
+        if (!IsApi() && !$this->isAdmin() && count($this->UserLevelID) > 0) {
+            $userPrivSql .= " WHERE " . Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . " IN (" . $this->userLevelList() . ")";
+            $_SESSION[SESSION_USER_LEVEL_LIST_LOADED] = $this->userLevelList(); // Save last loaded list
+        } else {
+            $_SESSION[SESSION_USER_LEVEL_LIST_LOADED] = ""; // Save last loaded list
+        }
+        $this->UserLevelPriv = $conn->fetchAllNumeric($userPrivSql);
+
+        // Update User Level privileges record if necessary
+        $projectID = CurrentProjectID();
+        $relatedProjectID = Config("RELATED_PROJECT_ID");
+        $reloadUserPriv = 0;
+
+        // Update tables with report maker prefix
+        if ($relatedProjectID) {
+            $sql = "SELECT COUNT(*) FROM " . Config("USER_LEVEL_PRIV_TABLE") . " WHERE EXISTS(SELECT * FROM " .
+                Config("USER_LEVEL_PRIV_TABLE") . " WHERE " . Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " LIKE '" . AdjustSql($relatedProjectID, Config("USER_LEVEL_PRIV_DBID")) . "%')";
+            if (ExecuteScalar($sql, $conn) > 0) {
+                $ar = array_map(function ($t) use ($relatedProjectID) {
+                    return "'" . AdjustSql($relatedProjectID . $t[0], Config("USER_LEVEL_PRIV_DBID")) . "'";
+                }, $arTable);
+                $sql = "UPDATE " . Config("USER_LEVEL_PRIV_TABLE") . " SET " .
+                    Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " = " . $conn->getDatabasePlatform()->getConcatExpression("'" . AdjustSql($projectID, Config("USER_LEVEL_PRIV_DBID")) . "'", Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD")) . " WHERE " .
+                    Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " IN (" . implode(",", $ar) . ")";
+                $reloadUserPriv += $conn->executeStatement($sql);
+            }
+        }
+
+        // Reload the User Level privileges
+        if ($reloadUserPriv) {
+            $this->UserLevelPriv = $conn->fetchAllNumeric($userPrivSql);
+        }
+
+        // Warn user if user level not setup
+        if (count($this->UserLevelPriv) == 0 && $this->isAdmin() && $Page != null && Session(SESSION_USER_LEVEL_MSG) == "") {
+            $Page->setFailureMessage($Language->phrase("NoUserLevel"));
+            $_SESSION[SESSION_USER_LEVEL_MSG] = "1"; // Show only once
+            $Page->terminate("userlevelslist");
+        }
+        return true;
+    }
+
+    // Update user level permissions
+    public function updatePermissions($userLevel, $privs)
+    {
+        $c = Conn(Config("USER_LEVEL_PRIV_DBID"));
+        foreach ($privs as $table => $priv) {
+            if (is_numeric($priv)) {
+                $sql = "SELECT * FROM " . Config("USER_LEVEL_PRIV_TABLE") . " WHERE " .
+                    Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " = '" . AdjustSql($table, Config("USER_LEVEL_PRIV_DBID")) . "' AND " .
+                    Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . " = " . $userLevel;
+                if ($c->fetchAssociative($sql)) {
+                    $sql = "UPDATE " . Config("USER_LEVEL_PRIV_TABLE") . " SET " . Config("USER_LEVEL_PRIV_PRIV_FIELD") . " = " . $priv . " WHERE " .
+                        Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " = '" . AdjustSql($table, Config("USER_LEVEL_PRIV_DBID")) . "' AND " .
+                        Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . " = " . $userLevel;
+                    $c->executeStatement($sql);
+                } else {
+                    $sql = "INSERT INTO " . Config("USER_LEVEL_PRIV_TABLE") . " (" . Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . ", " . Config("USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD") . ", " . Config("USER_LEVEL_PRIV_PRIV_FIELD") . ") VALUES ('" . AdjustSql($table, Config("USER_LEVEL_PRIV_DBID")) . "', " . $userLevel . ", " . $priv . ")";
+                    $c->executeStatement($sql);
+                }
+            }
+        }
     }
 
     // Check import/lookup permissions

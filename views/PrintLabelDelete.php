@@ -56,6 +56,15 @@ $Page->showMessage();
 <?php if ($Page->store_code->Visible) { // store_code ?>
         <th class="<?= $Page->store_code->headerCellClass() ?>"><span id="elh_print_label_store_code" class="print_label_store_code"><?= $Page->store_code->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+        <th class="<?= $Page->user->headerCellClass() ?>"><span id="elh_print_label_user" class="print_label_user"><?= $Page->user->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->date_created->Visible) { // date_created ?>
+        <th class="<?= $Page->date_created->headerCellClass() ?>"><span id="elh_print_label_date_created" class="print_label_date_created"><?= $Page->date_created->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->time_created->Visible) { // time_created ?>
+        <th class="<?= $Page->time_created->headerCellClass() ?>"><span id="elh_print_label_time_created" class="print_label_time_created"><?= $Page->time_created->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -106,6 +115,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_print_label_store_code" class="el_print_label_store_code">
 <span<?= $Page->store_code->viewAttributes() ?>>
 <?= $Page->store_code->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+        <td<?= $Page->user->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_print_label_user" class="el_print_label_user">
+<span<?= $Page->user->viewAttributes() ?>>
+<?= $Page->user->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->date_created->Visible) { // date_created ?>
+        <td<?= $Page->date_created->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_print_label_date_created" class="el_print_label_date_created">
+<span<?= $Page->date_created->viewAttributes() ?>>
+<?= $Page->date_created->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->time_created->Visible) { // time_created ?>
+        <td<?= $Page->time_created->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_print_label_time_created" class="el_print_label_time_created">
+<span<?= $Page->time_created->viewAttributes() ?>>
+<?= $Page->time_created->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
