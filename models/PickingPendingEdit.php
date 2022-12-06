@@ -1042,7 +1042,7 @@ class PickingPendingEdit extends PickingPending
             if (IsApi() && $val === null) {
                 $this->confirmation_date->Visible = false; // Disable update for API request
             } else {
-                $this->confirmation_date->setFormValue($val, true, $validate);
+                $this->confirmation_date->setFormValue($val);
             }
             $this->confirmation_date->CurrentValue = UnFormatDateTime($this->confirmation_date->CurrentValue, $this->confirmation_date->formatPattern());
         }
@@ -1843,6 +1843,7 @@ class PickingPendingEdit extends PickingPending
             // concept
             $this->concept->LinkCustomAttributes = "";
             $this->concept->HrefValue = "";
+            $this->concept->TooltipValue = "";
 
             // target_qty
             $this->target_qty->LinkCustomAttributes = "";
@@ -1860,6 +1861,7 @@ class PickingPendingEdit extends PickingPending
             // confirmation_date
             $this->confirmation_date->LinkCustomAttributes = "";
             $this->confirmation_date->HrefValue = "";
+            $this->confirmation_date->TooltipValue = "";
 
             // confirmation_time
             $this->confirmation_time->LinkCustomAttributes = "";
@@ -1876,6 +1878,7 @@ class PickingPendingEdit extends PickingPending
             // picker
             $this->picker->LinkCustomAttributes = "";
             $this->picker->HrefValue = "";
+            $this->picker->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2074,11 +2077,8 @@ class PickingPendingEdit extends PickingPending
             // concept
             $this->concept->setupEditAttributes();
             $this->concept->EditCustomAttributes = "";
-            if (!$this->concept->Raw) {
-                $this->concept->CurrentValue = HtmlDecode($this->concept->CurrentValue);
-            }
-            $this->concept->EditValue = HtmlEncode($this->concept->CurrentValue);
-            $this->concept->PlaceHolder = RemoveHtml($this->concept->caption());
+            $this->concept->EditValue = $this->concept->CurrentValue;
+            $this->concept->ViewCustomAttributes = "";
 
             // target_qty
             $this->target_qty->setupEditAttributes();
@@ -2108,8 +2108,9 @@ class PickingPendingEdit extends PickingPending
             // confirmation_date
             $this->confirmation_date->setupEditAttributes();
             $this->confirmation_date->EditCustomAttributes = "";
-            $this->confirmation_date->EditValue = HtmlEncode(FormatDateTime($this->confirmation_date->CurrentValue, $this->confirmation_date->formatPattern()));
-            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+            $this->confirmation_date->EditValue = $this->confirmation_date->CurrentValue;
+            $this->confirmation_date->EditValue = FormatDateTime($this->confirmation_date->EditValue, $this->confirmation_date->formatPattern());
+            $this->confirmation_date->ViewCustomAttributes = "";
 
             // confirmation_time
             $this->confirmation_time->setupEditAttributes();
@@ -2134,17 +2135,8 @@ class PickingPendingEdit extends PickingPending
             // picker
             $this->picker->setupEditAttributes();
             $this->picker->EditCustomAttributes = "";
-            if (!$Security->isAdmin() && $Security->isLoggedIn() && !$this->userIDAllow("edit")) { // Non system admin
-                $this->picker->CurrentValue = CurrentUserID();
-                $this->picker->EditValue = $this->picker->CurrentValue;
-                $this->picker->ViewCustomAttributes = "";
-            } else {
-                if (!$this->picker->Raw) {
-                    $this->picker->CurrentValue = HtmlDecode($this->picker->CurrentValue);
-                }
-                $this->picker->EditValue = HtmlEncode($this->picker->CurrentValue);
-                $this->picker->PlaceHolder = RemoveHtml($this->picker->caption());
-            }
+            $this->picker->EditValue = $this->picker->CurrentValue;
+            $this->picker->ViewCustomAttributes = "";
 
             // status
             $this->status->setupEditAttributes();
@@ -2337,6 +2329,7 @@ class PickingPendingEdit extends PickingPending
             // concept
             $this->concept->LinkCustomAttributes = "";
             $this->concept->HrefValue = "";
+            $this->concept->TooltipValue = "";
 
             // target_qty
             $this->target_qty->LinkCustomAttributes = "";
@@ -2354,6 +2347,7 @@ class PickingPendingEdit extends PickingPending
             // confirmation_date
             $this->confirmation_date->LinkCustomAttributes = "";
             $this->confirmation_date->HrefValue = "";
+            $this->confirmation_date->TooltipValue = "";
 
             // confirmation_time
             $this->confirmation_time->LinkCustomAttributes = "";
@@ -2370,6 +2364,7 @@ class PickingPendingEdit extends PickingPending
             // picker
             $this->picker->LinkCustomAttributes = "";
             $this->picker->HrefValue = "";
+            $this->picker->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2577,9 +2572,6 @@ class PickingPendingEdit extends PickingPending
                 $this->confirmation_date->addErrorMessage(str_replace("%s", $this->confirmation_date->caption(), $this->confirmation_date->RequiredErrorMessage));
             }
         }
-        if (!CheckDate($this->confirmation_date->FormValue, $this->confirmation_date->formatPattern())) {
-            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
-        }
         if ($this->confirmation_time->Required) {
             if (!$this->confirmation_time->IsDetailKey && EmptyValue($this->confirmation_time->FormValue)) {
                 $this->confirmation_time->addErrorMessage(str_replace("%s", $this->confirmation_time->caption(), $this->confirmation_time->RequiredErrorMessage));
@@ -2730,17 +2722,11 @@ class PickingPendingEdit extends PickingPending
         // color_code
         $this->color_code->setDbValueDef($rsnew, $this->color_code->CurrentValue, null, $this->color_code->ReadOnly);
 
-        // concept
-        $this->concept->setDbValueDef($rsnew, $this->concept->CurrentValue, null, $this->concept->ReadOnly);
-
         // picked_qty
         $this->picked_qty->setDbValueDef($rsnew, $this->picked_qty->CurrentValue, null, $this->picked_qty->ReadOnly);
 
         // variance_qty
         $this->variance_qty->setDbValueDef($rsnew, $this->variance_qty->CurrentValue, null, $this->variance_qty->ReadOnly);
-
-        // confirmation_date
-        $this->confirmation_date->setDbValueDef($rsnew, UnFormatDateTime($this->confirmation_date->CurrentValue, $this->confirmation_date->formatPattern()), null, $this->confirmation_date->ReadOnly);
 
         // confirmation_time
         $this->confirmation_time->setDbValueDef($rsnew, UnFormatDateTime($this->confirmation_time->CurrentValue, $this->confirmation_time->formatPattern()), null, $this->confirmation_time->ReadOnly);
@@ -2750,9 +2736,6 @@ class PickingPendingEdit extends PickingPending
 
         // box_type
         $this->box_type->setDbValueDef($rsnew, $this->box_type->CurrentValue, null, $this->box_type->ReadOnly);
-
-        // picker
-        $this->picker->setDbValueDef($rsnew, $this->picker->CurrentValue, null, $this->picker->ReadOnly);
 
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);

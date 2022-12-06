@@ -32,15 +32,15 @@ class AuditPickingOnline extends DbTable
 
     // Fields
     public $id;
+    public $scan;
     public $box_code;
     public $store_id;
     public $store_name;
-    public $scan;
-    public $article;
     public $picked_qty;
     public $scan_qty;
     public $checker;
     public $status;
+    public $article;
     public $date_update;
     public $time_update;
 
@@ -104,8 +104,50 @@ class AuditPickingOnline extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = false; // Allow sort
+        $this->id->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'audit_picking_online', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'audit_picking_online', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
+
+        // scan
+        $this->scan = new DbField(
+            'audit_picking_online',
+            'audit_picking_online',
+            'x_scan',
+            'scan',
+            '\'\'',
+            '\'\'',
+            201,
+            65530,
+            -1,
+            false,
+            '\'\'',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->scan->InputTextType = "text";
+        $this->scan->IsCustom = true; // Custom field
+        $this->scan->Sortable = false; // Allow sort
+        $this->scan->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->scan->Lookup = new Lookup('scan', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "`article`");
+                break;
+            default:
+                $this->scan->Lookup = new Lookup('scan', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "`article`");
+                break;
+        }
+        $this->Fields['scan'] = &$this->scan;
 
         // box_code
         $this->box_code = new DbField(
@@ -124,15 +166,21 @@ class AuditPickingOnline extends DbTable
             false,
             false,
             'FORMATTED TEXT',
-            'SELECT'
+            'TEXT'
         );
         $this->box_code->InputTextType = "text";
         $this->box_code->Nullable = false; // NOT NULL field
         $this->box_code->Required = true; // Required field
         $this->box_code->Sortable = false; // Allow sort
-        $this->box_code->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->box_code->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], ["x_store_id","x_article"], [], [], ["store_id"], ["x_store_id"], '', '', "`box_code`");
+        $this->box_code->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_code->Lookup = new Lookup('box_code', 'box_picking_online', true, 'box_id', ["box_id","","",""], [], ["x_store_id"], [], [], [], [], '', '', "`box_id`");
+                break;
+            default:
+                $this->box_code->Lookup = new Lookup('box_code', 'box_picking_online', true, 'box_id', ["box_id","","",""], [], ["x_store_id"], [], [], [], [], '', '', "`box_id`");
+                break;
+        }
         $this->Fields['box_code'] = &$this->box_code;
 
         // store_id
@@ -152,15 +200,21 @@ class AuditPickingOnline extends DbTable
             false,
             false,
             'FORMATTED TEXT',
-            'SELECT'
+            'TEXT'
         );
         $this->store_id->InputTextType = "text";
         $this->store_id->Nullable = false; // NOT NULL field
         $this->store_id->Required = true; // Required field
         $this->store_id->Sortable = false; // Allow sort
-        $this->store_id->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->store_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->store_id->Lookup = new Lookup('store_id', 'check_box', true, 'store_id', ["store_id","","",""], ["x_box_code"], ["x_store_name"], ["box_code"], ["x_box_code"], ["store_name"], ["x_store_name"], '`store_id` ASC', '', "`store_id`");
+        $this->store_id->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_id->Lookup = new Lookup('store_id', 'box_picking_online', true, 'store_code', ["store_code","","",""], ["x_box_code"], [], ["box_id"], ["x_box_id"], ["store_name","picked_qty","scan_qty"], ["x_store_name","x_picked_qty","x_scan_qty"], '', '', "`store_code`");
+                break;
+            default:
+                $this->store_id->Lookup = new Lookup('store_id', 'box_picking_online', true, 'store_code', ["store_code","","",""], ["x_box_code"], [], ["box_id"], ["x_box_id"], ["store_name","picked_qty","scan_qty"], ["x_store_name","x_picked_qty","x_scan_qty"], '', '', "`store_code`");
+                break;
+        }
         $this->Fields['store_id'] = &$this->store_id;
 
         // store_name
@@ -186,14 +240,23 @@ class AuditPickingOnline extends DbTable
         $this->store_name->Nullable = false; // NOT NULL field
         $this->store_name->Required = true; // Required field
         $this->store_name->Sortable = false; // Allow sort
+        $this->store_name->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'box_picking_online', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "`store_name`");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'box_picking_online', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "`store_name`");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
-        // scan
-        $this->scan = new DbField(
+        // picked_qty
+        $this->picked_qty = new DbField(
             'audit_picking_online',
             'audit_picking_online',
-            'x_scan',
-            'scan',
+            'x_picked_qty',
+            'picked_qty',
             '\'\'',
             '\'\'',
             201,
@@ -207,60 +270,18 @@ class AuditPickingOnline extends DbTable
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->scan->InputTextType = "text";
-        $this->scan->IsCustom = true; // Custom field
-        $this->scan->Sortable = false; // Allow sort
-        $this->Fields['scan'] = &$this->scan;
-
-        // article
-        $this->article = new DbField(
-            'audit_picking_online',
-            'audit_picking_online',
-            'x_article',
-            'article',
-            '`article`',
-            '`article`',
-            200,
-            16,
-            -1,
-            false,
-            '`article`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->article->InputTextType = "text";
-        $this->article->Nullable = false; // NOT NULL field
-        $this->article->Required = true; // Required field
-        $this->article->Sortable = false; // Allow sort
-        $this->Fields['article'] = &$this->article;
-
-        // picked_qty
-        $this->picked_qty = new DbField(
-            'audit_picking_online',
-            'audit_picking_online',
-            'x_picked_qty',
-            'picked_qty',
-            '`picked_qty`',
-            '`picked_qty`',
-            3,
-            11,
-            -1,
-            false,
-            '`picked_qty`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
         $this->picked_qty->InputTextType = "text";
-        $this->picked_qty->Nullable = false; // NOT NULL field
-        $this->picked_qty->Required = true; // Required field
+        $this->picked_qty->IsCustom = true; // Custom field
         $this->picked_qty->Sortable = false; // Allow sort
-        $this->picked_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->picked_qty->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'box_picking_online', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "`picked_qty`");
+                break;
+            default:
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'box_picking_online', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "`picked_qty`");
+                break;
+        }
         $this->Fields['picked_qty'] = &$this->picked_qty;
 
         // scan_qty
@@ -284,6 +305,16 @@ class AuditPickingOnline extends DbTable
         );
         $this->scan_qty->InputTextType = "text";
         $this->scan_qty->IsCustom = true; // Custom field
+        $this->scan_qty->Sortable = false; // Allow sort
+        $this->scan_qty->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->scan_qty->Lookup = new Lookup('scan_qty', 'box_picking_online', true, 'scan_qty', ["scan_qty","","",""], [], [], [], [], [], [], '', '', "`scan_qty`");
+                break;
+            default:
+                $this->scan_qty->Lookup = new Lookup('scan_qty', 'box_picking_online', true, 'scan_qty', ["scan_qty","","",""], [], [], [], [], [], [], '', '', "`scan_qty`");
+                break;
+        }
         $this->Fields['scan_qty'] = &$this->scan_qty;
 
         // checker
@@ -308,7 +339,15 @@ class AuditPickingOnline extends DbTable
         $this->checker->InputTextType = "text";
         $this->checker->Nullable = false; // NOT NULL field
         $this->checker->Required = true; // Required field
-        $this->checker->Sortable = false; // Allow sort
+        $this->checker->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->checker->Lookup = new Lookup('checker', 'audit_picking_online', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->checker->Lookup = new Lookup('checker', 'audit_picking_online', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['checker'] = &$this->checker;
 
         // status
@@ -334,7 +373,50 @@ class AuditPickingOnline extends DbTable
         $this->status->Nullable = false; // NOT NULL field
         $this->status->Required = true; // Required field
         $this->status->Sortable = false; // Allow sort
+        $this->status->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'audit_picking_online', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'audit_picking_online', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['status'] = &$this->status;
+
+        // article
+        $this->article = new DbField(
+            'audit_picking_online',
+            'audit_picking_online',
+            'x_article',
+            'article',
+            '`article`',
+            '`article`',
+            200,
+            16,
+            -1,
+            false,
+            '`article`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->article->InputTextType = "text";
+        $this->article->Nullable = false; // NOT NULL field
+        $this->article->Required = true; // Required field
+        $this->article->Sortable = false; // Allow sort
+        $this->article->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "`article`");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "`article`");
+                break;
+        }
+        $this->Fields['article'] = &$this->article;
 
         // date_update
         $this->date_update = new DbField(
@@ -357,8 +439,16 @@ class AuditPickingOnline extends DbTable
         );
         $this->date_update->InputTextType = "text";
         $this->date_update->Nullable = false; // NOT NULL field
-        $this->date_update->Required = true; // Required field
         $this->date_update->Sortable = false; // Allow sort
+        $this->date_update->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_update->Lookup = new Lookup('date_update', 'audit_picking_online', true, 'date_update', ["date_update","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_update->Lookup = new Lookup('date_update', 'audit_picking_online', true, 'date_update', ["date_update","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_update->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_update'] = &$this->date_update;
 
@@ -369,10 +459,10 @@ class AuditPickingOnline extends DbTable
             'x_time_update',
             'time_update',
             '`time_update`',
-            CastDateFieldForLike("`time_update`", 0, "DB"),
-            135,
-            19,
-            0,
+            CastDateFieldForLike("`time_update`", 3, "DB"),
+            134,
+            10,
+            3,
             false,
             '`time_update`',
             false,
@@ -383,8 +473,16 @@ class AuditPickingOnline extends DbTable
         );
         $this->time_update->InputTextType = "text";
         $this->time_update->Nullable = false; // NOT NULL field
-        $this->time_update->Required = true; // Required field
-        $this->time_update->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->time_update->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->time_update->Lookup = new Lookup('time_update', 'audit_picking_online', true, 'time_update', ["time_update","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->time_update->Lookup = new Lookup('time_update', 'audit_picking_online', true, 'time_update', ["time_update","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->time_update->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectDate"));
         $this->Fields['time_update'] = &$this->time_update;
 
         // Add Doctrine Cache
@@ -460,7 +558,7 @@ class AuditPickingOnline extends DbTable
 
     public function getSqlSelect() // Select
     {
-        return $this->SqlSelect ?? $this->getQueryBuilder()->select("*, '' AS `scan`, '' AS `scan_qty`");
+        return $this->SqlSelect ?? $this->getQueryBuilder()->select("*, '' AS `scan`, '' AS `picked_qty`, '' AS `scan_qty`");
     }
 
     public function sqlSelect() // For backward compatibility
@@ -818,15 +916,15 @@ class AuditPickingOnline extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
+        $this->scan->DbValue = $row['scan'];
         $this->box_code->DbValue = $row['box_code'];
         $this->store_id->DbValue = $row['store_id'];
         $this->store_name->DbValue = $row['store_name'];
-        $this->scan->DbValue = $row['scan'];
-        $this->article->DbValue = $row['article'];
         $this->picked_qty->DbValue = $row['picked_qty'];
         $this->scan_qty->DbValue = $row['scan_qty'];
         $this->checker->DbValue = $row['checker'];
         $this->status->DbValue = $row['status'];
+        $this->article->DbValue = $row['article'];
         $this->date_update->DbValue = $row['date_update'];
         $this->time_update->DbValue = $row['time_update'];
     }
@@ -1148,15 +1246,15 @@ class AuditPickingOnline extends DbTable
             return;
         }
         $this->id->setDbValue($row['id']);
+        $this->scan->setDbValue($row['scan']);
         $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
-        $this->scan->setDbValue($row['scan']);
-        $this->article->setDbValue($row['article']);
         $this->picked_qty->setDbValue($row['picked_qty']);
         $this->scan_qty->setDbValue($row['scan_qty']);
         $this->checker->setDbValue($row['checker']);
         $this->status->setDbValue($row['status']);
+        $this->article->setDbValue($row['article']);
         $this->date_update->setDbValue($row['date_update']);
         $this->time_update->setDbValue($row['time_update']);
     }
@@ -1174,6 +1272,9 @@ class AuditPickingOnline extends DbTable
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
 
+        // scan
+        $this->scan->CellCssStyle = "white-space: nowrap;";
+
         // box_code
         $this->box_code->CellCssStyle = "white-space: nowrap;";
 
@@ -1183,22 +1284,20 @@ class AuditPickingOnline extends DbTable
         // store_name
         $this->store_name->CellCssStyle = "white-space: nowrap;";
 
-        // scan
-        $this->scan->CellCssStyle = "white-space: nowrap;";
-
-        // article
-        $this->article->CellCssStyle = "white-space: nowrap;";
-
         // picked_qty
         $this->picked_qty->CellCssStyle = "white-space: nowrap;";
 
         // scan_qty
+        $this->scan_qty->CellCssStyle = "white-space: nowrap;";
 
         // checker
         $this->checker->CellCssStyle = "white-space: nowrap;";
 
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // article
+        $this->article->CellCssStyle = "white-space: nowrap;";
 
         // date_update
         $this->date_update->CellCssStyle = "white-space: nowrap;";
@@ -1209,69 +1308,24 @@ class AuditPickingOnline extends DbTable
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
+        // scan
+        $this->scan->ViewValue = $this->scan->CurrentValue;
+        $this->scan->ViewCustomAttributes = "";
+
         // box_code
-        $curVal = strval($this->box_code->CurrentValue);
-        if ($curVal != "") {
-            $this->box_code->ViewValue = $this->box_code->lookupCacheOption($curVal);
-            if ($this->box_code->ViewValue === null) { // Lookup from database
-                $filterWrk = "`box_code`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                $sqlWrk = $this->box_code->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->box_code->Lookup->renderViewRow($rswrk[0]);
-                    $this->box_code->ViewValue = $this->box_code->displayValue($arwrk);
-                } else {
-                    $this->box_code->ViewValue = $this->box_code->CurrentValue;
-                }
-            }
-        } else {
-            $this->box_code->ViewValue = null;
-        }
+        $this->box_code->ViewValue = $this->box_code->CurrentValue;
         $this->box_code->ViewCustomAttributes = "";
 
         // store_id
-        $curVal = strval($this->store_id->CurrentValue);
-        if ($curVal != "") {
-            $this->store_id->ViewValue = $this->store_id->lookupCacheOption($curVal);
-            if ($this->store_id->ViewValue === null) { // Lookup from database
-                $filterWrk = "`store_id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                $sqlWrk = $this->store_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->store_id->Lookup->renderViewRow($rswrk[0]);
-                    $this->store_id->ViewValue = $this->store_id->displayValue($arwrk);
-                } else {
-                    $this->store_id->ViewValue = $this->store_id->CurrentValue;
-                }
-            }
-        } else {
-            $this->store_id->ViewValue = null;
-        }
+        $this->store_id->ViewValue = $this->store_id->CurrentValue;
         $this->store_id->ViewCustomAttributes = "";
 
         // store_name
         $this->store_name->ViewValue = $this->store_name->CurrentValue;
         $this->store_name->ViewCustomAttributes = "";
 
-        // scan
-        $this->scan->ViewValue = $this->scan->CurrentValue;
-        $this->scan->ViewCustomAttributes = "";
-
-        // article
-        $this->article->ViewValue = $this->article->CurrentValue;
-        $this->article->ViewCustomAttributes = "";
-
         // picked_qty
         $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-        $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
         $this->picked_qty->ViewCustomAttributes = "";
 
         // scan_qty
@@ -1285,6 +1339,10 @@ class AuditPickingOnline extends DbTable
         // status
         $this->status->ViewValue = $this->status->CurrentValue;
         $this->status->ViewCustomAttributes = "";
+
+        // article
+        $this->article->ViewValue = $this->article->CurrentValue;
+        $this->article->ViewCustomAttributes = "";
 
         // date_update
         $this->date_update->ViewValue = $this->date_update->CurrentValue;
@@ -1301,6 +1359,11 @@ class AuditPickingOnline extends DbTable
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
+        // scan
+        $this->scan->LinkCustomAttributes = "";
+        $this->scan->HrefValue = "";
+        $this->scan->TooltipValue = "";
+
         // box_code
         $this->box_code->LinkCustomAttributes = "";
         $this->box_code->HrefValue = "";
@@ -1315,16 +1378,6 @@ class AuditPickingOnline extends DbTable
         $this->store_name->LinkCustomAttributes = "";
         $this->store_name->HrefValue = "";
         $this->store_name->TooltipValue = "";
-
-        // scan
-        $this->scan->LinkCustomAttributes = "";
-        $this->scan->HrefValue = "";
-        $this->scan->TooltipValue = "";
-
-        // article
-        $this->article->LinkCustomAttributes = "";
-        $this->article->HrefValue = "";
-        $this->article->TooltipValue = "";
 
         // picked_qty
         $this->picked_qty->LinkCustomAttributes = "";
@@ -1345,6 +1398,11 @@ class AuditPickingOnline extends DbTable
         $this->status->LinkCustomAttributes = "";
         $this->status->HrefValue = "";
         $this->status->TooltipValue = "";
+
+        // article
+        $this->article->LinkCustomAttributes = "";
+        $this->article->HrefValue = "";
+        $this->article->TooltipValue = "";
 
         // date_update
         $this->date_update->LinkCustomAttributes = "";
@@ -1377,14 +1435,31 @@ class AuditPickingOnline extends DbTable
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
+        // scan
+        $this->scan->setupEditAttributes();
+        $this->scan->EditCustomAttributes = 'autofocus';
+        if (!$this->scan->Raw) {
+            $this->scan->CurrentValue = HtmlDecode($this->scan->CurrentValue);
+        }
+        $this->scan->EditValue = $this->scan->CurrentValue;
+        $this->scan->PlaceHolder = RemoveHtml($this->scan->caption());
+
         // box_code
         $this->box_code->setupEditAttributes();
         $this->box_code->EditCustomAttributes = "";
+        if (!$this->box_code->Raw) {
+            $this->box_code->CurrentValue = HtmlDecode($this->box_code->CurrentValue);
+        }
+        $this->box_code->EditValue = $this->box_code->CurrentValue;
         $this->box_code->PlaceHolder = RemoveHtml($this->box_code->caption());
 
         // store_id
         $this->store_id->setupEditAttributes();
-        $this->store_id->EditCustomAttributes = "";
+        $this->store_id->EditCustomAttributes = 'readonly';
+        if (!$this->store_id->Raw) {
+            $this->store_id->CurrentValue = HtmlDecode($this->store_id->CurrentValue);
+        }
+        $this->store_id->EditValue = $this->store_id->CurrentValue;
         $this->store_id->PlaceHolder = RemoveHtml($this->store_id->caption());
 
         // store_name
@@ -1396,32 +1471,14 @@ class AuditPickingOnline extends DbTable
         $this->store_name->EditValue = $this->store_name->CurrentValue;
         $this->store_name->PlaceHolder = RemoveHtml($this->store_name->caption());
 
-        // scan
-        $this->scan->setupEditAttributes();
-        $this->scan->EditCustomAttributes = 'autofocus';
-        if (!$this->scan->Raw) {
-            $this->scan->CurrentValue = HtmlDecode($this->scan->CurrentValue);
-        }
-        $this->scan->EditValue = $this->scan->CurrentValue;
-        $this->scan->PlaceHolder = RemoveHtml($this->scan->caption());
-
-        // article
-        $this->article->setupEditAttributes();
-        $this->article->EditCustomAttributes = 'readonly';
-        if (!$this->article->Raw) {
-            $this->article->CurrentValue = HtmlDecode($this->article->CurrentValue);
-        }
-        $this->article->EditValue = $this->article->CurrentValue;
-        $this->article->PlaceHolder = RemoveHtml($this->article->caption());
-
         // picked_qty
         $this->picked_qty->setupEditAttributes();
         $this->picked_qty->EditCustomAttributes = 'readonly';
+        if (!$this->picked_qty->Raw) {
+            $this->picked_qty->CurrentValue = HtmlDecode($this->picked_qty->CurrentValue);
+        }
         $this->picked_qty->EditValue = $this->picked_qty->CurrentValue;
         $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
-        if (strval($this->picked_qty->EditValue) != "" && is_numeric($this->picked_qty->EditValue)) {
-            $this->picked_qty->EditValue = FormatNumber($this->picked_qty->EditValue, null);
-        }
 
         // scan_qty
         $this->scan_qty->setupEditAttributes();
@@ -1450,17 +1507,18 @@ class AuditPickingOnline extends DbTable
         $this->status->EditValue = $this->status->CurrentValue;
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+        // article
+        $this->article->setupEditAttributes();
+        $this->article->EditCustomAttributes = 'readonly';
+        if (!$this->article->Raw) {
+            $this->article->CurrentValue = HtmlDecode($this->article->CurrentValue);
+        }
+        $this->article->EditValue = $this->article->CurrentValue;
+        $this->article->PlaceHolder = RemoveHtml($this->article->caption());
+
         // date_update
-        $this->date_update->setupEditAttributes();
-        $this->date_update->EditCustomAttributes = 'readonly';
-        $this->date_update->EditValue = FormatDateTime($this->date_update->CurrentValue, $this->date_update->formatPattern());
-        $this->date_update->PlaceHolder = RemoveHtml($this->date_update->caption());
 
         // time_update
-        $this->time_update->setupEditAttributes();
-        $this->time_update->EditCustomAttributes = 'readonly';
-        $this->time_update->EditValue = FormatDateTime($this->time_update->CurrentValue, $this->time_update->formatPattern());
-        $this->time_update->PlaceHolder = RemoveHtml($this->time_update->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1470,9 +1528,6 @@ class AuditPickingOnline extends DbTable
     public function aggregateListRowValues()
     {
             $this->article->Count++; // Increment count
-            if (is_numeric($this->picked_qty->CurrentValue)) {
-                $this->picked_qty->Total += $this->picked_qty->CurrentValue; // Accumulate total
-            }
     }
 
     // Aggregate list row (for rendering)
@@ -1482,11 +1537,6 @@ class AuditPickingOnline extends DbTable
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
             $this->article->HrefValue = ""; // Clear href value
-            $this->picked_qty->CurrentValue = $this->picked_qty->Total;
-            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
-            $this->picked_qty->ViewCustomAttributes = "";
-            $this->picked_qty->HrefValue = ""; // Clear href value
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1508,11 +1558,9 @@ class AuditPickingOnline extends DbTable
                     $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->store_id);
                     $doc->exportCaption($this->store_name);
-                    $doc->exportCaption($this->article);
-                    $doc->exportCaption($this->picked_qty);
-                    $doc->exportCaption($this->scan_qty);
                     $doc->exportCaption($this->checker);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->article);
                     $doc->exportCaption($this->date_update);
                     $doc->exportCaption($this->time_update);
                 } else {
@@ -1520,10 +1568,9 @@ class AuditPickingOnline extends DbTable
                     $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->store_id);
                     $doc->exportCaption($this->store_name);
-                    $doc->exportCaption($this->article);
-                    $doc->exportCaption($this->picked_qty);
                     $doc->exportCaption($this->checker);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->article);
                     $doc->exportCaption($this->date_update);
                     $doc->exportCaption($this->time_update);
                 }
@@ -1560,11 +1607,9 @@ class AuditPickingOnline extends DbTable
                         $doc->exportField($this->box_code);
                         $doc->exportField($this->store_id);
                         $doc->exportField($this->store_name);
-                        $doc->exportField($this->article);
-                        $doc->exportField($this->picked_qty);
-                        $doc->exportField($this->scan_qty);
                         $doc->exportField($this->checker);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->article);
                         $doc->exportField($this->date_update);
                         $doc->exportField($this->time_update);
                     } else {
@@ -1572,10 +1617,9 @@ class AuditPickingOnline extends DbTable
                         $doc->exportField($this->box_code);
                         $doc->exportField($this->store_id);
                         $doc->exportField($this->store_name);
-                        $doc->exportField($this->article);
-                        $doc->exportField($this->picked_qty);
                         $doc->exportField($this->checker);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->article);
                         $doc->exportField($this->date_update);
                         $doc->exportField($this->time_update);
                     }
@@ -1602,10 +1646,9 @@ class AuditPickingOnline extends DbTable
                 $doc->exportAggregate($this->box_code, '');
                 $doc->exportAggregate($this->store_id, '');
                 $doc->exportAggregate($this->store_name, '');
-                $doc->exportAggregate($this->article, 'COUNT');
-                $doc->exportAggregate($this->picked_qty, 'TOTAL');
                 $doc->exportAggregate($this->checker, '');
                 $doc->exportAggregate($this->status, '');
+                $doc->exportAggregate($this->article, 'COUNT');
                 $doc->exportAggregate($this->date_update, '');
                 $doc->exportAggregate($this->time_update, '');
                 $doc->endExportRow();
@@ -1669,13 +1712,61 @@ class AuditPickingOnline extends DbTable
     {
         // Enter your code here
         // To cancel, set return value to false
-        return true;
+        	$_box_code  	= $rsnew["box_code"];
+            $_store_id  	= $rsnew["store_id"];
+            $_article  		= $rsnew["article"];
+            $currentDate2 = CurrentDate();
+            $compare1 = "SELECT count(`article`) FROM `picking` WHERE `box_code` =  '$_box_code' AND `store_id` = '$_store_id' AND `article` = '$_article'  ";
+            $_compare1 = ExecuteScalar($compare1);
+            $compare_qty = "SELECT sum(`picked_qty`) FROM `picking` WHERE `box_code` =  '$_box_code' AND `store_id` = '$_store_id' AND `article` = '$_article'  ";
+            $_compare_qty = ExecuteScalar($compare_qty);
+            $compare_qty2 = "SELECT count(`article`) FROM `audit_picking_online` WHERE `box_code` =  '$_box_code' AND `store_id` = '$_store_id' AND `article` = '$_article'  ";
+            $_compare_qty2 = ExecuteScalar($compare_qty2);
+            if($_compare1 == 0 ){
+            	//console.log('cek_dobel');
+            	$this->setWarningMessage("Not Belong Article");
+            	return false;
+            }
+            if($_compare_qty2 == $_compare_qty ){
+            	//console.log('cek_dobel');
+            	$this->setWarningMessage("Excess Article");
+            	return false;
+            }
+            if($_compare_qty2 < $_compare_qty ) {
+            	//$this->setWarningMessage("Excess Article");
+            	//console.log('cek_dobel');
+            	return true;
+            }
     }
 
     // Row Inserted event
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        $currentDate = CurrentDate();
+        $currentTime = CurrentTime();
+        $currentUser = CurrentUsername();
+        $_box 		= $rsnew["box_code"];
+        $_store 	= $rsnew["store_id"];
+        $_scan		= $rsnew["scan_qty"];
+        $_status 	= $rsnew["status"];
+        //after insert
+        $update = "UPDATE `box_picking_online` SET `scan_qty` = '$_scan' ,`date_updated` = '$currentDate' WHERE `box_id` = '$_box' AND `store_code` = '$_store' ";
+        $_update = ExecuteStatement($update);
+        //---
+        $qtybox = "SELECT `picked_qty` From `box_picking_online` WHERE `box_id` = '$_box' AND `store_code` = '$_store' ";
+        $_qtybox = ExecuteScalar($qtybox);
+        $qtyscan = "SELECT `scan_qty` From `box_picking_online` WHERE `box_id` = '$_box' AND `store_code` = '$_store' ";
+        $_qtyscan = ExecuteScalar($qtyscan);
+        //update status
+        $update2 = "UPDATE `box_picking_online` SET `status` = 'Match' ,`date_updated` = '$currentDate' WHERE `box_id` = '$_box' AND `store_code` = '$_store' ";
+        $update3 = "UPDATE `box_picking_online` SET `status` = 'Excess' ,`date_updated` = '$currentDate' WHERE `box_id` = '$_box' AND `store_code` = '$_store' ";
+        if($_qtybox == $_qtyscan){
+        	$_update2 = ExecuteStatement($update2);
+        }
+        if($_qtybox < $_qtyscan){
+        	$_update3 = ExecuteStatement($update3);
+        }
     }
 
     // Row Updating event
@@ -1740,6 +1831,29 @@ class AuditPickingOnline extends DbTable
     public function rowDeleted(&$rs)
     {
         //Log("Row Deleted");
+        	$currentDate = CurrentDate();
+            $currentDateTime = CurrentDateTime();
+            $_user = CurrentUserName();
+            $_boxcode = $rs["box_code"];
+            $_storeid = $rs["store_id"];
+            $_storename = $rs["store_name"];
+            $_scanqty = $rs["scan_qty"];
+            //Delete Price Tag
+            $compare1 = "SELECT count(`box_id`) FROM `box_picking_online` WHERE  `box_id` = '$_boxcode' AND `store_code` =  '$_storeid' AND `store_name` =  '$_storename' ";
+            $_compare1 = ExecuteScalar($compare1);
+            $result_true1 = "UPDATE box_picking_online SET `scan_qty` = ( `scan_qty` - '1'), `date_updated` = '$currentDate'  WHERE `box_id` = '$_boxcode' AND `store_code` =  '$_storeid' AND `store_name` =  '$_storename' ";
+            //Delete QR
+            $result_true2 = "UPDATE extra_stock SET `scan_qty` = ( `scan_qty` - '1'), `date_updated` = '$currentDate'  WHERE `box_id` = '$_boxcode' AND `store_code` =  '$_storeid' AND `store_name` =  '$_storename' ";
+            //
+            if($_compare1 == 0  ){
+            $this->setWarningMessage("No Record");
+            //console.log('statement1');
+            }
+            else{
+            ExecuteStatement($result_true1);
+            $this->setSuccessMessage("Record Updated");
+            //console.log('statement2');
+            }
     }
 
     // Email Sending event

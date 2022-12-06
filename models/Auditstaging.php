@@ -1671,14 +1671,18 @@ class Auditstaging extends DbTable
         //var_dump($this-><FieldName>);
         $_status = "Match";
         $currentDate = CurrentDate();
-        $abc = ($this->box_id->ViewValue);
+        $_boxid = ($this->box_id->ViewValue);
+        $_storecode = ($this->store_code->ViewValue);
+        $_type = ($this->type->ViewValue);
         $scan = CurrentUserName();
         $result = ExecuteStatement("UPDATE staging SET
         `status` = '$_status' ,
         `date_updated` = '$currentDate',
         `users` = '$scan'
-        WHERE box_id = '$abc'
-        and `status` = 'Unmatch' ");
+        WHERE box_id = '$_boxid'
+        AND `store_code` = '$_storecode'
+        AND `type` = '$_type'
+         ");
     }
 
     // User ID Filtering event

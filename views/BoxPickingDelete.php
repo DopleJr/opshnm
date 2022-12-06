@@ -74,14 +74,20 @@ $Page->showMessage();
 <?php if ($Page->picking_date->Visible) { // picking_date ?>
         <th class="<?= $Page->picking_date->headerCellClass() ?>"><span id="elh_box_picking_picking_date" class="box_picking_picking_date"><?= $Page->picking_date->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <th class="<?= $Page->line->headerCellClass() ?>"><span id="elh_box_picking_line" class="box_picking_line"><?= $Page->line->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <th class="<?= $Page->date_created->headerCellClass() ?>"><span id="elh_box_picking_date_created" class="box_picking_date_created"><?= $Page->date_created->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
-        <th class="<?= $Page->date_delivery->headerCellClass() ?>"><span id="elh_box_picking_date_delivery" class="box_picking_date_delivery"><?= $Page->date_delivery->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <th class="<?= $Page->date_updated->headerCellClass() ?>"><span id="elh_box_picking_date_updated" class="box_picking_date_updated"><?= $Page->date_updated->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+        <th class="<?= $Page->date_staging->headerCellClass() ?>"><span id="elh_box_picking_date_staging" class="box_picking_date_staging"><?= $Page->date_staging->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
+        <th class="<?= $Page->date_delivery->headerCellClass() ?>"><span id="elh_box_picking_date_delivery" class="box_picking_date_delivery"><?= $Page->date_delivery->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -184,6 +190,14 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <td<?= $Page->line->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_box_picking_line" class="el_box_picking_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <td<?= $Page->date_created->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_box_picking_date_created" class="el_box_picking_date_created">
@@ -192,19 +206,27 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
-        <td<?= $Page->date_delivery->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_box_picking_date_delivery" class="el_box_picking_date_delivery">
-<span<?= $Page->date_delivery->viewAttributes() ?>>
-<?= $Page->date_delivery->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <td<?= $Page->date_updated->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_box_picking_date_updated" class="el_box_picking_date_updated">
 <span<?= $Page->date_updated->viewAttributes() ?>>
 <?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+        <td<?= $Page->date_staging->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_box_picking_date_staging" class="el_box_picking_date_staging">
+<span<?= $Page->date_staging->viewAttributes() ?>>
+<?= $Page->date_staging->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
+        <td<?= $Page->date_delivery->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_box_picking_date_delivery" class="el_box_picking_date_delivery">
+<span<?= $Page->date_delivery->viewAttributes() ?>>
+<?= $Page->date_delivery->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

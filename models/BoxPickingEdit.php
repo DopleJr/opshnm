@@ -501,9 +501,11 @@ class BoxPickingEdit extends BoxPicking
         $this->status->setVisibility();
         $this->users->setVisibility();
         $this->picking_date->setVisibility();
+        $this->line->setVisibility();
         $this->date_created->setVisibility();
-        $this->date_delivery->setVisibility();
         $this->date_updated->setVisibility();
+        $this->date_staging->setVisibility();
+        $this->date_delivery->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -786,6 +788,16 @@ class BoxPickingEdit extends BoxPicking
             $this->picking_date->CurrentValue = UnFormatDateTime($this->picking_date->CurrentValue, $this->picking_date->formatPattern());
         }
 
+        // Check field name 'line' first before field var 'x_line'
+        $val = $CurrentForm->hasValue("line") ? $CurrentForm->getValue("line") : $CurrentForm->getValue("x_line");
+        if (!$this->line->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->line->Visible = false; // Disable update for API request
+            } else {
+                $this->line->setFormValue($val);
+            }
+        }
+
         // Check field name 'date_created' first before field var 'x_date_created'
         $val = $CurrentForm->hasValue("date_created") ? $CurrentForm->getValue("date_created") : $CurrentForm->getValue("x_date_created");
         if (!$this->date_created->IsDetailKey) {
@@ -797,17 +809,6 @@ class BoxPickingEdit extends BoxPicking
             $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
         }
 
-        // Check field name 'date_delivery' first before field var 'x_date_delivery'
-        $val = $CurrentForm->hasValue("date_delivery") ? $CurrentForm->getValue("date_delivery") : $CurrentForm->getValue("x_date_delivery");
-        if (!$this->date_delivery->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->date_delivery->Visible = false; // Disable update for API request
-            } else {
-                $this->date_delivery->setFormValue($val, true, $validate);
-            }
-            $this->date_delivery->CurrentValue = UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern());
-        }
-
         // Check field name 'date_updated' first before field var 'x_date_updated'
         $val = $CurrentForm->hasValue("date_updated") ? $CurrentForm->getValue("date_updated") : $CurrentForm->getValue("x_date_updated");
         if (!$this->date_updated->IsDetailKey) {
@@ -817,6 +818,28 @@ class BoxPickingEdit extends BoxPicking
                 $this->date_updated->setFormValue($val);
             }
             $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
+        }
+
+        // Check field name 'date_staging' first before field var 'x_date_staging'
+        $val = $CurrentForm->hasValue("date_staging") ? $CurrentForm->getValue("date_staging") : $CurrentForm->getValue("x_date_staging");
+        if (!$this->date_staging->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->date_staging->Visible = false; // Disable update for API request
+            } else {
+                $this->date_staging->setFormValue($val, true, $validate);
+            }
+            $this->date_staging->CurrentValue = UnFormatDateTime($this->date_staging->CurrentValue, $this->date_staging->formatPattern());
+        }
+
+        // Check field name 'date_delivery' first before field var 'x_date_delivery'
+        $val = $CurrentForm->hasValue("date_delivery") ? $CurrentForm->getValue("date_delivery") : $CurrentForm->getValue("x_date_delivery");
+        if (!$this->date_delivery->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->date_delivery->Visible = false; // Disable update for API request
+            } else {
+                $this->date_delivery->setFormValue($val, true, $validate);
+            }
+            $this->date_delivery->CurrentValue = UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern());
         }
     }
 
@@ -835,12 +858,15 @@ class BoxPickingEdit extends BoxPicking
         $this->users->CurrentValue = $this->users->FormValue;
         $this->picking_date->CurrentValue = $this->picking_date->FormValue;
         $this->picking_date->CurrentValue = UnFormatDateTime($this->picking_date->CurrentValue, $this->picking_date->formatPattern());
+        $this->line->CurrentValue = $this->line->FormValue;
         $this->date_created->CurrentValue = $this->date_created->FormValue;
         $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
-        $this->date_delivery->CurrentValue = $this->date_delivery->FormValue;
-        $this->date_delivery->CurrentValue = UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern());
         $this->date_updated->CurrentValue = $this->date_updated->FormValue;
         $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
+        $this->date_staging->CurrentValue = $this->date_staging->FormValue;
+        $this->date_staging->CurrentValue = UnFormatDateTime($this->date_staging->CurrentValue, $this->date_staging->formatPattern());
+        $this->date_delivery->CurrentValue = $this->date_delivery->FormValue;
+        $this->date_delivery->CurrentValue = UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern());
     }
 
     /**
@@ -900,9 +926,11 @@ class BoxPickingEdit extends BoxPicking
         $this->status->setDbValue($row['status']);
         $this->users->setDbValue($row['users']);
         $this->picking_date->setDbValue($row['picking_date']);
+        $this->line->setDbValue($row['line']);
         $this->date_created->setDbValue($row['date_created']);
-        $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
+        $this->date_staging->setDbValue($row['date_staging']);
+        $this->date_delivery->setDbValue($row['date_delivery']);
     }
 
     // Return a row with default values
@@ -919,9 +947,11 @@ class BoxPickingEdit extends BoxPicking
         $row['status'] = $this->status->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['picking_date'] = $this->picking_date->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['date_staging'] = $this->date_staging->DefaultValue;
+        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         return $row;
     }
 
@@ -983,14 +1013,20 @@ class BoxPickingEdit extends BoxPicking
         // picking_date
         $this->picking_date->RowCssClass = "row";
 
+        // line
+        $this->line->RowCssClass = "row";
+
         // date_created
         $this->date_created->RowCssClass = "row";
 
-        // date_delivery
-        $this->date_delivery->RowCssClass = "row";
-
         // date_updated
         $this->date_updated->RowCssClass = "row";
+
+        // date_staging
+        $this->date_staging->RowCssClass = "row";
+
+        // date_delivery
+        $this->date_delivery->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1036,20 +1072,29 @@ class BoxPickingEdit extends BoxPicking
             $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
             $this->picking_date->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
-            // date_delivery
-            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
-            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
-            $this->date_delivery->ViewCustomAttributes = "";
-
             // date_updated
             $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
+
+            // date_staging
+            $this->date_staging->ViewValue = $this->date_staging->CurrentValue;
+            $this->date_staging->ViewValue = FormatDateTime($this->date_staging->ViewValue, $this->date_staging->formatPattern());
+            $this->date_staging->ViewCustomAttributes = "";
+
+            // date_delivery
+            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
+            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
+            $this->date_delivery->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1091,17 +1136,25 @@ class BoxPickingEdit extends BoxPicking
             $this->picking_date->LinkCustomAttributes = "";
             $this->picking_date->HrefValue = "";
 
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
 
-            // date_delivery
-            $this->date_delivery->LinkCustomAttributes = "";
-            $this->date_delivery->HrefValue = "";
-
             // date_updated
             $this->date_updated->LinkCustomAttributes = "";
             $this->date_updated->HrefValue = "";
+
+            // date_staging
+            $this->date_staging->LinkCustomAttributes = "";
+            $this->date_staging->HrefValue = "";
+
+            // date_delivery
+            $this->date_delivery->LinkCustomAttributes = "";
+            $this->date_delivery->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -1187,19 +1240,34 @@ class BoxPickingEdit extends BoxPicking
             $this->picking_date->EditValue = HtmlEncode(FormatDateTime($this->picking_date->CurrentValue, $this->picking_date->formatPattern()));
             $this->picking_date->PlaceHolder = RemoveHtml($this->picking_date->caption());
 
+            // line
+            $this->line->setupEditAttributes();
+            $this->line->EditCustomAttributes = "";
+            if (!$this->line->Raw) {
+                $this->line->CurrentValue = HtmlDecode($this->line->CurrentValue);
+            }
+            $this->line->EditValue = HtmlEncode($this->line->CurrentValue);
+            $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
             // date_created
             $this->date_created->setupEditAttributes();
             $this->date_created->EditCustomAttributes = "";
             $this->date_created->EditValue = HtmlEncode(FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()));
             $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
 
+            // date_updated
+
+            // date_staging
+            $this->date_staging->setupEditAttributes();
+            $this->date_staging->EditCustomAttributes = "";
+            $this->date_staging->EditValue = HtmlEncode(FormatDateTime($this->date_staging->CurrentValue, $this->date_staging->formatPattern()));
+            $this->date_staging->PlaceHolder = RemoveHtml($this->date_staging->caption());
+
             // date_delivery
             $this->date_delivery->setupEditAttributes();
             $this->date_delivery->EditCustomAttributes = "";
             $this->date_delivery->EditValue = HtmlEncode(FormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern()));
             $this->date_delivery->PlaceHolder = RemoveHtml($this->date_delivery->caption());
-
-            // date_updated
 
             // Edit refer script
 
@@ -1243,17 +1311,25 @@ class BoxPickingEdit extends BoxPicking
             $this->picking_date->LinkCustomAttributes = "";
             $this->picking_date->HrefValue = "";
 
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
 
-            // date_delivery
-            $this->date_delivery->LinkCustomAttributes = "";
-            $this->date_delivery->HrefValue = "";
-
             // date_updated
             $this->date_updated->LinkCustomAttributes = "";
             $this->date_updated->HrefValue = "";
+
+            // date_staging
+            $this->date_staging->LinkCustomAttributes = "";
+            $this->date_staging->HrefValue = "";
+
+            // date_delivery
+            $this->date_delivery->LinkCustomAttributes = "";
+            $this->date_delivery->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1331,6 +1407,11 @@ class BoxPickingEdit extends BoxPicking
         if (!CheckDate($this->picking_date->FormValue, $this->picking_date->formatPattern())) {
             $this->picking_date->addErrorMessage($this->picking_date->getErrorMessage(false));
         }
+        if ($this->line->Required) {
+            if (!$this->line->IsDetailKey && EmptyValue($this->line->FormValue)) {
+                $this->line->addErrorMessage(str_replace("%s", $this->line->caption(), $this->line->RequiredErrorMessage));
+            }
+        }
         if ($this->date_created->Required) {
             if (!$this->date_created->IsDetailKey && EmptyValue($this->date_created->FormValue)) {
                 $this->date_created->addErrorMessage(str_replace("%s", $this->date_created->caption(), $this->date_created->RequiredErrorMessage));
@@ -1339,6 +1420,19 @@ class BoxPickingEdit extends BoxPicking
         if (!CheckDate($this->date_created->FormValue, $this->date_created->formatPattern())) {
             $this->date_created->addErrorMessage($this->date_created->getErrorMessage(false));
         }
+        if ($this->date_updated->Required) {
+            if (!$this->date_updated->IsDetailKey && EmptyValue($this->date_updated->FormValue)) {
+                $this->date_updated->addErrorMessage(str_replace("%s", $this->date_updated->caption(), $this->date_updated->RequiredErrorMessage));
+            }
+        }
+        if ($this->date_staging->Required) {
+            if (!$this->date_staging->IsDetailKey && EmptyValue($this->date_staging->FormValue)) {
+                $this->date_staging->addErrorMessage(str_replace("%s", $this->date_staging->caption(), $this->date_staging->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->date_staging->FormValue, $this->date_staging->formatPattern())) {
+            $this->date_staging->addErrorMessage($this->date_staging->getErrorMessage(false));
+        }
         if ($this->date_delivery->Required) {
             if (!$this->date_delivery->IsDetailKey && EmptyValue($this->date_delivery->FormValue)) {
                 $this->date_delivery->addErrorMessage(str_replace("%s", $this->date_delivery->caption(), $this->date_delivery->RequiredErrorMessage));
@@ -1346,11 +1440,6 @@ class BoxPickingEdit extends BoxPicking
         }
         if (!CheckDate($this->date_delivery->FormValue, $this->date_delivery->formatPattern())) {
             $this->date_delivery->addErrorMessage($this->date_delivery->getErrorMessage(false));
-        }
-        if ($this->date_updated->Required) {
-            if (!$this->date_updated->IsDetailKey && EmptyValue($this->date_updated->FormValue)) {
-                $this->date_updated->addErrorMessage(str_replace("%s", $this->date_updated->caption(), $this->date_updated->RequiredErrorMessage));
-            }
         }
 
         // Return validate result
@@ -1415,15 +1504,21 @@ class BoxPickingEdit extends BoxPicking
         // picking_date
         $this->picking_date->setDbValueDef($rsnew, UnFormatDateTime($this->picking_date->CurrentValue, $this->picking_date->formatPattern()), null, $this->picking_date->ReadOnly);
 
+        // line
+        $this->line->setDbValueDef($rsnew, $this->line->CurrentValue, null, $this->line->ReadOnly);
+
         // date_created
         $this->date_created->setDbValueDef($rsnew, UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern()), null, $this->date_created->ReadOnly);
-
-        // date_delivery
-        $this->date_delivery->setDbValueDef($rsnew, UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern()), null, $this->date_delivery->ReadOnly);
 
         // date_updated
         $this->date_updated->CurrentValue = CurrentDate();
         $this->date_updated->setDbValueDef($rsnew, $this->date_updated->CurrentValue, null);
+
+        // date_staging
+        $this->date_staging->setDbValueDef($rsnew, UnFormatDateTime($this->date_staging->CurrentValue, $this->date_staging->formatPattern()), null, $this->date_staging->ReadOnly);
+
+        // date_delivery
+        $this->date_delivery->setDbValueDef($rsnew, UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern()), null, $this->date_delivery->ReadOnly);
 
         // Update current values
         $this->setCurrentValues($rsnew);

@@ -32,6 +32,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["picking_date", [fields.picking_date.visible && fields.picking_date.required ? ew.Validators.required(fields.picking_date.caption) : null, ew.Validators.datetime(fields.picking_date.clientFormatPattern)], fields.picking_date.isInvalid],
         ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["line", [fields.line.visible && fields.line.required ? ew.Validators.required(fields.line.caption) : null], fields.line.isInvalid],
         ["users", [fields.users.visible && fields.users.required ? ew.Validators.required(fields.users.caption) : null], fields.users.isInvalid],
         ["date_delivery", [fields.date_delivery.visible && fields.date_delivery.required ? ew.Validators.required(fields.date_delivery.caption) : null, ew.Validators.datetime(fields.date_delivery.clientFormatPattern)], fields.date_delivery.isInvalid],
         ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid]
@@ -292,6 +293,18 @@ loadjs.ready("fstagingedit", function() {
     ew.createSelect(options);
 });
 </script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <div id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <label id="elh_staging_line" for="x_line" class="<?= $Page->LeftColumnClass ?>"><?= $Page->line->caption() ?><?= $Page->line->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->line->cellAttributes() ?>>
+<span id="el_staging_line">
+<input type="<?= $Page->line->getInputTextType() ?>" name="x_line" id="x_line" data-table="staging" data-field="x_line" value="<?= $Page->line->EditValue ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"<?= $Page->line->editAttributes() ?> aria-describedby="x_line_help">
+<?= $Page->line->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->line->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

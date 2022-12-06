@@ -523,11 +523,16 @@ class TransferBinPieceView extends TransferBinPiece
         $this->id->setVisibility();
         $this->source_location->setVisibility();
         $this->article->setVisibility();
+        $this->description->setVisibility();
         $this->destination_location->setVisibility();
         $this->su->setVisibility();
+        $this->qty->setVisibility();
+        $this->actual->setVisibility();
         $this->user->setVisibility();
+        $this->status->setVisibility();
         $this->date_upload->setVisibility();
         $this->date_confirmation->setVisibility();
+        $this->time_confirmation->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -738,11 +743,16 @@ class TransferBinPieceView extends TransferBinPiece
         $this->id->setDbValue($row['id']);
         $this->source_location->setDbValue($row['source_location']);
         $this->article->setDbValue($row['article']);
+        $this->description->setDbValue($row['description']);
         $this->destination_location->setDbValue($row['destination_location']);
         $this->su->setDbValue($row['su']);
+        $this->qty->setDbValue($row['qty']);
+        $this->actual->setDbValue($row['actual']);
         $this->user->setDbValue($row['user']);
+        $this->status->setDbValue($row['status']);
         $this->date_upload->setDbValue($row['date_upload']);
         $this->date_confirmation->setDbValue($row['date_confirmation']);
+        $this->time_confirmation->setDbValue($row['time_confirmation']);
     }
 
     // Return a row with default values
@@ -752,11 +762,16 @@ class TransferBinPieceView extends TransferBinPiece
         $row['id'] = $this->id->DefaultValue;
         $row['source_location'] = $this->source_location->DefaultValue;
         $row['article'] = $this->article->DefaultValue;
+        $row['description'] = $this->description->DefaultValue;
         $row['destination_location'] = $this->destination_location->DefaultValue;
         $row['su'] = $this->su->DefaultValue;
+        $row['qty'] = $this->qty->DefaultValue;
+        $row['actual'] = $this->actual->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['status'] = $this->status->DefaultValue;
         $row['date_upload'] = $this->date_upload->DefaultValue;
         $row['date_confirmation'] = $this->date_confirmation->DefaultValue;
+        $row['time_confirmation'] = $this->time_confirmation->DefaultValue;
         return $row;
     }
 
@@ -784,15 +799,25 @@ class TransferBinPieceView extends TransferBinPiece
 
         // article
 
+        // description
+
         // destination_location
 
         // su
 
+        // qty
+
+        // actual
+
         // user
+
+        // status
 
         // date_upload
 
         // date_confirmation
+
+        // time_confirmation
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -809,6 +834,10 @@ class TransferBinPieceView extends TransferBinPiece
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
 
+            // description
+            $this->description->ViewValue = $this->description->CurrentValue;
+            $this->description->ViewCustomAttributes = "";
+
             // destination_location
             $this->destination_location->ViewValue = $this->destination_location->CurrentValue;
             $this->destination_location->ViewCustomAttributes = "";
@@ -817,9 +846,23 @@ class TransferBinPieceView extends TransferBinPiece
             $this->su->ViewValue = $this->su->CurrentValue;
             $this->su->ViewCustomAttributes = "";
 
+            // qty
+            $this->qty->ViewValue = $this->qty->CurrentValue;
+            $this->qty->ViewValue = FormatNumber($this->qty->ViewValue, $this->qty->formatPattern());
+            $this->qty->ViewCustomAttributes = "";
+
+            // actual
+            $this->actual->ViewValue = $this->actual->CurrentValue;
+            $this->actual->ViewValue = FormatNumber($this->actual->ViewValue, $this->actual->formatPattern());
+            $this->actual->ViewCustomAttributes = "";
+
             // user
             $this->user->ViewValue = $this->user->CurrentValue;
             $this->user->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
 
             // date_upload
             $this->date_upload->ViewValue = $this->date_upload->CurrentValue;
@@ -830,6 +873,11 @@ class TransferBinPieceView extends TransferBinPiece
             $this->date_confirmation->ViewValue = $this->date_confirmation->CurrentValue;
             $this->date_confirmation->ViewValue = FormatDateTime($this->date_confirmation->ViewValue, $this->date_confirmation->formatPattern());
             $this->date_confirmation->ViewCustomAttributes = "";
+
+            // time_confirmation
+            $this->time_confirmation->ViewValue = $this->time_confirmation->CurrentValue;
+            $this->time_confirmation->ViewValue = FormatDateTime($this->time_confirmation->ViewValue, $this->time_confirmation->formatPattern());
+            $this->time_confirmation->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -846,6 +894,11 @@ class TransferBinPieceView extends TransferBinPiece
             $this->article->HrefValue = "";
             $this->article->TooltipValue = "";
 
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+            $this->description->TooltipValue = "";
+
             // destination_location
             $this->destination_location->LinkCustomAttributes = "";
             $this->destination_location->HrefValue = "";
@@ -856,10 +909,25 @@ class TransferBinPieceView extends TransferBinPiece
             $this->su->HrefValue = "";
             $this->su->TooltipValue = "";
 
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+            $this->qty->TooltipValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+            $this->actual->TooltipValue = "";
+
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
             $this->user->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
 
             // date_upload
             $this->date_upload->LinkCustomAttributes = "";
@@ -870,6 +938,11 @@ class TransferBinPieceView extends TransferBinPiece
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
             $this->date_confirmation->TooltipValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
+            $this->time_confirmation->TooltipValue = "";
         }
 
         // Call Row Rendered event

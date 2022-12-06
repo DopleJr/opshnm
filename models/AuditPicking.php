@@ -34,6 +34,7 @@ class AuditPicking extends DbTable
     public $id;
     public $store_name;
     public $store_code;
+    public $line;
     public $box_id;
     public $type;
     public $concept;
@@ -125,7 +126,14 @@ class AuditPicking extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'audit_picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'audit_picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'audit_picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // store_code
@@ -149,8 +157,49 @@ class AuditPicking extends DbTable
         );
         $this->store_code->InputTextType = "text";
         $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'audit_picking', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'audit_picking', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'audit_picking', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_code'] = &$this->store_code;
+
+        // line
+        $this->line = new DbField(
+            'audit_picking',
+            'audit_picking',
+            'x_line',
+            'line',
+            '`line`',
+            '`line`',
+            200,
+            10,
+            -1,
+            false,
+            '`line`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'SELECT'
+        );
+        $this->line->InputTextType = "text";
+        $this->line->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->line->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->line->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->line->Lookup = new Lookup('line', 'audit_picking', true, 'line', ["line","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->line->Lookup = new Lookup('line', 'audit_picking', true, 'line', ["line","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->line->OptionCount = 7;
+        $this->Fields['line'] = &$this->line;
 
         // box_id
         $this->box_id = new DbField(
@@ -174,7 +223,14 @@ class AuditPicking extends DbTable
         $this->box_id->InputTextType = "text";
         $this->box_id->Required = true; // Required field
         $this->box_id->UseFilter = true; // Table header filter
-        $this->box_id->Lookup = new Lookup('box_id', 'audit_picking', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_id->Lookup = new Lookup('box_id', 'audit_picking', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_id->Lookup = new Lookup('box_id', 'audit_picking', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->box_id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->box_id->Param, "CustomMsg");
         $this->Fields['box_id'] = &$this->box_id;
 
@@ -199,7 +255,14 @@ class AuditPicking extends DbTable
         );
         $this->type->InputTextType = "text";
         $this->type->UseFilter = true; // Table header filter
-        $this->type->Lookup = new Lookup('type', 'audit_picking', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->type->Lookup = new Lookup('type', 'audit_picking', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->type->Lookup = new Lookup('type', 'audit_picking', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['type'] = &$this->type;
 
         // concept
@@ -223,7 +286,14 @@ class AuditPicking extends DbTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'audit_picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'audit_picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'audit_picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['concept'] = &$this->concept;
 
         // quantity
@@ -247,7 +317,14 @@ class AuditPicking extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'audit_picking', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'audit_picking', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'audit_picking', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['quantity'] = &$this->quantity;
 
@@ -272,7 +349,14 @@ class AuditPicking extends DbTable
         );
         $this->status->InputTextType = "text";
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'audit_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'audit_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'audit_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['status'] = &$this->status;
 
         // users
@@ -296,7 +380,14 @@ class AuditPicking extends DbTable
         );
         $this->users->InputTextType = "text";
         $this->users->UseFilter = true; // Table header filter
-        $this->users->Lookup = new Lookup('users', 'audit_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->users->Lookup = new Lookup('users', 'audit_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->users->Lookup = new Lookup('users', 'audit_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['users'] = &$this->users;
 
         // picking_date
@@ -320,7 +411,14 @@ class AuditPicking extends DbTable
         );
         $this->picking_date->InputTextType = "text";
         $this->picking_date->UseFilter = true; // Table header filter
-        $this->picking_date->Lookup = new Lookup('picking_date', 'audit_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picking_date->Lookup = new Lookup('picking_date', 'audit_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picking_date->Lookup = new Lookup('picking_date', 'audit_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['picking_date'] = &$this->picking_date;
 
@@ -757,6 +855,7 @@ class AuditPicking extends DbTable
         $this->id->DbValue = $row['id'];
         $this->store_name->DbValue = $row['store_name'];
         $this->store_code->DbValue = $row['store_code'];
+        $this->line->DbValue = $row['line'];
         $this->box_id->DbValue = $row['box_id'];
         $this->type->DbValue = $row['type'];
         $this->concept->DbValue = $row['concept'];
@@ -1085,6 +1184,7 @@ class AuditPicking extends DbTable
         $this->id->setDbValue($row['id']);
         $this->store_name->setDbValue($row['store_name']);
         $this->store_code->setDbValue($row['store_code']);
+        $this->line->setDbValue($row['line']);
         $this->box_id->setDbValue($row['box_id']);
         $this->type->setDbValue($row['type']);
         $this->concept->setDbValue($row['concept']);
@@ -1112,6 +1212,9 @@ class AuditPicking extends DbTable
 
         // store_code
         $this->store_code->CellCssStyle = "white-space: nowrap;";
+
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
 
         // box_id
         $this->box_id->CellCssStyle = "white-space: nowrap;";
@@ -1145,6 +1248,14 @@ class AuditPicking extends DbTable
         // store_code
         $this->store_code->ViewValue = $this->store_code->CurrentValue;
         $this->store_code->ViewCustomAttributes = "";
+
+        // line
+        if (strval($this->line->CurrentValue) != "") {
+            $this->line->ViewValue = $this->line->optionCaption($this->line->CurrentValue);
+        } else {
+            $this->line->ViewValue = null;
+        }
+        $this->line->ViewCustomAttributes = "";
 
         // box_id
         $this->box_id->ViewValue = $this->box_id->CurrentValue;
@@ -1190,6 +1301,11 @@ class AuditPicking extends DbTable
         $this->store_code->LinkCustomAttributes = "";
         $this->store_code->HrefValue = "";
         $this->store_code->TooltipValue = "";
+
+        // line
+        $this->line->LinkCustomAttributes = "";
+        $this->line->HrefValue = "";
+        $this->line->TooltipValue = "";
 
         // box_id
         $this->box_id->LinkCustomAttributes = "";
@@ -1265,9 +1381,15 @@ class AuditPicking extends DbTable
         $this->store_code->EditValue = $this->store_code->CurrentValue;
         $this->store_code->PlaceHolder = RemoveHtml($this->store_code->caption());
 
+        // line
+        $this->line->setupEditAttributes();
+        $this->line->EditCustomAttributes = "";
+        $this->line->EditValue = $this->line->options(true);
+        $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
         // box_id
         $this->box_id->setupEditAttributes();
-        $this->box_id->EditCustomAttributes = "";
+        $this->box_id->EditCustomAttributes = 'autofocus';
         if (!$this->box_id->Raw) {
             $this->box_id->CurrentValue = HtmlDecode($this->box_id->CurrentValue);
         }
@@ -1356,6 +1478,7 @@ class AuditPicking extends DbTable
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->store_name);
                     $doc->exportCaption($this->store_code);
+                    $doc->exportCaption($this->line);
                     $doc->exportCaption($this->box_id);
                     $doc->exportCaption($this->type);
                     $doc->exportCaption($this->concept);
@@ -1367,6 +1490,7 @@ class AuditPicking extends DbTable
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->store_name);
                     $doc->exportCaption($this->store_code);
+                    $doc->exportCaption($this->line);
                     $doc->exportCaption($this->box_id);
                     $doc->exportCaption($this->type);
                     $doc->exportCaption($this->concept);
@@ -1406,6 +1530,7 @@ class AuditPicking extends DbTable
                         $doc->exportField($this->id);
                         $doc->exportField($this->store_name);
                         $doc->exportField($this->store_code);
+                        $doc->exportField($this->line);
                         $doc->exportField($this->box_id);
                         $doc->exportField($this->type);
                         $doc->exportField($this->concept);
@@ -1417,6 +1542,7 @@ class AuditPicking extends DbTable
                         $doc->exportField($this->id);
                         $doc->exportField($this->store_name);
                         $doc->exportField($this->store_code);
+                        $doc->exportField($this->line);
                         $doc->exportField($this->box_id);
                         $doc->exportField($this->type);
                         $doc->exportField($this->concept);
@@ -1501,33 +1627,33 @@ class AuditPicking extends DbTable
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        		$_id  = $rsnew["id"];
-                $_id2  = $rsnew["id"];
-                $_box_id  = $rsnew["box_id"];
-                $_status1  = 'Match';
-                $_status2  = 'Unmatch';
-                $_status3  = 'Scanned';
-                $currentDate = CurrentDate();
-                $currentUser = CurrentUsername();
-                $compare1 = "SELECT count(`box_id`) FROM `box_picking` WHERE `box_id` =  '$_box_id' ";
-                $_compare1 = ExecuteScalar($compare1);
-                $_result_false = "DELETE FROM`box_picking` WHERE id = '$_id' ";
-                $_result_false2 = "UPDATE `box_picking` SET `status` = '$_status1',
-                 `picking_date` = '$currentDate' , `users` = '$currentUser'
-                 WHERE `box_id` =  '$_box_id' AND `status`='$_status2'  ";
-                $_result_true  = "UPDATE `box_picking` SET `status` = '$_status3', `picking_date` = '$currentDate' , `users` = '$currentUser' WHERE id = '$_id'  ";
-                if($_compare1 == 1 ){
-                ExecuteStatement($_result_true);
-                	//console.log('betul');
-                }
-                elseif($_compare1 == 2  ){
-                ExecuteStatement($_result_false);
-                ExecuteStatement($_result_false2);
-                }
-                elseif($_compare1 >= 2  ){
-                ExecuteStatement($_result_false);
-                ExecuteStatement($_result_false2);
-                }
+        			$_id  = $rsnew["id"];
+                    $_id2  = $rsnew["id"];
+                    $_box_id  = $rsnew["box_id"];
+                    $_status1  = 'Match';
+                    $_status2  = 'Unmatch';
+                    $_status3  = 'Scanned';
+                        $currentDate = CurrentDate();
+                        $currentUser = CurrentUsername();
+                        $compare1 = "SELECT count(`box_id`) FROM `box_picking` WHERE `box_id` =  '$_box_id' ";
+                        $_compare1 = ExecuteScalar($compare1);
+                        $_result_false = "DELETE FROM`box_picking` WHERE id = '$_id' ";
+                        $_result_false2 = "UPDATE `box_picking` SET `status` = '$_status1',
+                        `picking_date` = '$currentDate' , `users` = '$currentUser'
+                        WHERE `box_id` =  '$_box_id' AND `status`='$_status2'  ";
+                        $_result_true  = "UPDATE `box_picking` SET `status` = '$_status3', `picking_date` = '$currentDate' , `users` = '$currentUser' WHERE id = '$_id'  ";
+                        if($_compare1 == 1 ){
+                        ExecuteStatement($_result_true);
+                            //console.log('betul');
+                        }
+                        elseif($_compare1 == 2  ){
+                        ExecuteStatement($_result_false);
+                        ExecuteStatement($_result_false2);
+                        }
+                        elseif($_compare1 >= 2  ){
+                        ExecuteStatement($_result_false);
+                        ExecuteStatement($_result_false2);
+                        }
     }
 
     // Row Updating event
@@ -1629,15 +1755,15 @@ class AuditPicking extends DbTable
                 color: aliceblue;
                 background-color: grey
                 ";}
-         elseif ($this->status->ViewValue == "Quarantine") { 
-                $this->status->ViewAttrs["style"] = "
-                color: aliceblue;
-                background-color: red
-                ";}
          elseif ($this->status->ViewValue == "Scanned") { 
                 $this->status->ViewAttrs["style"] = "
                 color: aliceblue;
                 background-color: orange
+                ";}
+         elseif ($this->status->ViewValue == "Staging") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: blue
                 ";}
     }
 

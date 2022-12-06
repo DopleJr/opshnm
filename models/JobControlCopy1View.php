@@ -531,6 +531,7 @@ class JobControlCopy1View extends JobControlCopy1
         $this->id->setVisibility();
         $this->creation_date->setVisibility();
         $this->store_id->setVisibility();
+        $this->concept->setVisibility();
         $this->area->setVisibility();
         $this->aisle->setVisibility();
         $this->user->setVisibility();
@@ -557,6 +558,7 @@ class JobControlCopy1View extends JobControlCopy1
         // Set up lookup cache
         $this->setupLookupOptions($this->creation_date);
         $this->setupLookupOptions($this->store_id);
+        $this->setupLookupOptions($this->concept);
         $this->setupLookupOptions($this->area);
         $this->setupLookupOptions($this->aisle);
         $this->setupLookupOptions($this->user);
@@ -748,6 +750,7 @@ class JobControlCopy1View extends JobControlCopy1
         $this->id->setDbValue($row['id']);
         $this->creation_date->setDbValue($row['creation_date']);
         $this->store_id->setDbValue($row['store_id']);
+        $this->concept->setDbValue($row['concept']);
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
@@ -765,6 +768,7 @@ class JobControlCopy1View extends JobControlCopy1
         $row['id'] = $this->id->DefaultValue;
         $row['creation_date'] = $this->creation_date->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
+        $row['concept'] = $this->concept->DefaultValue;
         $row['area'] = $this->area->DefaultValue;
         $row['aisle'] = $this->aisle->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
@@ -799,6 +803,8 @@ class JobControlCopy1View extends JobControlCopy1
         // creation_date
 
         // store_id
+
+        // concept
 
         // area
 
@@ -887,6 +893,30 @@ class JobControlCopy1View extends JobControlCopy1
                 $this->store_id->ViewValue = null;
             }
             $this->store_id->ViewCustomAttributes = "";
+
+            // concept
+            $curVal = strval($this->concept->CurrentValue);
+            if ($curVal != "") {
+                $this->concept->ViewValue = $this->concept->lookupCacheOption($curVal);
+                if ($this->concept->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`concept`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->concept->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->concept->Lookup->renderViewRow($rswrk[0]);
+                        $this->concept->ViewValue = $this->concept->displayValue($arwrk);
+                    } else {
+                        $this->concept->ViewValue = $this->concept->CurrentValue;
+                    }
+                }
+            } else {
+                $this->concept->ViewValue = null;
+            }
+            $this->concept->ViewCustomAttributes = "";
 
             // area
             $curVal = strval($this->area->CurrentValue);
@@ -1019,6 +1049,11 @@ class JobControlCopy1View extends JobControlCopy1
             $this->store_id->HrefValue = "";
             $this->store_id->TooltipValue = "";
 
+            // concept
+            $this->concept->LinkCustomAttributes = "";
+            $this->concept->HrefValue = "";
+            $this->concept->TooltipValue = "";
+
             // area
             $this->area->LinkCustomAttributes = "";
             $this->area->HrefValue = "";
@@ -1101,6 +1136,8 @@ class JobControlCopy1View extends JobControlCopy1
                         return "`picker` is Null  ";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_concept":
                     break;
                 case "x_area":
                     $lookupFilter = function () {

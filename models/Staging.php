@@ -43,6 +43,7 @@ class Staging extends DbTable
     public $picking_date;
     public $date_created;
     public $status;
+    public $line;
     public $users;
     public $date_delivery;
     public $date_updated;
@@ -107,7 +108,14 @@ class Staging extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'staging', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'staging', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'staging', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -133,7 +141,14 @@ class Staging extends DbTable
         $this->week->InputTextType = "text";
         $this->week->IsCustom = true; // Custom field
         $this->week->UseFilter = true; // Table header filter
-        $this->week->Lookup = new Lookup('week', 'staging', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->week->Lookup = new Lookup('week', 'staging', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->week->Lookup = new Lookup('week', 'staging', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['week'] = &$this->week;
 
         // aging
@@ -158,7 +173,14 @@ class Staging extends DbTable
         $this->aging->InputTextType = "text";
         $this->aging->IsCustom = true; // Custom field
         $this->aging->UseFilter = true; // Table header filter
-        $this->aging->Lookup = new Lookup('aging', 'staging', true, 'aging', ["aging","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->aging->Lookup = new Lookup('aging', 'staging', true, 'aging', ["aging","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->aging->Lookup = new Lookup('aging', 'staging', true, 'aging', ["aging","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->aging->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['aging'] = &$this->aging;
 
@@ -183,7 +205,14 @@ class Staging extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'staging', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'staging', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'staging', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // store_code
@@ -207,7 +236,14 @@ class Staging extends DbTable
         );
         $this->store_code->InputTextType = "text";
         $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'staging', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'staging', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'staging', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_code'] = &$this->store_code;
 
         // box_id
@@ -231,7 +267,14 @@ class Staging extends DbTable
         );
         $this->box_id->InputTextType = "text";
         $this->box_id->UseFilter = true; // Table header filter
-        $this->box_id->Lookup = new Lookup('box_id', 'staging', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_id->Lookup = new Lookup('box_id', 'staging', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_id->Lookup = new Lookup('box_id', 'staging', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_id'] = &$this->box_id;
 
         // type
@@ -255,7 +298,14 @@ class Staging extends DbTable
         );
         $this->type->InputTextType = "text";
         $this->type->UseFilter = true; // Table header filter
-        $this->type->Lookup = new Lookup('type', 'staging', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->type->Lookup = new Lookup('type', 'staging', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->type->Lookup = new Lookup('type', 'staging', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['type'] = &$this->type;
 
         // concept
@@ -279,7 +329,14 @@ class Staging extends DbTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'staging', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'staging', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'staging', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['concept'] = &$this->concept;
 
         // quantity
@@ -303,7 +360,14 @@ class Staging extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'staging', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'staging', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'staging', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['quantity'] = &$this->quantity;
 
@@ -328,7 +392,14 @@ class Staging extends DbTable
         );
         $this->picking_date->InputTextType = "text";
         $this->picking_date->UseFilter = true; // Table header filter
-        $this->picking_date->Lookup = new Lookup('picking_date', 'staging', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picking_date->Lookup = new Lookup('picking_date', 'staging', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picking_date->Lookup = new Lookup('picking_date', 'staging', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['picking_date'] = &$this->picking_date;
 
@@ -353,7 +424,14 @@ class Staging extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'staging', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'staging', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'staging', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -380,9 +458,47 @@ class Staging extends DbTable
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'staging', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'staging', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'staging', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->status->OptionCount = 2;
         $this->Fields['status'] = &$this->status;
+
+        // line
+        $this->line = new DbField(
+            'staging',
+            'staging',
+            'x_line',
+            'line',
+            '`line`',
+            '`line`',
+            200,
+            10,
+            -1,
+            false,
+            '`line`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->line->InputTextType = "text";
+        $this->line->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->line->Lookup = new Lookup('line', 'staging', true, 'line', ["line","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->line->Lookup = new Lookup('line', 'staging', true, 'line', ["line","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['line'] = &$this->line;
 
         // users
         $this->users = new DbField(
@@ -405,7 +521,14 @@ class Staging extends DbTable
         );
         $this->users->InputTextType = "text";
         $this->users->UseFilter = true; // Table header filter
-        $this->users->Lookup = new Lookup('users', 'staging', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->users->Lookup = new Lookup('users', 'staging', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->users->Lookup = new Lookup('users', 'staging', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['users'] = &$this->users;
 
         // date_delivery
@@ -453,7 +576,14 @@ class Staging extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'staging', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'staging', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'staging', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 
@@ -899,6 +1029,7 @@ class Staging extends DbTable
         $this->picking_date->DbValue = $row['picking_date'];
         $this->date_created->DbValue = $row['date_created'];
         $this->status->DbValue = $row['status'];
+        $this->line->DbValue = $row['line'];
         $this->users->DbValue = $row['users'];
         $this->date_delivery->DbValue = $row['date_delivery'];
         $this->date_updated->DbValue = $row['date_updated'];
@@ -1232,6 +1363,7 @@ class Staging extends DbTable
         $this->picking_date->setDbValue($row['picking_date']);
         $this->date_created->setDbValue($row['date_created']);
         $this->status->setDbValue($row['status']);
+        $this->line->setDbValue($row['line']);
         $this->users->setDbValue($row['users']);
         $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -1282,6 +1414,9 @@ class Staging extends DbTable
 
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
 
         // users
         $this->users->CellCssStyle = "white-space: nowrap;";
@@ -1347,6 +1482,10 @@ class Staging extends DbTable
             $this->status->ViewValue = null;
         }
         $this->status->ViewCustomAttributes = "";
+
+        // line
+        $this->line->ViewValue = $this->line->CurrentValue;
+        $this->line->ViewCustomAttributes = "";
 
         // users
         $this->users->ViewValue = $this->users->CurrentValue;
@@ -1421,6 +1560,11 @@ class Staging extends DbTable
         $this->status->LinkCustomAttributes = "";
         $this->status->HrefValue = "";
         $this->status->TooltipValue = "";
+
+        // line
+        $this->line->LinkCustomAttributes = "";
+        $this->line->HrefValue = "";
+        $this->line->TooltipValue = "";
 
         // users
         $this->users->LinkCustomAttributes = "";
@@ -1548,6 +1692,15 @@ class Staging extends DbTable
         $this->status->EditValue = $this->status->options(true);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+        // line
+        $this->line->setupEditAttributes();
+        $this->line->EditCustomAttributes = "";
+        if (!$this->line->Raw) {
+            $this->line->CurrentValue = HtmlDecode($this->line->CurrentValue);
+        }
+        $this->line->EditValue = $this->line->CurrentValue;
+        $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
         // users
 
         // date_delivery
@@ -1598,6 +1751,7 @@ class Staging extends DbTable
                     $doc->exportCaption($this->picking_date);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->line);
                     $doc->exportCaption($this->users);
                     $doc->exportCaption($this->date_delivery);
                     $doc->exportCaption($this->date_updated);
@@ -1614,6 +1768,7 @@ class Staging extends DbTable
                     $doc->exportCaption($this->picking_date);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->line);
                     $doc->exportCaption($this->users);
                     $doc->exportCaption($this->date_delivery);
                     $doc->exportCaption($this->date_updated);
@@ -1658,6 +1813,7 @@ class Staging extends DbTable
                         $doc->exportField($this->picking_date);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->line);
                         $doc->exportField($this->users);
                         $doc->exportField($this->date_delivery);
                         $doc->exportField($this->date_updated);
@@ -1674,6 +1830,7 @@ class Staging extends DbTable
                         $doc->exportField($this->picking_date);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->line);
                         $doc->exportField($this->users);
                         $doc->exportField($this->date_delivery);
                         $doc->exportField($this->date_updated);
@@ -1789,8 +1946,10 @@ class Staging extends DbTable
         $_compare2 = ExecuteScalar($compare2);
         $compare3 = "SELECT count(`box_id`) FROM report_outbound WHERE `box_id` =  '$_box_id' AND `store_code` = '$_store_code' AND `concept` = '$_concept' ";
         $_compare3 = ExecuteScalar($compare3);
+        $compare4 = "SELECT `line` FROM `box_picking` WHERE `box_id` =  '$_box_id' AND `store_code` = '$_store_code' AND `concept` = '$_concept' ";
+        $_compare4 = ExecuteScalar($compare4);
         $_result_true  = "DELETE FROM staging WHERE  id = '$_id' ";
-        $_result_false  = "UPDATE staging SET `status` = '$_status1', `date_created` = '$currentDate2' ,`date_delivery` =  null WHERE id = '$_id2' ";
+        $_result_false  = "UPDATE staging SET `status` = '$_status1',`line` = '$_compare4', `date_created` = '$currentDate2' ,`date_delivery` =  null WHERE id = '$_id2' ";
         $_result_false2  = "DELETE FROM staging WHERE  id = '$_id' ";
         if($_compare1 == $_compare2 ){
         ExecuteStatement($_result_true);
@@ -1905,17 +2064,16 @@ class Staging extends DbTable
                 color: aliceblue;
                 background-color: grey
                 ";}
-         elseif ($this->status->ViewValue == "Quarantine") { 
-                $this->status->ViewAttrs["style"] = "
-                color: aliceblue;
-                background-color: red
-                ";}
-         elseif ($this->status->ViewValue == "Delivered") { 
+         elseif ($this->status->ViewValue == "Scanned") { 
                 $this->status->ViewAttrs["style"] = "
                 color: aliceblue;
                 background-color: orange
-                ";
-                }
+                ";}
+         elseif ($this->status->ViewValue == "Staging") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: blue
+                ";}
          if ($this->Export <> "") {
          //$this->box_id->ViewValue = "'" .$this->box_id->ViewValue;
          $this->box_id->ViewValue = "=\"" . $this->box_id->ViewValue . "\"";

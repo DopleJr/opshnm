@@ -114,7 +114,14 @@ class ReportOutbound extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'report_outbound', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'report_outbound', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'report_outbound', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -140,7 +147,14 @@ class ReportOutbound extends DbTable
         $this->Week->InputTextType = "text";
         $this->Week->IsCustom = true; // Custom field
         $this->Week->UseFilter = true; // Table header filter
-        $this->Week->Lookup = new Lookup('Week', 'report_outbound', true, 'Week', ["Week","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Week->Lookup = new Lookup('Week', 'report_outbound', true, 'Week', ["Week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Week->Lookup = new Lookup('Week', 'report_outbound', true, 'Week', ["Week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Week'] = &$this->Week;
 
         // box_id
@@ -164,7 +178,14 @@ class ReportOutbound extends DbTable
         );
         $this->box_id->InputTextType = "text";
         $this->box_id->UseFilter = true; // Table header filter
-        $this->box_id->Lookup = new Lookup('box_id', 'report_outbound', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_id->Lookup = new Lookup('box_id', 'report_outbound', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_id->Lookup = new Lookup('box_id', 'report_outbound', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_id'] = &$this->box_id;
 
         // date_delivery
@@ -188,7 +209,14 @@ class ReportOutbound extends DbTable
         );
         $this->date_delivery->InputTextType = "text";
         $this->date_delivery->UseFilter = true; // Table header filter
-        $this->date_delivery->Lookup = new Lookup('date_delivery', 'report_outbound', true, 'date_delivery', ["date_delivery","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_delivery->Lookup = new Lookup('date_delivery', 'report_outbound', true, 'date_delivery', ["date_delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_delivery->Lookup = new Lookup('date_delivery', 'report_outbound', true, 'date_delivery', ["date_delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_delivery->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_delivery'] = &$this->date_delivery;
 
@@ -213,7 +241,14 @@ class ReportOutbound extends DbTable
         );
         $this->box_type->InputTextType = "text";
         $this->box_type->UseFilter = true; // Table header filter
-        $this->box_type->Lookup = new Lookup('box_type', 'report_outbound', true, 'box_type', ["box_type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_type->Lookup = new Lookup('box_type', 'report_outbound', true, 'box_type', ["box_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_type->Lookup = new Lookup('box_type', 'report_outbound', true, 'box_type', ["box_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_type'] = &$this->box_type;
 
         // check_by
@@ -237,7 +272,14 @@ class ReportOutbound extends DbTable
         );
         $this->check_by->InputTextType = "text";
         $this->check_by->UseFilter = true; // Table header filter
-        $this->check_by->Lookup = new Lookup('check_by', 'report_outbound', true, 'check_by', ["check_by","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->check_by->Lookup = new Lookup('check_by', 'report_outbound', true, 'check_by', ["check_by","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->check_by->Lookup = new Lookup('check_by', 'report_outbound', true, 'check_by', ["check_by","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['check_by'] = &$this->check_by;
 
         // quantity
@@ -261,7 +303,14 @@ class ReportOutbound extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'report_outbound', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'report_outbound', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'report_outbound', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['quantity'] = &$this->quantity;
 
         // concept
@@ -285,7 +334,14 @@ class ReportOutbound extends DbTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'report_outbound', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'report_outbound', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'report_outbound', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['concept'] = &$this->concept;
 
         // store_code
@@ -309,7 +365,14 @@ class ReportOutbound extends DbTable
         );
         $this->store_code->InputTextType = "text";
         $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'report_outbound', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'report_outbound', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'report_outbound', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_code'] = &$this->store_code;
 
         // store_name
@@ -333,7 +396,14 @@ class ReportOutbound extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'report_outbound', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'report_outbound', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'report_outbound', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // remark
@@ -357,7 +427,14 @@ class ReportOutbound extends DbTable
         );
         $this->remark->InputTextType = "text";
         $this->remark->UseFilter = true; // Table header filter
-        $this->remark->Lookup = new Lookup('remark', 'report_outbound', true, 'remark', ["remark","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->remark->Lookup = new Lookup('remark', 'report_outbound', true, 'remark', ["remark","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->remark->Lookup = new Lookup('remark', 'report_outbound', true, 'remark', ["remark","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['remark'] = &$this->remark;
 
         // no_delivery
@@ -381,7 +458,14 @@ class ReportOutbound extends DbTable
         );
         $this->no_delivery->InputTextType = "text";
         $this->no_delivery->UseFilter = true; // Table header filter
-        $this->no_delivery->Lookup = new Lookup('no_delivery', 'report_outbound', true, 'no_delivery', ["no_delivery","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->no_delivery->Lookup = new Lookup('no_delivery', 'report_outbound', true, 'no_delivery', ["no_delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->no_delivery->Lookup = new Lookup('no_delivery', 'report_outbound', true, 'no_delivery', ["no_delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['no_delivery'] = &$this->no_delivery;
 
         // truck_type
@@ -405,7 +489,14 @@ class ReportOutbound extends DbTable
         );
         $this->truck_type->InputTextType = "text";
         $this->truck_type->UseFilter = true; // Table header filter
-        $this->truck_type->Lookup = new Lookup('truck_type', 'report_outbound', true, 'truck_type', ["truck_type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->truck_type->Lookup = new Lookup('truck_type', 'report_outbound', true, 'truck_type', ["truck_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->truck_type->Lookup = new Lookup('truck_type', 'report_outbound', true, 'truck_type', ["truck_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['truck_type'] = &$this->truck_type;
 
         // seal_no
@@ -429,7 +520,14 @@ class ReportOutbound extends DbTable
         );
         $this->seal_no->InputTextType = "text";
         $this->seal_no->UseFilter = true; // Table header filter
-        $this->seal_no->Lookup = new Lookup('seal_no', 'report_outbound', true, 'seal_no', ["seal_no","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->seal_no->Lookup = new Lookup('seal_no', 'report_outbound', true, 'seal_no', ["seal_no","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->seal_no->Lookup = new Lookup('seal_no', 'report_outbound', true, 'seal_no', ["seal_no","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['seal_no'] = &$this->seal_no;
 
         // truck_plate
@@ -453,7 +551,14 @@ class ReportOutbound extends DbTable
         );
         $this->truck_plate->InputTextType = "text";
         $this->truck_plate->UseFilter = true; // Table header filter
-        $this->truck_plate->Lookup = new Lookup('truck_plate', 'report_outbound', true, 'truck_plate', ["truck_plate","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->truck_plate->Lookup = new Lookup('truck_plate', 'report_outbound', true, 'truck_plate', ["truck_plate","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->truck_plate->Lookup = new Lookup('truck_plate', 'report_outbound', true, 'truck_plate', ["truck_plate","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['truck_plate'] = &$this->truck_plate;
 
         // transporter
@@ -477,7 +582,14 @@ class ReportOutbound extends DbTable
         );
         $this->transporter->InputTextType = "text";
         $this->transporter->UseFilter = true; // Table header filter
-        $this->transporter->Lookup = new Lookup('transporter', 'report_outbound', true, 'transporter', ["transporter","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->transporter->Lookup = new Lookup('transporter', 'report_outbound', true, 'transporter', ["transporter","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->transporter->Lookup = new Lookup('transporter', 'report_outbound', true, 'transporter', ["transporter","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['transporter'] = &$this->transporter;
 
         // no_hp
@@ -501,7 +613,14 @@ class ReportOutbound extends DbTable
         );
         $this->no_hp->InputTextType = "text";
         $this->no_hp->UseFilter = true; // Table header filter
-        $this->no_hp->Lookup = new Lookup('no_hp', 'report_outbound', true, 'no_hp', ["no_hp","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->no_hp->Lookup = new Lookup('no_hp', 'report_outbound', true, 'no_hp', ["no_hp","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->no_hp->Lookup = new Lookup('no_hp', 'report_outbound', true, 'no_hp', ["no_hp","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['no_hp'] = &$this->no_hp;
 
         // checker
@@ -525,7 +644,14 @@ class ReportOutbound extends DbTable
         );
         $this->checker->InputTextType = "text";
         $this->checker->UseFilter = true; // Table header filter
-        $this->checker->Lookup = new Lookup('checker', 'report_outbound', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->checker->Lookup = new Lookup('checker', 'report_outbound', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->checker->Lookup = new Lookup('checker', 'report_outbound', true, 'checker', ["checker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['checker'] = &$this->checker;
 
         // admin
@@ -549,7 +675,14 @@ class ReportOutbound extends DbTable
         );
         $this->admin->InputTextType = "text";
         $this->admin->UseFilter = true; // Table header filter
-        $this->admin->Lookup = new Lookup('admin', 'report_outbound', true, 'admin', ["admin","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->admin->Lookup = new Lookup('admin', 'report_outbound', true, 'admin', ["admin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->admin->Lookup = new Lookup('admin', 'report_outbound', true, 'admin', ["admin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['admin'] = &$this->admin;
 
         // remarks_box
@@ -573,7 +706,14 @@ class ReportOutbound extends DbTable
         );
         $this->remarks_box->InputTextType = "text";
         $this->remarks_box->UseFilter = true; // Table header filter
-        $this->remarks_box->Lookup = new Lookup('remarks_box', 'report_outbound', true, 'remarks_box', ["remarks_box","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->remarks_box->Lookup = new Lookup('remarks_box', 'report_outbound', true, 'remarks_box', ["remarks_box","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->remarks_box->Lookup = new Lookup('remarks_box', 'report_outbound', true, 'remarks_box', ["remarks_box","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['remarks_box'] = &$this->remarks_box;
 
         // date_created
@@ -597,7 +737,14 @@ class ReportOutbound extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'report_outbound', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'report_outbound', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'report_outbound', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -622,7 +769,14 @@ class ReportOutbound extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'report_outbound', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'report_outbound', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'report_outbound', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 
@@ -2119,11 +2273,11 @@ class ReportOutbound extends DbTable
         //Log("Row Inserted");
         $_status = 'Match';
         $currentDate = CurrentDate();
-        $sql3 = "UPDATE staging SET `status` = '$_status' , `date_created` = '$currentDate' , `date_updated` = '$currentDate',  `date_delivery` = '".$rsnew["date_delivery"]."' WHERE `box_id` = '".$rsnew["box_id"]."' AND `store_code` = '".$rsnew["store_code"]."' AND `concept` = '".$rsnew["concept"]."' ";
+        $sql3 = "UPDATE staging SET `status` = '$_status' ,`line` = Null , `date_created` = '$currentDate' , `date_updated` = '$currentDate',  `date_delivery` = '".$rsnew["date_delivery"]."' WHERE `box_id` = '".$rsnew["box_id"]."' AND `store_code` = '".$rsnew["store_code"]."' AND `concept` = '".$rsnew["concept"]."' ";
         $result = ExecuteStatement($sql3);
         $sql4 = "UPDATE report_outbound SET `date_created` = '$currentDate' , `date_updated` = '$currentDate' WHERE `id` = '".$rsnew["id"]."' ";
         $result = ExecuteStatement($sql4);
-        $sql5 = "UPDATE box_picking SET `status` = '$_status' , `date_updated` = '$currentDate',  `date_delivery` = '".$rsnew["date_delivery"]."' WHERE `box_id` = '".$rsnew["box_id"]."' AND `store_code` = '".$rsnew["store_code"]."' AND `concept` = '".$rsnew["concept"]."' ";
+        $sql5 = "UPDATE box_picking SET `status` = '$_status' ,`line` = Null , `date_updated` = '$currentDate',  `date_delivery` = '".$rsnew["date_delivery"]."' WHERE `box_id` = '".$rsnew["box_id"]."' AND `store_code` = '".$rsnew["store_code"]."' AND `concept` = '".$rsnew["concept"]."' ";
         $result = ExecuteStatement($sql5);
     }
 
@@ -2217,7 +2371,6 @@ class ReportOutbound extends DbTable
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
         if ($this->Export <> "") {
-         //$this->box_id->ViewValue = "'" .$this->box_id->ViewValue;
          $this->box_id->ViewValue = "=\"" . $this->box_id->ViewValue . "\"";
          }
     }

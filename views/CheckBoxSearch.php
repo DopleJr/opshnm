@@ -25,7 +25,12 @@ loadjs.ready(["wrapper", "head"], function () {
     var fields = currentTable.fields;
     fcheck_boxsearch.addFields([
         ["box_code", [], fields.box_code.isInvalid],
-        ["article", [], fields.article.isInvalid]
+        ["store_id", [], fields.store_id.isInvalid],
+        ["concept", [], fields.concept.isInvalid],
+        ["article", [], fields.article.isInvalid],
+        ["confirmation_date", [ew.Validators.datetime(fields.confirmation_date.clientFormatPattern)], fields.confirmation_date.isInvalid],
+        ["y_confirmation_date", [ew.Validators.between], false],
+        ["picker", [], fields.picker.isInvalid]
     ]);
 
     // Validate form
@@ -81,8 +86,8 @@ $Page->showMessage();
     <div id="r_box_code"<?= $Page->box_code->rowAttributes() ?>>
         <label for="x_box_code" class="<?= $Page->LeftColumnClass ?>"><span id="elh_check_box_box_code"><?= $Page->box_code->caption() ?></span>
         <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_box_code" id="z_box_code" value="LIKE">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_box_code" id="z_box_code" value="=">
 </span>
         </label>
         <div class="<?= $Page->RightColumnClass ?>">
@@ -90,6 +95,42 @@ $Page->showMessage();
             <span id="el_check_box_box_code" class="ew-search-field ew-search-field-single">
 <input type="<?= $Page->box_code->getInputTextType() ?>" name="x_box_code" id="x_box_code" data-table="check_box" data-field="x_box_code" value="<?= $Page->box_code->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->box_code->getPlaceHolder()) ?>"<?= $Page->box_code->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->box_code->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->store_id->Visible) { // store_id ?>
+    <div id="r_store_id"<?= $Page->store_id->rowAttributes() ?>>
+        <label for="x_store_id" class="<?= $Page->LeftColumnClass ?>"><span id="elh_check_box_store_id"><?= $Page->store_id->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_store_id" id="z_store_id" value="=">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->store_id->cellAttributes() ?>>
+            <span id="el_check_box_store_id" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->store_id->getInputTextType() ?>" name="x_store_id" id="x_store_id" data-table="check_box" data-field="x_store_id" value="<?= $Page->store_id->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->store_id->getPlaceHolder()) ?>"<?= $Page->store_id->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->store_id->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+    <div id="r_concept"<?= $Page->concept->rowAttributes() ?>>
+        <label for="x_concept" class="<?= $Page->LeftColumnClass ?>"><span id="elh_check_box_concept"><?= $Page->concept->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_concept" id="z_concept" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->concept->cellAttributes() ?>>
+            <span id="el_check_box_concept" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->concept->getInputTextType() ?>" name="x_concept" id="x_concept" data-table="check_box" data-field="x_concept" value="<?= $Page->concept->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->concept->getPlaceHolder()) ?>"<?= $Page->concept->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->concept->getErrorMessage(false) ?></div>
 </span>
             </div>
         </div>
@@ -108,6 +149,103 @@ $Page->showMessage();
             <span id="el_check_box_article" class="ew-search-field ew-search-field-single">
 <input type="<?= $Page->article->getInputTextType() ?>" name="x_article" id="x_article" data-table="check_box" data-field="x_article" value="<?= $Page->article->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->article->getPlaceHolder()) ?>"<?= $Page->article->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->article->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->confirmation_date->Visible) { // confirmation_date ?>
+    <div id="r_confirmation_date"<?= $Page->confirmation_date->rowAttributes() ?>>
+        <label for="x_confirmation_date" class="<?= $Page->LeftColumnClass ?>"><span id="elh_check_box_confirmation_date"><?= $Page->confirmation_date->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("BETWEEN") ?>
+<input type="hidden" name="z_confirmation_date" id="z_confirmation_date" value="BETWEEN">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->confirmation_date->cellAttributes() ?>>
+            <span id="el_check_box_confirmation_date" class="ew-search-field">
+<input type="<?= $Page->confirmation_date->getInputTextType() ?>" name="x_confirmation_date" id="x_confirmation_date" data-table="check_box" data-field="x_confirmation_date" value="<?= $Page->confirmation_date->EditValue ?>" placeholder="<?= HtmlEncode($Page->confirmation_date->getPlaceHolder()) ?>"<?= $Page->confirmation_date->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->confirmation_date->getErrorMessage(false) ?></div>
+<?php if (!$Page->confirmation_date->ReadOnly && !$Page->confirmation_date->Disabled && !isset($Page->confirmation_date->EditAttrs["readonly"]) && !isset($Page->confirmation_date->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fcheck_boxsearch", "datetimepicker"], function () {
+    let format = "<?= "yyyyMMdd" ?>",
+        options = {
+            localization: {
+                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
+            },
+            display: {
+                icons: {
+                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                },
+                components: {
+                    hours: !!format.match(/h/i),
+                    minutes: !!format.match(/m/),
+                    seconds: !!format.match(/s/i),
+                    useTwentyfourHour: !!format.match(/H/)
+                }
+            },
+            meta: {
+                format
+            }
+        };
+    ew.createDateTimePicker("fcheck_boxsearch", "x_confirmation_date", ew.deepAssign({"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+                <span class="ew-search-and"><label><?= $Language->phrase("AND") ?></label></span>
+                <span id="el2_check_box_confirmation_date" class="ew-search-field2">
+<input type="<?= $Page->confirmation_date->getInputTextType() ?>" name="y_confirmation_date" id="y_confirmation_date" data-table="check_box" data-field="x_confirmation_date" value="<?= $Page->confirmation_date->EditValue2 ?>" placeholder="<?= HtmlEncode($Page->confirmation_date->getPlaceHolder()) ?>"<?= $Page->confirmation_date->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->confirmation_date->getErrorMessage(false) ?></div>
+<?php if (!$Page->confirmation_date->ReadOnly && !$Page->confirmation_date->Disabled && !isset($Page->confirmation_date->EditAttrs["readonly"]) && !isset($Page->confirmation_date->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fcheck_boxsearch", "datetimepicker"], function () {
+    let format = "<?= "yyyyMMdd" ?>",
+        options = {
+            localization: {
+                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
+            },
+            display: {
+                icons: {
+                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                },
+                components: {
+                    hours: !!format.match(/h/i),
+                    minutes: !!format.match(/m/),
+                    seconds: !!format.match(/s/i),
+                    useTwentyfourHour: !!format.match(/H/)
+                }
+            },
+            meta: {
+                format
+            }
+        };
+    ew.createDateTimePicker("fcheck_boxsearch", "y_confirmation_date", ew.deepAssign({"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->picker->Visible) { // picker ?>
+    <div id="r_picker"<?= $Page->picker->rowAttributes() ?>>
+        <label for="x_picker" class="<?= $Page->LeftColumnClass ?>"><span id="elh_check_box_picker"><?= $Page->picker->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_picker" id="z_picker" value="=">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->picker->cellAttributes() ?>>
+            <span id="el_check_box_picker" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->picker->getInputTextType() ?>" name="x_picker" id="x_picker" data-table="check_box" data-field="x_picker" value="<?= $Page->picker->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->picker->getPlaceHolder()) ?>"<?= $Page->picker->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->picker->getErrorMessage(false) ?></div>
 </span>
             </div>
         </div>

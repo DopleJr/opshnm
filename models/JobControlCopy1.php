@@ -42,6 +42,7 @@ class JobControlCopy1 extends DbTable
     public $id;
     public $creation_date;
     public $store_id;
+    public $concept;
     public $area;
     public $aisle;
     public $user;
@@ -112,7 +113,14 @@ class JobControlCopy1 extends DbTable
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = false; // Allow sort
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'job_control_copy1', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'job_control_copy1', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'job_control_copy1', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -142,7 +150,14 @@ class JobControlCopy1 extends DbTable
         $this->creation_date->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->creation_date->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->creation_date->UseFilter = true; // Table header filter
-        $this->creation_date->Lookup = new Lookup('creation_date', 'picking_pending', true, 'creation_date', ["creation_date","","",""], [], ["x_store_id[]","x_area","x_aisle[]"], [], [], [], [], '`creation_date` ASC', '', "" . CastDateFieldForLike("`creation_date`", 0, "DB") . "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->creation_date->Lookup = new Lookup('creation_date', 'picking_pending', true, 'creation_date', ["creation_date","","",""], [], ["x_store_id[]","x_concept","x_area","x_aisle[]"], [], [], [], [], '`creation_date` ASC', '', "" . CastDateFieldForLike("`creation_date`", 0, "DB") . "");
+                break;
+            default:
+                $this->creation_date->Lookup = new Lookup('creation_date', 'picking_pending', true, 'creation_date', ["creation_date","","",""], [], ["x_store_id[]","x_concept","x_area","x_aisle[]"], [], [], [], [], '`creation_date` ASC', '', "" . CastDateFieldForLike("`creation_date`", 0, "DB") . "");
+                break;
+        }
         $this->creation_date->DefaultErrorMessage = str_replace("%s", "yyyy-MM-dd", $Language->phrase("IncorrectDate"));
         $this->Fields['creation_date'] = &$this->creation_date;
 
@@ -170,8 +185,49 @@ class JobControlCopy1 extends DbTable
         $this->store_id->Sortable = false; // Allow sort
         $this->store_id->SelectMultiple = true; // Multiple select
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id","","",""], ["x_creation_date"], ["x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id","","",""], ["x_creation_date"], ["x_concept","x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id`");
+                break;
+            default:
+                $this->store_id->Lookup = new Lookup('store_id', 'picking_pending', true, 'store_id2', ["store_id","","",""], ["x_creation_date"], ["x_concept","x_area","x_aisle[]"], ["creation_date"], ["x_creation_date"], [], [], '`store_id2` ASC', '', "`store_id`");
+                break;
+        }
         $this->Fields['store_id'] = &$this->store_id;
+
+        // concept
+        $this->concept = new DbField(
+            'job_control_copy1',
+            'job_control_copy1',
+            'x_concept',
+            'concept',
+            '`concept`',
+            '`concept`',
+            200,
+            255,
+            -1,
+            false,
+            '`concept`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'SELECT'
+        );
+        $this->concept->InputTextType = "text";
+        $this->concept->Sortable = false; // Allow sort
+        $this->concept->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->concept->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->concept->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'picking_pending', true, 'concept', ["concept","","",""], ["x_creation_date","x_store_id[]"], ["x_area"], ["creation_date","store_id2"], ["x_creation_date","x_store_id2"], [], [], '', '', "`concept`");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'picking_pending', true, 'concept', ["concept","","",""], ["x_creation_date","x_store_id[]"], ["x_area"], ["creation_date","store_id2"], ["x_creation_date","x_store_id2"], [], [], '', '', "`concept`");
+                break;
+        }
+        $this->Fields['concept'] = &$this->concept;
 
         // area
         $this->area = new DbField(
@@ -198,7 +254,14 @@ class JobControlCopy1 extends DbTable
         $this->area->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->area->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->area->UseFilter = true; // Table header filter
-        $this->area->Lookup = new Lookup('area', 'picking_pending', true, 'area', ["area","","",""], ["x_creation_date","x_store_id[]"], ["x_aisle[]"], ["creation_date","store_id2"], ["x_creation_date","x_store_id2"], ["aisle"], ["x_aisle[]"], '`area` ASC', '', "`area`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->area->Lookup = new Lookup('area', 'picking_pending', true, 'area', ["area","","",""], ["x_creation_date","x_store_id[]","x_concept"], ["x_aisle[]"], ["creation_date","store_id2","concept"], ["x_creation_date","x_store_id2","x_concept"], ["aisle"], ["x_aisle[]"], '`area` ASC', '', "`area`");
+                break;
+            default:
+                $this->area->Lookup = new Lookup('area', 'picking_pending', true, 'area', ["area","","",""], ["x_creation_date","x_store_id[]","x_concept"], ["x_aisle[]"], ["creation_date","store_id2","concept"], ["x_creation_date","x_store_id2","x_concept"], ["aisle"], ["x_aisle[]"], '`area` ASC', '', "`area`");
+                break;
+        }
         $this->Fields['area'] = &$this->area;
 
         // aisle
@@ -225,7 +288,14 @@ class JobControlCopy1 extends DbTable
         $this->aisle->Sortable = false; // Allow sort
         $this->aisle->SelectMultiple = true; // Multiple select
         $this->aisle->UseFilter = true; // Table header filter
-        $this->aisle->Lookup = new Lookup('aisle', 'picking_pending', true, 'aisle2', ["aisle","","",""], ["x_area","x_creation_date","x_store_id[]"], [], ["area","creation_date","store_id2"], ["x_area","x_creation_date","x_store_id2"], [], [], '`aisle2` ASC', '', "`aisle`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->aisle->Lookup = new Lookup('aisle', 'picking_pending', true, 'aisle2', ["aisle","","",""], ["x_area","x_creation_date","x_store_id[]"], [], ["area","creation_date","store_id2"], ["x_area","x_creation_date","x_store_id2"], [], [], '`aisle2` ASC', '', "`aisle`");
+                break;
+            default:
+                $this->aisle->Lookup = new Lookup('aisle', 'picking_pending', true, 'aisle2', ["aisle","","",""], ["x_area","x_creation_date","x_store_id[]"], [], ["area","creation_date","store_id2"], ["x_area","x_creation_date","x_store_id2"], [], [], '`aisle2` ASC', '', "`aisle`");
+                break;
+        }
         $this->Fields['aisle'] = &$this->aisle;
 
         // user
@@ -253,7 +323,14 @@ class JobControlCopy1 extends DbTable
         $this->user->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->user->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
+                break;
+        }
         $this->Fields['user'] = &$this->user;
 
         // target_qty
@@ -278,7 +355,14 @@ class JobControlCopy1 extends DbTable
         $this->target_qty->InputTextType = "text";
         $this->target_qty->Sortable = false; // Allow sort
         $this->target_qty->UseFilter = true; // Table header filter
-        $this->target_qty->Lookup = new Lookup('target_qty', 'job_control_copy1', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->target_qty->Lookup = new Lookup('target_qty', 'job_control_copy1', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->target_qty->Lookup = new Lookup('target_qty', 'job_control_copy1', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['target_qty'] = &$this->target_qty;
 
         // picked_qty
@@ -303,7 +387,14 @@ class JobControlCopy1 extends DbTable
         $this->picked_qty->InputTextType = "text";
         $this->picked_qty->Sortable = false; // Allow sort
         $this->picked_qty->UseFilter = true; // Table header filter
-        $this->picked_qty->Lookup = new Lookup('picked_qty', 'job_control_copy1', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'job_control_copy1', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'job_control_copy1', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['picked_qty'] = &$this->picked_qty;
 
         // status
@@ -330,7 +421,14 @@ class JobControlCopy1 extends DbTable
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'job_control_copy1', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'job_control_copy1', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'job_control_copy1', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->status->OptionCount = 2;
         $this->Fields['status'] = &$this->status;
 
@@ -356,7 +454,14 @@ class JobControlCopy1 extends DbTable
         $this->date_created->InputTextType = "text";
         $this->date_created->Sortable = false; // Allow sort
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'job_control_copy1', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'job_control_copy1', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'job_control_copy1', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -382,7 +487,14 @@ class JobControlCopy1 extends DbTable
         $this->date_updated->InputTextType = "text";
         $this->date_updated->Sortable = false; // Allow sort
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'job_control_copy1', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'job_control_copy1', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'job_control_copy1', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 
@@ -833,6 +945,7 @@ class JobControlCopy1 extends DbTable
         $this->id->DbValue = $row['id'];
         $this->creation_date->DbValue = $row['creation_date'];
         $this->store_id->DbValue = $row['store_id'];
+        $this->concept->DbValue = $row['concept'];
         $this->area->DbValue = $row['area'];
         $this->aisle->DbValue = $row['aisle'];
         $this->user->DbValue = $row['user'];
@@ -1162,6 +1275,7 @@ class JobControlCopy1 extends DbTable
         $this->id->setDbValue($row['id']);
         $this->creation_date->setDbValue($row['creation_date']);
         $this->store_id->setDbValue($row['store_id']);
+        $this->concept->setDbValue($row['concept']);
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
@@ -1189,6 +1303,9 @@ class JobControlCopy1 extends DbTable
         $this->creation_date->CellCssStyle = "white-space: nowrap;";
 
         // store_id
+
+        // concept
+        $this->concept->CellCssStyle = "white-space: nowrap;";
 
         // area
         $this->area->CellCssStyle = "white-space: nowrap;";
@@ -1282,6 +1399,30 @@ class JobControlCopy1 extends DbTable
             $this->store_id->ViewValue = null;
         }
         $this->store_id->ViewCustomAttributes = "";
+
+        // concept
+        $curVal = strval($this->concept->CurrentValue);
+        if ($curVal != "") {
+            $this->concept->ViewValue = $this->concept->lookupCacheOption($curVal);
+            if ($this->concept->ViewValue === null) { // Lookup from database
+                $filterWrk = "`concept`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $sqlWrk = $this->concept->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCacheImpl($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->concept->Lookup->renderViewRow($rswrk[0]);
+                    $this->concept->ViewValue = $this->concept->displayValue($arwrk);
+                } else {
+                    $this->concept->ViewValue = $this->concept->CurrentValue;
+                }
+            }
+        } else {
+            $this->concept->ViewValue = null;
+        }
+        $this->concept->ViewCustomAttributes = "";
 
         // area
         $curVal = strval($this->area->CurrentValue);
@@ -1414,6 +1555,11 @@ class JobControlCopy1 extends DbTable
         $this->store_id->HrefValue = "";
         $this->store_id->TooltipValue = "";
 
+        // concept
+        $this->concept->LinkCustomAttributes = "";
+        $this->concept->HrefValue = "";
+        $this->concept->TooltipValue = "";
+
         // area
         $this->area->LinkCustomAttributes = "";
         $this->area->HrefValue = "";
@@ -1532,6 +1678,30 @@ class JobControlCopy1 extends DbTable
             $this->store_id->EditValue = $arwrk;
         }
         $this->store_id->PlaceHolder = RemoveHtml($this->store_id->caption());
+
+        // concept
+        $this->concept->setupEditAttributes();
+        $this->concept->EditCustomAttributes = "";
+        $curVal = trim(strval($this->concept->CurrentValue));
+        if ($curVal != "") {
+            $this->concept->ViewValue = $this->concept->lookupCacheOption($curVal);
+        } else {
+            $this->concept->ViewValue = $this->concept->Lookup !== null && is_array($this->concept->lookupOptions()) ? $curVal : null;
+        }
+        if ($this->concept->ViewValue !== null) { // Load from cache
+            $this->concept->EditValue = array_values($this->concept->lookupOptions());
+        } else { // Lookup from database
+            $filterWrk = "";
+            $sqlWrk = $this->concept->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+            $conn = Conn();
+            $config = $conn->getConfiguration();
+            $config->setResultCacheImpl($this->Cache);
+            $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+            $ari = count($rswrk);
+            $arwrk = $rswrk;
+            $this->concept->EditValue = $arwrk;
+        }
+        $this->concept->PlaceHolder = RemoveHtml($this->concept->caption());
 
         // area
         $this->area->setupEditAttributes();
@@ -1675,6 +1845,7 @@ class JobControlCopy1 extends DbTable
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->creation_date);
                     $doc->exportCaption($this->store_id);
+                    $doc->exportCaption($this->concept);
                     $doc->exportCaption($this->area);
                     $doc->exportCaption($this->aisle);
                     $doc->exportCaption($this->user);
@@ -1687,6 +1858,7 @@ class JobControlCopy1 extends DbTable
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->creation_date);
                     $doc->exportCaption($this->store_id);
+                    $doc->exportCaption($this->concept);
                     $doc->exportCaption($this->area);
                     $doc->exportCaption($this->aisle);
                     $doc->exportCaption($this->user);
@@ -1727,6 +1899,7 @@ class JobControlCopy1 extends DbTable
                         $doc->exportField($this->id);
                         $doc->exportField($this->creation_date);
                         $doc->exportField($this->store_id);
+                        $doc->exportField($this->concept);
                         $doc->exportField($this->area);
                         $doc->exportField($this->aisle);
                         $doc->exportField($this->user);
@@ -1739,6 +1912,7 @@ class JobControlCopy1 extends DbTable
                         $doc->exportField($this->id);
                         $doc->exportField($this->creation_date);
                         $doc->exportField($this->store_id);
+                        $doc->exportField($this->concept);
                         $doc->exportField($this->area);
                         $doc->exportField($this->aisle);
                         $doc->exportField($this->user);
@@ -1961,6 +2135,7 @@ class JobControlCopy1 extends DbTable
         $currentDate = CurrentDate();
             $_creation_date = $rsnew["creation_date"];
             $_store_id = $rsnew["store_id"];
+            $_concept = $rsnew["concept"];
             $_area = $rsnew["area"];
             $_aisle = $rsnew["aisle"];
             $_target = $rsnew["target_qty"];
@@ -1969,7 +2144,7 @@ class JobControlCopy1 extends DbTable
             $_id = $rsnew["id"];
             $_user = $rsnew["user"];
             //set JOB ID
-            $result = "UPDATE picking_pending SET `picker` = '$_user',`job_id` = '$_id' WHERE `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
+            $result = "UPDATE picking_pending SET `picker` = '$_user',`job_id` = '$_id' WHERE `creation_date` in ('$_creation_date') AND `store_id` in (".$_store_id.") AND `concept` in ('$_concept') AND `area` in ('$_area') AND `aisle` in (".$_aisle.") ";
             $_result = ExecuteStatement($result);
             //target qty
                 $target_qty = "SELECT sum(target_qty) FROM `picking_pending` WHERE `job_id` = '$_id' ";
@@ -2091,6 +2266,7 @@ class JobControlCopy1 extends DbTable
          $currentDate = CurrentDate();
                 $_creation_date = $this->creation_date->CurrentValue;
                 $_store_id = $this->store_id->CurrentValue;
+                $_concept = $this->concept->CurrentValue;
                 $_area = $this->area->CurrentValue;
                 $_aisle = $this->aisle->CurrentValue;
                 $_target = $this->target_qty->CurrentValue;

@@ -95,7 +95,14 @@ class BoxResult extends DbTable
         );
         $this->confirmation_date->InputTextType = "text";
         $this->confirmation_date->UseFilter = true; // Table header filter
-        $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'box_result', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'box_result', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'box_result', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->confirmation_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['confirmation_date'] = &$this->confirmation_date;
 
@@ -120,7 +127,14 @@ class BoxResult extends DbTable
         );
         $this->box_code->InputTextType = "text";
         $this->box_code->UseFilter = true; // Table header filter
-        $this->box_code->Lookup = new Lookup('box_code', 'box_result', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_code->Lookup = new Lookup('box_code', 'box_result', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_code->Lookup = new Lookup('box_code', 'box_result', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_code'] = &$this->box_code;
 
         // store_id
@@ -144,7 +158,14 @@ class BoxResult extends DbTable
         );
         $this->store_id->InputTextType = "text";
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'box_result', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_id->Lookup = new Lookup('store_id', 'box_result', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_id->Lookup = new Lookup('store_id', 'box_result', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_id'] = &$this->store_id;
 
         // picker
@@ -168,7 +189,14 @@ class BoxResult extends DbTable
         );
         $this->picker->InputTextType = "text";
         $this->picker->UseFilter = true; // Table header filter
-        $this->picker->Lookup = new Lookup('picker', 'box_result', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picker->Lookup = new Lookup('picker', 'box_result', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picker->Lookup = new Lookup('picker', 'box_result', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['picker'] = &$this->picker;
 
         // total
@@ -192,7 +220,14 @@ class BoxResult extends DbTable
         );
         $this->total->InputTextType = "text";
         $this->total->UseFilter = true; // Table header filter
-        $this->total->Lookup = new Lookup('total', 'box_result', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->total->Lookup = new Lookup('total', 'box_result', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->total->Lookup = new Lookup('total', 'box_result', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->total->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['total'] = &$this->total;
 

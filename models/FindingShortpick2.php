@@ -135,7 +135,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->location->InputTextType = "text";
         $this->location->UseFilter = true; // Table header filter
-        $this->location->Lookup = new Lookup('location', 'finding_shortpick2', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->location->Lookup = new Lookup('location', 'finding_shortpick2', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->location->Lookup = new Lookup('location', 'finding_shortpick2', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['location'] = &$this->location;
 
         // ctn
@@ -159,7 +166,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->ctn->InputTextType = "text";
         $this->ctn->UseFilter = true; // Table header filter
-        $this->ctn->Lookup = new Lookup('ctn', 'finding_shortpick2', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->ctn->Lookup = new Lookup('ctn', 'finding_shortpick2', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->ctn->Lookup = new Lookup('ctn', 'finding_shortpick2', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['ctn'] = &$this->ctn;
 
         // article
@@ -183,7 +197,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'finding_shortpick2', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'finding_shortpick2', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'finding_shortpick2', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // description
@@ -207,7 +228,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->description->InputTextType = "text";
         $this->description->UseFilter = true; // Table header filter
-        $this->description->Lookup = new Lookup('description', 'finding_shortpick2', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->description->Lookup = new Lookup('description', 'finding_shortpick2', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->description->Lookup = new Lookup('description', 'finding_shortpick2', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['description'] = &$this->description;
 
         // avaiable
@@ -231,7 +259,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->avaiable->InputTextType = "text";
         $this->avaiable->UseFilter = true; // Table header filter
-        $this->avaiable->Lookup = new Lookup('avaiable', 'finding_shortpick2', true, 'avaiable', ["avaiable","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->avaiable->Lookup = new Lookup('avaiable', 'finding_shortpick2', true, 'avaiable', ["avaiable","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->avaiable->Lookup = new Lookup('avaiable', 'finding_shortpick2', true, 'avaiable', ["avaiable","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->avaiable->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['avaiable'] = &$this->avaiable;
 
@@ -256,7 +291,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->web->InputTextType = "text";
         $this->web->UseFilter = true; // Table header filter
-        $this->web->Lookup = new Lookup('web', 'finding_shortpick2', true, 'web', ["web","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->web->Lookup = new Lookup('web', 'finding_shortpick2', true, 'web', ["web","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->web->Lookup = new Lookup('web', 'finding_shortpick2', true, 'web', ["web","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->web->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['web'] = &$this->web;
 
@@ -281,7 +323,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->target_quantity->InputTextType = "text";
         $this->target_quantity->UseFilter = true; // Table header filter
-        $this->target_quantity->Lookup = new Lookup('target_quantity', 'finding_shortpick2', true, 'target_quantity', ["target_quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->target_quantity->Lookup = new Lookup('target_quantity', 'finding_shortpick2', true, 'target_quantity', ["target_quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->target_quantity->Lookup = new Lookup('target_quantity', 'finding_shortpick2', true, 'target_quantity', ["target_quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->target_quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['target_quantity'] = &$this->target_quantity;
 
@@ -306,7 +355,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->shortpick->InputTextType = "text";
         $this->shortpick->UseFilter = true; // Table header filter
-        $this->shortpick->Lookup = new Lookup('shortpick', 'finding_shortpick2', true, 'shortpick', ["shortpick","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->shortpick->Lookup = new Lookup('shortpick', 'finding_shortpick2', true, 'shortpick', ["shortpick","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->shortpick->Lookup = new Lookup('shortpick', 'finding_shortpick2', true, 'shortpick', ["shortpick","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->shortpick->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['shortpick'] = &$this->shortpick;
 
@@ -331,7 +387,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->actual->InputTextType = "text";
         $this->actual->UseFilter = true; // Table header filter
-        $this->actual->Lookup = new Lookup('actual', 'finding_shortpick2', true, 'actual', ["actual","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->actual->Lookup = new Lookup('actual', 'finding_shortpick2', true, 'actual', ["actual","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->actual->Lookup = new Lookup('actual', 'finding_shortpick2', true, 'actual', ["actual","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->actual->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['actual'] = &$this->actual;
 
@@ -356,7 +419,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->pick_quantity->InputTextType = "text";
         $this->pick_quantity->UseFilter = true; // Table header filter
-        $this->pick_quantity->Lookup = new Lookup('pick_quantity', 'finding_shortpick2', true, 'pick_quantity', ["pick_quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->pick_quantity->Lookup = new Lookup('pick_quantity', 'finding_shortpick2', true, 'pick_quantity', ["pick_quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->pick_quantity->Lookup = new Lookup('pick_quantity', 'finding_shortpick2', true, 'pick_quantity', ["pick_quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->pick_quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['pick_quantity'] = &$this->pick_quantity;
 
@@ -381,7 +451,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->excess->InputTextType = "text";
         $this->excess->UseFilter = true; // Table header filter
-        $this->excess->Lookup = new Lookup('excess', 'finding_shortpick2', true, 'excess', ["excess","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->excess->Lookup = new Lookup('excess', 'finding_shortpick2', true, 'excess', ["excess","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->excess->Lookup = new Lookup('excess', 'finding_shortpick2', true, 'excess', ["excess","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->excess->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['excess'] = &$this->excess;
 
@@ -406,7 +483,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->user->InputTextType = "text";
         $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'finding_shortpick2', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'finding_shortpick2', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'finding_shortpick2', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['user'] = &$this->user;
 
         // area
@@ -430,7 +514,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->area->InputTextType = "text";
         $this->area->UseFilter = true; // Table header filter
-        $this->area->Lookup = new Lookup('area', 'finding_shortpick2', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->area->Lookup = new Lookup('area', 'finding_shortpick2', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->area->Lookup = new Lookup('area', 'finding_shortpick2', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['area'] = &$this->area;
 
         // status
@@ -454,7 +545,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->status->InputTextType = "text";
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'finding_shortpick2', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'finding_shortpick2', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'finding_shortpick2', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['status'] = &$this->status;
 
         // date_shortpick
@@ -478,7 +576,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->date_shortpick->InputTextType = "text";
         $this->date_shortpick->UseFilter = true; // Table header filter
-        $this->date_shortpick->Lookup = new Lookup('date_shortpick', 'finding_shortpick2', true, 'date_shortpick', ["date_shortpick","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_shortpick->Lookup = new Lookup('date_shortpick', 'finding_shortpick2', true, 'date_shortpick', ["date_shortpick","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_shortpick->Lookup = new Lookup('date_shortpick', 'finding_shortpick2', true, 'date_shortpick', ["date_shortpick","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_shortpick->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_shortpick'] = &$this->date_shortpick;
 
@@ -503,7 +608,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->date_upload->InputTextType = "text";
         $this->date_upload->UseFilter = true; // Table header filter
-        $this->date_upload->Lookup = new Lookup('date_upload', 'finding_shortpick2', true, 'date_upload', ["date_upload","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_upload->Lookup = new Lookup('date_upload', 'finding_shortpick2', true, 'date_upload', ["date_upload","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_upload->Lookup = new Lookup('date_upload', 'finding_shortpick2', true, 'date_upload', ["date_upload","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_upload->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_upload'] = &$this->date_upload;
 
@@ -528,7 +640,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->date_picking->InputTextType = "text";
         $this->date_picking->UseFilter = true; // Table header filter
-        $this->date_picking->Lookup = new Lookup('date_picking', 'finding_shortpick2', true, 'date_picking', ["date_picking","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_picking->Lookup = new Lookup('date_picking', 'finding_shortpick2', true, 'date_picking', ["date_picking","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_picking->Lookup = new Lookup('date_picking', 'finding_shortpick2', true, 'date_picking', ["date_picking","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_picking->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_picking'] = &$this->date_picking;
 
@@ -553,7 +672,14 @@ class FindingShortpick2 extends DbTable
         );
         $this->time_picking->InputTextType = "text";
         $this->time_picking->UseFilter = true; // Table header filter
-        $this->time_picking->Lookup = new Lookup('time_picking', 'finding_shortpick2', true, 'time_picking', ["time_picking","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->time_picking->Lookup = new Lookup('time_picking', 'finding_shortpick2', true, 'time_picking', ["time_picking","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->time_picking->Lookup = new Lookup('time_picking', 'finding_shortpick2', true, 'time_picking', ["time_picking","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->time_picking->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectDate"));
         $this->Fields['time_picking'] = &$this->time_picking;
 

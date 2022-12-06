@@ -125,7 +125,14 @@ class DispositionLocation extends DbTable
         $this->photo_before->InputTextType = "text";
         $this->photo_before->Required = true; // Required field
         $this->photo_before->UseFilter = true; // Table header filter
-        $this->photo_before->Lookup = new Lookup('photo_before', 'disposition_location', true, 'photo_before', ["photo_before","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->photo_before->Lookup = new Lookup('photo_before', 'disposition_location', true, 'photo_before', ["photo_before","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->photo_before->Lookup = new Lookup('photo_before', 'disposition_location', true, 'photo_before', ["photo_before","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->photo_before->UploadAllowedFileExt = "jpg,png,jpeg,gif";
         $this->photo_before->UploadMaxFileSize = 10000000;
         $this->Fields['photo_before'] = &$this->photo_before;
@@ -151,7 +158,14 @@ class DispositionLocation extends DbTable
         );
         $this->photo_after->InputTextType = "text";
         $this->photo_after->UseFilter = true; // Table header filter
-        $this->photo_after->Lookup = new Lookup('photo_after', 'disposition_location', true, 'photo_after', ["photo_after","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->photo_after->Lookup = new Lookup('photo_after', 'disposition_location', true, 'photo_after', ["photo_after","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->photo_after->Lookup = new Lookup('photo_after', 'disposition_location', true, 'photo_after', ["photo_after","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->photo_after->UploadAllowedFileExt = "jpg,png,jpeg,gif";
         $this->photo_after->UploadMaxFileSize = 10000000;
         $this->Fields['photo_after'] = &$this->photo_after;
@@ -178,7 +192,14 @@ class DispositionLocation extends DbTable
         $this->divisi->InputTextType = "text";
         $this->divisi->Required = true; // Required field
         $this->divisi->UseFilter = true; // Table header filter
-        $this->divisi->Lookup = new Lookup('divisi', 'disposition_location', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->divisi->Lookup = new Lookup('divisi', 'disposition_location', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->divisi->Lookup = new Lookup('divisi', 'disposition_location', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->divisi->OptionCount = 2;
         $this->Fields['divisi'] = &$this->divisi;
 
@@ -205,7 +226,14 @@ class DispositionLocation extends DbTable
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'disposition_location', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'disposition_location', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'disposition_location', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->status->OptionCount = 2;
         $this->Fields['status'] = &$this->status;
 
@@ -230,7 +258,14 @@ class DispositionLocation extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'disposition_location', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'disposition_location', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'disposition_location', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -255,7 +290,14 @@ class DispositionLocation extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'disposition_location', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'disposition_location', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'disposition_location', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 

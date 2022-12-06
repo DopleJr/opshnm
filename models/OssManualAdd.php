@@ -1666,8 +1666,7 @@ class OssManualAdd extends OssManual
         SetClientVar("GetPallet",GetPallet() );
         SetClientVar("GetShift",GetShift() );
         SetClientVar("GetOrder",GetOrder() );
-        SetClientVar("GetIdw",GetIdw() );
-        SetClientVar("GetShipment",GetShipment() );
+        SetClientVar("GetIdw",GetIdw() );    
     }
 
     // Page Unload event

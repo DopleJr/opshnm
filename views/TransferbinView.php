@@ -55,24 +55,46 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->FromBin->Visible) { // From Bin ?>
-    <tr id="r_FromBin"<?= $Page->FromBin->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_FromBin"><?= $Page->FromBin->caption() ?></span></td>
-        <td data-name="FromBin"<?= $Page->FromBin->cellAttributes() ?>>
-<span id="el_transferbin_FromBin">
-<span<?= $Page->FromBin->viewAttributes() ?>>
-<?= $Page->FromBin->getViewValue() ?></span>
+<?php if ($Page->from_bin->Visible) { // from_bin ?>
+    <tr id="r_from_bin"<?= $Page->from_bin->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_from_bin"><?= $Page->from_bin->caption() ?></span></td>
+        <td data-name="from_bin"<?= $Page->from_bin->cellAttributes() ?>>
+<span id="el_transferbin_from_bin">
+<span<?= $Page->from_bin->viewAttributes() ?>>
+<?= $Page->from_bin->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->ToBin->Visible) { // To Bin ?>
-    <tr id="r_ToBin"<?= $Page->ToBin->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_ToBin"><?= $Page->ToBin->caption() ?></span></td>
-        <td data-name="ToBin"<?= $Page->ToBin->cellAttributes() ?>>
-<span id="el_transferbin_ToBin">
-<span<?= $Page->ToBin->viewAttributes() ?>>
-<?= $Page->ToBin->getViewValue() ?></span>
+<?php if ($Page->ctn->Visible) { // ctn ?>
+    <tr id="r_ctn"<?= $Page->ctn->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_ctn"><?= $Page->ctn->caption() ?></span></td>
+        <td data-name="ctn"<?= $Page->ctn->cellAttributes() ?>>
+<span id="el_transferbin_ctn">
+<span<?= $Page->ctn->viewAttributes() ?>>
+<?= $Page->ctn->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->to_bin->Visible) { // to_bin ?>
+    <tr id="r_to_bin"<?= $Page->to_bin->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_to_bin"><?= $Page->to_bin->caption() ?></span></td>
+        <td data-name="to_bin"<?= $Page->to_bin->cellAttributes() ?>>
+<span id="el_transferbin_to_bin">
+<span<?= $Page->to_bin->viewAttributes() ?>>
+<?= $Page->to_bin->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+    <tr id="r_user"<?= $Page->user->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_user"><?= $Page->user->caption() ?></span></td>
+        <td data-name="user"<?= $Page->user->cellAttributes() ?>>
+<span id="el_transferbin_user">
+<span<?= $Page->user->viewAttributes() ?>>
+<?= $Page->user->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -84,6 +106,28 @@ $Page->showMessage();
 <span id="el_transferbin_date_created">
 <span<?= $Page->date_created->viewAttributes() ?>>
 <?= $Page->date_created->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+    <tr id="r_date_updated"<?= $Page->date_updated->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_date_updated"><?= $Page->date_updated->caption() ?></span></td>
+        <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el_transferbin_date_updated">
+<span<?= $Page->date_updated->viewAttributes() ?>>
+<?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+    <tr id="r_time_updated"<?= $Page->time_updated->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transferbin_time_updated"><?= $Page->time_updated->caption() ?></span></td>
+        <td data-name="time_updated"<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el_transferbin_time_updated">
+<span<?= $Page->time_updated->viewAttributes() ?>>
+<?= $Page->time_updated->getViewValue() ?></span>
 </span>
 </td>
     </tr>

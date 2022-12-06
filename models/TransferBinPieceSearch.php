@@ -483,11 +483,16 @@ class TransferBinPieceSearch extends TransferBinPiece
         $this->id->Visible = false;
         $this->source_location->Visible = false;
         $this->article->Visible = false;
+        $this->description->setVisibility();
         $this->destination_location->Visible = false;
         $this->su->Visible = false;
+        $this->qty->setVisibility();
+        $this->actual->setVisibility();
         $this->user->Visible = false;
+        $this->status->setVisibility();
         $this->date_upload->setVisibility();
         $this->date_confirmation->setVisibility();
+        $this->time_confirmation->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -570,8 +575,13 @@ class TransferBinPieceSearch extends TransferBinPiece
     protected function buildAdvancedSearch()
     {
         $srchUrl = "";
+        $this->buildSearchUrl($srchUrl, $this->description); // description
+        $this->buildSearchUrl($srchUrl, $this->qty); // qty
+        $this->buildSearchUrl($srchUrl, $this->actual); // actual
+        $this->buildSearchUrl($srchUrl, $this->status); // status
         $this->buildSearchUrl($srchUrl, $this->date_upload); // date_upload
         $this->buildSearchUrl($srchUrl, $this->date_confirmation); // date_confirmation
+        $this->buildSearchUrl($srchUrl, $this->time_confirmation); // time_confirmation
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -663,6 +673,11 @@ class TransferBinPieceSearch extends TransferBinPiece
             $hasValue = true;
         }
 
+        // description
+        if ($this->description->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // destination_location
         if ($this->destination_location->AdvancedSearch->get()) {
             $hasValue = true;
@@ -673,8 +688,23 @@ class TransferBinPieceSearch extends TransferBinPiece
             $hasValue = true;
         }
 
+        // qty
+        if ($this->qty->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // actual
+        if ($this->actual->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // user
         if ($this->user->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // status
+        if ($this->status->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
@@ -685,6 +715,11 @@ class TransferBinPieceSearch extends TransferBinPiece
 
         // date_confirmation
         if ($this->date_confirmation->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // time_confirmation
+        if ($this->time_confirmation->AdvancedSearch->get()) {
             $hasValue = true;
         }
         return $hasValue;
@@ -711,20 +746,35 @@ class TransferBinPieceSearch extends TransferBinPiece
         // article
         $this->article->RowCssClass = "row";
 
+        // description
+        $this->description->RowCssClass = "row";
+
         // destination_location
         $this->destination_location->RowCssClass = "row";
 
         // su
         $this->su->RowCssClass = "row";
 
+        // qty
+        $this->qty->RowCssClass = "row";
+
+        // actual
+        $this->actual->RowCssClass = "row";
+
         // user
         $this->user->RowCssClass = "row";
+
+        // status
+        $this->status->RowCssClass = "row";
 
         // date_upload
         $this->date_upload->RowCssClass = "row";
 
         // date_confirmation
         $this->date_confirmation->RowCssClass = "row";
+
+        // time_confirmation
+        $this->time_confirmation->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -741,6 +791,10 @@ class TransferBinPieceSearch extends TransferBinPiece
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
 
+            // description
+            $this->description->ViewValue = $this->description->CurrentValue;
+            $this->description->ViewCustomAttributes = "";
+
             // destination_location
             $this->destination_location->ViewValue = $this->destination_location->CurrentValue;
             $this->destination_location->ViewCustomAttributes = "";
@@ -749,9 +803,23 @@ class TransferBinPieceSearch extends TransferBinPiece
             $this->su->ViewValue = $this->su->CurrentValue;
             $this->su->ViewCustomAttributes = "";
 
+            // qty
+            $this->qty->ViewValue = $this->qty->CurrentValue;
+            $this->qty->ViewValue = FormatNumber($this->qty->ViewValue, $this->qty->formatPattern());
+            $this->qty->ViewCustomAttributes = "";
+
+            // actual
+            $this->actual->ViewValue = $this->actual->CurrentValue;
+            $this->actual->ViewValue = FormatNumber($this->actual->ViewValue, $this->actual->formatPattern());
+            $this->actual->ViewCustomAttributes = "";
+
             // user
             $this->user->ViewValue = $this->user->CurrentValue;
             $this->user->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
 
             // date_upload
             $this->date_upload->ViewValue = $this->date_upload->CurrentValue;
@@ -763,6 +831,31 @@ class TransferBinPieceSearch extends TransferBinPiece
             $this->date_confirmation->ViewValue = FormatDateTime($this->date_confirmation->ViewValue, $this->date_confirmation->formatPattern());
             $this->date_confirmation->ViewCustomAttributes = "";
 
+            // time_confirmation
+            $this->time_confirmation->ViewValue = $this->time_confirmation->CurrentValue;
+            $this->time_confirmation->ViewValue = FormatDateTime($this->time_confirmation->ViewValue, $this->time_confirmation->formatPattern());
+            $this->time_confirmation->ViewCustomAttributes = "";
+
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+            $this->description->TooltipValue = "";
+
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+            $this->qty->TooltipValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+            $this->actual->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
+
             // date_upload
             $this->date_upload->LinkCustomAttributes = "";
             $this->date_upload->HrefValue = "";
@@ -772,7 +865,42 @@ class TransferBinPieceSearch extends TransferBinPiece
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
             $this->date_confirmation->TooltipValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
+            $this->time_confirmation->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
+            // description
+            $this->description->setupEditAttributes();
+            $this->description->EditCustomAttributes = "";
+            if (!$this->description->Raw) {
+                $this->description->AdvancedSearch->SearchValue = HtmlDecode($this->description->AdvancedSearch->SearchValue);
+            }
+            $this->description->EditValue = HtmlEncode($this->description->AdvancedSearch->SearchValue);
+            $this->description->PlaceHolder = RemoveHtml($this->description->caption());
+
+            // qty
+            $this->qty->setupEditAttributes();
+            $this->qty->EditCustomAttributes = "";
+            $this->qty->EditValue = HtmlEncode($this->qty->AdvancedSearch->SearchValue);
+            $this->qty->PlaceHolder = RemoveHtml($this->qty->caption());
+
+            // actual
+            $this->actual->setupEditAttributes();
+            $this->actual->EditCustomAttributes = "";
+            $this->actual->EditValue = HtmlEncode($this->actual->AdvancedSearch->SearchValue);
+            $this->actual->PlaceHolder = RemoveHtml($this->actual->caption());
+
+            // status
+            $this->status->setupEditAttributes();
+            $this->status->EditCustomAttributes = "";
+            if (!$this->status->Raw) {
+                $this->status->AdvancedSearch->SearchValue = HtmlDecode($this->status->AdvancedSearch->SearchValue);
+            }
+            $this->status->EditValue = HtmlEncode($this->status->AdvancedSearch->SearchValue);
+            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
             // date_upload
             $this->date_upload->setupEditAttributes();
             $this->date_upload->EditCustomAttributes = "";
@@ -792,6 +920,12 @@ class TransferBinPieceSearch extends TransferBinPiece
             $this->date_confirmation->EditCustomAttributes = "";
             $this->date_confirmation->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date_confirmation->AdvancedSearch->SearchValue2, $this->date_confirmation->formatPattern()), $this->date_confirmation->formatPattern()));
             $this->date_confirmation->PlaceHolder = RemoveHtml($this->date_confirmation->caption());
+
+            // time_confirmation
+            $this->time_confirmation->setupEditAttributes();
+            $this->time_confirmation->EditCustomAttributes = "";
+            $this->time_confirmation->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->time_confirmation->AdvancedSearch->SearchValue, $this->time_confirmation->formatPattern()), $this->time_confirmation->formatPattern()));
+            $this->time_confirmation->PlaceHolder = RemoveHtml($this->time_confirmation->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -810,6 +944,12 @@ class TransferBinPieceSearch extends TransferBinPiece
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if (!CheckInteger($this->qty->AdvancedSearch->SearchValue)) {
+            $this->qty->addErrorMessage($this->qty->getErrorMessage(false));
+        }
+        if (!CheckInteger($this->actual->AdvancedSearch->SearchValue)) {
+            $this->actual->addErrorMessage($this->actual->getErrorMessage(false));
+        }
         if (!CheckDate($this->date_upload->AdvancedSearch->SearchValue, $this->date_upload->formatPattern())) {
             $this->date_upload->addErrorMessage($this->date_upload->getErrorMessage(false));
         }
@@ -821,6 +961,9 @@ class TransferBinPieceSearch extends TransferBinPiece
         }
         if (!CheckDate($this->date_confirmation->AdvancedSearch->SearchValue2, $this->date_confirmation->formatPattern())) {
             $this->date_confirmation->addErrorMessage($this->date_confirmation->getErrorMessage(false));
+        }
+        if (!CheckTime($this->time_confirmation->AdvancedSearch->SearchValue, $this->time_confirmation->formatPattern())) {
+            $this->time_confirmation->addErrorMessage($this->time_confirmation->getErrorMessage(false));
         }
 
         // Return validate result
@@ -838,8 +981,13 @@ class TransferBinPieceSearch extends TransferBinPiece
     // Load advanced search
     public function loadAdvancedSearch()
     {
+        $this->description->AdvancedSearch->load();
+        $this->qty->AdvancedSearch->load();
+        $this->actual->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
         $this->date_upload->AdvancedSearch->load();
         $this->date_confirmation->AdvancedSearch->load();
+        $this->time_confirmation->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb

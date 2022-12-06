@@ -95,7 +95,14 @@ class Userlevels extends DbTable
         $this->userlevelid->Nullable = false; // NOT NULL field
         $this->userlevelid->Required = true; // Required field
         $this->userlevelid->UseFilter = true; // Table header filter
-        $this->userlevelid->Lookup = new Lookup('userlevelid', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->userlevelid->Lookup = new Lookup('userlevelid', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->userlevelid->Lookup = new Lookup('userlevelid', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->userlevelid->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['userlevelid'] = &$this->userlevelid;
 
@@ -122,7 +129,14 @@ class Userlevels extends DbTable
         $this->userlevelname->Nullable = false; // NOT NULL field
         $this->userlevelname->Required = true; // Required field
         $this->userlevelname->UseFilter = true; // Table header filter
-        $this->userlevelname->Lookup = new Lookup('userlevelname', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->userlevelname->Lookup = new Lookup('userlevelname', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->userlevelname->Lookup = new Lookup('userlevelname', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['userlevelname'] = &$this->userlevelname;
 
         // Add Doctrine Cache

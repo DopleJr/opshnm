@@ -26,6 +26,8 @@ loadjs.ready(["wrapper", "head"], function () {
     fbox_pickingsearch.addFields([
         ["picking_date", [ew.Validators.datetime(fields.picking_date.clientFormatPattern)], fields.picking_date.isInvalid],
         ["y_picking_date", [ew.Validators.between], false],
+        ["line", [], fields.line.isInvalid],
+        ["date_staging", [ew.Validators.datetime(fields.date_staging.clientFormatPattern)], fields.date_staging.isInvalid],
         ["date_delivery", [ew.Validators.datetime(fields.date_delivery.clientFormatPattern)], fields.date_delivery.isInvalid]
     ]);
 
@@ -149,6 +151,70 @@ loadjs.ready(["fbox_pickingsearch", "datetimepicker"], function () {
             }
         };
     ew.createDateTimePicker("fbox_pickingsearch", "y_picking_date", ew.deepAssign({"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <div id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <label for="x_line" class="<?= $Page->LeftColumnClass ?>"><span id="elh_box_picking_line"><?= $Page->line->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_line" id="z_line" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->line->cellAttributes() ?>>
+            <span id="el_box_picking_line" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->line->getInputTextType() ?>" name="x_line" id="x_line" data-table="box_picking" data-field="x_line" value="<?= $Page->line->EditValue ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"<?= $Page->line->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->line->getErrorMessage(false) ?></div>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+    <div id="r_date_staging"<?= $Page->date_staging->rowAttributes() ?>>
+        <label for="x_date_staging" class="<?= $Page->LeftColumnClass ?>"><span id="elh_box_picking_date_staging"><?= $Page->date_staging->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_date_staging" id="z_date_staging" value="=">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->date_staging->cellAttributes() ?>>
+            <span id="el_box_picking_date_staging" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->date_staging->getInputTextType() ?>" name="x_date_staging" id="x_date_staging" data-table="box_picking" data-field="x_date_staging" value="<?= $Page->date_staging->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_staging->getPlaceHolder()) ?>"<?= $Page->date_staging->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->date_staging->getErrorMessage(false) ?></div>
+<?php if (!$Page->date_staging->ReadOnly && !$Page->date_staging->Disabled && !isset($Page->date_staging->EditAttrs["readonly"]) && !isset($Page->date_staging->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fbox_pickingsearch", "datetimepicker"], function () {
+    let format = "<?= DateFormat(0) ?>",
+        options = {
+            localization: {
+                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
+            },
+            display: {
+                icons: {
+                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                },
+                components: {
+                    hours: !!format.match(/h/i),
+                    minutes: !!format.match(/m/),
+                    seconds: !!format.match(/s/i),
+                    useTwentyfourHour: !!format.match(/H/)
+                }
+            },
+            meta: {
+                format
+            }
+        };
+    ew.createDateTimePicker("fbox_pickingsearch", "x_date_staging", ew.deepAssign({"useCurrent":false}, options));
 });
 </script>
 <?php } ?>

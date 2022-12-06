@@ -521,15 +521,15 @@ class AuditPickingOnlineView extends AuditPickingOnline
         $this->UseLayout = $this->UseLayout && ConvertToBool(Param("layout", true));
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
+        $this->scan->setVisibility();
         $this->box_code->setVisibility();
         $this->store_id->setVisibility();
         $this->store_name->setVisibility();
-        $this->scan->setVisibility();
-        $this->article->setVisibility();
         $this->picked_qty->setVisibility();
         $this->scan_qty->setVisibility();
         $this->checker->setVisibility();
         $this->status->setVisibility();
+        $this->article->setVisibility();
         $this->date_update->setVisibility();
         $this->time_update->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -548,8 +548,6 @@ class AuditPickingOnlineView extends AuditPickingOnline
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->box_code);
-        $this->setupLookupOptions($this->store_id);
 
         // Check modal
         if ($this->IsModal) {
@@ -675,6 +673,15 @@ class AuditPickingOnlineView extends AuditPickingOnline
         }
         $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
+        // Delete
+        $item = &$option->add("delete");
+        if ($this->IsModal) { // Handle as inline delete
+            $item->Body = "<a data-ew-action=\"inline-delete\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery(GetUrl($this->DeleteUrl), "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
+        } else {
+            $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
+        }
+        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
+
         // Set up action default
         $option = $options["action"];
         $option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
@@ -733,15 +740,15 @@ class AuditPickingOnlineView extends AuditPickingOnline
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->scan->setDbValue($row['scan']);
         $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
-        $this->scan->setDbValue($row['scan']);
-        $this->article->setDbValue($row['article']);
         $this->picked_qty->setDbValue($row['picked_qty']);
         $this->scan_qty->setDbValue($row['scan_qty']);
         $this->checker->setDbValue($row['checker']);
         $this->status->setDbValue($row['status']);
+        $this->article->setDbValue($row['article']);
         $this->date_update->setDbValue($row['date_update']);
         $this->time_update->setDbValue($row['time_update']);
     }
@@ -751,15 +758,15 @@ class AuditPickingOnlineView extends AuditPickingOnline
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['scan'] = $this->scan->DefaultValue;
         $row['box_code'] = $this->box_code->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
-        $row['scan'] = $this->scan->DefaultValue;
-        $row['article'] = $this->article->DefaultValue;
         $row['picked_qty'] = $this->picked_qty->DefaultValue;
         $row['scan_qty'] = $this->scan_qty->DefaultValue;
         $row['checker'] = $this->checker->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['article'] = $this->article->DefaultValue;
         $row['date_update'] = $this->date_update->DefaultValue;
         $row['time_update'] = $this->time_update->DefaultValue;
         return $row;
@@ -785,15 +792,13 @@ class AuditPickingOnlineView extends AuditPickingOnline
 
         // id
 
+        // scan
+
         // box_code
 
         // store_id
 
         // store_name
-
-        // scan
-
-        // article
 
         // picked_qty
 
@@ -802,6 +807,8 @@ class AuditPickingOnlineView extends AuditPickingOnline
         // checker
 
         // status
+
+        // article
 
         // date_update
 
@@ -814,69 +821,16 @@ class AuditPickingOnlineView extends AuditPickingOnline
             $this->id->ViewCustomAttributes = "";
 
             // box_code
-            $curVal = strval($this->box_code->CurrentValue);
-            if ($curVal != "") {
-                $this->box_code->ViewValue = $this->box_code->lookupCacheOption($curVal);
-                if ($this->box_code->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`box_code`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->box_code->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->box_code->Lookup->renderViewRow($rswrk[0]);
-                        $this->box_code->ViewValue = $this->box_code->displayValue($arwrk);
-                    } else {
-                        $this->box_code->ViewValue = $this->box_code->CurrentValue;
-                    }
-                }
-            } else {
-                $this->box_code->ViewValue = null;
-            }
+            $this->box_code->ViewValue = $this->box_code->CurrentValue;
             $this->box_code->ViewCustomAttributes = "";
 
             // store_id
-            $curVal = strval($this->store_id->CurrentValue);
-            if ($curVal != "") {
-                $this->store_id->ViewValue = $this->store_id->lookupCacheOption($curVal);
-                if ($this->store_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`store_id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->store_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->store_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->store_id->ViewValue = $this->store_id->displayValue($arwrk);
-                    } else {
-                        $this->store_id->ViewValue = $this->store_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->store_id->ViewValue = null;
-            }
+            $this->store_id->ViewValue = $this->store_id->CurrentValue;
             $this->store_id->ViewCustomAttributes = "";
 
             // store_name
             $this->store_name->ViewValue = $this->store_name->CurrentValue;
             $this->store_name->ViewCustomAttributes = "";
-
-            // article
-            $this->article->ViewValue = $this->article->CurrentValue;
-            $this->article->ViewCustomAttributes = "";
-
-            // picked_qty
-            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
-            $this->picked_qty->ViewCustomAttributes = "";
-
-            // scan_qty
-            $this->scan_qty->ViewValue = $this->scan_qty->CurrentValue;
-            $this->scan_qty->ViewCustomAttributes = "";
 
             // checker
             $this->checker->ViewValue = $this->checker->CurrentValue;
@@ -885,6 +839,10 @@ class AuditPickingOnlineView extends AuditPickingOnline
             // status
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
+
+            // article
+            $this->article->ViewValue = $this->article->CurrentValue;
+            $this->article->ViewCustomAttributes = "";
 
             // date_update
             $this->date_update->ViewValue = $this->date_update->CurrentValue;
@@ -916,21 +874,6 @@ class AuditPickingOnlineView extends AuditPickingOnline
             $this->store_name->HrefValue = "";
             $this->store_name->TooltipValue = "";
 
-            // article
-            $this->article->LinkCustomAttributes = "";
-            $this->article->HrefValue = "";
-            $this->article->TooltipValue = "";
-
-            // picked_qty
-            $this->picked_qty->LinkCustomAttributes = "";
-            $this->picked_qty->HrefValue = "";
-            $this->picked_qty->TooltipValue = "";
-
-            // scan_qty
-            $this->scan_qty->LinkCustomAttributes = "";
-            $this->scan_qty->HrefValue = "";
-            $this->scan_qty->TooltipValue = "";
-
             // checker
             $this->checker->LinkCustomAttributes = "";
             $this->checker->HrefValue = "";
@@ -940,6 +883,11 @@ class AuditPickingOnlineView extends AuditPickingOnline
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // article
+            $this->article->LinkCustomAttributes = "";
+            $this->article->HrefValue = "";
+            $this->article->TooltipValue = "";
 
             // date_update
             $this->date_update->LinkCustomAttributes = "";
@@ -982,10 +930,6 @@ class AuditPickingOnlineView extends AuditPickingOnline
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_box_code":
-                    break;
-                case "x_store_id":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

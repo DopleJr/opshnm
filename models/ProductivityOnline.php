@@ -97,7 +97,14 @@ class ProductivityOnline extends DbTable
         $this->picking_date->InputTextType = "text";
         $this->picking_date->Sortable = false; // Allow sort
         $this->picking_date->UseFilter = true; // Table header filter
-        $this->picking_date->Lookup = new Lookup('picking_date', 'productivity_online', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picking_date->Lookup = new Lookup('picking_date', 'productivity_online', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picking_date->Lookup = new Lookup('picking_date', 'productivity_online', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['picking_date'] = &$this->picking_date;
 
@@ -123,7 +130,14 @@ class ProductivityOnline extends DbTable
         $this->picker->InputTextType = "text";
         $this->picker->Sortable = false; // Allow sort
         $this->picker->UseFilter = true; // Table header filter
-        $this->picker->Lookup = new Lookup('picker', 'productivity_online', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picker->Lookup = new Lookup('picker', 'productivity_online', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picker->Lookup = new Lookup('picker', 'productivity_online', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['picker'] = &$this->picker;
 
         // total_bin
@@ -149,7 +163,14 @@ class ProductivityOnline extends DbTable
         $this->total_bin->Nullable = false; // NOT NULL field
         $this->total_bin->Sortable = false; // Allow sort
         $this->total_bin->UseFilter = true; // Table header filter
-        $this->total_bin->Lookup = new Lookup('total_bin', 'productivity_online', true, 'total_bin', ["total_bin","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->total_bin->Lookup = new Lookup('total_bin', 'productivity_online', true, 'total_bin', ["total_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->total_bin->Lookup = new Lookup('total_bin', 'productivity_online', true, 'total_bin', ["total_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->total_bin->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['total_bin'] = &$this->total_bin;
 
@@ -175,7 +196,14 @@ class ProductivityOnline extends DbTable
         $this->total->InputTextType = "text";
         $this->total->Sortable = false; // Allow sort
         $this->total->UseFilter = true; // Table header filter
-        $this->total->Lookup = new Lookup('total', 'productivity_online', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->total->Lookup = new Lookup('total', 'productivity_online', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->total->Lookup = new Lookup('total', 'productivity_online', true, 'total', ["total","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->total->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['total'] = &$this->total;
 
@@ -201,7 +229,14 @@ class ProductivityOnline extends DbTable
         $this->picked->InputTextType = "text";
         $this->picked->Sortable = false; // Allow sort
         $this->picked->UseFilter = true; // Table header filter
-        $this->picked->Lookup = new Lookup('picked', 'productivity_online', true, 'picked', ["picked","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picked->Lookup = new Lookup('picked', 'productivity_online', true, 'picked', ["picked","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picked->Lookup = new Lookup('picked', 'productivity_online', true, 'picked', ["picked","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picked->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['picked'] = &$this->picked;
 
@@ -227,7 +262,14 @@ class ProductivityOnline extends DbTable
         $this->variance->InputTextType = "text";
         $this->variance->Sortable = false; // Allow sort
         $this->variance->UseFilter = true; // Table header filter
-        $this->variance->Lookup = new Lookup('variance', 'productivity_online', true, 'variance', ["variance","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->variance->Lookup = new Lookup('variance', 'productivity_online', true, 'variance', ["variance","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->variance->Lookup = new Lookup('variance', 'productivity_online', true, 'variance', ["variance","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->variance->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['variance'] = &$this->variance;
 

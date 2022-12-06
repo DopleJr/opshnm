@@ -88,39 +88,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->article->Visible) { // article ?>
-    <tr id="r_article"<?= $Page->article->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_audit_picking_online_article"><?= $Page->article->caption() ?></span></td>
-        <td data-name="article"<?= $Page->article->cellAttributes() ?>>
-<span id="el_audit_picking_online_article">
-<span<?= $Page->article->viewAttributes() ?>>
-<?= $Page->article->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
-    <tr id="r_picked_qty"<?= $Page->picked_qty->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_audit_picking_online_picked_qty"><?= $Page->picked_qty->caption() ?></span></td>
-        <td data-name="picked_qty"<?= $Page->picked_qty->cellAttributes() ?>>
-<span id="el_audit_picking_online_picked_qty">
-<span<?= $Page->picked_qty->viewAttributes() ?>>
-<?= $Page->picked_qty->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->scan_qty->Visible) { // scan_qty ?>
-    <tr id="r_scan_qty"<?= $Page->scan_qty->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_audit_picking_online_scan_qty"><?= $Page->scan_qty->caption() ?></span></td>
-        <td data-name="scan_qty"<?= $Page->scan_qty->cellAttributes() ?>>
-<span id="el_audit_picking_online_scan_qty">
-<span<?= $Page->scan_qty->viewAttributes() ?>>
-<?= $Page->scan_qty->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->checker->Visible) { // checker ?>
     <tr id="r_checker"<?= $Page->checker->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_audit_picking_online_checker"><?= $Page->checker->caption() ?></span></td>
@@ -139,6 +106,17 @@ $Page->showMessage();
 <span id="el_audit_picking_online_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->article->Visible) { // article ?>
+    <tr id="r_article"<?= $Page->article->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_audit_picking_online_article"><?= $Page->article->caption() ?></span></td>
+        <td data-name="article"<?= $Page->article->cellAttributes() ?>>
+<span id="el_audit_picking_online_article">
+<span<?= $Page->article->viewAttributes() ?>>
+<?= $Page->article->getViewValue() ?></span>
 </span>
 </td>
     </tr>

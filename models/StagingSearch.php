@@ -492,6 +492,7 @@ class StagingSearch extends Staging
         $this->picking_date->setVisibility();
         $this->date_created->Visible = false;
         $this->status->Visible = false;
+        $this->line->setVisibility();
         $this->users->Visible = false;
         $this->date_delivery->Visible = false;
         $this->date_updated->Visible = false;
@@ -579,6 +580,7 @@ class StagingSearch extends Staging
     {
         $srchUrl = "";
         $this->buildSearchUrl($srchUrl, $this->picking_date); // picking_date
+        $this->buildSearchUrl($srchUrl, $this->line); // line
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -720,6 +722,11 @@ class StagingSearch extends Staging
             $hasValue = true;
         }
 
+        // line
+        if ($this->line->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // users
         if ($this->users->AdvancedSearch->get()) {
             $hasValue = true;
@@ -779,6 +786,9 @@ class StagingSearch extends Staging
 
         // status
         $this->status->RowCssClass = "row";
+
+        // line
+        $this->line->RowCssClass = "row";
 
         // users
         $this->users->RowCssClass = "row";
@@ -847,6 +857,10 @@ class StagingSearch extends Staging
             }
             $this->status->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // users
             $this->users->ViewValue = $this->users->CurrentValue;
             $this->users->ViewCustomAttributes = "";
@@ -865,6 +879,11 @@ class StagingSearch extends Staging
             $this->picking_date->LinkCustomAttributes = "";
             $this->picking_date->HrefValue = "";
             $this->picking_date->TooltipValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // picking_date
             $this->picking_date->setupEditAttributes();
@@ -875,6 +894,15 @@ class StagingSearch extends Staging
             $this->picking_date->EditCustomAttributes = 'readonly';
             $this->picking_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->picking_date->AdvancedSearch->SearchValue2, $this->picking_date->formatPattern()), $this->picking_date->formatPattern()));
             $this->picking_date->PlaceHolder = RemoveHtml($this->picking_date->caption());
+
+            // line
+            $this->line->setupEditAttributes();
+            $this->line->EditCustomAttributes = "";
+            if (!$this->line->Raw) {
+                $this->line->AdvancedSearch->SearchValue = HtmlDecode($this->line->AdvancedSearch->SearchValue);
+            }
+            $this->line->EditValue = HtmlEncode($this->line->AdvancedSearch->SearchValue);
+            $this->line->PlaceHolder = RemoveHtml($this->line->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -916,6 +944,7 @@ class StagingSearch extends Staging
     public function loadAdvancedSearch()
     {
         $this->picking_date->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb

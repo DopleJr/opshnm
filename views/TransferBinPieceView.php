@@ -77,6 +77,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->description->Visible) { // description ?>
+    <tr id="r_description"<?= $Page->description->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_description"><?= $Page->description->caption() ?></span></td>
+        <td data-name="description"<?= $Page->description->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_description">
+<span<?= $Page->description->viewAttributes() ?>>
+<?= $Page->description->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->destination_location->Visible) { // destination_location ?>
     <tr id="r_destination_location"<?= $Page->destination_location->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_destination_location"><?= $Page->destination_location->caption() ?></span></td>
@@ -99,6 +110,28 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->qty->Visible) { // qty ?>
+    <tr id="r_qty"<?= $Page->qty->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_qty"><?= $Page->qty->caption() ?></span></td>
+        <td data-name="qty"<?= $Page->qty->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_qty">
+<span<?= $Page->qty->viewAttributes() ?>>
+<?= $Page->qty->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->actual->Visible) { // actual ?>
+    <tr id="r_actual"<?= $Page->actual->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_actual"><?= $Page->actual->caption() ?></span></td>
+        <td data-name="actual"<?= $Page->actual->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_actual">
+<span<?= $Page->actual->viewAttributes() ?>>
+<?= $Page->actual->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
     <tr id="r_user"<?= $Page->user->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_user"><?= $Page->user->caption() ?></span></td>
@@ -106,6 +139,17 @@ $Page->showMessage();
 <span id="el_transfer_bin_piece_user">
 <span<?= $Page->user->viewAttributes() ?>>
 <?= $Page->user->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <tr id="r_status"<?= $Page->status->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_status"><?= $Page->status->caption() ?></span></td>
+        <td data-name="status"<?= $Page->status->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -128,6 +172,17 @@ $Page->showMessage();
 <span id="el_transfer_bin_piece_date_confirmation">
 <span<?= $Page->date_confirmation->viewAttributes() ?>>
 <?= $Page->date_confirmation->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->time_confirmation->Visible) { // time_confirmation ?>
+    <tr id="r_time_confirmation"<?= $Page->time_confirmation->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_transfer_bin_piece_time_confirmation"><?= $Page->time_confirmation->caption() ?></span></td>
+        <td data-name="time_confirmation"<?= $Page->time_confirmation->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_time_confirmation">
+<span<?= $Page->time_confirmation->viewAttributes() ?>>
+<?= $Page->time_confirmation->getViewValue() ?></span>
 </span>
 </td>
     </tr>

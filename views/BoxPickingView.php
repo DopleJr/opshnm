@@ -154,6 +154,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <tr id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_box_picking_line"><?= $Page->line->caption() ?></span></td>
+        <td data-name="line"<?= $Page->line->cellAttributes() ?>>
+<span id="el_box_picking_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
     <tr id="r_date_created"<?= $Page->date_created->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_box_picking_date_created"><?= $Page->date_created->caption() ?></span></td>
@@ -165,17 +176,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
-    <tr id="r_date_delivery"<?= $Page->date_delivery->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_box_picking_date_delivery"><?= $Page->date_delivery->caption() ?></span></td>
-        <td data-name="date_delivery"<?= $Page->date_delivery->cellAttributes() ?>>
-<span id="el_box_picking_date_delivery">
-<span<?= $Page->date_delivery->viewAttributes() ?>>
-<?= $Page->date_delivery->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
     <tr id="r_date_updated"<?= $Page->date_updated->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_box_picking_date_updated"><?= $Page->date_updated->caption() ?></span></td>
@@ -183,6 +183,28 @@ $Page->showMessage();
 <span id="el_box_picking_date_updated">
 <span<?= $Page->date_updated->viewAttributes() ?>>
 <?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+    <tr id="r_date_staging"<?= $Page->date_staging->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_box_picking_date_staging"><?= $Page->date_staging->caption() ?></span></td>
+        <td data-name="date_staging"<?= $Page->date_staging->cellAttributes() ?>>
+<span id="el_box_picking_date_staging">
+<span<?= $Page->date_staging->viewAttributes() ?>>
+<?= $Page->date_staging->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
+    <tr id="r_date_delivery"<?= $Page->date_delivery->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_box_picking_date_delivery"><?= $Page->date_delivery->caption() ?></span></td>
+        <td data-name="date_delivery"<?= $Page->date_delivery->cellAttributes() ?>>
+<span id="el_box_picking_date_delivery">
+<span<?= $Page->date_delivery->viewAttributes() ?>>
+<?= $Page->date_delivery->getViewValue() ?></span>
 </span>
 </td>
     </tr>

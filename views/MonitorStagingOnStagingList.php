@@ -57,6 +57,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["y_picking_date", [ew.Validators.between], false],
         ["date_created", [], fields.date_created.isInvalid],
         ["status", [], fields.status.isInvalid],
+        ["line", [], fields.line.isInvalid],
         ["users", [], fields.users.isInvalid],
         ["date_updated", [], fields.date_updated.isInvalid]
     ]);
@@ -726,6 +727,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_monitor_staging_on_staging_status" class="monitor_staging_on_staging_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <th data-name="line" class="<?= $Page->line->headerCellClass() ?>"><div id="elh_monitor_staging_on_staging_line" class="monitor_staging_on_staging_line"><?= $Page->renderFieldHeader($Page->line) ?></div></th>
+<?php } ?>
 <?php if ($Page->users->Visible) { // users ?>
         <th data-name="users" class="<?= $Page->users->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_monitor_staging_on_staging_users" class="monitor_staging_on_staging_users"><?= $Page->renderFieldHeader($Page->users) ?></div></th>
 <?php } ?>
@@ -892,6 +896,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_monitor_staging_on_staging_status" class="el_monitor_staging_on_staging_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->line->Visible) { // line ?>
+        <td data-name="line"<?= $Page->line->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_monitor_staging_on_staging_line" class="el_monitor_staging_on_staging_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

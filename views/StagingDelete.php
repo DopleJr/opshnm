@@ -80,6 +80,9 @@ $Page->showMessage();
 <?php if ($Page->status->Visible) { // status ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_staging_status" class="staging_status"><?= $Page->status->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <th class="<?= $Page->line->headerCellClass() ?>"><span id="elh_staging_line" class="staging_line"><?= $Page->line->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->users->Visible) { // users ?>
         <th class="<?= $Page->users->headerCellClass() ?>"><span id="elh_staging_users" class="staging_users"><?= $Page->users->caption() ?></span></th>
 <?php } ?>
@@ -200,6 +203,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_staging_status" class="el_staging_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <td<?= $Page->line->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_staging_line" class="el_staging_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

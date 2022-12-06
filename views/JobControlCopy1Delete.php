@@ -53,6 +53,9 @@ $Page->showMessage();
 <?php if ($Page->store_id->Visible) { // store_id ?>
         <th class="<?= $Page->store_id->headerCellClass() ?>"><span id="elh_job_control_copy1_store_id" class="job_control_copy1_store_id"><?= $Page->store_id->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+        <th class="<?= $Page->concept->headerCellClass() ?>"><span id="elh_job_control_copy1_concept" class="job_control_copy1_concept"><?= $Page->concept->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->area->Visible) { // area ?>
         <th class="<?= $Page->area->headerCellClass() ?>"><span id="elh_job_control_copy1_area" class="job_control_copy1_area"><?= $Page->area->caption() ?></span></th>
 <?php } ?>
@@ -116,6 +119,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_job_control_copy1_store_id" class="el_job_control_copy1_store_id">
 <span<?= $Page->store_id->viewAttributes() ?>>
 <?= $Page->store_id->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+        <td<?= $Page->concept->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_copy1_concept" class="el_job_control_copy1_concept">
+<span<?= $Page->concept->viewAttributes() ?>>
+<?= $Page->concept->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

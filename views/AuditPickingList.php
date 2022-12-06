@@ -20,6 +20,7 @@ loadjs.ready(["wrapper", "head"], function () {
     faudit_pickinglist.formKeyCountName = "<?= $Page->FormKeyCountName ?>";
 
     // Dynamic selection lists
+    faudit_pickinglist.lists.line = <?= $Page->line->toClientList($Page) ?>;
     faudit_pickinglist.lists.box_id = <?= $Page->box_id->toClientList($Page) ?>;
     faudit_pickinglist.lists.status = <?= $Page->status->toClientList($Page) ?>;
     faudit_pickinglist.lists.users = <?= $Page->users->toClientList($Page) ?>;
@@ -36,6 +37,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Add fields
     var fields = currentTable.fields;
     faudit_pickingsrch.addFields([
+        ["line", [], fields.line.isInvalid],
         ["box_id", [], fields.box_id.isInvalid],
         ["status", [], fields.status.isInvalid],
         ["users", [], fields.users.isInvalid],
@@ -72,6 +74,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Dynamic selection lists
     faudit_pickingsrch.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
     faudit_pickingsrch.lists.store_code = <?= $Page->store_code->toClientList($Page) ?>;
+    faudit_pickingsrch.lists.line = <?= $Page->line->toClientList($Page) ?>;
     faudit_pickingsrch.lists.box_id = <?= $Page->box_id->toClientList($Page) ?>;
     faudit_pickingsrch.lists.type = <?= $Page->type->toClientList($Page) ?>;
     faudit_pickingsrch.lists.concept = <?= $Page->concept->toClientList($Page) ?>;
@@ -193,6 +196,43 @@ if (!$Page->store_code->UseFilter) {
                 ajax: { id: "x_store_code", form: "faudit_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking.fields.store_code.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+<?php
+if (!$Page->line->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_line" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->line->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_line"
+            name="x_line[]"
+            class="form-control ew-select<?= $Page->line->isInvalidClass() ?>"
+            data-select2-id="faudit_pickingsrch_x_line"
+            data-table="audit_picking"
+            data-field="x_line"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->line->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->line->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"
+            <?= $Page->line->editAttributes() ?>>
+            <?= $Page->line->selectOptionListHtml("x_line", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->line->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_pickingsrch", function() {
+            var options = {
+                name: "x_line",
+                selectId: "faudit_pickingsrch_x_line",
+                ajax: { id: "x_line", form: "faudit_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking.fields.line.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -522,6 +562,9 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <th data-name="line" class="<?= $Page->line->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_line" class="audit_picking_line"><?= $Page->renderFieldHeader($Page->line) ?></div></th>
+<?php } ?>
 <?php if ($Page->box_id->Visible) { // box_id ?>
         <th data-name="box_id" class="<?= $Page->box_id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_box_id" class="audit_picking_box_id"><?= $Page->renderFieldHeader($Page->box_id) ?></div></th>
 <?php } ?>
@@ -609,6 +652,14 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->line->Visible) { // line ?>
+        <td data-name="line"<?= $Page->line->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_audit_picking_line" class="el_audit_picking_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->box_id->Visible) { // box_id ?>
         <td data-name="box_id"<?= $Page->box_id->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_audit_picking_box_id" class="el_audit_picking_box_id">

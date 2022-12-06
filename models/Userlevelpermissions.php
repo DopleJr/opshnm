@@ -96,7 +96,14 @@ class Userlevelpermissions extends DbTable
         $this->userlevelid->Nullable = false; // NOT NULL field
         $this->userlevelid->Required = true; // Required field
         $this->userlevelid->UseFilter = true; // Table header filter
-        $this->userlevelid->Lookup = new Lookup('userlevelid', 'userlevelpermissions', true, 'userlevelid', ["userlevelid","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->userlevelid->Lookup = new Lookup('userlevelid', 'userlevelpermissions', true, 'userlevelid', ["userlevelid","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->userlevelid->Lookup = new Lookup('userlevelid', 'userlevelpermissions', true, 'userlevelid', ["userlevelid","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->userlevelid->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['userlevelid'] = &$this->userlevelid;
 
@@ -124,7 +131,14 @@ class Userlevelpermissions extends DbTable
         $this->_tablename->Nullable = false; // NOT NULL field
         $this->_tablename->Required = true; // Required field
         $this->_tablename->UseFilter = true; // Table header filter
-        $this->_tablename->Lookup = new Lookup('tablename', 'userlevelpermissions', true, 'tablename', ["tablename","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->_tablename->Lookup = new Lookup('tablename', 'userlevelpermissions', true, 'tablename', ["tablename","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->_tablename->Lookup = new Lookup('tablename', 'userlevelpermissions', true, 'tablename', ["tablename","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['tablename'] = &$this->_tablename;
 
         // permission
@@ -150,7 +164,14 @@ class Userlevelpermissions extends DbTable
         $this->_permission->Nullable = false; // NOT NULL field
         $this->_permission->Required = true; // Required field
         $this->_permission->UseFilter = true; // Table header filter
-        $this->_permission->Lookup = new Lookup('permission', 'userlevelpermissions', true, 'permission', ["permission","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->_permission->Lookup = new Lookup('permission', 'userlevelpermissions', true, 'permission', ["permission","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->_permission->Lookup = new Lookup('permission', 'userlevelpermissions', true, 'permission', ["permission","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->_permission->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['permission'] = &$this->_permission;
 

@@ -10,7 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 /**
  * Page class
  */
-class BintobinList extends Bintobin
+class BinToBinList extends BinToBin
 {
     use MessagesTrait;
 
@@ -21,10 +21,10 @@ class BintobinList extends Bintobin
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'bin to bin';
+    public $TableName = 'bin_to_bin';
 
     // Page object name
-    public $PageObjName = "BintobinList";
+    public $PageObjName = "BinToBinList";
 
     // View file path
     public $View = null;
@@ -36,7 +36,7 @@ class BintobinList extends Bintobin
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fbintobinlist";
+    public $FormName = "fbin_to_binlist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -173,9 +173,9 @@ class BintobinList extends Bintobin
         // Parent constuctor
         parent::__construct();
 
-        // Table object (bintobin)
-        if (!isset($GLOBALS["bintobin"]) || get_class($GLOBALS["bintobin"]) == PROJECT_NAMESPACE . "bintobin") {
-            $GLOBALS["bintobin"] = &$this;
+        // Table object (bin_to_bin)
+        if (!isset($GLOBALS["bin_to_bin"]) || get_class($GLOBALS["bin_to_bin"]) == PROJECT_NAMESPACE . "bin_to_bin") {
+            $GLOBALS["bin_to_bin"] = &$this;
         }
 
         // Page URL
@@ -191,7 +191,7 @@ class BintobinList extends Bintobin
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'bin to bin');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'bin_to_bin');
         }
 
         // Start timer
@@ -327,7 +327,7 @@ class BintobinList extends Bintobin
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $tbl = Container("bintobin");
+                $tbl = Container("bin_to_bin");
                 $doc = new $class($tbl);
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
@@ -454,6 +454,7 @@ class BintobinList extends Bintobin
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -542,12 +543,12 @@ class BintobinList extends Bintobin
     public $ListActions; // List actions
     public $SelectedCount = 0;
     public $SelectedIndex = 0;
-    public $DisplayRecords = 20;
+    public $DisplayRecords = 1;
     public $StartRecord;
     public $StopRecord;
     public $TotalRecords = 0;
     public $RecordRange = 10;
-    public $PageSizes = "10,20,50,100"; // Page sizes (comma separated)
+    public $PageSizes = "1"; // Page sizes (comma separated)
     public $DefaultSearchWhere = ""; // Default search WHERE clause
     public $SearchWhere = ""; // Search WHERE clause
     public $SearchPanelClass = "ew-search-panel collapse show"; // Search Panel class
@@ -635,8 +636,13 @@ class BintobinList extends Bintobin
 
         // Setup export options
         $this->setupExportOptions();
-        $this->FromBin->setVisibility();
-        $this->ToBin->setVisibility();
+        $this->id->setVisibility();
+        $this->from_bin->setVisibility();
+        $this->ctn->setVisibility();
+        $this->to_bin->setVisibility();
+        $this->date_created->setVisibility();
+        $this->date_updated->setVisibility();
+        $this->time_updated->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -744,7 +750,7 @@ class BintobinList extends Bintobin
         if ($this->Command != "json" && $this->getRecordsPerPage() != "") {
             $this->DisplayRecords = $this->getRecordsPerPage(); // Restore from Session
         } else {
-            $this->DisplayRecords = 20; // Load default
+            $this->DisplayRecords = 1; // Load default
             $this->setRecordsPerPage($this->DisplayRecords); // Save default to Session
         }
 
@@ -895,7 +901,7 @@ class BintobinList extends Bintobin
                 if (SameText($wrk, "all")) { // Display all records
                     $this->DisplayRecords = -1;
                 } else {
-                    $this->DisplayRecords = 20; // Non-numeric, load default
+                    $this->DisplayRecords = 1; // Non-numeric, load default
                 }
             }
             $this->setRecordsPerPage($this->DisplayRecords); // Save to Session
@@ -944,8 +950,12 @@ class BintobinList extends Bintobin
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->FromBin->AdvancedSearch->toJson(), ","); // Field From Bin
-        $filterList = Concat($filterList, $this->ToBin->AdvancedSearch->toJson(), ","); // Field To Bin
+        $filterList = Concat($filterList, $this->from_bin->AdvancedSearch->toJson(), ","); // Field from_bin
+        $filterList = Concat($filterList, $this->ctn->AdvancedSearch->toJson(), ","); // Field ctn
+        $filterList = Concat($filterList, $this->to_bin->AdvancedSearch->toJson(), ","); // Field to_bin
+        $filterList = Concat($filterList, $this->date_created->AdvancedSearch->toJson(), ","); // Field date_created
+        $filterList = Concat($filterList, $this->date_updated->AdvancedSearch->toJson(), ","); // Field date_updated
+        $filterList = Concat($filterList, $this->time_updated->AdvancedSearch->toJson(), ","); // Field time_updated
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -967,7 +977,7 @@ class BintobinList extends Bintobin
         global $UserProfile;
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fbintobinsrch", $filters);
+            $UserProfile->setSearchFilters(CurrentUserName(), "fbin_to_binsrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -986,21 +996,53 @@ class BintobinList extends Bintobin
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field From Bin
-        $this->FromBin->AdvancedSearch->SearchValue = @$filter["x_FromBin"];
-        $this->FromBin->AdvancedSearch->SearchOperator = @$filter["z_FromBin"];
-        $this->FromBin->AdvancedSearch->SearchCondition = @$filter["v_FromBin"];
-        $this->FromBin->AdvancedSearch->SearchValue2 = @$filter["y_FromBin"];
-        $this->FromBin->AdvancedSearch->SearchOperator2 = @$filter["w_FromBin"];
-        $this->FromBin->AdvancedSearch->save();
+        // Field from_bin
+        $this->from_bin->AdvancedSearch->SearchValue = @$filter["x_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchOperator = @$filter["z_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchCondition = @$filter["v_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchValue2 = @$filter["y_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchOperator2 = @$filter["w_from_bin"];
+        $this->from_bin->AdvancedSearch->save();
 
-        // Field To Bin
-        $this->ToBin->AdvancedSearch->SearchValue = @$filter["x_ToBin"];
-        $this->ToBin->AdvancedSearch->SearchOperator = @$filter["z_ToBin"];
-        $this->ToBin->AdvancedSearch->SearchCondition = @$filter["v_ToBin"];
-        $this->ToBin->AdvancedSearch->SearchValue2 = @$filter["y_ToBin"];
-        $this->ToBin->AdvancedSearch->SearchOperator2 = @$filter["w_ToBin"];
-        $this->ToBin->AdvancedSearch->save();
+        // Field ctn
+        $this->ctn->AdvancedSearch->SearchValue = @$filter["x_ctn"];
+        $this->ctn->AdvancedSearch->SearchOperator = @$filter["z_ctn"];
+        $this->ctn->AdvancedSearch->SearchCondition = @$filter["v_ctn"];
+        $this->ctn->AdvancedSearch->SearchValue2 = @$filter["y_ctn"];
+        $this->ctn->AdvancedSearch->SearchOperator2 = @$filter["w_ctn"];
+        $this->ctn->AdvancedSearch->save();
+
+        // Field to_bin
+        $this->to_bin->AdvancedSearch->SearchValue = @$filter["x_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchOperator = @$filter["z_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchCondition = @$filter["v_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchValue2 = @$filter["y_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchOperator2 = @$filter["w_to_bin"];
+        $this->to_bin->AdvancedSearch->save();
+
+        // Field date_created
+        $this->date_created->AdvancedSearch->SearchValue = @$filter["x_date_created"];
+        $this->date_created->AdvancedSearch->SearchOperator = @$filter["z_date_created"];
+        $this->date_created->AdvancedSearch->SearchCondition = @$filter["v_date_created"];
+        $this->date_created->AdvancedSearch->SearchValue2 = @$filter["y_date_created"];
+        $this->date_created->AdvancedSearch->SearchOperator2 = @$filter["w_date_created"];
+        $this->date_created->AdvancedSearch->save();
+
+        // Field date_updated
+        $this->date_updated->AdvancedSearch->SearchValue = @$filter["x_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchOperator = @$filter["z_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchCondition = @$filter["v_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchValue2 = @$filter["y_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchOperator2 = @$filter["w_date_updated"];
+        $this->date_updated->AdvancedSearch->save();
+
+        // Field time_updated
+        $this->time_updated->AdvancedSearch->SearchValue = @$filter["x_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchOperator = @$filter["z_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchCondition = @$filter["v_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchValue2 = @$filter["y_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchOperator2 = @$filter["w_time_updated"];
+        $this->time_updated->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1016,8 +1058,9 @@ class BintobinList extends Bintobin
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->FromBin;
-        $searchFlds[] = &$this->ToBin;
+        $searchFlds[] = &$this->from_bin;
+        $searchFlds[] = &$this->ctn;
+        $searchFlds[] = &$this->to_bin;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1083,7 +1126,7 @@ class BintobinList extends Bintobin
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = ""; // Set up default sort
+            $defaultSort = $this->date_created->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1093,8 +1136,13 @@ class BintobinList extends Bintobin
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->FromBin); // From Bin
-            $this->updateSort($this->ToBin); // To Bin
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->from_bin); // from_bin
+            $this->updateSort($this->ctn); // ctn
+            $this->updateSort($this->to_bin); // to_bin
+            $this->updateSort($this->date_created); // date_created
+            $this->updateSort($this->date_updated); // date_updated
+            $this->updateSort($this->time_updated); // time_updated
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1119,8 +1167,13 @@ class BintobinList extends Bintobin
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->FromBin->setSort("");
-                $this->ToBin->setSort("");
+                $this->id->setSort("");
+                $this->from_bin->setSort("");
+                $this->ctn->setSort("");
+                $this->to_bin->setSort("");
+                $this->date_created->setSort("");
+                $this->date_updated->setSort("");
+                $this->time_updated->setSort("");
             }
 
             // Reset start position
@@ -1205,11 +1258,11 @@ class BintobinList extends Bintobin
                 if ($listaction->Select == ACTION_SINGLE && $allowed) {
                     $caption = $listaction->Caption;
                     $icon = ($listaction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listaction->Icon)) . "\" data-caption=\"" . HtmlTitle($caption) . "\"></i> " : "";
-                    $link = "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"fbintobinlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button></li>";
+                    $link = "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"fbin_to_binlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button></li>";
                     if ($link != "") {
                         $links[] = $link;
                         if ($body == "") { // Setup first button
-                            $body = "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"fbintobinlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button>";
+                            $body = "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" data-ew-action=\"submit\" form=\"fbin_to_binlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listaction->toDataAttrs() . ">" . $icon . $listaction->Caption . "</button>";
                         }
                     }
                 }
@@ -1230,6 +1283,7 @@ class BintobinList extends Bintobin
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1256,8 +1310,13 @@ class BintobinList extends Bintobin
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $option->add("From Bin", $this->createColumnOption("From Bin"));
-            $option->add("To Bin", $this->createColumnOption("To Bin"));
+            $option->add("id", $this->createColumnOption("id"));
+            $option->add("from_bin", $this->createColumnOption("from_bin"));
+            $option->add("ctn", $this->createColumnOption("ctn"));
+            $option->add("to_bin", $this->createColumnOption("to_bin"));
+            $option->add("date_created", $this->createColumnOption("date_created"));
+            $option->add("date_updated", $this->createColumnOption("date_updated"));
+            $option->add("time_updated", $this->createColumnOption("time_updated"));
         }
 
         // Set up options default
@@ -1277,10 +1336,10 @@ class BintobinList extends Bintobin
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fbintobinsrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fbin_to_binsrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fbintobinsrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fbin_to_binsrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1319,7 +1378,7 @@ class BintobinList extends Bintobin
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fbintobinlist"' . $listaction->toDataAttrs() . '>' . $icon . '</button>';
+                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fbin_to_binlist"' . $listaction->toDataAttrs() . '>' . $icon . '</button>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1519,24 +1578,43 @@ class BintobinList extends Bintobin
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->FromBin->setDbValue($row['From Bin']);
-        $this->ToBin->setDbValue($row['To Bin']);
+        $this->id->setDbValue($row['id']);
+        $this->from_bin->setDbValue($row['from_bin']);
+        $this->ctn->setDbValue($row['ctn']);
+        $this->to_bin->setDbValue($row['to_bin']);
+        $this->date_created->setDbValue($row['date_created']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['From Bin'] = $this->FromBin->DefaultValue;
-        $row['To Bin'] = $this->ToBin->DefaultValue;
+        $row['id'] = $this->id->DefaultValue;
+        $row['from_bin'] = $this->from_bin->DefaultValue;
+        $row['ctn'] = $this->ctn->DefaultValue;
+        $row['to_bin'] = $this->to_bin->DefaultValue;
+        $row['date_created'] = $this->date_created->DefaultValue;
+        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['time_updated'] = $this->time_updated->DefaultValue;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        $this->loadRowValues(); // Load default row values
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1557,29 +1635,94 @@ class BintobinList extends Bintobin
 
         // Common render codes for all row types
 
-        // From Bin
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
-        // To Bin
+        // from_bin
+        $this->from_bin->CellCssStyle = "white-space: nowrap;";
+
+        // ctn
+        $this->ctn->CellCssStyle = "white-space: nowrap;";
+
+        // to_bin
+        $this->to_bin->CellCssStyle = "white-space: nowrap;";
+
+        // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
-            // From Bin
-            $this->FromBin->ViewValue = $this->FromBin->CurrentValue;
-            $this->FromBin->ViewCustomAttributes = "";
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
 
-            // To Bin
-            $this->ToBin->ViewValue = $this->ToBin->CurrentValue;
-            $this->ToBin->ViewCustomAttributes = "";
+            // from_bin
+            $this->from_bin->ViewValue = $this->from_bin->CurrentValue;
+            $this->from_bin->ViewCustomAttributes = "";
 
-            // From Bin
-            $this->FromBin->LinkCustomAttributes = "";
-            $this->FromBin->HrefValue = "";
-            $this->FromBin->TooltipValue = "";
+            // ctn
+            $this->ctn->ViewValue = $this->ctn->CurrentValue;
+            $this->ctn->ViewCustomAttributes = "";
 
-            // To Bin
-            $this->ToBin->LinkCustomAttributes = "";
-            $this->ToBin->HrefValue = "";
-            $this->ToBin->TooltipValue = "";
+            // to_bin
+            $this->to_bin->ViewValue = $this->to_bin->CurrentValue;
+            $this->to_bin->ViewCustomAttributes = "";
+
+            // date_created
+            $this->date_created->ViewValue = $this->date_created->CurrentValue;
+            $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
+            $this->date_created->ViewCustomAttributes = "";
+
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
+            // from_bin
+            $this->from_bin->LinkCustomAttributes = "";
+            $this->from_bin->HrefValue = "";
+            $this->from_bin->TooltipValue = "";
+
+            // ctn
+            $this->ctn->LinkCustomAttributes = "";
+            $this->ctn->HrefValue = "";
+            $this->ctn->TooltipValue = "";
+
+            // to_bin
+            $this->to_bin->LinkCustomAttributes = "";
+            $this->to_bin->HrefValue = "";
+            $this->to_bin->TooltipValue = "";
+
+            // date_created
+            $this->date_created->LinkCustomAttributes = "";
+            $this->date_created->HrefValue = "";
+            $this->date_created->TooltipValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+            $this->date_updated->TooltipValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
+            $this->time_updated->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1601,19 +1744,19 @@ class BintobinList extends Bintobin
         $exportUrl = GetUrl($pageUrl . "export=" . $type . ($custom ? "&amp;custom=1" : ""));
         if (SameText($type, "excel")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" form=\"fbintobinlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"excel\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToExcel") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" form=\"fbin_to_binlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"excel\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToExcel") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
             }
         } elseif (SameText($type, "word")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" form=\"fbintobinlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"word\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToWord") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" form=\"fbin_to_binlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"word\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToWord") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
             }
         } elseif (SameText($type, "pdf")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" form=\"fbintobinlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"pdf\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToPdf") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" form=\"fbin_to_binlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"pdf\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToPdf") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdfText")) . "\">" . $Language->phrase("ExportToPdf") . "</a>";
             }
@@ -1625,7 +1768,7 @@ class BintobinList extends Bintobin
             return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-csv\" title=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\">" . $Language->phrase("ExportToCsv") . "</a>";
         } elseif (SameText($type, "email")) {
             $url = $custom ? ' data-url="' . $exportUrl . '"' : '';
-            return '<button type="button" class="btn btn-default ew-export-link ew-email" title="' . $Language->phrase("ExportToEmailText") . '" data-caption="' . $Language->phrase("ExportToEmailText") . '" form="fbintobinlist" data-ew-action="email" data-hdr="' . $Language->phrase("ExportToEmailText") . '" data-sel="false"' . $url . '>' . $Language->phrase("ExportToEmail") . '</button>';
+            return '<button type="button" class="btn btn-default ew-export-link ew-email" title="' . $Language->phrase("ExportToEmailText") . '" data-caption="' . $Language->phrase("ExportToEmailText") . '" form="fbin_to_binlist" data-ew-action="email" data-hdr="' . $Language->phrase("ExportToEmailText") . '" data-sel="false"' . $url . '>' . $Language->phrase("ExportToEmail") . '</button>';
         } elseif (SameText($type, "print")) {
             return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-print\" title=\"" . HtmlEncode($Language->phrase("ExportToPrintText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPrintText")) . "\">" . $Language->phrase("PrinterFriendly") . "</a>";
         }
@@ -1700,7 +1843,7 @@ class BintobinList extends Bintobin
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fbintobinsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fbin_to_binsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button

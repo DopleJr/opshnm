@@ -503,6 +503,7 @@ class StagingEdit extends Staging
         $this->picking_date->setVisibility();
         $this->date_created->setVisibility();
         $this->status->setVisibility();
+        $this->line->setVisibility();
         $this->users->setVisibility();
         $this->date_delivery->setVisibility();
         $this->date_updated->setVisibility();
@@ -810,6 +811,16 @@ class StagingEdit extends Staging
             }
         }
 
+        // Check field name 'line' first before field var 'x_line'
+        $val = $CurrentForm->hasValue("line") ? $CurrentForm->getValue("line") : $CurrentForm->getValue("x_line");
+        if (!$this->line->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->line->Visible = false; // Disable update for API request
+            } else {
+                $this->line->setFormValue($val);
+            }
+        }
+
         // Check field name 'users' first before field var 'x_users'
         $val = $CurrentForm->hasValue("users") ? $CurrentForm->getValue("users") : $CurrentForm->getValue("x_users");
         if (!$this->users->IsDetailKey) {
@@ -861,6 +872,7 @@ class StagingEdit extends Staging
         $this->date_created->CurrentValue = $this->date_created->FormValue;
         $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
         $this->status->CurrentValue = $this->status->FormValue;
+        $this->line->CurrentValue = $this->line->FormValue;
         $this->users->CurrentValue = $this->users->FormValue;
         $this->date_delivery->CurrentValue = $this->date_delivery->FormValue;
         $this->date_delivery->CurrentValue = UnFormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern());
@@ -927,6 +939,7 @@ class StagingEdit extends Staging
         $this->picking_date->setDbValue($row['picking_date']);
         $this->date_created->setDbValue($row['date_created']);
         $this->status->setDbValue($row['status']);
+        $this->line->setDbValue($row['line']);
         $this->users->setDbValue($row['users']);
         $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -948,6 +961,7 @@ class StagingEdit extends Staging
         $row['picking_date'] = $this->picking_date->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
@@ -1018,6 +1032,9 @@ class StagingEdit extends Staging
         // status
         $this->status->RowCssClass = "row";
 
+        // line
+        $this->line->RowCssClass = "row";
+
         // users
         $this->users->RowCssClass = "row";
 
@@ -1085,6 +1102,10 @@ class StagingEdit extends Staging
             }
             $this->status->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // users
             $this->users->ViewValue = $this->users->CurrentValue;
             $this->users->ViewCustomAttributes = "";
@@ -1146,6 +1167,10 @@ class StagingEdit extends Staging
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
 
             // users
             $this->users->LinkCustomAttributes = "";
@@ -1255,6 +1280,15 @@ class StagingEdit extends Staging
             $this->status->EditValue = $this->status->options(true);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+            // line
+            $this->line->setupEditAttributes();
+            $this->line->EditCustomAttributes = "";
+            if (!$this->line->Raw) {
+                $this->line->CurrentValue = HtmlDecode($this->line->CurrentValue);
+            }
+            $this->line->EditValue = HtmlEncode($this->line->CurrentValue);
+            $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
             // users
 
             // date_delivery
@@ -1314,6 +1348,10 @@ class StagingEdit extends Staging
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
 
             // users
             $this->users->LinkCustomAttributes = "";
@@ -1419,6 +1457,11 @@ class StagingEdit extends Staging
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
+        if ($this->line->Required) {
+            if (!$this->line->IsDetailKey && EmptyValue($this->line->FormValue)) {
+                $this->line->addErrorMessage(str_replace("%s", $this->line->caption(), $this->line->RequiredErrorMessage));
+            }
+        }
         if ($this->users->Required) {
             if (!$this->users->IsDetailKey && EmptyValue($this->users->FormValue)) {
                 $this->users->addErrorMessage(str_replace("%s", $this->users->caption(), $this->users->RequiredErrorMessage));
@@ -1505,6 +1548,9 @@ class StagingEdit extends Staging
 
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
+
+        // line
+        $this->line->setDbValueDef($rsnew, $this->line->CurrentValue, null, $this->line->ReadOnly);
 
         // users
         $this->users->CurrentValue = CurrentUserName();

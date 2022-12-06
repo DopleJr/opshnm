@@ -23,11 +23,16 @@ loadjs.ready(["wrapper", "head"], function () {
         ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
         ["source_location", [fields.source_location.visible && fields.source_location.required ? ew.Validators.required(fields.source_location.caption) : null], fields.source_location.isInvalid],
         ["article", [fields.article.visible && fields.article.required ? ew.Validators.required(fields.article.caption) : null], fields.article.isInvalid],
+        ["description", [fields.description.visible && fields.description.required ? ew.Validators.required(fields.description.caption) : null], fields.description.isInvalid],
         ["destination_location", [fields.destination_location.visible && fields.destination_location.required ? ew.Validators.required(fields.destination_location.caption) : null], fields.destination_location.isInvalid],
         ["su", [fields.su.visible && fields.su.required ? ew.Validators.required(fields.su.caption) : null], fields.su.isInvalid],
+        ["qty", [fields.qty.visible && fields.qty.required ? ew.Validators.required(fields.qty.caption) : null, ew.Validators.integer], fields.qty.isInvalid],
+        ["actual", [fields.actual.visible && fields.actual.required ? ew.Validators.required(fields.actual.caption) : null, ew.Validators.integer], fields.actual.isInvalid],
         ["user", [fields.user.visible && fields.user.required ? ew.Validators.required(fields.user.caption) : null], fields.user.isInvalid],
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["date_upload", [fields.date_upload.visible && fields.date_upload.required ? ew.Validators.required(fields.date_upload.caption) : null, ew.Validators.datetime(fields.date_upload.clientFormatPattern)], fields.date_upload.isInvalid],
-        ["date_confirmation", [fields.date_confirmation.visible && fields.date_confirmation.required ? ew.Validators.required(fields.date_confirmation.caption) : null, ew.Validators.datetime(fields.date_confirmation.clientFormatPattern)], fields.date_confirmation.isInvalid]
+        ["date_confirmation", [fields.date_confirmation.visible && fields.date_confirmation.required ? ew.Validators.required(fields.date_confirmation.caption) : null, ew.Validators.datetime(fields.date_confirmation.clientFormatPattern)], fields.date_confirmation.isInvalid],
+        ["time_confirmation", [fields.time_confirmation.visible && fields.time_confirmation.required ? ew.Validators.required(fields.time_confirmation.caption) : null, ew.Validators.time(fields.time_confirmation.clientFormatPattern)], fields.time_confirmation.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -103,6 +108,18 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->description->Visible) { // description ?>
+    <div id="r_description"<?= $Page->description->rowAttributes() ?>>
+        <label id="elh_transfer_bin_piece_description" for="x_description" class="<?= $Page->LeftColumnClass ?>"><?= $Page->description->caption() ?><?= $Page->description->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->description->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_description">
+<input type="<?= $Page->description->getInputTextType() ?>" name="x_description" id="x_description" data-table="transfer_bin_piece" data-field="x_description" value="<?= $Page->description->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->description->getPlaceHolder()) ?>"<?= $Page->description->editAttributes() ?> aria-describedby="x_description_help">
+<?= $Page->description->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->description->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->destination_location->Visible) { // destination_location ?>
     <div id="r_destination_location"<?= $Page->destination_location->rowAttributes() ?>>
         <label id="elh_transfer_bin_piece_destination_location" for="x_destination_location" class="<?= $Page->LeftColumnClass ?>"><?= $Page->destination_location->caption() ?><?= $Page->destination_location->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -127,6 +144,30 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->qty->Visible) { // qty ?>
+    <div id="r_qty"<?= $Page->qty->rowAttributes() ?>>
+        <label id="elh_transfer_bin_piece_qty" for="x_qty" class="<?= $Page->LeftColumnClass ?>"><?= $Page->qty->caption() ?><?= $Page->qty->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->qty->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_qty">
+<input type="<?= $Page->qty->getInputTextType() ?>" name="x_qty" id="x_qty" data-table="transfer_bin_piece" data-field="x_qty" value="<?= $Page->qty->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->qty->getPlaceHolder()) ?>"<?= $Page->qty->editAttributes() ?> aria-describedby="x_qty_help">
+<?= $Page->qty->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->qty->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->actual->Visible) { // actual ?>
+    <div id="r_actual"<?= $Page->actual->rowAttributes() ?>>
+        <label id="elh_transfer_bin_piece_actual" for="x_actual" class="<?= $Page->LeftColumnClass ?>"><?= $Page->actual->caption() ?><?= $Page->actual->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->actual->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_actual">
+<input type="<?= $Page->actual->getInputTextType() ?>" name="x_actual" id="x_actual" data-table="transfer_bin_piece" data-field="x_actual" value="<?= $Page->actual->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->actual->getPlaceHolder()) ?>"<?= $Page->actual->editAttributes() ?> aria-describedby="x_actual_help">
+<?= $Page->actual->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->actual->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
     <div id="r_user"<?= $Page->user->rowAttributes() ?>>
         <label id="elh_transfer_bin_piece_user" for="x_user" class="<?= $Page->LeftColumnClass ?>"><?= $Page->user->caption() ?><?= $Page->user->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -135,6 +176,18 @@ $Page->showMessage();
 <input type="<?= $Page->user->getInputTextType() ?>" name="x_user" id="x_user" data-table="transfer_bin_piece" data-field="x_user" value="<?= $Page->user->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->user->getPlaceHolder()) ?>"<?= $Page->user->editAttributes() ?> aria-describedby="x_user_help">
 <?= $Page->user->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->user->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <div id="r_status"<?= $Page->status->rowAttributes() ?>>
+        <label id="elh_transfer_bin_piece_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_status">
+<input type="<?= $Page->status->getInputTextType() ?>" name="x_status" id="x_status" data-table="transfer_bin_piece" data-field="x_status" value="<?= $Page->status->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"<?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
+<?= $Page->status->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -190,7 +243,7 @@ loadjs.ready(["ftransfer_bin_pieceedit", "datetimepicker"], function () {
 <?php if (!$Page->date_confirmation->ReadOnly && !$Page->date_confirmation->Disabled && !isset($Page->date_confirmation->EditAttrs["readonly"]) && !isset($Page->date_confirmation->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["ftransfer_bin_pieceedit", "datetimepicker"], function () {
-    let format = "<?= DateFormat(1) ?>",
+    let format = "<?= DateFormat(2) ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
@@ -215,6 +268,18 @@ loadjs.ready(["ftransfer_bin_pieceedit", "datetimepicker"], function () {
 });
 </script>
 <?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->time_confirmation->Visible) { // time_confirmation ?>
+    <div id="r_time_confirmation"<?= $Page->time_confirmation->rowAttributes() ?>>
+        <label id="elh_transfer_bin_piece_time_confirmation" for="x_time_confirmation" class="<?= $Page->LeftColumnClass ?>"><?= $Page->time_confirmation->caption() ?><?= $Page->time_confirmation->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->time_confirmation->cellAttributes() ?>>
+<span id="el_transfer_bin_piece_time_confirmation">
+<input type="<?= $Page->time_confirmation->getInputTextType() ?>" name="x_time_confirmation" id="x_time_confirmation" data-table="transfer_bin_piece" data-field="x_time_confirmation" value="<?= $Page->time_confirmation->EditValue ?>" placeholder="<?= HtmlEncode($Page->time_confirmation->getPlaceHolder()) ?>"<?= $Page->time_confirmation->editAttributes() ?> aria-describedby="x_time_confirmation_help">
+<?= $Page->time_confirmation->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->time_confirmation->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

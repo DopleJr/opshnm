@@ -490,9 +490,11 @@ class BoxPickingSearch extends BoxPicking
         $this->status->Visible = false;
         $this->users->Visible = false;
         $this->picking_date->setVisibility();
+        $this->line->setVisibility();
         $this->date_created->Visible = false;
-        $this->date_delivery->setVisibility();
         $this->date_updated->Visible = false;
+        $this->date_staging->setVisibility();
+        $this->date_delivery->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -576,6 +578,8 @@ class BoxPickingSearch extends BoxPicking
     {
         $srchUrl = "";
         $this->buildSearchUrl($srchUrl, $this->picking_date); // picking_date
+        $this->buildSearchUrl($srchUrl, $this->line); // line
+        $this->buildSearchUrl($srchUrl, $this->date_staging); // date_staging
         $this->buildSearchUrl($srchUrl, $this->date_delivery); // date_delivery
         if ($srchUrl != "") {
             $srchUrl .= "&";
@@ -703,18 +707,28 @@ class BoxPickingSearch extends BoxPicking
             $hasValue = true;
         }
 
+        // line
+        if ($this->line->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // date_created
         if ($this->date_created->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // date_delivery
-        if ($this->date_delivery->AdvancedSearch->get()) {
+        // date_updated
+        if ($this->date_updated->AdvancedSearch->get()) {
             $hasValue = true;
         }
 
-        // date_updated
-        if ($this->date_updated->AdvancedSearch->get()) {
+        // date_staging
+        if ($this->date_staging->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
+        // date_delivery
+        if ($this->date_delivery->AdvancedSearch->get()) {
             $hasValue = true;
         }
         return $hasValue;
@@ -762,14 +776,20 @@ class BoxPickingSearch extends BoxPicking
         // picking_date
         $this->picking_date->RowCssClass = "row";
 
+        // line
+        $this->line->RowCssClass = "row";
+
         // date_created
         $this->date_created->RowCssClass = "row";
 
-        // date_delivery
-        $this->date_delivery->RowCssClass = "row";
-
         // date_updated
         $this->date_updated->RowCssClass = "row";
+
+        // date_staging
+        $this->date_staging->RowCssClass = "row";
+
+        // date_delivery
+        $this->date_delivery->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -815,25 +835,44 @@ class BoxPickingSearch extends BoxPicking
             $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
             $this->picking_date->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
-
-            // date_delivery
-            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
-            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
-            $this->date_delivery->ViewCustomAttributes = "";
 
             // date_updated
             $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
 
+            // date_staging
+            $this->date_staging->ViewValue = $this->date_staging->CurrentValue;
+            $this->date_staging->ViewValue = FormatDateTime($this->date_staging->ViewValue, $this->date_staging->formatPattern());
+            $this->date_staging->ViewCustomAttributes = "";
+
+            // date_delivery
+            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
+            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
+            $this->date_delivery->ViewCustomAttributes = "";
+
             // picking_date
             $this->picking_date->LinkCustomAttributes = "";
             $this->picking_date->HrefValue = "";
             $this->picking_date->TooltipValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
+
+            // date_staging
+            $this->date_staging->LinkCustomAttributes = "";
+            $this->date_staging->HrefValue = "";
+            $this->date_staging->TooltipValue = "";
 
             // date_delivery
             $this->date_delivery->LinkCustomAttributes = "";
@@ -849,6 +888,21 @@ class BoxPickingSearch extends BoxPicking
             $this->picking_date->EditCustomAttributes = "";
             $this->picking_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->picking_date->AdvancedSearch->SearchValue2, $this->picking_date->formatPattern()), $this->picking_date->formatPattern()));
             $this->picking_date->PlaceHolder = RemoveHtml($this->picking_date->caption());
+
+            // line
+            $this->line->setupEditAttributes();
+            $this->line->EditCustomAttributes = "";
+            if (!$this->line->Raw) {
+                $this->line->AdvancedSearch->SearchValue = HtmlDecode($this->line->AdvancedSearch->SearchValue);
+            }
+            $this->line->EditValue = HtmlEncode($this->line->AdvancedSearch->SearchValue);
+            $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
+            // date_staging
+            $this->date_staging->setupEditAttributes();
+            $this->date_staging->EditCustomAttributes = "";
+            $this->date_staging->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date_staging->AdvancedSearch->SearchValue, $this->date_staging->formatPattern()), $this->date_staging->formatPattern()));
+            $this->date_staging->PlaceHolder = RemoveHtml($this->date_staging->caption());
 
             // date_delivery
             $this->date_delivery->setupEditAttributes();
@@ -879,6 +933,9 @@ class BoxPickingSearch extends BoxPicking
         if (!CheckDate($this->picking_date->AdvancedSearch->SearchValue2, $this->picking_date->formatPattern())) {
             $this->picking_date->addErrorMessage($this->picking_date->getErrorMessage(false));
         }
+        if (!CheckDate($this->date_staging->AdvancedSearch->SearchValue, $this->date_staging->formatPattern())) {
+            $this->date_staging->addErrorMessage($this->date_staging->getErrorMessage(false));
+        }
         if (!CheckDate($this->date_delivery->AdvancedSearch->SearchValue, $this->date_delivery->formatPattern())) {
             $this->date_delivery->addErrorMessage($this->date_delivery->getErrorMessage(false));
         }
@@ -899,6 +956,8 @@ class BoxPickingSearch extends BoxPicking
     public function loadAdvancedSearch()
     {
         $this->picking_date->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
+        $this->date_staging->AdvancedSearch->load();
         $this->date_delivery->AdvancedSearch->load();
     }
 

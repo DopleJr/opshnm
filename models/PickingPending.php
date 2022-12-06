@@ -743,7 +743,14 @@ class PickingPending extends DbTable
         );
         $this->box_type->InputTextType = "text";
         $this->box_type->Required = true; // Required field
-        $this->box_type->Lookup = new Lookup('box_type', 'picking_pending', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_type->Lookup = new Lookup('box_type', 'picking_pending', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_type->Lookup = new Lookup('box_type', 'picking_pending', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->box_type->OptionCount = 2;
         $this->Fields['box_type'] = &$this->box_type;
 
@@ -768,7 +775,14 @@ class PickingPending extends DbTable
         );
         $this->picker->InputTextType = "text";
         $this->picker->UseFilter = true; // Table header filter
-        $this->picker->Lookup = new Lookup('picker', 'picking_pending', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picker->Lookup = new Lookup('picker', 'picking_pending', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picker->Lookup = new Lookup('picker', 'picking_pending', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['picker'] = &$this->picker;
 
         // status
@@ -2494,11 +2508,8 @@ class PickingPending extends DbTable
         // concept
         $this->concept->setupEditAttributes();
         $this->concept->EditCustomAttributes = "";
-        if (!$this->concept->Raw) {
-            $this->concept->CurrentValue = HtmlDecode($this->concept->CurrentValue);
-        }
         $this->concept->EditValue = $this->concept->CurrentValue;
-        $this->concept->PlaceHolder = RemoveHtml($this->concept->caption());
+        $this->concept->ViewCustomAttributes = "";
 
         // target_qty
         $this->target_qty->setupEditAttributes();
@@ -2528,8 +2539,9 @@ class PickingPending extends DbTable
         // confirmation_date
         $this->confirmation_date->setupEditAttributes();
         $this->confirmation_date->EditCustomAttributes = "";
-        $this->confirmation_date->EditValue = FormatDateTime($this->confirmation_date->CurrentValue, $this->confirmation_date->formatPattern());
-        $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+        $this->confirmation_date->EditValue = $this->confirmation_date->CurrentValue;
+        $this->confirmation_date->EditValue = FormatDateTime($this->confirmation_date->EditValue, $this->confirmation_date->formatPattern());
+        $this->confirmation_date->ViewCustomAttributes = "";
 
         // confirmation_time
         $this->confirmation_time->setupEditAttributes();
@@ -2554,17 +2566,8 @@ class PickingPending extends DbTable
         // picker
         $this->picker->setupEditAttributes();
         $this->picker->EditCustomAttributes = "";
-        if (!$Security->isAdmin() && $Security->isLoggedIn() && !$this->userIDAllow("info")) { // Non system admin
-            $this->picker->CurrentValue = CurrentUserID();
-            $this->picker->EditValue = $this->picker->CurrentValue;
-            $this->picker->ViewCustomAttributes = "";
-        } else {
-            if (!$this->picker->Raw) {
-                $this->picker->CurrentValue = HtmlDecode($this->picker->CurrentValue);
-            }
-            $this->picker->EditValue = $this->picker->CurrentValue;
-            $this->picker->PlaceHolder = RemoveHtml($this->picker->caption());
-        }
+        $this->picker->EditValue = $this->picker->CurrentValue;
+        $this->picker->ViewCustomAttributes = "";
 
         // status
         $this->status->setupEditAttributes();
@@ -3156,14 +3159,32 @@ class PickingPending extends DbTable
     // Row Updating event
     public function rowUpdating($rsold, &$rsnew)
     {
+    	$_id = $rsold["id"];
+        $_status = "Done";
+        $_status2 = "Unmatch";
+        $_user = CurrentUsername();
+        $_date = CurrentDate();
+        $_status2 = "Pending";
+        $status = $this->picked_qty->CurrentValue;
+        //Compare
+        $_priority = $this->to_priority->CurrentValue;
+        $_concept = $this->concept->CurrentValue;
+        $_picked = $this->picked_qty->CurrentValue;
+        $_target = $this->target_qty->CurrentValue;
+        $_variance = $this->variance_qty->CurrentValue;
+        $_storecid = $this->store_id->CurrentValue;
+        $_boxcode = $this->box_code->CurrentValue;
+        $_boxtype = $this->box_type->CurrentValue;
+        $_closetotes = $this->close_totes->CurrentValue;
+        $_jobid = $this->job_id->CurrentValue;
         // Enter your code here
         // To cancel, set return value to false
         if ( $rsnew["scan_box"] !== $rsnew["box_code"] ) {
         	$this->setFailureMessage("BOX SALAH");
         	return FALSE;
-        	}
-        else {
-        return true;
+        }
+        else{
+        	return TRUE;
         }
     }
 
@@ -3177,55 +3198,126 @@ class PickingPending extends DbTable
         $_status = "Done";
         $_shortpick = "M";
         $_user = CurrentUsername();
+        $_date = CurrentDate();
         $_status2 = "Pending";
+        $_status3 = "Unmatch";
         $status = $this->picked_qty->CurrentValue;
         //Compare
         $like = "%";
+        $_priority = $this->to_priority->CurrentValue;
+        $_concept = $this->concept->CurrentValue;
         $_picked = $this->picked_qty->CurrentValue;
         $_target = $this->target_qty->CurrentValue;
         $_variance = $this->variance_qty->CurrentValue;
         $_storecid = $this->store_id->CurrentValue;
+        $_storename = $this->store_name->CurrentValue;
         $_boxcode = $this->box_code->CurrentValue;
         $_boxtype = $this->box_type->CurrentValue;
         $_closetotes = $this->close_totes->CurrentValue;
         $_jobid = $this->job_id->CurrentValue;
         $hasil = $_picked - $_target;
-        if($hasil !== 0 && $_closetotes == 1 ){    
-        $sql3 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
-        $_result3 = ExecuteStatement($sql3);
-        $boxupdate3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
-        $result3 = ExecuteStatement($boxupdate3);
-        //$this->setSuccessMessage("Confirmed");
-        //Log("No Close Totes 1");
-        //return true;
-        }
-        if ($hasil !== 0 && $_closetotes == 2 ){
-        	$sql4 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
-        	$result4 = ExecuteStatement($sql4);
-        	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
-        	$_qty = ExecuteScalar($qty);
-        	//$this -> setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : ".$_qty);
-        	//Log("Close Totes 1");
-        	//return true;
-        	}
-        if($hasil == 0 && $_closetotes == 1 ){    
-        $sql6 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
-        $_result6 = ExecuteStatement($sql6);
-        $boxupdate6 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
-        $result6 = ExecuteStatement($boxupdate6);
-        //$this->setSuccessMessage("Confirmed");
-        //Log("No Close Totes 2");
-        //return true;
-        }
-        if ($hasil == 0 && $_closetotes == 2 ){
-        	$sql7 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
-        	$result7 = ExecuteStatement($sql7);
-        	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
-        	$_qty = ExecuteScalar($qty);
-        	//$this->setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : " .$_qty);
-        	//Log("Close Totes 2");
-        	//return true;
-        	}
+        //compare boolean
+            $comparee = "SELECT count(`box_id`) FROM `box_picking_online` WHERE `box_id` = '$_boxcode' AND `store_code` = '$_storecid' AND `concept` = '$_concept'  ";
+            $_compare1 = ExecuteScalar($comparee);
+            //result insert if 0
+            $result_insert = "INSERT INTO `box_picking_online`
+            (id,box_id,store_code,store_name,type,concept,picked_qty,scan_qty,status,users,picking_date,line,date_created)
+            VALUES (0,'$_boxcode','$_storecid','$_storename','$_priority','$_concept','$_picked','0','$_status3','$_user','$_date','','$_date')";
+            //$_result_insert = ExecuteStatement($result_insert);
+            //result update if 1
+            $result_update = "UPDATE `box_picking_online` SET
+            `picked_qty` = (`picked_qty` + '$_picked'),
+            `date_updated` = '$_date'
+            WHERE
+            	`users` = '$_user' AND
+            	`box_id` = '$_boxcode' AND
+            	`store_code` = '$_storecid' AND
+            	`concept` = '$_concept'  ";
+            //$_result_update = ExecuteStatement($result_update);
+            if($hasil !== 0 && $_closetotes == 1 && $_compare1 == 0 ){    
+            $sql3 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
+            $_result3 = ExecuteStatement($sql3);
+            $boxupdate3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
+            $result3 = ExecuteStatement($boxupdate3);
+            $boxpicking3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
+            $result3 = ExecuteStatement($boxupdate3);
+            $_result_insert = ExecuteStatement($result_insert);
+            //$this->setSuccessMessage("Confirmed");
+            //Log("No Close Totes 1");
+            //return true;
+            }
+            if($hasil !== 0 && $_closetotes == 1 && $_compare1 == 1 ){    
+            $sql3 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
+            $_result3 = ExecuteStatement($sql3);
+            $boxupdate3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
+            $result3 = ExecuteStatement($boxupdate3);
+            $boxpicking3 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
+            $result3 = ExecuteStatement($boxupdate3);
+            $_result_update = ExecuteStatement($result_update);
+            //$this->setSuccessMessage("Confirmed");
+            //Log("No Close Totes 1");
+            //return true;
+            }
+            if ($hasil !== 0 && $_closetotes == 2 && $_compare1 == 0 ){
+            	$sql4 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
+            	$result4 = ExecuteStatement($sql4);
+            	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
+            	$_qty = ExecuteScalar($qty);
+            	$_result_insert = ExecuteStatement($result_insert);
+            	//$this -> setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : ".$_qty);
+            	//Log("Close Totes 1");
+            	//return true;
+            	}
+            if ($hasil !== 0 && $_closetotes == 2 && $_compare1 == 1 ){
+            	$sql4 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = '$_shortpick' WHERE `id` = '$_id' ";
+            	$result4 = ExecuteStatement($sql4);
+            	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
+            	$_qty = ExecuteScalar($qty);
+            	$_result_update = ExecuteStatement($result_update);
+            	//$this -> setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : ".$_qty);
+            	//Log("Close Totes 1");
+            	//return true;
+            	}
+            if($hasil == 0 && $_closetotes == 1 && $_compare1 == 0 ){    
+            $sql6 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
+            $_result6 = ExecuteStatement($sql6);
+            $boxupdate6 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
+            $result6 = ExecuteStatement($boxupdate6);
+            $_result_insert = ExecuteStatement($result_insert);
+            //$this->setSuccessMessage("Confirmed");
+            //Log("No Close Totes 2");
+            //return true;
+            }
+            if($hasil == 0 && $_closetotes == 1 && $_compare1 == 1 ){    
+            $sql6 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
+            $_result6 = ExecuteStatement($sql6);
+            $boxupdate6 = "UPDATE picking_pending SET `box_code` = '$_boxcode',`box_type` = '$_boxtype' WHERE `picker` = '$_user' AND `store_id` = '$_storecid' ORDER BY `sequence` asc LIMIT 1 ";
+            $result6 = ExecuteStatement($boxupdate6);
+            $_result_update = ExecuteStatement($result_update);
+            //$this->setSuccessMessage("Confirmed");
+            //Log("No Close Totes 2");
+            //return true;
+            }
+            if ($hasil == 0 && $_closetotes == 2 && $_compare1 == 0){
+            	$sql7 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
+            	$result7 = ExecuteStatement($sql7);
+            	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
+            	$_qty = ExecuteScalar($qty);
+            	$_result_insert = ExecuteStatement($result_insert);
+            	//$this->setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : " .$_qty);
+            	//Log("Close Totes 2");
+            	//return true;
+            	}
+            if ($hasil == 0 && $_closetotes == 2 && $_compare1 == 1){
+            	$sql7 = "UPDATE picking SET `confirmation_date` = '$currentDate',`confirmation_time` = '$currentTime',`status` = '$_status',`picker` = '$_user',`variance_qty` = '$_picked' - '$_target',`remarks` = Null  WHERE `id` = '$_id' ";
+            	$result7 = ExecuteStatement($sql7);
+            	$qty = "SELECT SUM(`picked_qty`) FROM picking WHERE `box_code` = '$_boxcode'  ";
+            	$_qty = ExecuteScalar($qty);
+            	$_result_update = ExecuteStatement($result_update);
+            	//$this->setSuccessMessage("BOX CODE : ".$_boxcode. " Qty : " .$_qty);
+            	//Log("Close Totes 2");
+            	//return true;
+            	}
     }
 
     // Row Update Conflict event

@@ -96,7 +96,14 @@ class MonitorKpi extends DbTable
         );
         $this->Date->InputTextType = "text";
         $this->Date->UseFilter = true; // Table header filter
-        $this->Date->Lookup = new Lookup('Date', 'monitor_kpi', true, 'Date', ["Date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Date->Lookup = new Lookup('Date', 'monitor_kpi', true, 'Date', ["Date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Date->Lookup = new Lookup('Date', 'monitor_kpi', true, 'Date', ["Date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['Date'] = &$this->Date;
 
@@ -121,7 +128,14 @@ class MonitorKpi extends DbTable
         );
         $this->Subject->InputTextType = "text";
         $this->Subject->UseFilter = true; // Table header filter
-        $this->Subject->Lookup = new Lookup('Subject', 'monitor_kpi', true, 'Subject', ["Subject","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Subject->Lookup = new Lookup('Subject', 'monitor_kpi', true, 'Subject', ["Subject","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Subject->Lookup = new Lookup('Subject', 'monitor_kpi', true, 'Subject', ["Subject","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Subject'] = &$this->Subject;
 
         // Divisi
@@ -145,7 +159,14 @@ class MonitorKpi extends DbTable
         );
         $this->Divisi->InputTextType = "text";
         $this->Divisi->UseFilter = true; // Table header filter
-        $this->Divisi->Lookup = new Lookup('Divisi', 'monitor_kpi', true, 'Divisi', ["Divisi","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Divisi->Lookup = new Lookup('Divisi', 'monitor_kpi', true, 'Divisi', ["Divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Divisi->Lookup = new Lookup('Divisi', 'monitor_kpi', true, 'Divisi', ["Divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Divisi'] = &$this->Divisi;
 
         // Pending
@@ -169,7 +190,14 @@ class MonitorKpi extends DbTable
         );
         $this->Pending->InputTextType = "text";
         $this->Pending->UseFilter = true; // Table header filter
-        $this->Pending->Lookup = new Lookup('Pending', 'monitor_kpi', true, 'Pending', ["Pending","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Pending->Lookup = new Lookup('Pending', 'monitor_kpi', true, 'Pending', ["Pending","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Pending->Lookup = new Lookup('Pending', 'monitor_kpi', true, 'Pending', ["Pending","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Pending->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['Pending'] = &$this->Pending;
 
@@ -194,7 +222,14 @@ class MonitorKpi extends DbTable
         );
         $this->Done->InputTextType = "text";
         $this->Done->UseFilter = true; // Table header filter
-        $this->Done->Lookup = new Lookup('Done', 'monitor_kpi', true, 'Done', ["Done","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Done->Lookup = new Lookup('Done', 'monitor_kpi', true, 'Done', ["Done","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Done->Lookup = new Lookup('Done', 'monitor_kpi', true, 'Done', ["Done","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Done->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['Done'] = &$this->Done;
 

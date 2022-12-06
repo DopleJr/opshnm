@@ -457,6 +457,9 @@ class BinToBinPieceList extends BinToBinPiece
         if ($this->isAddOrEdit()) {
             $this->date_confirmation->Visible = false;
         }
+        if ($this->isAddOrEdit()) {
+            $this->time_confirmation->Visible = false;
+        }
     }
 
     // Lookup data
@@ -596,11 +599,16 @@ class BinToBinPieceList extends BinToBinPiece
         $this->source_location->setVisibility();
         $this->scan_location->Visible = false;
         $this->article->setVisibility();
+        $this->description->setVisibility();
         $this->scan_article->Visible = false;
         $this->destination_location->setVisibility();
         $this->su->setVisibility();
+        $this->qty->setVisibility();
+        $this->actual->setVisibility();
         $this->user->setVisibility();
+        $this->status->setVisibility();
         $this->date_confirmation->setVisibility();
+        $this->time_confirmation->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -675,7 +683,11 @@ class BinToBinPieceList extends BinToBinPiece
             }
 
             // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
             AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
 
             // Get and validate search values for advanced search
             if (EmptyValue($this->UserAction)) { // Skip if user action
@@ -702,6 +714,11 @@ class BinToBinPieceList extends BinToBinPiece
             // Set up sorting order
             $this->setupSortOrder();
 
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
+
             // Get search criteria for advanced search
             if (!$this->hasInvalidFields()) {
                 $srchAdvanced = $this->advancedSearchWhere();
@@ -718,6 +735,12 @@ class BinToBinPieceList extends BinToBinPiece
 
         // Load search default if no existing search criteria
         if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+
             // Load advanced search from default
             if ($this->loadAdvancedSearchDefault()) {
                 $srchAdvanced = $this->advancedSearchWhere();
@@ -910,11 +933,20 @@ class BinToBinPieceList extends BinToBinPiece
         $filterList = Concat($filterList, $this->source_location->AdvancedSearch->toJson(), ","); // Field source_location
         $filterList = Concat($filterList, $this->scan_location->AdvancedSearch->toJson(), ","); // Field scan_location
         $filterList = Concat($filterList, $this->article->AdvancedSearch->toJson(), ","); // Field article
+        $filterList = Concat($filterList, $this->description->AdvancedSearch->toJson(), ","); // Field description
         $filterList = Concat($filterList, $this->scan_article->AdvancedSearch->toJson(), ","); // Field scan_article
         $filterList = Concat($filterList, $this->destination_location->AdvancedSearch->toJson(), ","); // Field destination_location
         $filterList = Concat($filterList, $this->su->AdvancedSearch->toJson(), ","); // Field su
+        $filterList = Concat($filterList, $this->qty->AdvancedSearch->toJson(), ","); // Field qty
+        $filterList = Concat($filterList, $this->actual->AdvancedSearch->toJson(), ","); // Field actual
         $filterList = Concat($filterList, $this->user->AdvancedSearch->toJson(), ","); // Field user
+        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->date_confirmation->AdvancedSearch->toJson(), ","); // Field date_confirmation
+        $filterList = Concat($filterList, $this->time_confirmation->AdvancedSearch->toJson(), ","); // Field time_confirmation
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
 
         // Return filter list in JSON
         if ($filterList != "") {
@@ -991,6 +1023,14 @@ class BinToBinPieceList extends BinToBinPiece
         $this->article->AdvancedSearch->SearchOperator2 = @$filter["w_article"];
         $this->article->AdvancedSearch->save();
 
+        // Field description
+        $this->description->AdvancedSearch->SearchValue = @$filter["x_description"];
+        $this->description->AdvancedSearch->SearchOperator = @$filter["z_description"];
+        $this->description->AdvancedSearch->SearchCondition = @$filter["v_description"];
+        $this->description->AdvancedSearch->SearchValue2 = @$filter["y_description"];
+        $this->description->AdvancedSearch->SearchOperator2 = @$filter["w_description"];
+        $this->description->AdvancedSearch->save();
+
         // Field scan_article
         $this->scan_article->AdvancedSearch->SearchValue = @$filter["x_scan_article"];
         $this->scan_article->AdvancedSearch->SearchOperator = @$filter["z_scan_article"];
@@ -1015,6 +1055,22 @@ class BinToBinPieceList extends BinToBinPiece
         $this->su->AdvancedSearch->SearchOperator2 = @$filter["w_su"];
         $this->su->AdvancedSearch->save();
 
+        // Field qty
+        $this->qty->AdvancedSearch->SearchValue = @$filter["x_qty"];
+        $this->qty->AdvancedSearch->SearchOperator = @$filter["z_qty"];
+        $this->qty->AdvancedSearch->SearchCondition = @$filter["v_qty"];
+        $this->qty->AdvancedSearch->SearchValue2 = @$filter["y_qty"];
+        $this->qty->AdvancedSearch->SearchOperator2 = @$filter["w_qty"];
+        $this->qty->AdvancedSearch->save();
+
+        // Field actual
+        $this->actual->AdvancedSearch->SearchValue = @$filter["x_actual"];
+        $this->actual->AdvancedSearch->SearchOperator = @$filter["z_actual"];
+        $this->actual->AdvancedSearch->SearchCondition = @$filter["v_actual"];
+        $this->actual->AdvancedSearch->SearchValue2 = @$filter["y_actual"];
+        $this->actual->AdvancedSearch->SearchOperator2 = @$filter["w_actual"];
+        $this->actual->AdvancedSearch->save();
+
         // Field user
         $this->user->AdvancedSearch->SearchValue = @$filter["x_user"];
         $this->user->AdvancedSearch->SearchOperator = @$filter["z_user"];
@@ -1023,6 +1079,14 @@ class BinToBinPieceList extends BinToBinPiece
         $this->user->AdvancedSearch->SearchOperator2 = @$filter["w_user"];
         $this->user->AdvancedSearch->save();
 
+        // Field status
+        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
+        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
+        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
+        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
+        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
+        $this->status->AdvancedSearch->save();
+
         // Field date_confirmation
         $this->date_confirmation->AdvancedSearch->SearchValue = @$filter["x_date_confirmation"];
         $this->date_confirmation->AdvancedSearch->SearchOperator = @$filter["z_date_confirmation"];
@@ -1030,6 +1094,16 @@ class BinToBinPieceList extends BinToBinPiece
         $this->date_confirmation->AdvancedSearch->SearchValue2 = @$filter["y_date_confirmation"];
         $this->date_confirmation->AdvancedSearch->SearchOperator2 = @$filter["w_date_confirmation"];
         $this->date_confirmation->AdvancedSearch->save();
+
+        // Field time_confirmation
+        $this->time_confirmation->AdvancedSearch->SearchValue = @$filter["x_time_confirmation"];
+        $this->time_confirmation->AdvancedSearch->SearchOperator = @$filter["z_time_confirmation"];
+        $this->time_confirmation->AdvancedSearch->SearchCondition = @$filter["v_time_confirmation"];
+        $this->time_confirmation->AdvancedSearch->SearchValue2 = @$filter["y_time_confirmation"];
+        $this->time_confirmation->AdvancedSearch->SearchOperator2 = @$filter["w_time_confirmation"];
+        $this->time_confirmation->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
 
     // Advanced search WHERE clause based on QueryString
@@ -1045,11 +1119,16 @@ class BinToBinPieceList extends BinToBinPiece
         $this->buildSearchSql($where, $this->source_location, $default, true); // source_location
         $this->buildSearchSql($where, $this->scan_location, $default, false); // scan_location
         $this->buildSearchSql($where, $this->article, $default, true); // article
+        $this->buildSearchSql($where, $this->description, $default, true); // description
         $this->buildSearchSql($where, $this->scan_article, $default, false); // scan_article
         $this->buildSearchSql($where, $this->destination_location, $default, true); // destination_location
         $this->buildSearchSql($where, $this->su, $default, true); // su
+        $this->buildSearchSql($where, $this->qty, $default, false); // qty
+        $this->buildSearchSql($where, $this->actual, $default, false); // actual
         $this->buildSearchSql($where, $this->user, $default, true); // user
+        $this->buildSearchSql($where, $this->status, $default, true); // status
         $this->buildSearchSql($where, $this->date_confirmation, $default, true); // date_confirmation
+        $this->buildSearchSql($where, $this->time_confirmation, $default, false); // time_confirmation
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1061,11 +1140,16 @@ class BinToBinPieceList extends BinToBinPiece
             $this->source_location->AdvancedSearch->save(); // source_location
             $this->scan_location->AdvancedSearch->save(); // scan_location
             $this->article->AdvancedSearch->save(); // article
+            $this->description->AdvancedSearch->save(); // description
             $this->scan_article->AdvancedSearch->save(); // scan_article
             $this->destination_location->AdvancedSearch->save(); // destination_location
             $this->su->AdvancedSearch->save(); // su
+            $this->qty->AdvancedSearch->save(); // qty
+            $this->actual->AdvancedSearch->save(); // actual
             $this->user->AdvancedSearch->save(); // user
+            $this->status->AdvancedSearch->save(); // status
             $this->date_confirmation->AdvancedSearch->save(); // date_confirmation
+            $this->time_confirmation->AdvancedSearch->save(); // time_confirmation
         }
         return $where;
     }
@@ -1133,9 +1217,48 @@ class BinToBinPieceList extends BinToBinPiece
         return $value;
     }
 
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+
+        // Fields to search
+        $searchFlds = [];
+        $searchFlds[] = &$this->source_location;
+        $searchFlds[] = &$this->article;
+        $searchFlds[] = &$this->description;
+        $searchFlds[] = &$this->su;
+        $searchFlds[] = &$this->user;
+        $searchFlds[] = &$this->status;
+        $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            $searchStr = GetQuickSearchFilter($searchFlds, $ar, $searchType, Config("BASIC_SEARCH_ANY_FIELDS"), $this->Dbid);
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
     // Check if search parm exists
     protected function checkSearchParms()
     {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
         if ($this->id->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1151,6 +1274,9 @@ class BinToBinPieceList extends BinToBinPiece
         if ($this->article->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->description->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->scan_article->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1160,10 +1286,22 @@ class BinToBinPieceList extends BinToBinPiece
         if ($this->su->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->qty->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->actual->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->user->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->status->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->date_confirmation->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->time_confirmation->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1176,6 +1314,9 @@ class BinToBinPieceList extends BinToBinPiece
         $this->SearchWhere = "";
         $this->setSearchWhere($this->SearchWhere);
 
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+
         // Clear advanced search parameters
         $this->resetAdvancedSearchParms();
     }
@@ -1186,6 +1327,12 @@ class BinToBinPieceList extends BinToBinPiece
         return false;
     }
 
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
     // Clear all advanced search parameters
     protected function resetAdvancedSearchParms()
     {
@@ -1194,11 +1341,16 @@ class BinToBinPieceList extends BinToBinPiece
         $this->source_location->AdvancedSearch->unsetSession();
         $this->scan_location->AdvancedSearch->unsetSession();
         $this->article->AdvancedSearch->unsetSession();
+        $this->description->AdvancedSearch->unsetSession();
         $this->scan_article->AdvancedSearch->unsetSession();
         $this->destination_location->AdvancedSearch->unsetSession();
         $this->su->AdvancedSearch->unsetSession();
+        $this->qty->AdvancedSearch->unsetSession();
+        $this->actual->AdvancedSearch->unsetSession();
         $this->user->AdvancedSearch->unsetSession();
+        $this->status->AdvancedSearch->unsetSession();
         $this->date_confirmation->AdvancedSearch->unsetSession();
+        $this->time_confirmation->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1206,17 +1358,25 @@ class BinToBinPieceList extends BinToBinPiece
     {
         $this->RestoreSearch = true;
 
+        // Restore basic search values
+        $this->BasicSearch->load();
+
         // Restore advanced search values
         $this->id->AdvancedSearch->load();
         $this->date_upload->AdvancedSearch->load();
         $this->source_location->AdvancedSearch->load();
         $this->scan_location->AdvancedSearch->load();
         $this->article->AdvancedSearch->load();
+        $this->description->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
         $this->destination_location->AdvancedSearch->load();
         $this->su->AdvancedSearch->load();
+        $this->qty->AdvancedSearch->load();
+        $this->actual->AdvancedSearch->load();
         $this->user->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
         $this->date_confirmation->AdvancedSearch->load();
+        $this->time_confirmation->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1224,7 +1384,7 @@ class BinToBinPieceList extends BinToBinPiece
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->date_confirmation->Expression . " DESC"; // Set up default sort
+            $defaultSort = $this->id->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1238,10 +1398,15 @@ class BinToBinPieceList extends BinToBinPiece
             $this->updateSort($this->date_upload); // date_upload
             $this->updateSort($this->source_location); // source_location
             $this->updateSort($this->article); // article
+            $this->updateSort($this->description); // description
             $this->updateSort($this->destination_location); // destination_location
             $this->updateSort($this->su); // su
+            $this->updateSort($this->qty); // qty
+            $this->updateSort($this->actual); // actual
             $this->updateSort($this->user); // user
+            $this->updateSort($this->status); // status
             $this->updateSort($this->date_confirmation); // date_confirmation
+            $this->updateSort($this->time_confirmation); // time_confirmation
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1271,11 +1436,16 @@ class BinToBinPieceList extends BinToBinPiece
                 $this->source_location->setSort("");
                 $this->scan_location->setSort("");
                 $this->article->setSort("");
+                $this->description->setSort("");
                 $this->scan_article->setSort("");
                 $this->destination_location->setSort("");
                 $this->su->setSort("");
+                $this->qty->setSort("");
+                $this->actual->setSort("");
                 $this->user->setSort("");
+                $this->status->setSort("");
                 $this->date_confirmation->setSort("");
+                $this->time_confirmation->setSort("");
             }
 
             // Reset start position
@@ -1430,10 +1600,15 @@ class BinToBinPieceList extends BinToBinPiece
             $option->add("date_upload", $this->createColumnOption("date_upload"));
             $option->add("source_location", $this->createColumnOption("source_location"));
             $option->add("article", $this->createColumnOption("article"));
+            $option->add("description", $this->createColumnOption("description"));
             $option->add("destination_location", $this->createColumnOption("destination_location"));
             $option->add("su", $this->createColumnOption("su"));
+            $option->add("qty", $this->createColumnOption("qty"));
+            $option->add("actual", $this->createColumnOption("actual"));
             $option->add("user", $this->createColumnOption("user"));
+            $option->add("status", $this->createColumnOption("status"));
             $option->add("date_confirmation", $this->createColumnOption("date_confirmation"));
+            $option->add("time_confirmation", $this->createColumnOption("time_confirmation"));
         }
 
         // Set up options default
@@ -1600,6 +1775,16 @@ class BinToBinPieceList extends BinToBinPiece
         return false; // Not ajax request
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load search values for validation
     protected function loadSearchValues()
     {
@@ -1646,6 +1831,14 @@ class BinToBinPieceList extends BinToBinPiece
             }
         }
 
+        // description
+        if ($this->description->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->description->AdvancedSearch->SearchValue != "" || $this->description->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // scan_article
         if ($this->scan_article->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1670,6 +1863,22 @@ class BinToBinPieceList extends BinToBinPiece
             }
         }
 
+        // qty
+        if ($this->qty->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->qty->AdvancedSearch->SearchValue != "" || $this->qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // actual
+        if ($this->actual->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->actual->AdvancedSearch->SearchValue != "" || $this->actual->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // user
         if ($this->user->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1678,10 +1887,26 @@ class BinToBinPieceList extends BinToBinPiece
             }
         }
 
+        // status
+        if ($this->status->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->status->AdvancedSearch->SearchValue != "" || $this->status->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // date_confirmation
         if ($this->date_confirmation->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->date_confirmation->AdvancedSearch->SearchValue != "" || $this->date_confirmation->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // time_confirmation
+        if ($this->time_confirmation->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->time_confirmation->AdvancedSearch->SearchValue != "" || $this->time_confirmation->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1778,11 +2003,16 @@ class BinToBinPieceList extends BinToBinPiece
         $this->source_location->setDbValue($row['source_location']);
         $this->scan_location->setDbValue($row['scan_location']);
         $this->article->setDbValue($row['article']);
+        $this->description->setDbValue($row['description']);
         $this->scan_article->setDbValue($row['scan_article']);
         $this->destination_location->setDbValue($row['destination_location']);
         $this->su->setDbValue($row['su']);
+        $this->qty->setDbValue($row['qty']);
+        $this->actual->setDbValue($row['actual']);
         $this->user->setDbValue($row['user']);
+        $this->status->setDbValue($row['status']);
         $this->date_confirmation->setDbValue($row['date_confirmation']);
+        $this->time_confirmation->setDbValue($row['time_confirmation']);
     }
 
     // Return a row with default values
@@ -1794,11 +2024,16 @@ class BinToBinPieceList extends BinToBinPiece
         $row['source_location'] = $this->source_location->DefaultValue;
         $row['scan_location'] = $this->scan_location->DefaultValue;
         $row['article'] = $this->article->DefaultValue;
+        $row['description'] = $this->description->DefaultValue;
         $row['scan_article'] = $this->scan_article->DefaultValue;
         $row['destination_location'] = $this->destination_location->DefaultValue;
         $row['su'] = $this->su->DefaultValue;
+        $row['qty'] = $this->qty->DefaultValue;
+        $row['actual'] = $this->actual->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['status'] = $this->status->DefaultValue;
         $row['date_confirmation'] = $this->date_confirmation->DefaultValue;
+        $row['time_confirmation'] = $this->time_confirmation->DefaultValue;
         return $row;
     }
 
@@ -1851,6 +2086,9 @@ class BinToBinPieceList extends BinToBinPiece
         // article
         $this->article->CellCssStyle = "white-space: nowrap;";
 
+        // description
+        $this->description->CellCssStyle = "white-space: nowrap;";
+
         // scan_article
         $this->scan_article->CellCssStyle = "white-space: nowrap;";
 
@@ -1860,11 +2098,23 @@ class BinToBinPieceList extends BinToBinPiece
         // su
         $this->su->CellCssStyle = "white-space: nowrap;";
 
+        // qty
+        $this->qty->CellCssStyle = "white-space: nowrap;";
+
+        // actual
+        $this->actual->CellCssStyle = "white-space: nowrap;";
+
         // user
         $this->user->CellCssStyle = "white-space: nowrap;";
 
+        // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
+
         // date_confirmation
         $this->date_confirmation->CellCssStyle = "white-space: nowrap;";
+
+        // time_confirmation
+        $this->time_confirmation->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1885,6 +2135,10 @@ class BinToBinPieceList extends BinToBinPiece
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
 
+            // description
+            $this->description->ViewValue = $this->description->CurrentValue;
+            $this->description->ViewCustomAttributes = "";
+
             // destination_location
             $this->destination_location->ViewValue = $this->destination_location->CurrentValue;
             $this->destination_location->ViewCustomAttributes = "";
@@ -1893,14 +2147,33 @@ class BinToBinPieceList extends BinToBinPiece
             $this->su->ViewValue = $this->su->CurrentValue;
             $this->su->ViewCustomAttributes = "";
 
+            // qty
+            $this->qty->ViewValue = $this->qty->CurrentValue;
+            $this->qty->ViewValue = FormatNumber($this->qty->ViewValue, $this->qty->formatPattern());
+            $this->qty->ViewCustomAttributes = "";
+
+            // actual
+            $this->actual->ViewValue = $this->actual->CurrentValue;
+            $this->actual->ViewValue = FormatNumber($this->actual->ViewValue, $this->actual->formatPattern());
+            $this->actual->ViewCustomAttributes = "";
+
             // user
             $this->user->ViewValue = $this->user->CurrentValue;
             $this->user->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
 
             // date_confirmation
             $this->date_confirmation->ViewValue = $this->date_confirmation->CurrentValue;
             $this->date_confirmation->ViewValue = FormatDateTime($this->date_confirmation->ViewValue, $this->date_confirmation->formatPattern());
             $this->date_confirmation->ViewCustomAttributes = "";
+
+            // time_confirmation
+            $this->time_confirmation->ViewValue = $this->time_confirmation->CurrentValue;
+            $this->time_confirmation->ViewValue = FormatDateTime($this->time_confirmation->ViewValue, $this->time_confirmation->formatPattern());
+            $this->time_confirmation->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1922,6 +2195,11 @@ class BinToBinPieceList extends BinToBinPiece
             $this->article->HrefValue = "";
             $this->article->TooltipValue = "";
 
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+            $this->description->TooltipValue = "";
+
             // destination_location
             $this->destination_location->LinkCustomAttributes = "";
             $this->destination_location->HrefValue = "";
@@ -1932,15 +2210,35 @@ class BinToBinPieceList extends BinToBinPiece
             $this->su->HrefValue = "";
             $this->su->TooltipValue = "";
 
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+            $this->qty->TooltipValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+            $this->actual->TooltipValue = "";
+
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
             $this->user->TooltipValue = "";
 
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
+
             // date_confirmation
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
             $this->date_confirmation->TooltipValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
+            $this->time_confirmation->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
             if ($this->id->UseFilter && !EmptyValue($this->id->AdvancedSearch->SearchValue)) {
@@ -1974,6 +2272,14 @@ class BinToBinPieceList extends BinToBinPiece
                 $this->article->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->article->AdvancedSearch->SearchValue);
             }
 
+            // description
+            if ($this->description->UseFilter && !EmptyValue($this->description->AdvancedSearch->SearchValue)) {
+                if (is_array($this->description->AdvancedSearch->SearchValue)) {
+                    $this->description->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->description->AdvancedSearch->SearchValue);
+                }
+                $this->description->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->description->AdvancedSearch->SearchValue);
+            }
+
             // destination_location
             if ($this->destination_location->UseFilter && !EmptyValue($this->destination_location->AdvancedSearch->SearchValue)) {
                 if (is_array($this->destination_location->AdvancedSearch->SearchValue)) {
@@ -1990,12 +2296,32 @@ class BinToBinPieceList extends BinToBinPiece
                 $this->su->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->su->AdvancedSearch->SearchValue);
             }
 
+            // qty
+            $this->qty->setupEditAttributes();
+            $this->qty->EditCustomAttributes = 'readonly';
+            $this->qty->EditValue = HtmlEncode($this->qty->AdvancedSearch->SearchValue);
+            $this->qty->PlaceHolder = RemoveHtml($this->qty->caption());
+
+            // actual
+            $this->actual->setupEditAttributes();
+            $this->actual->EditCustomAttributes = 'readonly';
+            $this->actual->EditValue = HtmlEncode($this->actual->AdvancedSearch->SearchValue);
+            $this->actual->PlaceHolder = RemoveHtml($this->actual->caption());
+
             // user
             if ($this->user->UseFilter && !EmptyValue($this->user->AdvancedSearch->SearchValue)) {
                 if (is_array($this->user->AdvancedSearch->SearchValue)) {
                     $this->user->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
                 }
                 $this->user->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
+            }
+
+            // status
+            if ($this->status->UseFilter && !EmptyValue($this->status->AdvancedSearch->SearchValue)) {
+                if (is_array($this->status->AdvancedSearch->SearchValue)) {
+                    $this->status->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+                }
+                $this->status->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
             }
 
             // date_confirmation
@@ -2005,6 +2331,12 @@ class BinToBinPieceList extends BinToBinPiece
                 }
                 $this->date_confirmation->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_confirmation->AdvancedSearch->SearchValue);
             }
+
+            // time_confirmation
+            $this->time_confirmation->setupEditAttributes();
+            $this->time_confirmation->EditCustomAttributes = "";
+            $this->time_confirmation->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->time_confirmation->AdvancedSearch->SearchValue, $this->time_confirmation->formatPattern()), $this->time_confirmation->formatPattern()));
+            $this->time_confirmation->PlaceHolder = RemoveHtml($this->time_confirmation->caption());
         }
 
         // Call Row Rendered event
@@ -2041,11 +2373,16 @@ class BinToBinPieceList extends BinToBinPiece
         $this->source_location->AdvancedSearch->load();
         $this->scan_location->AdvancedSearch->load();
         $this->article->AdvancedSearch->load();
+        $this->description->AdvancedSearch->load();
         $this->scan_article->AdvancedSearch->load();
         $this->destination_location->AdvancedSearch->load();
         $this->su->AdvancedSearch->load();
+        $this->qty->AdvancedSearch->load();
+        $this->actual->AdvancedSearch->load();
         $this->user->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
         $this->date_confirmation->AdvancedSearch->load();
+        $this->time_confirmation->AdvancedSearch->load();
     }
 
     // Set up search options
@@ -2054,6 +2391,12 @@ class BinToBinPieceList extends BinToBinPiece
         global $Language, $Security;
         $pageUrl = $this->pageUrl(false);
         $this->SearchOptions = new ListOptions(["TagClassName" => "ew-search-option"]);
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fbin_to_bin_piecesrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
 
         // Show all button
         $item = &$this->SearchOptions->add("showall");
@@ -2083,7 +2426,7 @@ class BinToBinPieceList extends BinToBinPiece
     // Check if any search fields
     public function hasSearchFields()
     {
-        return $this->id->Visible || $this->date_upload->Visible || $this->source_location->Visible || $this->article->Visible || $this->destination_location->Visible || $this->su->Visible || $this->user->Visible || $this->date_confirmation->Visible;
+        return true;
     }
 
     // Render search options

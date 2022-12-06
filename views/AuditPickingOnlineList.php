@@ -18,6 +18,17 @@ loadjs.ready(["wrapper", "head"], function () {
     currentPageID = ew.PAGE_ID = "list";
     currentForm = faudit_picking_onlinelist;
     faudit_picking_onlinelist.formKeyCountName = "<?= $Page->FormKeyCountName ?>";
+
+    // Dynamic selection lists
+    faudit_picking_onlinelist.lists.id = <?= $Page->id->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.checker = <?= $Page->checker->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.article = <?= $Page->article->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.date_update = <?= $Page->date_update->toClientList($Page) ?>;
+    faudit_picking_onlinelist.lists.time_update = <?= $Page->time_update->toClientList($Page) ?>;
     loadjs.done("faudit_picking_onlinelist");
 });
 var faudit_picking_onlinesrch, currentSearchForm, currentAdvancedSearchForm;
@@ -27,7 +38,60 @@ loadjs.ready(["wrapper", "head"], function () {
     faudit_picking_onlinesrch = new ew.Form("faudit_picking_onlinesrch", "list");
     currentSearchForm = faudit_picking_onlinesrch;
 
+    // Add fields
+    var fields = currentTable.fields;
+    faudit_picking_onlinesrch.addFields([
+        ["id", [], fields.id.isInvalid],
+        ["box_code", [], fields.box_code.isInvalid],
+        ["store_id", [], fields.store_id.isInvalid],
+        ["store_name", [], fields.store_name.isInvalid],
+        ["checker", [], fields.checker.isInvalid],
+        ["status", [], fields.status.isInvalid],
+        ["article", [], fields.article.isInvalid],
+        ["date_update", [], fields.date_update.isInvalid],
+        ["time_update", [], fields.time_update.isInvalid]
+    ]);
+
+    // Validate form
+    faudit_picking_onlinesrch.validate = function () {
+        if (!this.validateRequired)
+            return true; // Ignore validation
+        var fobj = this.getForm();
+
+        // Validate fields
+        if (!this.validateFields())
+            return false;
+
+        // Call Form_CustomValidate event
+        if (!this.customValidate(fobj)) {
+            this.focus();
+            return false;
+        }
+        return true;
+    }
+
+    // Form_CustomValidate
+    faudit_picking_onlinesrch.customValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+        // Your custom validation code here, return false if invalid.
+        return true;
+    }
+
+    // Use JavaScript validation or not
+    faudit_picking_onlinesrch.validateRequired = ew.CLIENT_VALIDATE;
+
     // Dynamic selection lists
+    faudit_picking_onlinesrch.lists.id = <?= $Page->id->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.scan = <?= $Page->scan->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.picked_qty = <?= $Page->picked_qty->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.scan_qty = <?= $Page->scan_qty->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.checker = <?= $Page->checker->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.article = <?= $Page->article->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.date_update = <?= $Page->date_update->toClientList($Page) ?>;
+    faudit_picking_onlinesrch.lists.time_update = <?= $Page->time_update->toClientList($Page) ?>;
 
     // Filters
     faudit_picking_onlinesrch.filterList = <?= $Page->getFilterList() ?>;
@@ -66,6 +130,458 @@ $Page->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="audit_picking_online">
 <div class="ew-extended-search container-fluid">
+<div class="row mb-0<?= ($Page->SearchFieldsPerRow > 0) ? " row-cols-sm-" . $Page->SearchFieldsPerRow : "" ?>">
+<?php
+// Render search row
+$Page->RowType = ROWTYPE_SEARCH;
+$Page->resetAttributes();
+$Page->renderRow();
+?>
+<?php if ($Page->id->Visible) { // id ?>
+<?php
+if (!$Page->id->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_id" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->id->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_id"
+            name="x_id[]"
+            class="form-control ew-select<?= $Page->id->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_id"
+            data-table="audit_picking_online"
+            data-field="x_id"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->id->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->id->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>"
+            <?= $Page->id->editAttributes() ?>>
+            <?= $Page->id->selectOptionListHtml("x_id", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->id->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_id",
+                selectId: "faudit_picking_onlinesrch_x_id",
+                ajax: { id: "x_id", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.id.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->scan->Visible) { // scan ?>
+<?php
+if (!$Page->scan->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_scan" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->scan->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_scan"
+            name="x_scan[]"
+            class="form-control ew-select<?= $Page->scan->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_scan"
+            data-table="audit_picking_online"
+            data-field="x_scan"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->scan->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->scan->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->scan->getPlaceHolder()) ?>"
+            <?= $Page->scan->editAttributes() ?>>
+            <?= $Page->scan->selectOptionListHtml("x_scan", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->scan->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_scan",
+                selectId: "faudit_picking_onlinesrch_x_scan",
+                ajax: { id: "x_scan", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.scan.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->box_code->Visible) { // box_code ?>
+<?php
+if (!$Page->box_code->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_box_code" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->box_code->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_box_code"
+            name="x_box_code[]"
+            class="form-control ew-select<?= $Page->box_code->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_box_code"
+            data-table="audit_picking_online"
+            data-field="x_box_code"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->box_code->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->box_code->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->box_code->getPlaceHolder()) ?>"
+            <?= $Page->box_code->editAttributes() ?>>
+            <?= $Page->box_code->selectOptionListHtml("x_box_code", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->box_code->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_box_code",
+                selectId: "faudit_picking_onlinesrch_x_box_code",
+                ajax: { id: "x_box_code", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.box_code.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->store_id->Visible) { // store_id ?>
+<?php
+if (!$Page->store_id->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_store_id" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->store_id->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_store_id"
+            name="x_store_id[]"
+            class="form-control ew-select<?= $Page->store_id->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_store_id"
+            data-table="audit_picking_online"
+            data-field="x_store_id"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->store_id->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->store_id->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->store_id->getPlaceHolder()) ?>"
+            <?= $Page->store_id->editAttributes() ?>>
+            <?= $Page->store_id->selectOptionListHtml("x_store_id", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->store_id->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_store_id",
+                selectId: "faudit_picking_onlinesrch_x_store_id",
+                ajax: { id: "x_store_id", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.store_id.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->store_name->Visible) { // store_name ?>
+<?php
+if (!$Page->store_name->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_store_name" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->store_name->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_store_name"
+            name="x_store_name[]"
+            class="form-control ew-select<?= $Page->store_name->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_store_name"
+            data-table="audit_picking_online"
+            data-field="x_store_name"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->store_name->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->store_name->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->store_name->getPlaceHolder()) ?>"
+            <?= $Page->store_name->editAttributes() ?>>
+            <?= $Page->store_name->selectOptionListHtml("x_store_name", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->store_name->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_store_name",
+                selectId: "faudit_picking_onlinesrch_x_store_name",
+                ajax: { id: "x_store_name", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.store_name.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
+<?php
+if (!$Page->picked_qty->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_picked_qty" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->picked_qty->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_picked_qty"
+            name="x_picked_qty[]"
+            class="form-control ew-select<?= $Page->picked_qty->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_picked_qty"
+            data-table="audit_picking_online"
+            data-field="x_picked_qty"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->picked_qty->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->picked_qty->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->picked_qty->getPlaceHolder()) ?>"
+            <?= $Page->picked_qty->editAttributes() ?>>
+            <?= $Page->picked_qty->selectOptionListHtml("x_picked_qty", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->picked_qty->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_picked_qty",
+                selectId: "faudit_picking_onlinesrch_x_picked_qty",
+                ajax: { id: "x_picked_qty", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.picked_qty.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->scan_qty->Visible) { // scan_qty ?>
+<?php
+if (!$Page->scan_qty->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_scan_qty" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->scan_qty->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_scan_qty"
+            name="x_scan_qty[]"
+            class="form-control ew-select<?= $Page->scan_qty->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_scan_qty"
+            data-table="audit_picking_online"
+            data-field="x_scan_qty"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->scan_qty->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->scan_qty->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->scan_qty->getPlaceHolder()) ?>"
+            <?= $Page->scan_qty->editAttributes() ?>>
+            <?= $Page->scan_qty->selectOptionListHtml("x_scan_qty", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->scan_qty->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_scan_qty",
+                selectId: "faudit_picking_onlinesrch_x_scan_qty",
+                ajax: { id: "x_scan_qty", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.scan_qty.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->checker->Visible) { // checker ?>
+<?php
+if (!$Page->checker->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_checker" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->checker->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_checker"
+            name="x_checker[]"
+            class="form-control ew-select<?= $Page->checker->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_checker"
+            data-table="audit_picking_online"
+            data-field="x_checker"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->checker->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->checker->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->checker->getPlaceHolder()) ?>"
+            <?= $Page->checker->editAttributes() ?>>
+            <?= $Page->checker->selectOptionListHtml("x_checker", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->checker->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_checker",
+                selectId: "faudit_picking_onlinesrch_x_checker",
+                ajax: { id: "x_checker", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.checker.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+<?php
+if (!$Page->status->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_status" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->status->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_status"
+            name="x_status[]"
+            class="form-control ew-select<?= $Page->status->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_status"
+            data-table="audit_picking_online"
+            data-field="x_status"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->status->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+            <?= $Page->status->editAttributes() ?>>
+            <?= $Page->status->selectOptionListHtml("x_status", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->status->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_status",
+                selectId: "faudit_picking_onlinesrch_x_status",
+                ajax: { id: "x_status", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.status.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->article->Visible) { // article ?>
+<?php
+if (!$Page->article->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_article" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->article->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_article"
+            name="x_article[]"
+            class="form-control ew-select<?= $Page->article->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_article"
+            data-table="audit_picking_online"
+            data-field="x_article"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->article->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->article->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->article->getPlaceHolder()) ?>"
+            <?= $Page->article->editAttributes() ?>>
+            <?= $Page->article->selectOptionListHtml("x_article", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->article->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_article",
+                selectId: "faudit_picking_onlinesrch_x_article",
+                ajax: { id: "x_article", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.article.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->date_update->Visible) { // date_update ?>
+<?php
+if (!$Page->date_update->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date_update" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_update->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date_update"
+            name="x_date_update[]"
+            class="form-control ew-select<?= $Page->date_update->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_date_update"
+            data-table="audit_picking_online"
+            data-field="x_date_update"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_update->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date_update->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date_update->getPlaceHolder()) ?>"
+            <?= $Page->date_update->editAttributes() ?>>
+            <?= $Page->date_update->selectOptionListHtml("x_date_update", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date_update->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_date_update",
+                selectId: "faudit_picking_onlinesrch_x_date_update",
+                ajax: { id: "x_date_update", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.date_update.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->time_update->Visible) { // time_update ?>
+<?php
+if (!$Page->time_update->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_time_update" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->time_update->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_time_update"
+            name="x_time_update[]"
+            class="form-control ew-select<?= $Page->time_update->isInvalidClass() ?>"
+            data-select2-id="faudit_picking_onlinesrch_x_time_update"
+            data-table="audit_picking_online"
+            data-field="x_time_update"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->time_update->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->time_update->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->time_update->getPlaceHolder()) ?>"
+            <?= $Page->time_update->editAttributes() ?>>
+            <?= $Page->time_update->selectOptionListHtml("x_time_update", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->time_update->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("faudit_picking_onlinesrch", function() {
+            var options = {
+                name: "x_time_update",
+                selectId: "faudit_picking_onlinesrch_x_time_update",
+                ajax: { id: "x_time_update", form: "faudit_picking_onlinesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.audit_picking_online.fields.time_update.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+</div><!-- /.row -->
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
         <div class="ew-basic-search input-group">
@@ -142,17 +658,14 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->store_name->Visible) { // store_name ?>
         <th data-name="store_name" class="<?= $Page->store_name->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_store_name" class="audit_picking_online_store_name"><?= $Page->renderFieldHeader($Page->store_name) ?></div></th>
 <?php } ?>
-<?php if ($Page->article->Visible) { // article ?>
-        <th data-name="article" class="<?= $Page->article->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_article" class="audit_picking_online_article"><?= $Page->renderFieldHeader($Page->article) ?></div></th>
-<?php } ?>
-<?php if ($Page->picked_qty->Visible) { // picked_qty ?>
-        <th data-name="picked_qty" class="<?= $Page->picked_qty->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_picked_qty" class="audit_picking_online_picked_qty"><?= $Page->renderFieldHeader($Page->picked_qty) ?></div></th>
-<?php } ?>
 <?php if ($Page->checker->Visible) { // checker ?>
         <th data-name="checker" class="<?= $Page->checker->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_checker" class="audit_picking_online_checker"><?= $Page->renderFieldHeader($Page->checker) ?></div></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_status" class="audit_picking_online_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
+<?php } ?>
+<?php if ($Page->article->Visible) { // article ?>
+        <th data-name="article" class="<?= $Page->article->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_article" class="audit_picking_online_article"><?= $Page->renderFieldHeader($Page->article) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_update->Visible) { // date_update ?>
         <th data-name="date_update" class="<?= $Page->date_update->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_audit_picking_online_date_update" class="audit_picking_online_date_update"><?= $Page->renderFieldHeader($Page->date_update) ?></div></th>
@@ -267,22 +780,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->article->Visible) { // article ?>
-        <td data-name="article"<?= $Page->article->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_audit_picking_online_article" class="el_audit_picking_online_article">
-<span<?= $Page->article->viewAttributes() ?>>
-<?= $Page->article->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->picked_qty->Visible) { // picked_qty ?>
-        <td data-name="picked_qty"<?= $Page->picked_qty->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_audit_picking_online_picked_qty" class="el_audit_picking_online_picked_qty">
-<span<?= $Page->picked_qty->viewAttributes() ?>>
-<?= $Page->picked_qty->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->checker->Visible) { // checker ?>
         <td data-name="checker"<?= $Page->checker->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_audit_picking_online_checker" class="el_audit_picking_online_checker">
@@ -296,6 +793,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_audit_picking_online_status" class="el_audit_picking_online_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->article->Visible) { // article ?>
+        <td data-name="article"<?= $Page->article->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_audit_picking_online_article" class="el_audit_picking_online_article">
+<span<?= $Page->article->viewAttributes() ?>>
+<?= $Page->article->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -360,24 +865,18 @@ $Page->ListOptions->render("footer", "left");
         <td data-name="store_name" class="<?= $Page->store_name->footerCellClass() ?>"><span id="elf_audit_picking_online_store_name" class="audit_picking_online_store_name">
         </span></td>
     <?php } ?>
-    <?php if ($Page->article->Visible) { // article ?>
-        <td data-name="article" class="<?= $Page->article->footerCellClass() ?>"><span id="elf_audit_picking_online_article" class="audit_picking_online_article">
-        <span class="ew-aggregate"><?= $Language->phrase("COUNT") ?></span><span class="ew-aggregate-value">
-        <?= $Page->article->ViewValue ?></span>
-        </span></td>
-    <?php } ?>
-    <?php if ($Page->picked_qty->Visible) { // picked_qty ?>
-        <td data-name="picked_qty" class="<?= $Page->picked_qty->footerCellClass() ?>"><span id="elf_audit_picking_online_picked_qty" class="audit_picking_online_picked_qty">
-        <span class="ew-aggregate"><?= $Language->phrase("TOTAL") ?></span><span class="ew-aggregate-value">
-        <?= $Page->picked_qty->ViewValue ?></span>
-        </span></td>
-    <?php } ?>
     <?php if ($Page->checker->Visible) { // checker ?>
         <td data-name="checker" class="<?= $Page->checker->footerCellClass() ?>"><span id="elf_audit_picking_online_checker" class="audit_picking_online_checker">
         </span></td>
     <?php } ?>
     <?php if ($Page->status->Visible) { // status ?>
         <td data-name="status" class="<?= $Page->status->footerCellClass() ?>"><span id="elf_audit_picking_online_status" class="audit_picking_online_status">
+        </span></td>
+    <?php } ?>
+    <?php if ($Page->article->Visible) { // article ?>
+        <td data-name="article" class="<?= $Page->article->footerCellClass() ?>"><span id="elf_audit_picking_online_article" class="audit_picking_online_article">
+        <span class="ew-aggregate"><?= $Language->phrase("COUNT") ?></span><span class="ew-aggregate-value">
+        <?= $Page->article->ViewValue ?></span>
         </span></td>
     <?php } ?>
     <?php if ($Page->date_update->Visible) { // date_update ?>

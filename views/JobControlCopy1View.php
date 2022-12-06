@@ -77,6 +77,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+    <tr id="r_concept"<?= $Page->concept->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_copy1_concept"><?= $Page->concept->caption() ?></span></td>
+        <td data-name="concept"<?= $Page->concept->cellAttributes() ?>>
+<span id="el_job_control_copy1_concept">
+<span<?= $Page->concept->viewAttributes() ?>>
+<?= $Page->concept->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->area->Visible) { // area ?>
     <tr id="r_area"<?= $Page->area->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_control_copy1_area"><?= $Page->area->caption() ?></span></td>

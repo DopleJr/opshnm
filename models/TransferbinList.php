@@ -457,6 +457,12 @@ class TransferbinList extends Transferbin
         if ($this->isAddOrEdit()) {
             $this->date_created->Visible = false;
         }
+        if ($this->isAddOrEdit()) {
+            $this->date_updated->Visible = false;
+        }
+        if ($this->isAddOrEdit()) {
+            $this->time_updated->Visible = false;
+        }
     }
 
     // Lookup data
@@ -623,9 +629,13 @@ class TransferbinList extends Transferbin
         // Setup import options
         $this->setupImportOptions();
         $this->id->setVisibility();
-        $this->FromBin->setVisibility();
-        $this->ToBin->setVisibility();
+        $this->from_bin->setVisibility();
+        $this->ctn->setVisibility();
+        $this->to_bin->setVisibility();
+        $this->user->setVisibility();
         $this->date_created->setVisibility();
+        $this->date_updated->setVisibility();
+        $this->time_updated->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -717,14 +727,23 @@ class TransferbinList extends Transferbin
 
             // Get default search criteria
             AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+            AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
 
             // Get basic search values
             $this->loadBasicSearchValues();
+
+            // Get and validate search values for advanced search
+            if (EmptyValue($this->UserAction)) { // Skip if user action
+                $this->loadSearchValues();
+            }
 
             // Process filter list
             if ($this->processFilterList()) {
                 $this->terminate();
                 return;
+            }
+            if (!$this->validateSearch()) {
+                // Nothing to do
             }
 
             // Restore search parms from Session if not searching / reset / export
@@ -741,6 +760,11 @@ class TransferbinList extends Transferbin
             // Get basic search criteria
             if (!$this->hasInvalidFields()) {
                 $srchBasic = $this->basicSearchWhere();
+            }
+
+            // Get search criteria for advanced search
+            if (!$this->hasInvalidFields()) {
+                $srchAdvanced = $this->advancedSearchWhere();
             }
         }
 
@@ -759,6 +783,16 @@ class TransferbinList extends Transferbin
             if ($this->BasicSearch->Keyword != "") {
                 $srchBasic = $this->basicSearchWhere();
             }
+
+            // Load advanced search from default
+            if ($this->loadAdvancedSearchDefault()) {
+                $srchAdvanced = $this->advancedSearchWhere();
+            }
+        }
+
+        // Restore search settings from Session
+        if (!$this->hasInvalidFields()) {
+            $this->loadAdvancedSearch();
         }
 
         // Build search criteria
@@ -944,7 +978,13 @@ class TransferbinList extends Transferbin
         // Initialize
         $filterList = "";
         $savedFilterList = "";
+        $filterList = Concat($filterList, $this->from_bin->AdvancedSearch->toJson(), ","); // Field from_bin
+        $filterList = Concat($filterList, $this->ctn->AdvancedSearch->toJson(), ","); // Field ctn
+        $filterList = Concat($filterList, $this->to_bin->AdvancedSearch->toJson(), ","); // Field to_bin
+        $filterList = Concat($filterList, $this->user->AdvancedSearch->toJson(), ","); // Field user
         $filterList = Concat($filterList, $this->date_created->AdvancedSearch->toJson(), ","); // Field date_created
+        $filterList = Concat($filterList, $this->date_updated->AdvancedSearch->toJson(), ","); // Field date_updated
+        $filterList = Concat($filterList, $this->time_updated->AdvancedSearch->toJson(), ","); // Field time_updated
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -985,6 +1025,38 @@ class TransferbinList extends Transferbin
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
+        // Field from_bin
+        $this->from_bin->AdvancedSearch->SearchValue = @$filter["x_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchOperator = @$filter["z_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchCondition = @$filter["v_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchValue2 = @$filter["y_from_bin"];
+        $this->from_bin->AdvancedSearch->SearchOperator2 = @$filter["w_from_bin"];
+        $this->from_bin->AdvancedSearch->save();
+
+        // Field ctn
+        $this->ctn->AdvancedSearch->SearchValue = @$filter["x_ctn"];
+        $this->ctn->AdvancedSearch->SearchOperator = @$filter["z_ctn"];
+        $this->ctn->AdvancedSearch->SearchCondition = @$filter["v_ctn"];
+        $this->ctn->AdvancedSearch->SearchValue2 = @$filter["y_ctn"];
+        $this->ctn->AdvancedSearch->SearchOperator2 = @$filter["w_ctn"];
+        $this->ctn->AdvancedSearch->save();
+
+        // Field to_bin
+        $this->to_bin->AdvancedSearch->SearchValue = @$filter["x_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchOperator = @$filter["z_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchCondition = @$filter["v_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchValue2 = @$filter["y_to_bin"];
+        $this->to_bin->AdvancedSearch->SearchOperator2 = @$filter["w_to_bin"];
+        $this->to_bin->AdvancedSearch->save();
+
+        // Field user
+        $this->user->AdvancedSearch->SearchValue = @$filter["x_user"];
+        $this->user->AdvancedSearch->SearchOperator = @$filter["z_user"];
+        $this->user->AdvancedSearch->SearchCondition = @$filter["v_user"];
+        $this->user->AdvancedSearch->SearchValue2 = @$filter["y_user"];
+        $this->user->AdvancedSearch->SearchOperator2 = @$filter["w_user"];
+        $this->user->AdvancedSearch->save();
+
         // Field date_created
         $this->date_created->AdvancedSearch->SearchValue = @$filter["x_date_created"];
         $this->date_created->AdvancedSearch->SearchOperator = @$filter["z_date_created"];
@@ -992,8 +1064,120 @@ class TransferbinList extends Transferbin
         $this->date_created->AdvancedSearch->SearchValue2 = @$filter["y_date_created"];
         $this->date_created->AdvancedSearch->SearchOperator2 = @$filter["w_date_created"];
         $this->date_created->AdvancedSearch->save();
+
+        // Field date_updated
+        $this->date_updated->AdvancedSearch->SearchValue = @$filter["x_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchOperator = @$filter["z_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchCondition = @$filter["v_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchValue2 = @$filter["y_date_updated"];
+        $this->date_updated->AdvancedSearch->SearchOperator2 = @$filter["w_date_updated"];
+        $this->date_updated->AdvancedSearch->save();
+
+        // Field time_updated
+        $this->time_updated->AdvancedSearch->SearchValue = @$filter["x_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchOperator = @$filter["z_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchCondition = @$filter["v_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchValue2 = @$filter["y_time_updated"];
+        $this->time_updated->AdvancedSearch->SearchOperator2 = @$filter["w_time_updated"];
+        $this->time_updated->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Advanced search WHERE clause based on QueryString
+    protected function advancedSearchWhere($default = false)
+    {
+        global $Security;
+        $where = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $this->buildSearchSql($where, $this->id, $default, true); // id
+        $this->buildSearchSql($where, $this->from_bin, $default, true); // from_bin
+        $this->buildSearchSql($where, $this->ctn, $default, true); // ctn
+        $this->buildSearchSql($where, $this->to_bin, $default, true); // to_bin
+        $this->buildSearchSql($where, $this->user, $default, true); // user
+        $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
+        $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
+        $this->buildSearchSql($where, $this->time_updated, $default, true); // time_updated
+
+        // Set up search parm
+        if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
+            $this->Command = "search";
+        }
+        if (!$default && $this->Command == "search") {
+            $this->from_bin->AdvancedSearch->save(); // from_bin
+            $this->ctn->AdvancedSearch->save(); // ctn
+            $this->to_bin->AdvancedSearch->save(); // to_bin
+            $this->user->AdvancedSearch->save(); // user
+            $this->date_created->AdvancedSearch->save(); // date_created
+            $this->date_updated->AdvancedSearch->save(); // date_updated
+            $this->time_updated->AdvancedSearch->save(); // time_updated
+        }
+        return $where;
+    }
+
+    // Build search SQL
+    protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
+    {
+        $fldParm = $fld->Param;
+        $fldVal = $default ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+        $fldOpr = $default ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+        $fldCond = $default ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+        $fldVal2 = $default ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+        $fldOpr2 = $default ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+        $wrk = "";
+        if (is_array($fldVal)) {
+            $fldVal = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal);
+        }
+        if (is_array($fldVal2)) {
+            $fldVal2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal2);
+        }
+        $fldOpr = strtoupper(trim($fldOpr ?? ""));
+        if ($fldOpr == "") {
+            $fldOpr = "=";
+        }
+        $fldOpr2 = strtoupper(trim($fldOpr2 ?? ""));
+        if ($fldOpr2 == "") {
+            $fldOpr2 = "=";
+        }
+        if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 && !$fld->UseFilter || !IsMultiSearchOperator($fldOpr)) {
+            $multiValue = false;
+        }
+        if ($multiValue) {
+            $wrk = $fldVal != "" ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+            $wrk2 = $fldVal2 != "" ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+            AddFilter($wrk, $wrk2, $fldCond);
+        } else {
+            $fldVal = $this->convertSearchValue($fld, $fldVal);
+            $fldVal2 = $this->convertSearchValue($fld, $fldVal2);
+            $wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+        }
+        if ($this->SearchOption == "AUTO" && in_array($this->BasicSearch->getType(), ["AND", "OR"])) {
+            $cond = $this->BasicSearch->getType();
+        } else {
+            $cond = SameText($this->SearchOption, "OR") ? "OR" : "AND";
+        }
+        AddFilter($where, $wrk, $cond);
+    }
+
+    // Convert search value
+    protected function convertSearchValue(&$fld, $fldVal)
+    {
+        if ($fldVal == Config("NULL_VALUE") || $fldVal == Config("NOT_NULL_VALUE")) {
+            return $fldVal;
+        }
+        $value = $fldVal;
+        if ($fld->isBoolean()) {
+            if ($fldVal != "") {
+                $value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
+            }
+        } elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
+            if ($fldVal != "") {
+                $value = UnFormatDateTime($fldVal, $fld->formatPattern());
+            }
+        }
+        return $value;
     }
 
     // Return basic search WHERE clause based on search keyword and type
@@ -1007,8 +1191,10 @@ class TransferbinList extends Transferbin
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->FromBin;
-        $searchFlds[] = &$this->ToBin;
+        $searchFlds[] = &$this->from_bin;
+        $searchFlds[] = &$this->ctn;
+        $searchFlds[] = &$this->to_bin;
+        $searchFlds[] = &$this->user;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1034,6 +1220,30 @@ class TransferbinList extends Transferbin
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
+        if ($this->id->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->from_bin->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->ctn->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->to_bin->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->user->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->date_created->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->date_updated->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->time_updated->AdvancedSearch->issetSession()) {
+            return true;
+        }
         return false;
     }
 
@@ -1046,6 +1256,9 @@ class TransferbinList extends Transferbin
 
         // Clear basic search parameters
         $this->resetBasicSearchParms();
+
+        // Clear advanced search parameters
+        $this->resetAdvancedSearchParms();
     }
 
     // Load advanced search default values
@@ -1060,6 +1273,19 @@ class TransferbinList extends Transferbin
         $this->BasicSearch->unsetSession();
     }
 
+    // Clear all advanced search parameters
+    protected function resetAdvancedSearchParms()
+    {
+        $this->id->AdvancedSearch->unsetSession();
+        $this->from_bin->AdvancedSearch->unsetSession();
+        $this->ctn->AdvancedSearch->unsetSession();
+        $this->to_bin->AdvancedSearch->unsetSession();
+        $this->user->AdvancedSearch->unsetSession();
+        $this->date_created->AdvancedSearch->unsetSession();
+        $this->date_updated->AdvancedSearch->unsetSession();
+        $this->time_updated->AdvancedSearch->unsetSession();
+    }
+
     // Restore all search parameters
     protected function restoreSearchParms()
     {
@@ -1067,6 +1293,16 @@ class TransferbinList extends Transferbin
 
         // Restore basic search values
         $this->BasicSearch->load();
+
+        // Restore advanced search values
+        $this->id->AdvancedSearch->load();
+        $this->from_bin->AdvancedSearch->load();
+        $this->ctn->AdvancedSearch->load();
+        $this->to_bin->AdvancedSearch->load();
+        $this->user->AdvancedSearch->load();
+        $this->date_created->AdvancedSearch->load();
+        $this->date_updated->AdvancedSearch->load();
+        $this->time_updated->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1074,7 +1310,7 @@ class TransferbinList extends Transferbin
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->date_created->Expression . " DESC"; // Set up default sort
+            $defaultSort = $this->date_updated->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1085,9 +1321,13 @@ class TransferbinList extends Transferbin
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->id); // id
-            $this->updateSort($this->FromBin); // From Bin
-            $this->updateSort($this->ToBin); // To Bin
+            $this->updateSort($this->from_bin); // from_bin
+            $this->updateSort($this->ctn); // ctn
+            $this->updateSort($this->to_bin); // to_bin
+            $this->updateSort($this->user); // user
             $this->updateSort($this->date_created); // date_created
+            $this->updateSort($this->date_updated); // date_updated
+            $this->updateSort($this->time_updated); // time_updated
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1113,9 +1353,13 @@ class TransferbinList extends Transferbin
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->FromBin->setSort("");
-                $this->ToBin->setSort("");
+                $this->from_bin->setSort("");
+                $this->ctn->setSort("");
+                $this->to_bin->setSort("");
+                $this->user->setSort("");
                 $this->date_created->setSort("");
+                $this->date_updated->setSort("");
+                $this->time_updated->setSort("");
             }
 
             // Reset start position
@@ -1309,9 +1553,13 @@ class TransferbinList extends Transferbin
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
             $option->add("id", $this->createColumnOption("id"));
-            $option->add("From Bin", $this->createColumnOption("From Bin"));
-            $option->add("To Bin", $this->createColumnOption("To Bin"));
+            $option->add("from_bin", $this->createColumnOption("from_bin"));
+            $option->add("ctn", $this->createColumnOption("ctn"));
+            $option->add("to_bin", $this->createColumnOption("to_bin"));
+            $option->add("user", $this->createColumnOption("user"));
             $option->add("date_created", $this->createColumnOption("date_created"));
+            $option->add("date_updated", $this->createColumnOption("date_updated"));
+            $option->add("time_updated", $this->createColumnOption("time_updated"));
         }
 
         // Set up options default
@@ -1488,6 +1736,78 @@ class TransferbinList extends Transferbin
         $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
+    // Load search values for validation
+    protected function loadSearchValues()
+    {
+        // Load search values
+        $hasValue = false;
+
+        // id
+        if ($this->id->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->id->AdvancedSearch->SearchValue != "" || $this->id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // from_bin
+        if ($this->from_bin->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->from_bin->AdvancedSearch->SearchValue != "" || $this->from_bin->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // ctn
+        if ($this->ctn->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->ctn->AdvancedSearch->SearchValue != "" || $this->ctn->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // to_bin
+        if ($this->to_bin->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->to_bin->AdvancedSearch->SearchValue != "" || $this->to_bin->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // user
+        if ($this->user->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->user->AdvancedSearch->SearchValue != "" || $this->user->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // date_created
+        if ($this->date_created->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date_created->AdvancedSearch->SearchValue != "" || $this->date_created->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // date_updated
+        if ($this->date_updated->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date_updated->AdvancedSearch->SearchValue != "" || $this->date_updated->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // time_updated
+        if ($this->time_updated->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->time_updated->AdvancedSearch->SearchValue != "" || $this->time_updated->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+        return $hasValue;
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1574,9 +1894,13 @@ class TransferbinList extends Transferbin
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->FromBin->setDbValue($row['From Bin']);
-        $this->ToBin->setDbValue($row['To Bin']);
+        $this->from_bin->setDbValue($row['from_bin']);
+        $this->ctn->setDbValue($row['ctn']);
+        $this->to_bin->setDbValue($row['to_bin']);
+        $this->user->setDbValue($row['user']);
         $this->date_created->setDbValue($row['date_created']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Return a row with default values
@@ -1584,9 +1908,13 @@ class TransferbinList extends Transferbin
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['From Bin'] = $this->FromBin->DefaultValue;
-        $row['To Bin'] = $this->ToBin->DefaultValue;
+        $row['from_bin'] = $this->from_bin->DefaultValue;
+        $row['ctn'] = $this->ctn->DefaultValue;
+        $row['to_bin'] = $this->to_bin->DefaultValue;
+        $row['user'] = $this->user->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
+        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['time_updated'] = $this->time_updated->DefaultValue;
         return $row;
     }
 
@@ -1625,12 +1953,28 @@ class TransferbinList extends Transferbin
         // Common render codes for all row types
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
-        // From Bin
+        // from_bin
+        $this->from_bin->CellCssStyle = "white-space: nowrap;";
 
-        // To Bin
+        // ctn
+        $this->ctn->CellCssStyle = "white-space: nowrap;";
+
+        // to_bin
+        $this->to_bin->CellCssStyle = "white-space: nowrap;";
+
+        // user
+        $this->user->CellCssStyle = "white-space: nowrap;";
 
         // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1638,44 +1982,170 @@ class TransferbinList extends Transferbin
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // From Bin
-            $this->FromBin->ViewValue = $this->FromBin->CurrentValue;
-            $this->FromBin->ViewCustomAttributes = "";
+            // from_bin
+            $this->from_bin->ViewValue = $this->from_bin->CurrentValue;
+            $this->from_bin->ViewCustomAttributes = "";
 
-            // To Bin
-            $this->ToBin->ViewValue = $this->ToBin->CurrentValue;
-            $this->ToBin->ViewCustomAttributes = "";
+            // ctn
+            $this->ctn->ViewValue = $this->ctn->CurrentValue;
+            $this->ctn->ViewCustomAttributes = "";
+
+            // to_bin
+            $this->to_bin->ViewValue = $this->to_bin->CurrentValue;
+            $this->to_bin->ViewCustomAttributes = "";
+
+            // user
+            $this->user->ViewValue = $this->user->CurrentValue;
+            $this->user->ViewCustomAttributes = "";
 
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
+
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
             $this->id->TooltipValue = "";
 
-            // From Bin
-            $this->FromBin->LinkCustomAttributes = "";
-            $this->FromBin->HrefValue = "";
-            $this->FromBin->TooltipValue = "";
+            // from_bin
+            $this->from_bin->LinkCustomAttributes = "";
+            $this->from_bin->HrefValue = "";
+            $this->from_bin->TooltipValue = "";
 
-            // To Bin
-            $this->ToBin->LinkCustomAttributes = "";
-            $this->ToBin->HrefValue = "";
-            $this->ToBin->TooltipValue = "";
+            // ctn
+            $this->ctn->LinkCustomAttributes = "";
+            $this->ctn->HrefValue = "";
+            $this->ctn->TooltipValue = "";
+
+            // to_bin
+            $this->to_bin->LinkCustomAttributes = "";
+            $this->to_bin->HrefValue = "";
+            $this->to_bin->TooltipValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
+            $this->user->TooltipValue = "";
 
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
             $this->date_created->TooltipValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+            $this->date_updated->TooltipValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
+            $this->time_updated->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_SEARCH) {
+            // id
+            if ($this->id->UseFilter && !EmptyValue($this->id->AdvancedSearch->SearchValue)) {
+                if (is_array($this->id->AdvancedSearch->SearchValue)) {
+                    $this->id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
+                }
+                $this->id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
+            }
+
+            // from_bin
+            if ($this->from_bin->UseFilter && !EmptyValue($this->from_bin->AdvancedSearch->SearchValue)) {
+                if (is_array($this->from_bin->AdvancedSearch->SearchValue)) {
+                    $this->from_bin->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->from_bin->AdvancedSearch->SearchValue);
+                }
+                $this->from_bin->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->from_bin->AdvancedSearch->SearchValue);
+            }
+
+            // ctn
+            if ($this->ctn->UseFilter && !EmptyValue($this->ctn->AdvancedSearch->SearchValue)) {
+                if (is_array($this->ctn->AdvancedSearch->SearchValue)) {
+                    $this->ctn->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->ctn->AdvancedSearch->SearchValue);
+                }
+                $this->ctn->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->ctn->AdvancedSearch->SearchValue);
+            }
+
+            // to_bin
+            if ($this->to_bin->UseFilter && !EmptyValue($this->to_bin->AdvancedSearch->SearchValue)) {
+                if (is_array($this->to_bin->AdvancedSearch->SearchValue)) {
+                    $this->to_bin->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->to_bin->AdvancedSearch->SearchValue);
+                }
+                $this->to_bin->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->to_bin->AdvancedSearch->SearchValue);
+            }
+
+            // user
+            if ($this->user->UseFilter && !EmptyValue($this->user->AdvancedSearch->SearchValue)) {
+                if (is_array($this->user->AdvancedSearch->SearchValue)) {
+                    $this->user->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
+                }
+                $this->user->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->user->AdvancedSearch->SearchValue);
+            }
+
+            // date_created
+            if ($this->date_created->UseFilter && !EmptyValue($this->date_created->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date_created->AdvancedSearch->SearchValue)) {
+                    $this->date_created->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_created->AdvancedSearch->SearchValue);
+                }
+                $this->date_created->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_created->AdvancedSearch->SearchValue);
+            }
+            $this->date_created->setupEditAttributes();
+            $this->date_created->EditCustomAttributes = "";
+            $this->date_created->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->date_created->AdvancedSearch->SearchValue2, $this->date_created->formatPattern()), $this->date_created->formatPattern()));
+            $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
+
+            // date_updated
+            if ($this->date_updated->UseFilter && !EmptyValue($this->date_updated->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date_updated->AdvancedSearch->SearchValue)) {
+                    $this->date_updated->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
+                }
+                $this->date_updated->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
+            }
+
+            // time_updated
+            if ($this->time_updated->UseFilter && !EmptyValue($this->time_updated->AdvancedSearch->SearchValue)) {
+                if (is_array($this->time_updated->AdvancedSearch->SearchValue)) {
+                    $this->time_updated->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->time_updated->AdvancedSearch->SearchValue);
+                }
+                $this->time_updated->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->time_updated->AdvancedSearch->SearchValue);
+            }
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
+    }
+
+    // Validate search
+    protected function validateSearch()
+    {
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+
+        // Return validate result
+        $validateSearch = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateSearch = $validateSearch && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateSearch;
     }
 
     /**
@@ -2010,6 +2480,18 @@ class TransferbinList extends Transferbin
         $sql = $this->getCurrentSql();
         $conn = $this->getConnection();
         return $conn->fetchAssociative($sql);
+    }
+
+    // Load advanced search
+    public function loadAdvancedSearch()
+    {
+        $this->from_bin->AdvancedSearch->load();
+        $this->ctn->AdvancedSearch->load();
+        $this->to_bin->AdvancedSearch->load();
+        $this->user->AdvancedSearch->load();
+        $this->date_created->AdvancedSearch->load();
+        $this->date_updated->AdvancedSearch->load();
+        $this->time_updated->AdvancedSearch->load();
     }
 
     // Get export HTML tag

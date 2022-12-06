@@ -176,6 +176,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <tr id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_staging_line"><?= $Page->line->caption() ?></span></td>
+        <td data-name="line"<?= $Page->line->cellAttributes() ?>>
+<span id="el_staging_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->users->Visible) { // users ?>
     <tr id="r_users"<?= $Page->users->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_staging_users"><?= $Page->users->caption() ?></span></td>

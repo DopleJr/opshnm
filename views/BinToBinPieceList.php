@@ -24,9 +24,11 @@ loadjs.ready(["wrapper", "head"], function () {
     fbin_to_bin_piecelist.lists.date_upload = <?= $Page->date_upload->toClientList($Page) ?>;
     fbin_to_bin_piecelist.lists.source_location = <?= $Page->source_location->toClientList($Page) ?>;
     fbin_to_bin_piecelist.lists.article = <?= $Page->article->toClientList($Page) ?>;
+    fbin_to_bin_piecelist.lists.description = <?= $Page->description->toClientList($Page) ?>;
     fbin_to_bin_piecelist.lists.destination_location = <?= $Page->destination_location->toClientList($Page) ?>;
     fbin_to_bin_piecelist.lists.su = <?= $Page->su->toClientList($Page) ?>;
     fbin_to_bin_piecelist.lists.user = <?= $Page->user->toClientList($Page) ?>;
+    fbin_to_bin_piecelist.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fbin_to_bin_piecelist.lists.date_confirmation = <?= $Page->date_confirmation->toClientList($Page) ?>;
     loadjs.done("fbin_to_bin_piecelist");
 });
@@ -44,10 +46,15 @@ loadjs.ready(["wrapper", "head"], function () {
         ["date_upload", [], fields.date_upload.isInvalid],
         ["source_location", [], fields.source_location.isInvalid],
         ["article", [], fields.article.isInvalid],
+        ["description", [], fields.description.isInvalid],
         ["destination_location", [], fields.destination_location.isInvalid],
         ["su", [], fields.su.isInvalid],
+        ["qty", [], fields.qty.isInvalid],
+        ["actual", [], fields.actual.isInvalid],
         ["user", [], fields.user.isInvalid],
-        ["date_confirmation", [], fields.date_confirmation.isInvalid]
+        ["status", [], fields.status.isInvalid],
+        ["date_confirmation", [], fields.date_confirmation.isInvalid],
+        ["time_confirmation", [], fields.time_confirmation.isInvalid]
     ]);
 
     // Validate form
@@ -82,9 +89,11 @@ loadjs.ready(["wrapper", "head"], function () {
     fbin_to_bin_piecesrch.lists.date_upload = <?= $Page->date_upload->toClientList($Page) ?>;
     fbin_to_bin_piecesrch.lists.source_location = <?= $Page->source_location->toClientList($Page) ?>;
     fbin_to_bin_piecesrch.lists.article = <?= $Page->article->toClientList($Page) ?>;
+    fbin_to_bin_piecesrch.lists.description = <?= $Page->description->toClientList($Page) ?>;
     fbin_to_bin_piecesrch.lists.destination_location = <?= $Page->destination_location->toClientList($Page) ?>;
     fbin_to_bin_piecesrch.lists.su = <?= $Page->su->toClientList($Page) ?>;
     fbin_to_bin_piecesrch.lists.user = <?= $Page->user->toClientList($Page) ?>;
+    fbin_to_bin_piecesrch.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fbin_to_bin_piecesrch.lists.date_confirmation = <?= $Page->date_confirmation->toClientList($Page) ?>;
 
     // Filters
@@ -279,6 +288,43 @@ if (!$Page->article->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
+<?php if ($Page->description->Visible) { // description ?>
+<?php
+if (!$Page->description->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_description" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->description->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_description"
+            name="x_description[]"
+            class="form-control ew-select<?= $Page->description->isInvalidClass() ?>"
+            data-select2-id="fbin_to_bin_piecesrch_x_description"
+            data-table="bin_to_bin_piece"
+            data-field="x_description"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->description->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->description->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->description->getPlaceHolder()) ?>"
+            <?= $Page->description->editAttributes() ?>>
+            <?= $Page->description->selectOptionListHtml("x_description", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->description->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fbin_to_bin_piecesrch", function() {
+            var options = {
+                name: "x_description",
+                selectId: "fbin_to_bin_piecesrch_x_description",
+                ajax: { id: "x_description", form: "fbin_to_bin_piecesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.bin_to_bin_piece.fields.description.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
 <?php if ($Page->destination_location->Visible) { // destination_location ?>
 <?php
 if (!$Page->destination_location->UseFilter) {
@@ -390,6 +436,43 @@ if (!$Page->user->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+<?php
+if (!$Page->status->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_status" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->status->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_status"
+            name="x_status[]"
+            class="form-control ew-select<?= $Page->status->isInvalidClass() ?>"
+            data-select2-id="fbin_to_bin_piecesrch_x_status"
+            data-table="bin_to_bin_piece"
+            data-field="x_status"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->status->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+            <?= $Page->status->editAttributes() ?>>
+            <?= $Page->status->selectOptionListHtml("x_status", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->status->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fbin_to_bin_piecesrch", function() {
+            var options = {
+                name: "x_status",
+                selectId: "fbin_to_bin_piecesrch_x_status",
+                ajax: { id: "x_status", form: "fbin_to_bin_piecesrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.bin_to_bin_piece.fields.status.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
 <?php if ($Page->date_confirmation->Visible) { // date_confirmation ?>
 <?php
 if (!$Page->date_confirmation->UseFilter) {
@@ -427,12 +510,27 @@ if (!$Page->date_confirmation->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
-<?php if ($Page->SearchColumnCount > 0) { ?>
-   <div class="col-sm-auto mb-3">
-       <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
-   </div>
-<?php } ?>
 </div><!-- /.row -->
+<div class="row mb-0">
+    <div class="col-sm-auto px-0 pe-sm-2">
+        <div class="ew-basic-search input-group">
+            <input type="search" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control ew-basic-search-keyword" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>" aria-label="<?= HtmlEncode($Language->phrase("Search")) ?>">
+            <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" class="ew-basic-search-type" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
+            <button type="button" data-bs-toggle="dropdown" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false">
+                <span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "" ? " active" : "" ?>" form="fbin_to_bin_piecesrch" data-ew-action="search-type"><?= $Language->phrase("QuickSearchAuto") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "=" ? " active" : "" ?>" form="fbin_to_bin_piecesrch" data-ew-action="search-type" data-search-type="="><?= $Language->phrase("QuickSearchExact") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "AND" ? " active" : "" ?>" form="fbin_to_bin_piecesrch" data-ew-action="search-type" data-search-type="AND"><?= $Language->phrase("QuickSearchAll") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "OR" ? " active" : "" ?>" form="fbin_to_bin_piecesrch" data-ew-action="search-type" data-search-type="OR"><?= $Language->phrase("QuickSearchAny") ?></button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-auto mb-3">
+        <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
+    </div>
+</div>
 </div><!-- /.ew-extended-search -->
 </div><!-- /.ew-search-panel -->
 </form>
@@ -489,17 +587,32 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->article->Visible) { // article ?>
         <th data-name="article" class="<?= $Page->article->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_article" class="bin_to_bin_piece_article"><?= $Page->renderFieldHeader($Page->article) ?></div></th>
 <?php } ?>
+<?php if ($Page->description->Visible) { // description ?>
+        <th data-name="description" class="<?= $Page->description->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_description" class="bin_to_bin_piece_description"><?= $Page->renderFieldHeader($Page->description) ?></div></th>
+<?php } ?>
 <?php if ($Page->destination_location->Visible) { // destination_location ?>
         <th data-name="destination_location" class="<?= $Page->destination_location->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_destination_location" class="bin_to_bin_piece_destination_location"><?= $Page->renderFieldHeader($Page->destination_location) ?></div></th>
 <?php } ?>
 <?php if ($Page->su->Visible) { // su ?>
         <th data-name="su" class="<?= $Page->su->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_su" class="bin_to_bin_piece_su"><?= $Page->renderFieldHeader($Page->su) ?></div></th>
 <?php } ?>
+<?php if ($Page->qty->Visible) { // qty ?>
+        <th data-name="qty" class="<?= $Page->qty->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_qty" class="bin_to_bin_piece_qty"><?= $Page->renderFieldHeader($Page->qty) ?></div></th>
+<?php } ?>
+<?php if ($Page->actual->Visible) { // actual ?>
+        <th data-name="actual" class="<?= $Page->actual->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_actual" class="bin_to_bin_piece_actual"><?= $Page->renderFieldHeader($Page->actual) ?></div></th>
+<?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
         <th data-name="user" class="<?= $Page->user->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_user" class="bin_to_bin_piece_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_status" class="bin_to_bin_piece_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
+<?php } ?>
 <?php if ($Page->date_confirmation->Visible) { // date_confirmation ?>
         <th data-name="date_confirmation" class="<?= $Page->date_confirmation->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_date_confirmation" class="bin_to_bin_piece_date_confirmation"><?= $Page->renderFieldHeader($Page->date_confirmation) ?></div></th>
+<?php } ?>
+<?php if ($Page->time_confirmation->Visible) { // time_confirmation ?>
+        <th data-name="time_confirmation" class="<?= $Page->time_confirmation->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_bin_to_bin_piece_time_confirmation" class="bin_to_bin_piece_time_confirmation"><?= $Page->renderFieldHeader($Page->time_confirmation) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -608,6 +721,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->description->Visible) { // description ?>
+        <td data-name="description"<?= $Page->description->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_description" class="el_bin_to_bin_piece_description">
+<span<?= $Page->description->viewAttributes() ?>>
+<?= $Page->description->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->destination_location->Visible) { // destination_location ?>
         <td data-name="destination_location"<?= $Page->destination_location->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_destination_location" class="el_bin_to_bin_piece_destination_location">
@@ -624,6 +745,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->qty->Visible) { // qty ?>
+        <td data-name="qty"<?= $Page->qty->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_qty" class="el_bin_to_bin_piece_qty">
+<span<?= $Page->qty->viewAttributes() ?>>
+<?= $Page->qty->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->actual->Visible) { // actual ?>
+        <td data-name="actual"<?= $Page->actual->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_actual" class="el_bin_to_bin_piece_actual">
+<span<?= $Page->actual->viewAttributes() ?>>
+<?= $Page->actual->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->user->Visible) { // user ?>
         <td data-name="user"<?= $Page->user->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_user" class="el_bin_to_bin_piece_user">
@@ -632,11 +769,27 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status"<?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_status" class="el_bin_to_bin_piece_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->date_confirmation->Visible) { // date_confirmation ?>
         <td data-name="date_confirmation"<?= $Page->date_confirmation->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_date_confirmation" class="el_bin_to_bin_piece_date_confirmation">
 <span<?= $Page->date_confirmation->viewAttributes() ?>>
 <?= $Page->date_confirmation->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->time_confirmation->Visible) { // time_confirmation ?>
+        <td data-name="time_confirmation"<?= $Page->time_confirmation->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_bin_to_bin_piece_time_confirmation" class="el_bin_to_bin_piece_time_confirmation">
+<span<?= $Page->time_confirmation->viewAttributes() ?>>
+<?= $Page->time_confirmation->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

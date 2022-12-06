@@ -492,9 +492,13 @@ class TransferbinEdit extends Transferbin
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->FromBin->setVisibility();
-        $this->ToBin->setVisibility();
+        $this->from_bin->setVisibility();
+        $this->ctn->setVisibility();
+        $this->to_bin->setVisibility();
+        $this->user->setVisibility();
         $this->date_created->setVisibility();
+        $this->date_updated->setVisibility();
+        $this->time_updated->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -686,23 +690,43 @@ class TransferbinEdit extends Transferbin
             $this->id->setFormValue($val);
         }
 
-        // Check field name 'From Bin' first before field var 'x_FromBin'
-        $val = $CurrentForm->hasValue("From Bin") ? $CurrentForm->getValue("From Bin") : $CurrentForm->getValue("x_FromBin");
-        if (!$this->FromBin->IsDetailKey) {
+        // Check field name 'from_bin' first before field var 'x_from_bin'
+        $val = $CurrentForm->hasValue("from_bin") ? $CurrentForm->getValue("from_bin") : $CurrentForm->getValue("x_from_bin");
+        if (!$this->from_bin->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->FromBin->Visible = false; // Disable update for API request
+                $this->from_bin->Visible = false; // Disable update for API request
             } else {
-                $this->FromBin->setFormValue($val);
+                $this->from_bin->setFormValue($val);
             }
         }
 
-        // Check field name 'To Bin' first before field var 'x_ToBin'
-        $val = $CurrentForm->hasValue("To Bin") ? $CurrentForm->getValue("To Bin") : $CurrentForm->getValue("x_ToBin");
-        if (!$this->ToBin->IsDetailKey) {
+        // Check field name 'ctn' first before field var 'x_ctn'
+        $val = $CurrentForm->hasValue("ctn") ? $CurrentForm->getValue("ctn") : $CurrentForm->getValue("x_ctn");
+        if (!$this->ctn->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->ToBin->Visible = false; // Disable update for API request
+                $this->ctn->Visible = false; // Disable update for API request
             } else {
-                $this->ToBin->setFormValue($val);
+                $this->ctn->setFormValue($val);
+            }
+        }
+
+        // Check field name 'to_bin' first before field var 'x_to_bin'
+        $val = $CurrentForm->hasValue("to_bin") ? $CurrentForm->getValue("to_bin") : $CurrentForm->getValue("x_to_bin");
+        if (!$this->to_bin->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->to_bin->Visible = false; // Disable update for API request
+            } else {
+                $this->to_bin->setFormValue($val);
+            }
+        }
+
+        // Check field name 'user' first before field var 'x_user'
+        $val = $CurrentForm->hasValue("user") ? $CurrentForm->getValue("user") : $CurrentForm->getValue("x_user");
+        if (!$this->user->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->user->Visible = false; // Disable update for API request
+            } else {
+                $this->user->setFormValue($val);
             }
         }
 
@@ -716,6 +740,28 @@ class TransferbinEdit extends Transferbin
             }
             $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
         }
+
+        // Check field name 'date_updated' first before field var 'x_date_updated'
+        $val = $CurrentForm->hasValue("date_updated") ? $CurrentForm->getValue("date_updated") : $CurrentForm->getValue("x_date_updated");
+        if (!$this->date_updated->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->date_updated->Visible = false; // Disable update for API request
+            } else {
+                $this->date_updated->setFormValue($val);
+            }
+            $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
+        }
+
+        // Check field name 'time_updated' first before field var 'x_time_updated'
+        $val = $CurrentForm->hasValue("time_updated") ? $CurrentForm->getValue("time_updated") : $CurrentForm->getValue("x_time_updated");
+        if (!$this->time_updated->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->time_updated->Visible = false; // Disable update for API request
+            } else {
+                $this->time_updated->setFormValue($val);
+            }
+            $this->time_updated->CurrentValue = UnFormatDateTime($this->time_updated->CurrentValue, $this->time_updated->formatPattern());
+        }
     }
 
     // Restore form values
@@ -723,10 +769,16 @@ class TransferbinEdit extends Transferbin
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
-        $this->FromBin->CurrentValue = $this->FromBin->FormValue;
-        $this->ToBin->CurrentValue = $this->ToBin->FormValue;
+        $this->from_bin->CurrentValue = $this->from_bin->FormValue;
+        $this->ctn->CurrentValue = $this->ctn->FormValue;
+        $this->to_bin->CurrentValue = $this->to_bin->FormValue;
+        $this->user->CurrentValue = $this->user->FormValue;
         $this->date_created->CurrentValue = $this->date_created->FormValue;
         $this->date_created->CurrentValue = UnFormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
+        $this->date_updated->CurrentValue = $this->date_updated->FormValue;
+        $this->date_updated->CurrentValue = UnFormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
+        $this->time_updated->CurrentValue = $this->time_updated->FormValue;
+        $this->time_updated->CurrentValue = UnFormatDateTime($this->time_updated->CurrentValue, $this->time_updated->formatPattern());
     }
 
     /**
@@ -777,9 +829,13 @@ class TransferbinEdit extends Transferbin
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->FromBin->setDbValue($row['From Bin']);
-        $this->ToBin->setDbValue($row['To Bin']);
+        $this->from_bin->setDbValue($row['from_bin']);
+        $this->ctn->setDbValue($row['ctn']);
+        $this->to_bin->setDbValue($row['to_bin']);
+        $this->user->setDbValue($row['user']);
         $this->date_created->setDbValue($row['date_created']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Return a row with default values
@@ -787,9 +843,13 @@ class TransferbinEdit extends Transferbin
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['From Bin'] = $this->FromBin->DefaultValue;
-        $row['To Bin'] = $this->ToBin->DefaultValue;
+        $row['from_bin'] = $this->from_bin->DefaultValue;
+        $row['ctn'] = $this->ctn->DefaultValue;
+        $row['to_bin'] = $this->to_bin->DefaultValue;
+        $row['user'] = $this->user->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
+        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['time_updated'] = $this->time_updated->DefaultValue;
         return $row;
     }
 
@@ -824,14 +884,26 @@ class TransferbinEdit extends Transferbin
         // id
         $this->id->RowCssClass = "row";
 
-        // From Bin
-        $this->FromBin->RowCssClass = "row";
+        // from_bin
+        $this->from_bin->RowCssClass = "row";
 
-        // To Bin
-        $this->ToBin->RowCssClass = "row";
+        // ctn
+        $this->ctn->RowCssClass = "row";
+
+        // to_bin
+        $this->to_bin->RowCssClass = "row";
+
+        // user
+        $this->user->RowCssClass = "row";
 
         // date_created
         $this->date_created->RowCssClass = "row";
+
+        // date_updated
+        $this->date_updated->RowCssClass = "row";
+
+        // time_updated
+        $this->time_updated->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -839,34 +911,68 @@ class TransferbinEdit extends Transferbin
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // From Bin
-            $this->FromBin->ViewValue = $this->FromBin->CurrentValue;
-            $this->FromBin->ViewCustomAttributes = "";
+            // from_bin
+            $this->from_bin->ViewValue = $this->from_bin->CurrentValue;
+            $this->from_bin->ViewCustomAttributes = "";
 
-            // To Bin
-            $this->ToBin->ViewValue = $this->ToBin->CurrentValue;
-            $this->ToBin->ViewCustomAttributes = "";
+            // ctn
+            $this->ctn->ViewValue = $this->ctn->CurrentValue;
+            $this->ctn->ViewCustomAttributes = "";
+
+            // to_bin
+            $this->to_bin->ViewValue = $this->to_bin->CurrentValue;
+            $this->to_bin->ViewCustomAttributes = "";
+
+            // user
+            $this->user->ViewValue = $this->user->CurrentValue;
+            $this->user->ViewCustomAttributes = "";
 
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
+
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
 
-            // From Bin
-            $this->FromBin->LinkCustomAttributes = "";
-            $this->FromBin->HrefValue = "";
+            // from_bin
+            $this->from_bin->LinkCustomAttributes = "";
+            $this->from_bin->HrefValue = "";
 
-            // To Bin
-            $this->ToBin->LinkCustomAttributes = "";
-            $this->ToBin->HrefValue = "";
+            // ctn
+            $this->ctn->LinkCustomAttributes = "";
+            $this->ctn->HrefValue = "";
+
+            // to_bin
+            $this->to_bin->LinkCustomAttributes = "";
+            $this->to_bin->HrefValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
 
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -874,25 +980,47 @@ class TransferbinEdit extends Transferbin
             $this->id->EditValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // From Bin
-            $this->FromBin->setupEditAttributes();
-            $this->FromBin->EditCustomAttributes = "";
-            if (!$this->FromBin->Raw) {
-                $this->FromBin->CurrentValue = HtmlDecode($this->FromBin->CurrentValue);
+            // from_bin
+            $this->from_bin->setupEditAttributes();
+            $this->from_bin->EditCustomAttributes = "";
+            if (!$this->from_bin->Raw) {
+                $this->from_bin->CurrentValue = HtmlDecode($this->from_bin->CurrentValue);
             }
-            $this->FromBin->EditValue = HtmlEncode($this->FromBin->CurrentValue);
-            $this->FromBin->PlaceHolder = RemoveHtml($this->FromBin->caption());
+            $this->from_bin->EditValue = HtmlEncode($this->from_bin->CurrentValue);
+            $this->from_bin->PlaceHolder = RemoveHtml($this->from_bin->caption());
 
-            // To Bin
-            $this->ToBin->setupEditAttributes();
-            $this->ToBin->EditCustomAttributes = "";
-            if (!$this->ToBin->Raw) {
-                $this->ToBin->CurrentValue = HtmlDecode($this->ToBin->CurrentValue);
+            // ctn
+            $this->ctn->setupEditAttributes();
+            $this->ctn->EditCustomAttributes = "";
+            if (!$this->ctn->Raw) {
+                $this->ctn->CurrentValue = HtmlDecode($this->ctn->CurrentValue);
             }
-            $this->ToBin->EditValue = HtmlEncode($this->ToBin->CurrentValue);
-            $this->ToBin->PlaceHolder = RemoveHtml($this->ToBin->caption());
+            $this->ctn->EditValue = HtmlEncode($this->ctn->CurrentValue);
+            $this->ctn->PlaceHolder = RemoveHtml($this->ctn->caption());
+
+            // to_bin
+            $this->to_bin->setupEditAttributes();
+            $this->to_bin->EditCustomAttributes = "";
+            if (!$this->to_bin->Raw) {
+                $this->to_bin->CurrentValue = HtmlDecode($this->to_bin->CurrentValue);
+            }
+            $this->to_bin->EditValue = HtmlEncode($this->to_bin->CurrentValue);
+            $this->to_bin->PlaceHolder = RemoveHtml($this->to_bin->caption());
+
+            // user
+            $this->user->setupEditAttributes();
+            $this->user->EditCustomAttributes = "";
+            if (!$this->user->Raw) {
+                $this->user->CurrentValue = HtmlDecode($this->user->CurrentValue);
+            }
+            $this->user->EditValue = HtmlEncode($this->user->CurrentValue);
+            $this->user->PlaceHolder = RemoveHtml($this->user->caption());
 
             // date_created
+
+            // date_updated
+
+            // time_updated
 
             // Edit refer script
 
@@ -900,17 +1028,33 @@ class TransferbinEdit extends Transferbin
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
 
-            // From Bin
-            $this->FromBin->LinkCustomAttributes = "";
-            $this->FromBin->HrefValue = "";
+            // from_bin
+            $this->from_bin->LinkCustomAttributes = "";
+            $this->from_bin->HrefValue = "";
 
-            // To Bin
-            $this->ToBin->LinkCustomAttributes = "";
-            $this->ToBin->HrefValue = "";
+            // ctn
+            $this->ctn->LinkCustomAttributes = "";
+            $this->ctn->HrefValue = "";
+
+            // to_bin
+            $this->to_bin->LinkCustomAttributes = "";
+            $this->to_bin->HrefValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
 
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -937,19 +1081,39 @@ class TransferbinEdit extends Transferbin
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
-        if ($this->FromBin->Required) {
-            if (!$this->FromBin->IsDetailKey && EmptyValue($this->FromBin->FormValue)) {
-                $this->FromBin->addErrorMessage(str_replace("%s", $this->FromBin->caption(), $this->FromBin->RequiredErrorMessage));
+        if ($this->from_bin->Required) {
+            if (!$this->from_bin->IsDetailKey && EmptyValue($this->from_bin->FormValue)) {
+                $this->from_bin->addErrorMessage(str_replace("%s", $this->from_bin->caption(), $this->from_bin->RequiredErrorMessage));
             }
         }
-        if ($this->ToBin->Required) {
-            if (!$this->ToBin->IsDetailKey && EmptyValue($this->ToBin->FormValue)) {
-                $this->ToBin->addErrorMessage(str_replace("%s", $this->ToBin->caption(), $this->ToBin->RequiredErrorMessage));
+        if ($this->ctn->Required) {
+            if (!$this->ctn->IsDetailKey && EmptyValue($this->ctn->FormValue)) {
+                $this->ctn->addErrorMessage(str_replace("%s", $this->ctn->caption(), $this->ctn->RequiredErrorMessage));
+            }
+        }
+        if ($this->to_bin->Required) {
+            if (!$this->to_bin->IsDetailKey && EmptyValue($this->to_bin->FormValue)) {
+                $this->to_bin->addErrorMessage(str_replace("%s", $this->to_bin->caption(), $this->to_bin->RequiredErrorMessage));
+            }
+        }
+        if ($this->user->Required) {
+            if (!$this->user->IsDetailKey && EmptyValue($this->user->FormValue)) {
+                $this->user->addErrorMessage(str_replace("%s", $this->user->caption(), $this->user->RequiredErrorMessage));
             }
         }
         if ($this->date_created->Required) {
             if (!$this->date_created->IsDetailKey && EmptyValue($this->date_created->FormValue)) {
                 $this->date_created->addErrorMessage(str_replace("%s", $this->date_created->caption(), $this->date_created->RequiredErrorMessage));
+            }
+        }
+        if ($this->date_updated->Required) {
+            if (!$this->date_updated->IsDetailKey && EmptyValue($this->date_updated->FormValue)) {
+                $this->date_updated->addErrorMessage(str_replace("%s", $this->date_updated->caption(), $this->date_updated->RequiredErrorMessage));
+            }
+        }
+        if ($this->time_updated->Required) {
+            if (!$this->time_updated->IsDetailKey && EmptyValue($this->time_updated->FormValue)) {
+                $this->time_updated->addErrorMessage(str_replace("%s", $this->time_updated->caption(), $this->time_updated->RequiredErrorMessage));
             }
         }
 
@@ -988,15 +1152,29 @@ class TransferbinEdit extends Transferbin
         // Set new row
         $rsnew = [];
 
-        // From Bin
-        $this->FromBin->setDbValueDef($rsnew, $this->FromBin->CurrentValue, null, $this->FromBin->ReadOnly);
+        // from_bin
+        $this->from_bin->setDbValueDef($rsnew, $this->from_bin->CurrentValue, "", $this->from_bin->ReadOnly);
 
-        // To Bin
-        $this->ToBin->setDbValueDef($rsnew, $this->ToBin->CurrentValue, null, $this->ToBin->ReadOnly);
+        // ctn
+        $this->ctn->setDbValueDef($rsnew, $this->ctn->CurrentValue, "", $this->ctn->ReadOnly);
+
+        // to_bin
+        $this->to_bin->setDbValueDef($rsnew, $this->to_bin->CurrentValue, "", $this->to_bin->ReadOnly);
+
+        // user
+        $this->user->setDbValueDef($rsnew, $this->user->CurrentValue, null, $this->user->ReadOnly);
 
         // date_created
         $this->date_created->CurrentValue = CurrentDate();
         $this->date_created->setDbValueDef($rsnew, $this->date_created->CurrentValue, null);
+
+        // date_updated
+        $this->date_updated->CurrentValue = CurrentDate();
+        $this->date_updated->setDbValueDef($rsnew, $this->date_updated->CurrentValue, null);
+
+        // time_updated
+        $this->time_updated->CurrentValue = CurrentTime();
+        $this->time_updated->setDbValueDef($rsnew, $this->time_updated->CurrentValue, null);
 
         // Update current values
         $this->setCurrentValues($rsnew);

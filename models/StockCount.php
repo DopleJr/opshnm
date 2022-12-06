@@ -101,7 +101,14 @@ class StockCount extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'stock_count', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'stock_count', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'stock_count', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -128,7 +135,14 @@ class StockCount extends DbTable
         $this->location->Nullable = false; // NOT NULL field
         $this->location->Required = true; // Required field
         $this->location->UseFilter = true; // Table header filter
-        $this->location->Lookup = new Lookup('location', 'stock_count', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->location->Lookup = new Lookup('location', 'stock_count', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->location->Lookup = new Lookup('location', 'stock_count', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['location'] = &$this->location;
 
         // scan
@@ -154,7 +168,14 @@ class StockCount extends DbTable
         $this->scan->Nullable = false; // NOT NULL field
         $this->scan->Required = true; // Required field
         $this->scan->UseFilter = true; // Table header filter
-        $this->scan->Lookup = new Lookup('scan', 'stock_count', true, 'scan', ["scan","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->scan->Lookup = new Lookup('scan', 'stock_count', true, 'scan', ["scan","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->scan->Lookup = new Lookup('scan', 'stock_count', true, 'scan', ["scan","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['scan'] = &$this->scan;
 
         // article
@@ -178,7 +199,14 @@ class StockCount extends DbTable
         );
         $this->article->InputTextType = "number";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'stock_count', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'stock_count', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'stock_count', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->article->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['article'] = &$this->article;
 
@@ -203,7 +231,14 @@ class StockCount extends DbTable
         );
         $this->user->InputTextType = "text";
         $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'stock_count', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'stock_count', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'stock_count', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['user'] = &$this->user;
 
         // divisi
@@ -227,7 +262,14 @@ class StockCount extends DbTable
         );
         $this->divisi->InputTextType = "text";
         $this->divisi->UseFilter = true; // Table header filter
-        $this->divisi->Lookup = new Lookup('divisi', 'stock_count', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->divisi->Lookup = new Lookup('divisi', 'stock_count', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->divisi->Lookup = new Lookup('divisi', 'stock_count', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['divisi'] = &$this->divisi;
 
         // date_created
@@ -251,7 +293,14 @@ class StockCount extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'stock_count', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'stock_count', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'stock_count', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -276,7 +325,14 @@ class StockCount extends DbTable
         );
         $this->time_created->InputTextType = "text";
         $this->time_created->UseFilter = true; // Table header filter
-        $this->time_created->Lookup = new Lookup('time_created', 'stock_count', true, 'time_created', ["time_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->time_created->Lookup = new Lookup('time_created', 'stock_count', true, 'time_created', ["time_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->time_created->Lookup = new Lookup('time_created', 'stock_count', true, 'time_created', ["time_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->time_created->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
         $this->Fields['time_created'] = &$this->time_created;
 

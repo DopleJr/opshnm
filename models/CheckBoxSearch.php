@@ -477,16 +477,17 @@ class CheckBoxSearch extends CheckBox
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->box_code->setVisibility();
-        $this->store_id->Visible = false;
+        $this->store_id->setVisibility();
         $this->store_name->Visible = false;
+        $this->concept->setVisibility();
         $this->article->setVisibility();
         $this->size_desc->Visible = false;
         $this->color_code->Visible = false;
         $this->picked_qty->Visible = false;
         $this->variance_qty->Visible = false;
-        $this->confirmation_date->Visible = false;
+        $this->confirmation_date->setVisibility();
         $this->confirmation_time->Visible = false;
-        $this->picker->Visible = false;
+        $this->picker->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -570,7 +571,11 @@ class CheckBoxSearch extends CheckBox
     {
         $srchUrl = "";
         $this->buildSearchUrl($srchUrl, $this->box_code); // box_code
+        $this->buildSearchUrl($srchUrl, $this->store_id); // store_id
+        $this->buildSearchUrl($srchUrl, $this->concept); // concept
         $this->buildSearchUrl($srchUrl, $this->article); // article
+        $this->buildSearchUrl($srchUrl, $this->confirmation_date); // confirmation_date
+        $this->buildSearchUrl($srchUrl, $this->picker); // picker
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -667,6 +672,11 @@ class CheckBoxSearch extends CheckBox
             $hasValue = true;
         }
 
+        // concept
+        if ($this->concept->AdvancedSearch->get()) {
+            $hasValue = true;
+        }
+
         // article
         if ($this->article->AdvancedSearch->get()) {
             $hasValue = true;
@@ -730,6 +740,9 @@ class CheckBoxSearch extends CheckBox
         // store_name
         $this->store_name->RowCssClass = "row";
 
+        // concept
+        $this->concept->RowCssClass = "row";
+
         // article
         $this->article->RowCssClass = "row";
 
@@ -767,6 +780,10 @@ class CheckBoxSearch extends CheckBox
             // store_name
             $this->store_name->ViewValue = $this->store_name->CurrentValue;
             $this->store_name->ViewCustomAttributes = "";
+
+            // concept
+            $this->concept->ViewValue = $this->concept->CurrentValue;
+            $this->concept->ViewCustomAttributes = "";
 
             // article
             $this->article->ViewValue = $this->article->CurrentValue;
@@ -809,10 +826,30 @@ class CheckBoxSearch extends CheckBox
             $this->box_code->HrefValue = "";
             $this->box_code->TooltipValue = "";
 
+            // store_id
+            $this->store_id->LinkCustomAttributes = "";
+            $this->store_id->HrefValue = "";
+            $this->store_id->TooltipValue = "";
+
+            // concept
+            $this->concept->LinkCustomAttributes = "";
+            $this->concept->HrefValue = "";
+            $this->concept->TooltipValue = "";
+
             // article
             $this->article->LinkCustomAttributes = "";
             $this->article->HrefValue = "";
             $this->article->TooltipValue = "";
+
+            // confirmation_date
+            $this->confirmation_date->LinkCustomAttributes = "";
+            $this->confirmation_date->HrefValue = "";
+            $this->confirmation_date->TooltipValue = "";
+
+            // picker
+            $this->picker->LinkCustomAttributes = "";
+            $this->picker->HrefValue = "";
+            $this->picker->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // box_code
             $this->box_code->setupEditAttributes();
@@ -823,6 +860,24 @@ class CheckBoxSearch extends CheckBox
             $this->box_code->EditValue = HtmlEncode($this->box_code->AdvancedSearch->SearchValue);
             $this->box_code->PlaceHolder = RemoveHtml($this->box_code->caption());
 
+            // store_id
+            $this->store_id->setupEditAttributes();
+            $this->store_id->EditCustomAttributes = "";
+            if (!$this->store_id->Raw) {
+                $this->store_id->AdvancedSearch->SearchValue = HtmlDecode($this->store_id->AdvancedSearch->SearchValue);
+            }
+            $this->store_id->EditValue = HtmlEncode($this->store_id->AdvancedSearch->SearchValue);
+            $this->store_id->PlaceHolder = RemoveHtml($this->store_id->caption());
+
+            // concept
+            $this->concept->setupEditAttributes();
+            $this->concept->EditCustomAttributes = "";
+            if (!$this->concept->Raw) {
+                $this->concept->AdvancedSearch->SearchValue = HtmlDecode($this->concept->AdvancedSearch->SearchValue);
+            }
+            $this->concept->EditValue = HtmlEncode($this->concept->AdvancedSearch->SearchValue);
+            $this->concept->PlaceHolder = RemoveHtml($this->concept->caption());
+
             // article
             $this->article->setupEditAttributes();
             $this->article->EditCustomAttributes = "";
@@ -831,6 +886,25 @@ class CheckBoxSearch extends CheckBox
             }
             $this->article->EditValue = HtmlEncode($this->article->AdvancedSearch->SearchValue);
             $this->article->PlaceHolder = RemoveHtml($this->article->caption());
+
+            // confirmation_date
+            $this->confirmation_date->setupEditAttributes();
+            $this->confirmation_date->EditCustomAttributes = "";
+            $this->confirmation_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->confirmation_date->AdvancedSearch->SearchValue, $this->confirmation_date->formatPattern()), $this->confirmation_date->formatPattern()));
+            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+            $this->confirmation_date->setupEditAttributes();
+            $this->confirmation_date->EditCustomAttributes = "";
+            $this->confirmation_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->confirmation_date->AdvancedSearch->SearchValue2, $this->confirmation_date->formatPattern()), $this->confirmation_date->formatPattern()));
+            $this->confirmation_date->PlaceHolder = RemoveHtml($this->confirmation_date->caption());
+
+            // picker
+            $this->picker->setupEditAttributes();
+            $this->picker->EditCustomAttributes = "";
+            if (!$this->picker->Raw) {
+                $this->picker->AdvancedSearch->SearchValue = HtmlDecode($this->picker->AdvancedSearch->SearchValue);
+            }
+            $this->picker->EditValue = HtmlEncode($this->picker->AdvancedSearch->SearchValue);
+            $this->picker->PlaceHolder = RemoveHtml($this->picker->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -849,6 +923,12 @@ class CheckBoxSearch extends CheckBox
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if (!CheckDate($this->confirmation_date->AdvancedSearch->SearchValue, $this->confirmation_date->formatPattern())) {
+            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
+        }
+        if (!CheckDate($this->confirmation_date->AdvancedSearch->SearchValue2, $this->confirmation_date->formatPattern())) {
+            $this->confirmation_date->addErrorMessage($this->confirmation_date->getErrorMessage(false));
+        }
 
         // Return validate result
         $validateSearch = !$this->hasInvalidFields();
@@ -866,7 +946,11 @@ class CheckBoxSearch extends CheckBox
     public function loadAdvancedSearch()
     {
         $this->box_code->AdvancedSearch->load();
+        $this->store_id->AdvancedSearch->load();
+        $this->concept->AdvancedSearch->load();
         $this->article->AdvancedSearch->load();
+        $this->confirmation_date->AdvancedSearch->load();
+        $this->picker->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb

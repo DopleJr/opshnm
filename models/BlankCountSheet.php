@@ -109,7 +109,14 @@ class BlankCountSheet extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'blank_count_sheet', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'blank_count_sheet', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'blank_count_sheet', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -134,7 +141,14 @@ class BlankCountSheet extends DbTable
         );
         $this->location->InputTextType = "text";
         $this->location->UseFilter = true; // Table header filter
-        $this->location->Lookup = new Lookup('location', 'blank_count_sheet', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->location->Lookup = new Lookup('location', 'blank_count_sheet', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->location->Lookup = new Lookup('location', 'blank_count_sheet', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['location'] = &$this->location;
 
         // ctn
@@ -158,7 +172,14 @@ class BlankCountSheet extends DbTable
         );
         $this->ctn->InputTextType = "text";
         $this->ctn->UseFilter = true; // Table header filter
-        $this->ctn->Lookup = new Lookup('ctn', 'blank_count_sheet', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->ctn->Lookup = new Lookup('ctn', 'blank_count_sheet', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->ctn->Lookup = new Lookup('ctn', 'blank_count_sheet', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['ctn'] = &$this->ctn;
 
         // scan
@@ -278,7 +299,14 @@ class BlankCountSheet extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'blank_count_sheet', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'blank_count_sheet', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'blank_count_sheet', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // description
@@ -302,7 +330,14 @@ class BlankCountSheet extends DbTable
         );
         $this->description->InputTextType = "text";
         $this->description->UseFilter = true; // Table header filter
-        $this->description->Lookup = new Lookup('description', 'blank_count_sheet', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->description->Lookup = new Lookup('description', 'blank_count_sheet', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->description->Lookup = new Lookup('description', 'blank_count_sheet', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['description'] = &$this->description;
 
         // size_desc
@@ -326,7 +361,14 @@ class BlankCountSheet extends DbTable
         );
         $this->size_desc->InputTextType = "text";
         $this->size_desc->UseFilter = true; // Table header filter
-        $this->size_desc->Lookup = new Lookup('size_desc', 'blank_count_sheet', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_desc->Lookup = new Lookup('size_desc', 'blank_count_sheet', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->size_desc->Lookup = new Lookup('size_desc', 'blank_count_sheet', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['size_desc'] = &$this->size_desc;
 
         // color_code
@@ -350,7 +392,14 @@ class BlankCountSheet extends DbTable
         );
         $this->color_code->InputTextType = "text";
         $this->color_code->UseFilter = true; // Table header filter
-        $this->color_code->Lookup = new Lookup('color_code', 'blank_count_sheet', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_code->Lookup = new Lookup('color_code', 'blank_count_sheet', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_code->Lookup = new Lookup('color_code', 'blank_count_sheet', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_code'] = &$this->color_code;
 
         // color_desc
@@ -374,7 +423,14 @@ class BlankCountSheet extends DbTable
         );
         $this->color_desc->InputTextType = "text";
         $this->color_desc->UseFilter = true; // Table header filter
-        $this->color_desc->Lookup = new Lookup('color_desc', 'blank_count_sheet', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_desc->Lookup = new Lookup('color_desc', 'blank_count_sheet', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_desc->Lookup = new Lookup('color_desc', 'blank_count_sheet', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_desc'] = &$this->color_desc;
 
         // season
@@ -398,7 +454,14 @@ class BlankCountSheet extends DbTable
         );
         $this->season->InputTextType = "text";
         $this->season->UseFilter = true; // Table header filter
-        $this->season->Lookup = new Lookup('season', 'blank_count_sheet', true, 'season', ["season","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->season->Lookup = new Lookup('season', 'blank_count_sheet', true, 'season', ["season","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->season->Lookup = new Lookup('season', 'blank_count_sheet', true, 'season', ["season","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['season'] = &$this->season;
 
         // quantity
@@ -422,7 +485,14 @@ class BlankCountSheet extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'blank_count_sheet', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'blank_count_sheet', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'blank_count_sheet', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['quantity'] = &$this->quantity;
 
@@ -447,7 +517,14 @@ class BlankCountSheet extends DbTable
         );
         $this->user->InputTextType = "text";
         $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'blank_count_sheet', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'blank_count_sheet', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'blank_count_sheet', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['user'] = &$this->user;
 
         // date_created
@@ -471,7 +548,14 @@ class BlankCountSheet extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'blank_count_sheet', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'blank_count_sheet', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'blank_count_sheet', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['date_created'] = &$this->date_created;
 
         // date_updated
@@ -495,7 +579,14 @@ class BlankCountSheet extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'blank_count_sheet', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'blank_count_sheet', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'blank_count_sheet', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['date_updated'] = &$this->date_updated;
 
         // Add Doctrine Cache

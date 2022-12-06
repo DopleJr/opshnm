@@ -214,6 +214,7 @@ ew.createChart = function (args) {
 };
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./bootstrap5/font-awesome/css/font-awesome.min.css">
 <!-- Navbar -->
 <script type="text/html" id="navbar-menu-items" class="ew-js-template" data-name="navbar" data-seq="10" data-data="navbar" data-method="appendTo" data-target="#ew-navbar">
 {{if items}}

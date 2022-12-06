@@ -30,9 +30,11 @@ loadjs.ready(["wrapper", "head"], function () {
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["users", [fields.users.visible && fields.users.required ? ew.Validators.required(fields.users.caption) : null], fields.users.isInvalid],
         ["picking_date", [fields.picking_date.visible && fields.picking_date.required ? ew.Validators.required(fields.picking_date.caption) : null, ew.Validators.datetime(fields.picking_date.clientFormatPattern)], fields.picking_date.isInvalid],
+        ["line", [fields.line.visible && fields.line.required ? ew.Validators.required(fields.line.caption) : null], fields.line.isInvalid],
         ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null, ew.Validators.datetime(fields.date_created.clientFormatPattern)], fields.date_created.isInvalid],
-        ["date_delivery", [fields.date_delivery.visible && fields.date_delivery.required ? ew.Validators.required(fields.date_delivery.caption) : null, ew.Validators.datetime(fields.date_delivery.clientFormatPattern)], fields.date_delivery.isInvalid],
-        ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid]
+        ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid],
+        ["date_staging", [fields.date_staging.visible && fields.date_staging.required ? ew.Validators.required(fields.date_staging.caption) : null, ew.Validators.datetime(fields.date_staging.clientFormatPattern)], fields.date_staging.isInvalid],
+        ["date_delivery", [fields.date_delivery.visible && fields.date_delivery.required ? ew.Validators.required(fields.date_delivery.caption) : null, ew.Validators.datetime(fields.date_delivery.clientFormatPattern)], fields.date_delivery.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -215,6 +217,18 @@ loadjs.ready(["fbox_pickingedit", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <div id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <label id="elh_box_picking_line" for="x_line" class="<?= $Page->LeftColumnClass ?>"><?= $Page->line->caption() ?><?= $Page->line->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->line->cellAttributes() ?>>
+<span id="el_box_picking_line">
+<input type="<?= $Page->line->getInputTextType() ?>" name="x_line" id="x_line" data-table="box_picking" data-field="x_line" value="<?= $Page->line->EditValue ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"<?= $Page->line->editAttributes() ?> aria-describedby="x_line_help">
+<?= $Page->line->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->line->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
     <div id="r_date_created"<?= $Page->date_created->rowAttributes() ?>>
         <label id="elh_box_picking_date_created" for="x_date_created" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_created->caption() ?><?= $Page->date_created->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -248,6 +262,46 @@ loadjs.ready(["fbox_pickingedit", "datetimepicker"], function () {
             }
         };
     ew.createDateTimePicker("fbox_pickingedit", "x_date_created", ew.deepAssign({"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+    <div id="r_date_staging"<?= $Page->date_staging->rowAttributes() ?>>
+        <label id="elh_box_picking_date_staging" for="x_date_staging" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_staging->caption() ?><?= $Page->date_staging->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_staging->cellAttributes() ?>>
+<span id="el_box_picking_date_staging">
+<input type="<?= $Page->date_staging->getInputTextType() ?>" name="x_date_staging" id="x_date_staging" data-table="box_picking" data-field="x_date_staging" value="<?= $Page->date_staging->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_staging->getPlaceHolder()) ?>"<?= $Page->date_staging->editAttributes() ?> aria-describedby="x_date_staging_help">
+<?= $Page->date_staging->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->date_staging->getErrorMessage() ?></div>
+<?php if (!$Page->date_staging->ReadOnly && !$Page->date_staging->Disabled && !isset($Page->date_staging->EditAttrs["readonly"]) && !isset($Page->date_staging->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fbox_pickingedit", "datetimepicker"], function () {
+    let format = "<?= DateFormat(0) ?>",
+        options = {
+            localization: {
+                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
+            },
+            display: {
+                icons: {
+                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                },
+                components: {
+                    hours: !!format.match(/h/i),
+                    minutes: !!format.match(/m/),
+                    seconds: !!format.match(/s/i),
+                    useTwentyfourHour: !!format.match(/H/)
+                }
+            },
+            meta: {
+                format
+            }
+        };
+    ew.createDateTimePicker("fbox_pickingedit", "x_date_staging", ew.deepAssign({"useCurrent":false}, options));
 });
 </script>
 <?php } ?>

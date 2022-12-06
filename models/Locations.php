@@ -97,7 +97,14 @@ class Locations extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'locations', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'locations', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'locations', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -122,7 +129,14 @@ class Locations extends DbTable
         );
         $this->location->InputTextType = "text";
         $this->location->UseFilter = true; // Table header filter
-        $this->location->Lookup = new Lookup('location', 'locations', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->location->Lookup = new Lookup('location', 'locations', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->location->Lookup = new Lookup('location', 'locations', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['location'] = &$this->location;
 
         // area
@@ -146,7 +160,14 @@ class Locations extends DbTable
         );
         $this->area->InputTextType = "text";
         $this->area->UseFilter = true; // Table header filter
-        $this->area->Lookup = new Lookup('area', 'locations', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->area->Lookup = new Lookup('area', 'locations', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->area->Lookup = new Lookup('area', 'locations', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['area'] = &$this->area;
 
         // sequence
@@ -170,7 +191,14 @@ class Locations extends DbTable
         );
         $this->sequence->InputTextType = "text";
         $this->sequence->UseFilter = true; // Table header filter
-        $this->sequence->Lookup = new Lookup('sequence', 'locations', true, 'sequence', ["sequence","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->sequence->Lookup = new Lookup('sequence', 'locations', true, 'sequence', ["sequence","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->sequence->Lookup = new Lookup('sequence', 'locations', true, 'sequence', ["sequence","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['sequence'] = &$this->sequence;
 
         // divisi
@@ -194,7 +222,14 @@ class Locations extends DbTable
         );
         $this->divisi->InputTextType = "text";
         $this->divisi->UseFilter = true; // Table header filter
-        $this->divisi->Lookup = new Lookup('divisi', 'locations', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->divisi->Lookup = new Lookup('divisi', 'locations', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->divisi->Lookup = new Lookup('divisi', 'locations', true, 'divisi', ["divisi","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['divisi'] = &$this->divisi;
 
         // Add Doctrine Cache

@@ -146,7 +146,7 @@ $CONFIG = [
 
     // General
     "UNFORMAT_YEAR" => 50, // Unformat year
-    "RANDOM_KEY" => 'toODB7q6hc19VoDE', // Random key for encryption
+    "RANDOM_KEY" => 'I4I2hdWhwrtSLtJO', // Random key for encryption
     "ENCRYPTION_KEY" => '', // Encryption key for data protection
     "PROJECT_STYLESHEET_FILENAME" => "css/opsmezzanineupload.css", // Project stylesheet file name
     "USE_COMPRESSED_STYLESHEET" => true, // Compressed stylesheet
@@ -402,7 +402,7 @@ $CONFIG = [
     "UPLOAD_TEMP_FOLDER_TIME_LIMIT" => 1440, // Upload temp folder time limit (minutes)
     "UPLOAD_THUMBNAIL_FOLDER" => "thumbnail", // Temporary thumbnail folder
     "UPLOAD_THUMBNAIL_WIDTH" => 200, // Temporary thumbnail max width
-    "UPLOAD_THUMBNAIL_HEIGHT" => 0, // Temporary thumbnail max height
+    "UPLOAD_THUMBNAIL_HEIGHT" => 200, // Temporary thumbnail max height
     "UPLOAD_ALLOWED_FILE_EXT" => "gif,jpg,jpeg,bmp,png,doc,docx,xls,xlsx,pdf,zip", // Allowed file extensions
     "IMAGE_ALLOWED_FILE_EXT" => "gif,jpe,jpeg,jpg,png,bmp", // Allowed file extensions for images
     "DOWNLOAD_ALLOWED_FILE_EXT" => "csv,pdf,xls,doc,xlsx,docx", // Allowed file extensions for download (non-image)
@@ -500,7 +500,7 @@ $CONFIG = [
 
     // Image resize
     "THUMBNAIL_CLASS" => "\PHPThumb\GD",
-    "RESIZE_OPTIONS" => ["keepAspectRatio" => false, "resizeUp" => !true, "jpegQuality" => 100],
+    "RESIZE_OPTIONS" => ["keepAspectRatio" => true, "resizeUp" => !true, "jpegQuality" => 100],
 
     // Audit trail
     "AUDIT_TRAIL_PATH" => "", // Audit trail path (relative to app root)

@@ -494,11 +494,16 @@ class TransferBinPieceEdit extends TransferBinPiece
         $this->id->setVisibility();
         $this->source_location->setVisibility();
         $this->article->setVisibility();
+        $this->description->setVisibility();
         $this->destination_location->setVisibility();
         $this->su->setVisibility();
+        $this->qty->setVisibility();
+        $this->actual->setVisibility();
         $this->user->setVisibility();
+        $this->status->setVisibility();
         $this->date_upload->setVisibility();
         $this->date_confirmation->setVisibility();
+        $this->time_confirmation->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -771,6 +776,16 @@ class TransferBinPieceEdit extends TransferBinPiece
             }
         }
 
+        // Check field name 'description' first before field var 'x_description'
+        $val = $CurrentForm->hasValue("description") ? $CurrentForm->getValue("description") : $CurrentForm->getValue("x_description");
+        if (!$this->description->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->description->Visible = false; // Disable update for API request
+            } else {
+                $this->description->setFormValue($val);
+            }
+        }
+
         // Check field name 'destination_location' first before field var 'x_destination_location'
         $val = $CurrentForm->hasValue("destination_location") ? $CurrentForm->getValue("destination_location") : $CurrentForm->getValue("x_destination_location");
         if (!$this->destination_location->IsDetailKey) {
@@ -791,6 +806,26 @@ class TransferBinPieceEdit extends TransferBinPiece
             }
         }
 
+        // Check field name 'qty' first before field var 'x_qty'
+        $val = $CurrentForm->hasValue("qty") ? $CurrentForm->getValue("qty") : $CurrentForm->getValue("x_qty");
+        if (!$this->qty->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->qty->Visible = false; // Disable update for API request
+            } else {
+                $this->qty->setFormValue($val, true, $validate);
+            }
+        }
+
+        // Check field name 'actual' first before field var 'x_actual'
+        $val = $CurrentForm->hasValue("actual") ? $CurrentForm->getValue("actual") : $CurrentForm->getValue("x_actual");
+        if (!$this->actual->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->actual->Visible = false; // Disable update for API request
+            } else {
+                $this->actual->setFormValue($val, true, $validate);
+            }
+        }
+
         // Check field name 'user' first before field var 'x_user'
         $val = $CurrentForm->hasValue("user") ? $CurrentForm->getValue("user") : $CurrentForm->getValue("x_user");
         if (!$this->user->IsDetailKey) {
@@ -798,6 +833,16 @@ class TransferBinPieceEdit extends TransferBinPiece
                 $this->user->Visible = false; // Disable update for API request
             } else {
                 $this->user->setFormValue($val);
+            }
+        }
+
+        // Check field name 'status' first before field var 'x_status'
+        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
+        if (!$this->status->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->status->Visible = false; // Disable update for API request
+            } else {
+                $this->status->setFormValue($val);
             }
         }
 
@@ -822,6 +867,17 @@ class TransferBinPieceEdit extends TransferBinPiece
             }
             $this->date_confirmation->CurrentValue = UnFormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern());
         }
+
+        // Check field name 'time_confirmation' first before field var 'x_time_confirmation'
+        $val = $CurrentForm->hasValue("time_confirmation") ? $CurrentForm->getValue("time_confirmation") : $CurrentForm->getValue("x_time_confirmation");
+        if (!$this->time_confirmation->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->time_confirmation->Visible = false; // Disable update for API request
+            } else {
+                $this->time_confirmation->setFormValue($val, true, $validate);
+            }
+            $this->time_confirmation->CurrentValue = UnFormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern());
+        }
     }
 
     // Restore form values
@@ -831,13 +887,19 @@ class TransferBinPieceEdit extends TransferBinPiece
         $this->id->CurrentValue = $this->id->FormValue;
         $this->source_location->CurrentValue = $this->source_location->FormValue;
         $this->article->CurrentValue = $this->article->FormValue;
+        $this->description->CurrentValue = $this->description->FormValue;
         $this->destination_location->CurrentValue = $this->destination_location->FormValue;
         $this->su->CurrentValue = $this->su->FormValue;
+        $this->qty->CurrentValue = $this->qty->FormValue;
+        $this->actual->CurrentValue = $this->actual->FormValue;
         $this->user->CurrentValue = $this->user->FormValue;
+        $this->status->CurrentValue = $this->status->FormValue;
         $this->date_upload->CurrentValue = $this->date_upload->FormValue;
         $this->date_upload->CurrentValue = UnFormatDateTime($this->date_upload->CurrentValue, $this->date_upload->formatPattern());
         $this->date_confirmation->CurrentValue = $this->date_confirmation->FormValue;
         $this->date_confirmation->CurrentValue = UnFormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern());
+        $this->time_confirmation->CurrentValue = $this->time_confirmation->FormValue;
+        $this->time_confirmation->CurrentValue = UnFormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern());
     }
 
     // Load recordset
@@ -928,11 +990,16 @@ class TransferBinPieceEdit extends TransferBinPiece
         $this->id->setDbValue($row['id']);
         $this->source_location->setDbValue($row['source_location']);
         $this->article->setDbValue($row['article']);
+        $this->description->setDbValue($row['description']);
         $this->destination_location->setDbValue($row['destination_location']);
         $this->su->setDbValue($row['su']);
+        $this->qty->setDbValue($row['qty']);
+        $this->actual->setDbValue($row['actual']);
         $this->user->setDbValue($row['user']);
+        $this->status->setDbValue($row['status']);
         $this->date_upload->setDbValue($row['date_upload']);
         $this->date_confirmation->setDbValue($row['date_confirmation']);
+        $this->time_confirmation->setDbValue($row['time_confirmation']);
     }
 
     // Return a row with default values
@@ -942,11 +1009,16 @@ class TransferBinPieceEdit extends TransferBinPiece
         $row['id'] = $this->id->DefaultValue;
         $row['source_location'] = $this->source_location->DefaultValue;
         $row['article'] = $this->article->DefaultValue;
+        $row['description'] = $this->description->DefaultValue;
         $row['destination_location'] = $this->destination_location->DefaultValue;
         $row['su'] = $this->su->DefaultValue;
+        $row['qty'] = $this->qty->DefaultValue;
+        $row['actual'] = $this->actual->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['status'] = $this->status->DefaultValue;
         $row['date_upload'] = $this->date_upload->DefaultValue;
         $row['date_confirmation'] = $this->date_confirmation->DefaultValue;
+        $row['time_confirmation'] = $this->time_confirmation->DefaultValue;
         return $row;
     }
 
@@ -987,20 +1059,35 @@ class TransferBinPieceEdit extends TransferBinPiece
         // article
         $this->article->RowCssClass = "row";
 
+        // description
+        $this->description->RowCssClass = "row";
+
         // destination_location
         $this->destination_location->RowCssClass = "row";
 
         // su
         $this->su->RowCssClass = "row";
 
+        // qty
+        $this->qty->RowCssClass = "row";
+
+        // actual
+        $this->actual->RowCssClass = "row";
+
         // user
         $this->user->RowCssClass = "row";
+
+        // status
+        $this->status->RowCssClass = "row";
 
         // date_upload
         $this->date_upload->RowCssClass = "row";
 
         // date_confirmation
         $this->date_confirmation->RowCssClass = "row";
+
+        // time_confirmation
+        $this->time_confirmation->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1017,6 +1104,10 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
 
+            // description
+            $this->description->ViewValue = $this->description->CurrentValue;
+            $this->description->ViewCustomAttributes = "";
+
             // destination_location
             $this->destination_location->ViewValue = $this->destination_location->CurrentValue;
             $this->destination_location->ViewCustomAttributes = "";
@@ -1025,9 +1116,23 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->su->ViewValue = $this->su->CurrentValue;
             $this->su->ViewCustomAttributes = "";
 
+            // qty
+            $this->qty->ViewValue = $this->qty->CurrentValue;
+            $this->qty->ViewValue = FormatNumber($this->qty->ViewValue, $this->qty->formatPattern());
+            $this->qty->ViewCustomAttributes = "";
+
+            // actual
+            $this->actual->ViewValue = $this->actual->CurrentValue;
+            $this->actual->ViewValue = FormatNumber($this->actual->ViewValue, $this->actual->formatPattern());
+            $this->actual->ViewCustomAttributes = "";
+
             // user
             $this->user->ViewValue = $this->user->CurrentValue;
             $this->user->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
 
             // date_upload
             $this->date_upload->ViewValue = $this->date_upload->CurrentValue;
@@ -1038,6 +1143,11 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->date_confirmation->ViewValue = $this->date_confirmation->CurrentValue;
             $this->date_confirmation->ViewValue = FormatDateTime($this->date_confirmation->ViewValue, $this->date_confirmation->formatPattern());
             $this->date_confirmation->ViewCustomAttributes = "";
+
+            // time_confirmation
+            $this->time_confirmation->ViewValue = $this->time_confirmation->CurrentValue;
+            $this->time_confirmation->ViewValue = FormatDateTime($this->time_confirmation->ViewValue, $this->time_confirmation->formatPattern());
+            $this->time_confirmation->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1051,6 +1161,10 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->article->LinkCustomAttributes = "";
             $this->article->HrefValue = "";
 
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+
             // destination_location
             $this->destination_location->LinkCustomAttributes = "";
             $this->destination_location->HrefValue = "";
@@ -1059,9 +1173,21 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->su->LinkCustomAttributes = "";
             $this->su->HrefValue = "";
 
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
 
             // date_upload
             $this->date_upload->LinkCustomAttributes = "";
@@ -1070,6 +1196,10 @@ class TransferBinPieceEdit extends TransferBinPiece
             // date_confirmation
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -1096,6 +1226,15 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->article->EditValue = HtmlEncode($this->article->CurrentValue);
             $this->article->PlaceHolder = RemoveHtml($this->article->caption());
 
+            // description
+            $this->description->setupEditAttributes();
+            $this->description->EditCustomAttributes = "";
+            if (!$this->description->Raw) {
+                $this->description->CurrentValue = HtmlDecode($this->description->CurrentValue);
+            }
+            $this->description->EditValue = HtmlEncode($this->description->CurrentValue);
+            $this->description->PlaceHolder = RemoveHtml($this->description->caption());
+
             // destination_location
             $this->destination_location->setupEditAttributes();
             $this->destination_location->EditCustomAttributes = "";
@@ -1114,6 +1253,24 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->su->EditValue = HtmlEncode($this->su->CurrentValue);
             $this->su->PlaceHolder = RemoveHtml($this->su->caption());
 
+            // qty
+            $this->qty->setupEditAttributes();
+            $this->qty->EditCustomAttributes = "";
+            $this->qty->EditValue = HtmlEncode($this->qty->CurrentValue);
+            $this->qty->PlaceHolder = RemoveHtml($this->qty->caption());
+            if (strval($this->qty->EditValue) != "" && is_numeric($this->qty->EditValue)) {
+                $this->qty->EditValue = FormatNumber($this->qty->EditValue, null);
+            }
+
+            // actual
+            $this->actual->setupEditAttributes();
+            $this->actual->EditCustomAttributes = "";
+            $this->actual->EditValue = HtmlEncode($this->actual->CurrentValue);
+            $this->actual->PlaceHolder = RemoveHtml($this->actual->caption());
+            if (strval($this->actual->EditValue) != "" && is_numeric($this->actual->EditValue)) {
+                $this->actual->EditValue = FormatNumber($this->actual->EditValue, null);
+            }
+
             // user
             $this->user->setupEditAttributes();
             $this->user->EditCustomAttributes = "";
@@ -1122,6 +1279,15 @@ class TransferBinPieceEdit extends TransferBinPiece
             }
             $this->user->EditValue = HtmlEncode($this->user->CurrentValue);
             $this->user->PlaceHolder = RemoveHtml($this->user->caption());
+
+            // status
+            $this->status->setupEditAttributes();
+            $this->status->EditCustomAttributes = "";
+            if (!$this->status->Raw) {
+                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+            }
+            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // date_upload
             $this->date_upload->setupEditAttributes();
@@ -1134,6 +1300,12 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->date_confirmation->EditCustomAttributes = "";
             $this->date_confirmation->EditValue = HtmlEncode(FormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern()));
             $this->date_confirmation->PlaceHolder = RemoveHtml($this->date_confirmation->caption());
+
+            // time_confirmation
+            $this->time_confirmation->setupEditAttributes();
+            $this->time_confirmation->EditCustomAttributes = "";
+            $this->time_confirmation->EditValue = HtmlEncode(FormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern()));
+            $this->time_confirmation->PlaceHolder = RemoveHtml($this->time_confirmation->caption());
 
             // Edit refer script
 
@@ -1149,6 +1321,10 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->article->LinkCustomAttributes = "";
             $this->article->HrefValue = "";
 
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+
             // destination_location
             $this->destination_location->LinkCustomAttributes = "";
             $this->destination_location->HrefValue = "";
@@ -1157,9 +1333,21 @@ class TransferBinPieceEdit extends TransferBinPiece
             $this->su->LinkCustomAttributes = "";
             $this->su->HrefValue = "";
 
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
 
             // date_upload
             $this->date_upload->LinkCustomAttributes = "";
@@ -1168,6 +1356,10 @@ class TransferBinPieceEdit extends TransferBinPiece
             // date_confirmation
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1204,6 +1396,11 @@ class TransferBinPieceEdit extends TransferBinPiece
                 $this->article->addErrorMessage(str_replace("%s", $this->article->caption(), $this->article->RequiredErrorMessage));
             }
         }
+        if ($this->description->Required) {
+            if (!$this->description->IsDetailKey && EmptyValue($this->description->FormValue)) {
+                $this->description->addErrorMessage(str_replace("%s", $this->description->caption(), $this->description->RequiredErrorMessage));
+            }
+        }
         if ($this->destination_location->Required) {
             if (!$this->destination_location->IsDetailKey && EmptyValue($this->destination_location->FormValue)) {
                 $this->destination_location->addErrorMessage(str_replace("%s", $this->destination_location->caption(), $this->destination_location->RequiredErrorMessage));
@@ -1214,9 +1411,30 @@ class TransferBinPieceEdit extends TransferBinPiece
                 $this->su->addErrorMessage(str_replace("%s", $this->su->caption(), $this->su->RequiredErrorMessage));
             }
         }
+        if ($this->qty->Required) {
+            if (!$this->qty->IsDetailKey && EmptyValue($this->qty->FormValue)) {
+                $this->qty->addErrorMessage(str_replace("%s", $this->qty->caption(), $this->qty->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->qty->FormValue)) {
+            $this->qty->addErrorMessage($this->qty->getErrorMessage(false));
+        }
+        if ($this->actual->Required) {
+            if (!$this->actual->IsDetailKey && EmptyValue($this->actual->FormValue)) {
+                $this->actual->addErrorMessage(str_replace("%s", $this->actual->caption(), $this->actual->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->actual->FormValue)) {
+            $this->actual->addErrorMessage($this->actual->getErrorMessage(false));
+        }
         if ($this->user->Required) {
             if (!$this->user->IsDetailKey && EmptyValue($this->user->FormValue)) {
                 $this->user->addErrorMessage(str_replace("%s", $this->user->caption(), $this->user->RequiredErrorMessage));
+            }
+        }
+        if ($this->status->Required) {
+            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
+                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
         if ($this->date_upload->Required) {
@@ -1234,6 +1452,14 @@ class TransferBinPieceEdit extends TransferBinPiece
         }
         if (!CheckDate($this->date_confirmation->FormValue, $this->date_confirmation->formatPattern())) {
             $this->date_confirmation->addErrorMessage($this->date_confirmation->getErrorMessage(false));
+        }
+        if ($this->time_confirmation->Required) {
+            if (!$this->time_confirmation->IsDetailKey && EmptyValue($this->time_confirmation->FormValue)) {
+                $this->time_confirmation->addErrorMessage(str_replace("%s", $this->time_confirmation->caption(), $this->time_confirmation->RequiredErrorMessage));
+            }
+        }
+        if (!CheckTime($this->time_confirmation->FormValue, $this->time_confirmation->formatPattern())) {
+            $this->time_confirmation->addErrorMessage($this->time_confirmation->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1277,20 +1503,35 @@ class TransferBinPieceEdit extends TransferBinPiece
         // article
         $this->article->setDbValueDef($rsnew, $this->article->CurrentValue, null, $this->article->ReadOnly);
 
+        // description
+        $this->description->setDbValueDef($rsnew, $this->description->CurrentValue, null, $this->description->ReadOnly);
+
         // destination_location
         $this->destination_location->setDbValueDef($rsnew, $this->destination_location->CurrentValue, null, $this->destination_location->ReadOnly);
 
         // su
         $this->su->setDbValueDef($rsnew, $this->su->CurrentValue, null, $this->su->ReadOnly);
 
+        // qty
+        $this->qty->setDbValueDef($rsnew, $this->qty->CurrentValue, null, $this->qty->ReadOnly);
+
+        // actual
+        $this->actual->setDbValueDef($rsnew, $this->actual->CurrentValue, null, $this->actual->ReadOnly);
+
         // user
         $this->user->setDbValueDef($rsnew, $this->user->CurrentValue, null, $this->user->ReadOnly);
+
+        // status
+        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
 
         // date_upload
         $this->date_upload->setDbValueDef($rsnew, UnFormatDateTime($this->date_upload->CurrentValue, $this->date_upload->formatPattern()), null, $this->date_upload->ReadOnly);
 
         // date_confirmation
         $this->date_confirmation->setDbValueDef($rsnew, UnFormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern()), null, $this->date_confirmation->ReadOnly);
+
+        // time_confirmation
+        $this->time_confirmation->setDbValueDef($rsnew, UnFormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern()), null, $this->time_confirmation->ReadOnly);
 
         // Update current values
         $this->setCurrentValues($rsnew);

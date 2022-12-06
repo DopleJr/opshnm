@@ -31,4 +31,10 @@ class AuditPickingOnlineController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "AuditPickingOnlineEdit");
     }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "AuditPickingOnlineDelete");
+    }
 }

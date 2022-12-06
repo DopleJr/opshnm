@@ -18,6 +18,16 @@ loadjs.ready(["wrapper", "head"], function () {
     currentPageID = ew.PAGE_ID = "list";
     currentForm = ftransferbinlist;
     ftransferbinlist.formKeyCountName = "<?= $Page->FormKeyCountName ?>";
+
+    // Dynamic selection lists
+    ftransferbinlist.lists.id = <?= $Page->id->toClientList($Page) ?>;
+    ftransferbinlist.lists.from_bin = <?= $Page->from_bin->toClientList($Page) ?>;
+    ftransferbinlist.lists.ctn = <?= $Page->ctn->toClientList($Page) ?>;
+    ftransferbinlist.lists.to_bin = <?= $Page->to_bin->toClientList($Page) ?>;
+    ftransferbinlist.lists.user = <?= $Page->user->toClientList($Page) ?>;
+    ftransferbinlist.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
+    ftransferbinlist.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
+    ftransferbinlist.lists.time_updated = <?= $Page->time_updated->toClientList($Page) ?>;
     loadjs.done("ftransferbinlist");
 });
 var ftransferbinsrch, currentSearchForm, currentAdvancedSearchForm;
@@ -27,7 +37,56 @@ loadjs.ready(["wrapper", "head"], function () {
     ftransferbinsrch = new ew.Form("ftransferbinsrch", "list");
     currentSearchForm = ftransferbinsrch;
 
+    // Add fields
+    var fields = currentTable.fields;
+    ftransferbinsrch.addFields([
+        ["id", [], fields.id.isInvalid],
+        ["from_bin", [], fields.from_bin.isInvalid],
+        ["ctn", [], fields.ctn.isInvalid],
+        ["to_bin", [], fields.to_bin.isInvalid],
+        ["user", [], fields.user.isInvalid],
+        ["date_created", [], fields.date_created.isInvalid],
+        ["y_date_created", [ew.Validators.between], false],
+        ["date_updated", [], fields.date_updated.isInvalid],
+        ["time_updated", [], fields.time_updated.isInvalid]
+    ]);
+
+    // Validate form
+    ftransferbinsrch.validate = function () {
+        if (!this.validateRequired)
+            return true; // Ignore validation
+        var fobj = this.getForm();
+
+        // Validate fields
+        if (!this.validateFields())
+            return false;
+
+        // Call Form_CustomValidate event
+        if (!this.customValidate(fobj)) {
+            this.focus();
+            return false;
+        }
+        return true;
+    }
+
+    // Form_CustomValidate
+    ftransferbinsrch.customValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+        // Your custom validation code here, return false if invalid.
+        return true;
+    }
+
+    // Use JavaScript validation or not
+    ftransferbinsrch.validateRequired = ew.CLIENT_VALIDATE;
+
     // Dynamic selection lists
+    ftransferbinsrch.lists.id = <?= $Page->id->toClientList($Page) ?>;
+    ftransferbinsrch.lists.from_bin = <?= $Page->from_bin->toClientList($Page) ?>;
+    ftransferbinsrch.lists.ctn = <?= $Page->ctn->toClientList($Page) ?>;
+    ftransferbinsrch.lists.to_bin = <?= $Page->to_bin->toClientList($Page) ?>;
+    ftransferbinsrch.lists.user = <?= $Page->user->toClientList($Page) ?>;
+    ftransferbinsrch.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
+    ftransferbinsrch.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
+    ftransferbinsrch.lists.time_updated = <?= $Page->time_updated->toClientList($Page) ?>;
 
     // Filters
     ftransferbinsrch.filterList = <?= $Page->getFilterList() ?>;
@@ -66,6 +125,310 @@ $Page->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="transferbin">
 <div class="ew-extended-search container-fluid">
+<div class="row mb-0<?= ($Page->SearchFieldsPerRow > 0) ? " row-cols-sm-" . $Page->SearchFieldsPerRow : "" ?>">
+<?php
+// Render search row
+$Page->RowType = ROWTYPE_SEARCH;
+$Page->resetAttributes();
+$Page->renderRow();
+?>
+<?php if ($Page->id->Visible) { // id ?>
+<?php
+if (!$Page->id->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_id" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->id->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_id"
+            name="x_id[]"
+            class="form-control ew-select<?= $Page->id->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_id"
+            data-table="transferbin"
+            data-field="x_id"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->id->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->id->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>"
+            <?= $Page->id->editAttributes() ?>>
+            <?= $Page->id->selectOptionListHtml("x_id", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->id->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_id",
+                selectId: "ftransferbinsrch_x_id",
+                ajax: { id: "x_id", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.id.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->from_bin->Visible) { // from_bin ?>
+<?php
+if (!$Page->from_bin->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_from_bin" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->from_bin->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_from_bin"
+            name="x_from_bin[]"
+            class="form-control ew-select<?= $Page->from_bin->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_from_bin"
+            data-table="transferbin"
+            data-field="x_from_bin"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->from_bin->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->from_bin->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->from_bin->getPlaceHolder()) ?>"
+            <?= $Page->from_bin->editAttributes() ?>>
+            <?= $Page->from_bin->selectOptionListHtml("x_from_bin", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->from_bin->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_from_bin",
+                selectId: "ftransferbinsrch_x_from_bin",
+                ajax: { id: "x_from_bin", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.from_bin.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->ctn->Visible) { // ctn ?>
+<?php
+if (!$Page->ctn->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_ctn" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->ctn->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_ctn"
+            name="x_ctn[]"
+            class="form-control ew-select<?= $Page->ctn->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_ctn"
+            data-table="transferbin"
+            data-field="x_ctn"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->ctn->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->ctn->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->ctn->getPlaceHolder()) ?>"
+            <?= $Page->ctn->editAttributes() ?>>
+            <?= $Page->ctn->selectOptionListHtml("x_ctn", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->ctn->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_ctn",
+                selectId: "ftransferbinsrch_x_ctn",
+                ajax: { id: "x_ctn", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.ctn.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->to_bin->Visible) { // to_bin ?>
+<?php
+if (!$Page->to_bin->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_to_bin" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->to_bin->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_to_bin"
+            name="x_to_bin[]"
+            class="form-control ew-select<?= $Page->to_bin->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_to_bin"
+            data-table="transferbin"
+            data-field="x_to_bin"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->to_bin->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->to_bin->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->to_bin->getPlaceHolder()) ?>"
+            <?= $Page->to_bin->editAttributes() ?>>
+            <?= $Page->to_bin->selectOptionListHtml("x_to_bin", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->to_bin->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_to_bin",
+                selectId: "ftransferbinsrch_x_to_bin",
+                ajax: { id: "x_to_bin", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.to_bin.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+<?php
+if (!$Page->user->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_user" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->user->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_user"
+            name="x_user[]"
+            class="form-control ew-select<?= $Page->user->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_user"
+            data-table="transferbin"
+            data-field="x_user"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->user->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->user->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->user->getPlaceHolder()) ?>"
+            <?= $Page->user->editAttributes() ?>>
+            <?= $Page->user->selectOptionListHtml("x_user", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->user->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_user",
+                selectId: "ftransferbinsrch_x_user",
+                ajax: { id: "x_user", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.user.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->date_created->Visible) { // date_created ?>
+<?php
+if (!$Page->date_created->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date_created" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_created->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date_created"
+            name="x_date_created[]"
+            class="form-control ew-select<?= $Page->date_created->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_date_created"
+            data-table="transferbin"
+            data-field="x_date_created"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_created->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date_created->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date_created->getPlaceHolder()) ?>"
+            <?= $Page->date_created->editAttributes() ?>>
+            <?= $Page->date_created->selectOptionListHtml("x_date_created", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date_created->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_date_created",
+                selectId: "ftransferbinsrch_x_date_created",
+                ajax: { id: "x_date_created", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.date_created.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+<?php
+if (!$Page->date_updated->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date_updated" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_updated->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date_updated"
+            name="x_date_updated[]"
+            class="form-control ew-select<?= $Page->date_updated->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_date_updated"
+            data-table="transferbin"
+            data-field="x_date_updated"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_updated->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date_updated->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date_updated->getPlaceHolder()) ?>"
+            <?= $Page->date_updated->editAttributes() ?>>
+            <?= $Page->date_updated->selectOptionListHtml("x_date_updated", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date_updated->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_date_updated",
+                selectId: "ftransferbinsrch_x_date_updated",
+                ajax: { id: "x_date_updated", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.date_updated.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+<?php
+if (!$Page->time_updated->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_time_updated" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->time_updated->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_time_updated"
+            name="x_time_updated[]"
+            class="form-control ew-select<?= $Page->time_updated->isInvalidClass() ?>"
+            data-select2-id="ftransferbinsrch_x_time_updated"
+            data-table="transferbin"
+            data-field="x_time_updated"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->time_updated->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->time_updated->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->time_updated->getPlaceHolder()) ?>"
+            <?= $Page->time_updated->editAttributes() ?>>
+            <?= $Page->time_updated->selectOptionListHtml("x_time_updated", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->time_updated->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("ftransferbinsrch", function() {
+            var options = {
+                name: "x_time_updated",
+                selectId: "ftransferbinsrch_x_time_updated",
+                ajax: { id: "x_time_updated", form: "ftransferbinsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.transferbin.fields.time_updated.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+</div><!-- /.row -->
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
         <div class="ew-basic-search input-group">
@@ -131,16 +494,28 @@ $Page->renderListOptions();
 $Page->ListOptions->render("header", "left");
 ?>
 <?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_transferbin_id" class="transferbin_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_id" class="transferbin_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
 <?php } ?>
-<?php if ($Page->FromBin->Visible) { // From Bin ?>
-        <th data-name="FromBin" class="<?= $Page->FromBin->headerCellClass() ?>"><div id="elh_transferbin_FromBin" class="transferbin_FromBin"><?= $Page->renderFieldHeader($Page->FromBin) ?></div></th>
+<?php if ($Page->from_bin->Visible) { // from_bin ?>
+        <th data-name="from_bin" class="<?= $Page->from_bin->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_from_bin" class="transferbin_from_bin"><?= $Page->renderFieldHeader($Page->from_bin) ?></div></th>
 <?php } ?>
-<?php if ($Page->ToBin->Visible) { // To Bin ?>
-        <th data-name="ToBin" class="<?= $Page->ToBin->headerCellClass() ?>"><div id="elh_transferbin_ToBin" class="transferbin_ToBin"><?= $Page->renderFieldHeader($Page->ToBin) ?></div></th>
+<?php if ($Page->ctn->Visible) { // ctn ?>
+        <th data-name="ctn" class="<?= $Page->ctn->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_ctn" class="transferbin_ctn"><?= $Page->renderFieldHeader($Page->ctn) ?></div></th>
+<?php } ?>
+<?php if ($Page->to_bin->Visible) { // to_bin ?>
+        <th data-name="to_bin" class="<?= $Page->to_bin->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_to_bin" class="transferbin_to_bin"><?= $Page->renderFieldHeader($Page->to_bin) ?></div></th>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+        <th data-name="user" class="<?= $Page->user->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_user" class="transferbin_user"><?= $Page->renderFieldHeader($Page->user) ?></div></th>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
-        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>"><div id="elh_transferbin_date_created" class="transferbin_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
+        <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_date_created" class="transferbin_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_date_updated" class="transferbin_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <th data-name="time_updated" class="<?= $Page->time_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transferbin_time_updated" class="transferbin_time_updated"><?= $Page->renderFieldHeader($Page->time_updated) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -225,19 +600,35 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->FromBin->Visible) { // From Bin ?>
-        <td data-name="FromBin"<?= $Page->FromBin->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_transferbin_FromBin" class="el_transferbin_FromBin">
-<span<?= $Page->FromBin->viewAttributes() ?>>
-<?= $Page->FromBin->getViewValue() ?></span>
+    <?php if ($Page->from_bin->Visible) { // from_bin ?>
+        <td data-name="from_bin"<?= $Page->from_bin->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_from_bin" class="el_transferbin_from_bin">
+<span<?= $Page->from_bin->viewAttributes() ?>>
+<?= $Page->from_bin->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->ToBin->Visible) { // To Bin ?>
-        <td data-name="ToBin"<?= $Page->ToBin->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_transferbin_ToBin" class="el_transferbin_ToBin">
-<span<?= $Page->ToBin->viewAttributes() ?>>
-<?= $Page->ToBin->getViewValue() ?></span>
+    <?php if ($Page->ctn->Visible) { // ctn ?>
+        <td data-name="ctn"<?= $Page->ctn->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_ctn" class="el_transferbin_ctn">
+<span<?= $Page->ctn->viewAttributes() ?>>
+<?= $Page->ctn->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->to_bin->Visible) { // to_bin ?>
+        <td data-name="to_bin"<?= $Page->to_bin->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_to_bin" class="el_transferbin_to_bin">
+<span<?= $Page->to_bin->viewAttributes() ?>>
+<?= $Page->to_bin->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->user->Visible) { // user ?>
+        <td data-name="user"<?= $Page->user->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_user" class="el_transferbin_user">
+<span<?= $Page->user->viewAttributes() ?>>
+<?= $Page->user->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -246,6 +637,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_transferbin_date_created" class="el_transferbin_date_created">
 <span<?= $Page->date_created->viewAttributes() ?>>
 <?= $Page->date_created->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_date_updated" class="el_transferbin_date_updated">
+<span<?= $Page->date_updated->viewAttributes() ?>>
+<?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <td data-name="time_updated"<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_time_updated" class="el_transferbin_time_updated">
+<span<?= $Page->time_updated->viewAttributes() ?>>
+<?= $Page->time_updated->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

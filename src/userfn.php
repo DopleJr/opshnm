@@ -213,7 +213,8 @@ $labelid26 = "Z";
     		return $mix;
     	}
 }
-
+//-------------------------------
+//Cycle Count
 function GetLastestLocation()
 {
 	$_usercycle = CurrentUserName();
@@ -247,6 +248,14 @@ function GetStockRecord()
 return ExecuteScalar("SELECT COUNT(`article`) FROM `stock_count` WHERE `location` = ('$currentLoc3') AND `user` = ('$_usercycle3') AND `article` is not null ORDER BY `id` desc LIMIT 1");
 }
 //---------------------------------
+//Stock Count Monitor
+function GetStockActive()
+{
+return ExecuteScalar("SELECT `total_stock` FROM `stock_count` WHERE stock_count_monitor.`aisle` = active_stock.aisle ");
+}
+
+//---------------------------------
+//Blank Count Sheet
 function GetLastestLocationXtra()
 {
 	$_usercycle = CurrentUserName();
@@ -259,17 +268,6 @@ function GetLastestCtn()
 return ExecuteScalar("SELECT ctn FROM blank_count_sheet WHERE `user` = ('$_usercycle') ORDER BY `id` desc LIMIT 1");
 }
 
-function GetArea()
-{
-	$_location = $rsnew["location"];
-	return ExecuteScalar("SELECT area FROM locations WHERE `location` = '$_location' ORDER BY `id` ");
-}
-
-function GetAisle()
-{
-	return ExecuteScalar("SELECT aisle2 FROM `picking` WHERE `status` = 'Pending' ORDER BY `id` ");
-}
-
 function GetSkip()
 {
 	$like = "%";
@@ -280,6 +278,18 @@ function GetSkip()
     $_confirm = CurrentDateTime();
 
 return ExecuteStatement("UPDATE finding_shortpick SET `pick_quantity` = '0',`actual` = '0',`excess` = '0', `status` = '$_status2', `date_picking` = '$_confirm' WHERE id = '$_id' ");
+}
+//--------------------
+//Picking Online
+function GetArea()
+{
+	$_location = $rsnew["location"];
+	return ExecuteScalar("SELECT area FROM locations WHERE `location` = '$_location' ORDER BY `id` ");
+}
+
+function GetAisle()
+{
+	return ExecuteScalar("SELECT aisle2 FROM `picking` WHERE `status` = 'Pending' ORDER BY `id` ");
 }
 
 function LastStore()
@@ -301,7 +311,8 @@ function GetBoxType()
 	$_picker = CurrentUserName();
 	return ExecuteScalar("SELECT `box_type` FROM picking WHERE `store_code` = '$_storecode' AND `picker` = '$_picker' ORDER BY `confirmation_date`, `confirmation_time` DESC ");
 }
-
+//--------------------
+//Oss Manual
 function GetShipment()
 {
 	$_checker = CurrentUserName();
@@ -331,26 +342,42 @@ function GetIdw()
 	$_checker = CurrentUserName();
 return ExecuteScalar("SELECT `idw` FROM oss_manual WHERE `checker` = ('$_checker')  ORDER BY `date_updated` desc,`time_updated` desc LIMIT 1 ");
 }
-
+//--------------------
 //audit picking online
 function LastBoxCode()
 {
 	$_checker = CurrentUserName();
-	return ExecuteScalar("SELECT `box_code` FROM audit_picking_online WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC ");
+	return ExecuteScalar("SELECT `box_code` FROM `audit_picking_online` WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC LIMIT 1");
 }
 
 function LastStoreID()
 {
 	$_checker = CurrentUserName();
-	return ExecuteScalar("SELECT `store_id` FROM audit_picking_online WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC ");
+	return ExecuteScalar("SELECT `store_id` FROM `audit_picking_online` WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC LIMIT 1");
 }
 
 function LastStoreName()
 {
 	$_checker = CurrentUserName();
-	return ExecuteScalar("SELECT `store_name` FROM audit_picking_online WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC ");
+	return ExecuteScalar("SELECT `store_name` FROM `audit_picking_online` WHERE `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC LIMIT 1");
 }
 
+function QtyBox()
+{
+	$_checker = CurrentUserName();
+	$_lastBox = LastBoxCode();
+	return ExecuteScalar("SELECT sum(`picked_qty`) FROM `box_picking_online` WHERE `box_id` = '$_lastBox'  ");
+}
+
+function QtyScan()
+{
+	$_checker = CurrentUserName();
+	$_lastBox = LastBoxCode();
+	return ExecuteScalar("SELECT count(`article`) FROM `audit_picking_online` WHERE `box_code` = '$_lastBox' AND `checker` = '$_checker' ORDER BY `date_update` DESC, `time_update` DESC");
+}
+
+//--------------------
+//Print Label
 function StoreName()
 {
 	return ExecuteScalar("SELECT `store_name` FROM `print_label` ORDER BY `id` DESC");
@@ -369,4 +396,25 @@ function StoreCode()
 function barcode_label()
 {
 	return ExecuteScalar("SELECT `barcode` FROM `print_label` ORDER BY `id` DESC");
+}
+//--------------------
+//Audit Picking
+function GetLine()
+{
+	$_user = CurrentUserName();
+	return ExecuteScalar("SELECT `line` FROM `audit_picking` where `users` = '$_user' ORDER BY `id` DESC");
+}
+//--------------------
+//inbound excess
+function GetPalletID()
+{
+	$_user = CurrentUserName();
+	return ExecuteScalar("SELECT `pallet_id` FROM `inbound_excess` where `users` = '$_user' ORDER BY `date_update` DESC,`time_update` DESC limit 1");
+}
+
+function GetTotalRecord2()
+{
+	$currentPallet = GetPalletID();
+	$_userexcess = CurrentUserName();
+return ExecuteScalar("SELECT COUNT(`pallet_id`) FROM `inbound_excess` WHERE `pallet_id` = ('$currentPallet') AND `users` = ('$_userexcess')  ORDER BY `sscc` ");
 }

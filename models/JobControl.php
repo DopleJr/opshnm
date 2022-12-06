@@ -38,6 +38,8 @@ class JobControl extends DbTable
     public $status;
     public $date_created;
     public $date_updated;
+    public $sdsds;
+    public $ddd;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -99,7 +101,14 @@ class JobControl extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'job_control', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'job_control', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'job_control', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -126,7 +135,14 @@ class JobControl extends DbTable
         $this->job_category->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->job_category->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->job_category->UseFilter = true; // Table header filter
-        $this->job_category->Lookup = new Lookup('job_category', 'job_control', true, 'job_category', ["job_category","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->job_category->Lookup = new Lookup('job_category', 'job_control', true, 'job_category', ["job_category","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->job_category->Lookup = new Lookup('job_category', 'job_control', true, 'job_category', ["job_category","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->job_category->OptionCount = 2;
         $this->Fields['job_category'] = &$this->job_category;
 
@@ -151,7 +167,14 @@ class JobControl extends DbTable
         );
         $this->aisle->InputTextType = "text";
         $this->aisle->UseFilter = true; // Table header filter
-        $this->aisle->Lookup = new Lookup('aisle', 'bin_to_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "`source_location`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->aisle->Lookup = new Lookup('aisle', 'bin_to_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "`source_location`");
+                break;
+            default:
+                $this->aisle->Lookup = new Lookup('aisle', 'bin_to_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "`source_location`");
+                break;
+        }
         $this->Fields['aisle'] = &$this->aisle;
 
         // user
@@ -177,7 +200,14 @@ class JobControl extends DbTable
         $this->user->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->user->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '`username` ASC', '', "`username`");
+                break;
+        }
         $this->Fields['user'] = &$this->user;
 
         // status
@@ -203,7 +233,14 @@ class JobControl extends DbTable
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'job_control', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'job_control', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'job_control', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->status->OptionCount = 2;
         $this->Fields['status'] = &$this->status;
 
@@ -229,7 +266,14 @@ class JobControl extends DbTable
         $this->date_created->InputTextType = "text";
         $this->date_created->Required = true; // Required field
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'job_control', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'job_control', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'job_control', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -254,9 +298,60 @@ class JobControl extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'job_control', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'job_control', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'job_control', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
+
+        // sdsds
+        $this->sdsds = new DbField(
+            'job_control',
+            'job_control',
+            'x_sdsds',
+            'sdsds',
+            '`sdsds`',
+            '`sdsds`',
+            200,
+            255,
+            -1,
+            false,
+            '`sdsds`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->sdsds->InputTextType = "text";
+        $this->Fields['sdsds'] = &$this->sdsds;
+
+        // ddd
+        $this->ddd = new DbField(
+            'job_control',
+            'job_control',
+            'x_ddd',
+            'ddd',
+            '`ddd`',
+            '`ddd`',
+            200,
+            255,
+            -1,
+            false,
+            '`ddd`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->ddd->InputTextType = "text";
+        $this->Fields['ddd'] = &$this->ddd;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -695,6 +790,8 @@ class JobControl extends DbTable
         $this->status->DbValue = $row['status'];
         $this->date_created->DbValue = $row['date_created'];
         $this->date_updated->DbValue = $row['date_updated'];
+        $this->sdsds->DbValue = $row['sdsds'];
+        $this->ddd->DbValue = $row['ddd'];
     }
 
     // Delete uploaded files
@@ -1020,6 +1117,8 @@ class JobControl extends DbTable
         $this->status->setDbValue($row['status']);
         $this->date_created->setDbValue($row['date_created']);
         $this->date_updated->setDbValue($row['date_updated']);
+        $this->sdsds->setDbValue($row['sdsds']);
+        $this->ddd->setDbValue($row['ddd']);
     }
 
     // Render list row values
@@ -1051,6 +1150,10 @@ class JobControl extends DbTable
 
         // date_updated
         $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // sdsds
+
+        // ddd
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1141,6 +1244,14 @@ class JobControl extends DbTable
         $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
         $this->date_updated->ViewCustomAttributes = "";
 
+        // sdsds
+        $this->sdsds->ViewValue = $this->sdsds->CurrentValue;
+        $this->sdsds->ViewCustomAttributes = "";
+
+        // ddd
+        $this->ddd->ViewValue = $this->ddd->CurrentValue;
+        $this->ddd->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
@@ -1175,6 +1286,16 @@ class JobControl extends DbTable
         $this->date_updated->LinkCustomAttributes = "";
         $this->date_updated->HrefValue = "";
         $this->date_updated->TooltipValue = "";
+
+        // sdsds
+        $this->sdsds->LinkCustomAttributes = "";
+        $this->sdsds->HrefValue = "";
+        $this->sdsds->TooltipValue = "";
+
+        // ddd
+        $this->ddd->LinkCustomAttributes = "";
+        $this->ddd->HrefValue = "";
+        $this->ddd->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1269,6 +1390,24 @@ class JobControl extends DbTable
         $this->date_updated->EditValue = FormatDateTime($this->date_updated->CurrentValue, $this->date_updated->formatPattern());
         $this->date_updated->PlaceHolder = RemoveHtml($this->date_updated->caption());
 
+        // sdsds
+        $this->sdsds->setupEditAttributes();
+        $this->sdsds->EditCustomAttributes = "";
+        if (!$this->sdsds->Raw) {
+            $this->sdsds->CurrentValue = HtmlDecode($this->sdsds->CurrentValue);
+        }
+        $this->sdsds->EditValue = $this->sdsds->CurrentValue;
+        $this->sdsds->PlaceHolder = RemoveHtml($this->sdsds->caption());
+
+        // ddd
+        $this->ddd->setupEditAttributes();
+        $this->ddd->EditCustomAttributes = "";
+        if (!$this->ddd->Raw) {
+            $this->ddd->CurrentValue = HtmlDecode($this->ddd->CurrentValue);
+        }
+        $this->ddd->EditValue = $this->ddd->CurrentValue;
+        $this->ddd->PlaceHolder = RemoveHtml($this->ddd->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1304,6 +1443,8 @@ class JobControl extends DbTable
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->sdsds);
+                    $doc->exportCaption($this->ddd);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->job_category);
@@ -1312,6 +1453,8 @@ class JobControl extends DbTable
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_created);
                     $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->sdsds);
+                    $doc->exportCaption($this->ddd);
                 }
                 $doc->endExportRow();
             }
@@ -1348,6 +1491,8 @@ class JobControl extends DbTable
                         $doc->exportField($this->status);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
+                        $doc->exportField($this->sdsds);
+                        $doc->exportField($this->ddd);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->job_category);
@@ -1356,6 +1501,8 @@ class JobControl extends DbTable
                         $doc->exportField($this->status);
                         $doc->exportField($this->date_created);
                         $doc->exportField($this->date_updated);
+                        $doc->exportField($this->sdsds);
+                        $doc->exportField($this->ddd);
                     }
                     $doc->endExportRow($rowCnt);
                 }

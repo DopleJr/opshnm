@@ -311,6 +311,21 @@ $(document).ready( function imagearranger() {
                         </a>
                     </div>
                 </div>
+                <div class="col-lg-4 p-4 mezzanine">
+                    <div class="item-box" href="./putawaystaginglist">
+                        <a class="mfp-image" href="./putawaystaginglist" title="Project Name">
+                            <img class="item-container img-fluid" src="./images/menu/box2.png" alt="work-img">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <p class="text-dark mb-0">Putaway Staging</p>
+                                </div>
+                            </div>
+                            <span class="detail-info">
+                            Putaway Staging Mezzanine
+                            </span>
+                        </a>
+                    </div>
+                </div>
                 <div class="col-lg-4 p-4 outbound">
                     <div class="item-box" href="./auditstaginglist">
                         <a class="mfp-image" href="./auditstaginglist" title="Project Name">
@@ -367,6 +382,36 @@ $(document).ready( function imagearranger() {
                             </div>
                             <span class="detail-info">
                             Blank Count Sheet Inventory
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 p-4 inventory">
+                    <div class="item-box" href="./bintobinlist">
+                        <a class="mfp-image" href="./bintobinlist" title="Project Name">
+                            <img class="item-container img-fluid" src="./images/menu/box2.png" alt="work-img">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <p class="text-dark mb-0">Bin To Bin Box</p>
+                                </div>
+                            </div>
+                            <span class="detail-info">
+                            Bin To Bin Box Inventory
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 p-4 inventory">
+                    <div class="item-box" href="./bintobinpieceedit?start=1">
+                        <a class="mfp-image" href="./bintobinpieceedit?start=1" title="Project Name">
+                            <img class="item-container img-fluid" src="./images/menu/box2.png" alt="work-img">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <p class="text-dark mb-0">Bin To Bin Piece</p>
+                                </div>
+                            </div>
+                            <span class="detail-info">
+                            Bin To Bin Piece Inventory
                             </span>
                         </a>
                     </div>

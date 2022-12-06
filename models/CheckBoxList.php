@@ -615,6 +615,7 @@ class CheckBoxList extends CheckBox
         $this->box_code->setVisibility();
         $this->store_id->setVisibility();
         $this->store_name->setVisibility();
+        $this->concept->setVisibility();
         $this->article->setVisibility();
         $this->size_desc->setVisibility();
         $this->color_code->setVisibility();
@@ -950,7 +951,11 @@ class CheckBoxList extends CheckBox
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->box_code->AdvancedSearch->toJson(), ","); // Field box_code
+        $filterList = Concat($filterList, $this->store_id->AdvancedSearch->toJson(), ","); // Field store_id
+        $filterList = Concat($filterList, $this->concept->AdvancedSearch->toJson(), ","); // Field concept
         $filterList = Concat($filterList, $this->article->AdvancedSearch->toJson(), ","); // Field article
+        $filterList = Concat($filterList, $this->confirmation_date->AdvancedSearch->toJson(), ","); // Field confirmation_date
+        $filterList = Concat($filterList, $this->picker->AdvancedSearch->toJson(), ","); // Field picker
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -999,6 +1004,22 @@ class CheckBoxList extends CheckBox
         $this->box_code->AdvancedSearch->SearchOperator2 = @$filter["w_box_code"];
         $this->box_code->AdvancedSearch->save();
 
+        // Field store_id
+        $this->store_id->AdvancedSearch->SearchValue = @$filter["x_store_id"];
+        $this->store_id->AdvancedSearch->SearchOperator = @$filter["z_store_id"];
+        $this->store_id->AdvancedSearch->SearchCondition = @$filter["v_store_id"];
+        $this->store_id->AdvancedSearch->SearchValue2 = @$filter["y_store_id"];
+        $this->store_id->AdvancedSearch->SearchOperator2 = @$filter["w_store_id"];
+        $this->store_id->AdvancedSearch->save();
+
+        // Field concept
+        $this->concept->AdvancedSearch->SearchValue = @$filter["x_concept"];
+        $this->concept->AdvancedSearch->SearchOperator = @$filter["z_concept"];
+        $this->concept->AdvancedSearch->SearchCondition = @$filter["v_concept"];
+        $this->concept->AdvancedSearch->SearchValue2 = @$filter["y_concept"];
+        $this->concept->AdvancedSearch->SearchOperator2 = @$filter["w_concept"];
+        $this->concept->AdvancedSearch->save();
+
         // Field article
         $this->article->AdvancedSearch->SearchValue = @$filter["x_article"];
         $this->article->AdvancedSearch->SearchOperator = @$filter["z_article"];
@@ -1006,6 +1027,22 @@ class CheckBoxList extends CheckBox
         $this->article->AdvancedSearch->SearchValue2 = @$filter["y_article"];
         $this->article->AdvancedSearch->SearchOperator2 = @$filter["w_article"];
         $this->article->AdvancedSearch->save();
+
+        // Field confirmation_date
+        $this->confirmation_date->AdvancedSearch->SearchValue = @$filter["x_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchOperator = @$filter["z_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchCondition = @$filter["v_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchValue2 = @$filter["y_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->SearchOperator2 = @$filter["w_confirmation_date"];
+        $this->confirmation_date->AdvancedSearch->save();
+
+        // Field picker
+        $this->picker->AdvancedSearch->SearchValue = @$filter["x_picker"];
+        $this->picker->AdvancedSearch->SearchOperator = @$filter["z_picker"];
+        $this->picker->AdvancedSearch->SearchCondition = @$filter["v_picker"];
+        $this->picker->AdvancedSearch->SearchValue2 = @$filter["y_picker"];
+        $this->picker->AdvancedSearch->SearchOperator2 = @$filter["w_picker"];
+        $this->picker->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1021,6 +1058,7 @@ class CheckBoxList extends CheckBox
         $this->buildSearchSql($where, $this->box_code, $default, true); // box_code
         $this->buildSearchSql($where, $this->store_id, $default, true); // store_id
         $this->buildSearchSql($where, $this->store_name, $default, true); // store_name
+        $this->buildSearchSql($where, $this->concept, $default, true); // concept
         $this->buildSearchSql($where, $this->article, $default, true); // article
         $this->buildSearchSql($where, $this->size_desc, $default, true); // size_desc
         $this->buildSearchSql($where, $this->color_code, $default, true); // color_code
@@ -1036,7 +1074,11 @@ class CheckBoxList extends CheckBox
         }
         if (!$default && $this->Command == "search") {
             $this->box_code->AdvancedSearch->save(); // box_code
+            $this->store_id->AdvancedSearch->save(); // store_id
+            $this->concept->AdvancedSearch->save(); // concept
             $this->article->AdvancedSearch->save(); // article
+            $this->confirmation_date->AdvancedSearch->save(); // confirmation_date
+            $this->picker->AdvancedSearch->save(); // picker
         }
         return $where;
     }
@@ -1116,7 +1158,11 @@ class CheckBoxList extends CheckBox
         // Fields to search
         $searchFlds = [];
         $searchFlds[] = &$this->box_code;
+        $searchFlds[] = &$this->concept;
         $searchFlds[] = &$this->article;
+        $searchFlds[] = &$this->confirmation_date;
+        $searchFlds[] = &$this->confirmation_time;
+        $searchFlds[] = &$this->picker;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1149,6 +1195,9 @@ class CheckBoxList extends CheckBox
             return true;
         }
         if ($this->store_name->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->concept->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->article->AdvancedSearch->issetSession()) {
@@ -1210,6 +1259,7 @@ class CheckBoxList extends CheckBox
         $this->box_code->AdvancedSearch->unsetSession();
         $this->store_id->AdvancedSearch->unsetSession();
         $this->store_name->AdvancedSearch->unsetSession();
+        $this->concept->AdvancedSearch->unsetSession();
         $this->article->AdvancedSearch->unsetSession();
         $this->size_desc->AdvancedSearch->unsetSession();
         $this->color_code->AdvancedSearch->unsetSession();
@@ -1232,6 +1282,7 @@ class CheckBoxList extends CheckBox
         $this->box_code->AdvancedSearch->load();
         $this->store_id->AdvancedSearch->load();
         $this->store_name->AdvancedSearch->load();
+        $this->concept->AdvancedSearch->load();
         $this->article->AdvancedSearch->load();
         $this->size_desc->AdvancedSearch->load();
         $this->color_code->AdvancedSearch->load();
@@ -1260,6 +1311,7 @@ class CheckBoxList extends CheckBox
             $this->updateSort($this->box_code); // box_code
             $this->updateSort($this->store_id); // store_id
             $this->updateSort($this->store_name); // store_name
+            $this->updateSort($this->concept); // concept
             $this->updateSort($this->article); // article
             $this->updateSort($this->size_desc); // size_desc
             $this->updateSort($this->color_code); // color_code
@@ -1295,6 +1347,7 @@ class CheckBoxList extends CheckBox
                 $this->box_code->setSort("");
                 $this->store_id->setSort("");
                 $this->store_name->setSort("");
+                $this->concept->setSort("");
                 $this->article->setSort("");
                 $this->size_desc->setSort("");
                 $this->color_code->setSort("");
@@ -1453,6 +1506,7 @@ class CheckBoxList extends CheckBox
             $option->add("box_code", $this->createColumnOption("box_code"));
             $option->add("store_id", $this->createColumnOption("store_id"));
             $option->add("store_name", $this->createColumnOption("store_name"));
+            $option->add("concept", $this->createColumnOption("concept"));
             $option->add("article", $this->createColumnOption("article"));
             $option->add("size_desc", $this->createColumnOption("size_desc"));
             $option->add("color_code", $this->createColumnOption("color_code"));
@@ -1667,6 +1721,14 @@ class CheckBoxList extends CheckBox
             }
         }
 
+        // concept
+        if ($this->concept->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->concept->AdvancedSearch->SearchValue != "" || $this->concept->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // article
         if ($this->article->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1821,6 +1883,7 @@ class CheckBoxList extends CheckBox
         $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
+        $this->concept->setDbValue($row['concept']);
         $this->article->setDbValue($row['article']);
         $this->size_desc->setDbValue($row['size_desc']);
         $this->color_code->setDbValue($row['color_code']);
@@ -1838,6 +1901,7 @@ class CheckBoxList extends CheckBox
         $row['box_code'] = $this->box_code->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
+        $row['concept'] = $this->concept->DefaultValue;
         $row['article'] = $this->article->DefaultValue;
         $row['size_desc'] = $this->size_desc->DefaultValue;
         $row['color_code'] = $this->color_code->DefaultValue;
@@ -1882,6 +1946,9 @@ class CheckBoxList extends CheckBox
 
         // store_name
         $this->store_name->CellCssStyle = "white-space: nowrap;";
+
+        // concept
+        $this->concept->CellCssStyle = "white-space: nowrap;";
 
         // article
         $this->article->CellCssStyle = "white-space: nowrap;";
@@ -1931,6 +1998,10 @@ class CheckBoxList extends CheckBox
             // store_name
             $this->store_name->ViewValue = $this->store_name->CurrentValue;
             $this->store_name->ViewCustomAttributes = "";
+
+            // concept
+            $this->concept->ViewValue = $this->concept->CurrentValue;
+            $this->concept->ViewCustomAttributes = "";
 
             // article
             $this->article->ViewValue = $this->article->CurrentValue;
@@ -1982,6 +2053,11 @@ class CheckBoxList extends CheckBox
             $this->store_name->LinkCustomAttributes = "";
             $this->store_name->HrefValue = "";
             $this->store_name->TooltipValue = "";
+
+            // concept
+            $this->concept->LinkCustomAttributes = "";
+            $this->concept->HrefValue = "";
+            $this->concept->TooltipValue = "";
 
             // article
             $this->article->LinkCustomAttributes = "";
@@ -2045,6 +2121,14 @@ class CheckBoxList extends CheckBox
                     $this->store_name->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_name->AdvancedSearch->SearchValue);
                 }
                 $this->store_name->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_name->AdvancedSearch->SearchValue);
+            }
+
+            // concept
+            if ($this->concept->UseFilter && !EmptyValue($this->concept->AdvancedSearch->SearchValue)) {
+                if (is_array($this->concept->AdvancedSearch->SearchValue)) {
+                    $this->concept->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->concept->AdvancedSearch->SearchValue);
+                }
+                $this->concept->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->concept->AdvancedSearch->SearchValue);
             }
 
             // article
@@ -2165,7 +2249,11 @@ class CheckBoxList extends CheckBox
     public function loadAdvancedSearch()
     {
         $this->box_code->AdvancedSearch->load();
+        $this->store_id->AdvancedSearch->load();
+        $this->concept->AdvancedSearch->load();
         $this->article->AdvancedSearch->load();
+        $this->confirmation_date->AdvancedSearch->load();
+        $this->picker->AdvancedSearch->load();
     }
 
     // Get export HTML tag

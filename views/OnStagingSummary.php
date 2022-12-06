@@ -23,7 +23,8 @@ loadjs.ready(["wrapper", "head"], function () {
     fOnStagingsrch.addFields([
         ["quantity", [], fields.quantity.isInvalid],
         ["picking_date", [], fields.picking_date.isInvalid],
-        ["y_picking_date", [ew.Validators.between], false]
+        ["y_picking_date", [ew.Validators.between], false],
+        ["line", [], fields.line.isInvalid]
     ]);
 
     // Validate form
@@ -687,6 +688,9 @@ while ($Page->GroupCount <= count($Page->GroupRecords) && $Page->GroupCount <= $
 <?php if ($Page->quantity->Visible) { ?>
     <th data-name="quantity" class="<?= $Page->quantity->headerCellClass() ?>" style="white-space: nowrap;"><div class="OnStaging_quantity"><?= $Page->renderFieldHeader($Page->quantity) ?></div></th>
 <?php } ?>
+<?php if ($Page->line->Visible) { ?>
+    <th data-name="line" class="<?= $Page->line->headerCellClass() ?>"><div class="OnStaging_line"><?= $Page->renderFieldHeader($Page->line) ?></div></th>
+<?php } ?>
     </tr>
 </thead>
 <tbody>
@@ -768,6 +772,12 @@ while ($Page->GroupCount <= count($Page->GroupRecords) && $Page->GroupCount <= $
         <td data-field="quantity"<?= $Page->quantity->cellAttributes() ?>>
 <span<?= $Page->quantity->viewAttributes() ?>>
 <?= $Page->quantity->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->line->Visible) { ?>
+        <td data-field="line"<?= $Page->line->cellAttributes() ?>>
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
 </td>
 <?php } ?>
     </tr>

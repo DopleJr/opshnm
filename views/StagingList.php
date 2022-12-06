@@ -32,6 +32,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fstaginglist.lists.picking_date = <?= $Page->picking_date->toClientList($Page) ?>;
     fstaginglist.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
     fstaginglist.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    fstaginglist.lists.line = <?= $Page->line->toClientList($Page) ?>;
     fstaginglist.lists.users = <?= $Page->users->toClientList($Page) ?>;
     fstaginglist.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
     loadjs.done("fstaginglist");
@@ -59,6 +60,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["y_picking_date", [ew.Validators.between], false],
         ["date_created", [], fields.date_created.isInvalid],
         ["status", [], fields.status.isInvalid],
+        ["line", [], fields.line.isInvalid],
         ["users", [], fields.users.isInvalid],
         ["date_updated", [], fields.date_updated.isInvalid]
     ]);
@@ -103,6 +105,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fstagingsrch.lists.picking_date = <?= $Page->picking_date->toClientList($Page) ?>;
     fstagingsrch.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
     fstagingsrch.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    fstagingsrch.lists.line = <?= $Page->line->toClientList($Page) ?>;
     fstagingsrch.lists.users = <?= $Page->users->toClientList($Page) ?>;
     fstagingsrch.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
 
@@ -594,6 +597,43 @@ if (!$Page->status->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+<?php
+if (!$Page->line->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_line" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->line->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_line"
+            name="x_line[]"
+            class="form-control ew-select<?= $Page->line->isInvalidClass() ?>"
+            data-select2-id="fstagingsrch_x_line"
+            data-table="staging"
+            data-field="x_line"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->line->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->line->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"
+            <?= $Page->line->editAttributes() ?>>
+            <?= $Page->line->selectOptionListHtml("x_line", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->line->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fstagingsrch", function() {
+            var options = {
+                name: "x_line",
+                selectId: "fstagingsrch_x_line",
+                ajax: { id: "x_line", form: "fstagingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.staging.fields.line.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
 <?php if ($Page->users->Visible) { // users ?>
 <?php
 if (!$Page->users->UseFilter) {
@@ -769,6 +809,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_staging_status" class="staging_status"><?= $Page->renderFieldHeader($Page->status) ?></div></th>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <th data-name="line" class="<?= $Page->line->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_staging_line" class="staging_line"><?= $Page->renderFieldHeader($Page->line) ?></div></th>
+<?php } ?>
 <?php if ($Page->users->Visible) { // users ?>
         <th data-name="users" class="<?= $Page->users->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_staging_users" class="staging_users"><?= $Page->renderFieldHeader($Page->users) ?></div></th>
 <?php } ?>
@@ -943,6 +986,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_staging_status" class="el_staging_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->line->Visible) { // line ?>
+        <td data-name="line"<?= $Page->line->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_staging_line" class="el_staging_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -268,7 +268,7 @@ class ComposerStaticInitd90ee555a794f98fe53990fa6771ef04
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/src',
         ),
         'DiDom\\' => 
         array (

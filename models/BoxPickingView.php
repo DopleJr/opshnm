@@ -530,9 +530,11 @@ class BoxPickingView extends BoxPicking
         $this->status->setVisibility();
         $this->users->setVisibility();
         $this->picking_date->setVisibility();
+        $this->line->setVisibility();
         $this->date_created->setVisibility();
-        $this->date_delivery->setVisibility();
         $this->date_updated->setVisibility();
+        $this->date_staging->setVisibility();
+        $this->date_delivery->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -760,9 +762,11 @@ class BoxPickingView extends BoxPicking
         $this->status->setDbValue($row['status']);
         $this->users->setDbValue($row['users']);
         $this->picking_date->setDbValue($row['picking_date']);
+        $this->line->setDbValue($row['line']);
         $this->date_created->setDbValue($row['date_created']);
-        $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
+        $this->date_staging->setDbValue($row['date_staging']);
+        $this->date_delivery->setDbValue($row['date_delivery']);
     }
 
     // Return a row with default values
@@ -779,9 +783,11 @@ class BoxPickingView extends BoxPicking
         $row['status'] = $this->status->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['picking_date'] = $this->picking_date->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['date_staging'] = $this->date_staging->DefaultValue;
+        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         return $row;
     }
 
@@ -823,11 +829,15 @@ class BoxPickingView extends BoxPicking
 
         // picking_date
 
+        // line
+
         // date_created
 
-        // date_delivery
-
         // date_updated
+
+        // date_staging
+
+        // date_delivery
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -873,20 +883,29 @@ class BoxPickingView extends BoxPicking
             $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
             $this->picking_date->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
-            // date_delivery
-            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
-            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
-            $this->date_delivery->ViewCustomAttributes = "";
-
             // date_updated
             $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
+
+            // date_staging
+            $this->date_staging->ViewValue = $this->date_staging->CurrentValue;
+            $this->date_staging->ViewValue = FormatDateTime($this->date_staging->ViewValue, $this->date_staging->formatPattern());
+            $this->date_staging->ViewCustomAttributes = "";
+
+            // date_delivery
+            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
+            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
+            $this->date_delivery->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -938,20 +957,30 @@ class BoxPickingView extends BoxPicking
             $this->picking_date->HrefValue = "";
             $this->picking_date->TooltipValue = "";
 
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
+
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
             $this->date_created->TooltipValue = "";
 
-            // date_delivery
-            $this->date_delivery->LinkCustomAttributes = "";
-            $this->date_delivery->HrefValue = "";
-            $this->date_delivery->TooltipValue = "";
-
             // date_updated
             $this->date_updated->LinkCustomAttributes = "";
             $this->date_updated->HrefValue = "";
             $this->date_updated->TooltipValue = "";
+
+            // date_staging
+            $this->date_staging->LinkCustomAttributes = "";
+            $this->date_staging->HrefValue = "";
+            $this->date_staging->TooltipValue = "";
+
+            // date_delivery
+            $this->date_delivery->LinkCustomAttributes = "";
+            $this->date_delivery->HrefValue = "";
+            $this->date_delivery->TooltipValue = "";
         }
 
         // Call Row Rendered event

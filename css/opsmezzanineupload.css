@@ -1220,7 +1220,7 @@ li.ui-timepicker-selected,
     width: 18rem;
   }
   .input-group > .form-control:not(.form-control-navbar),
-.input-group > .form-select {
+  .input-group > .form-select {
     width: auto;
     flex: initial;
   }
@@ -1238,7 +1238,7 @@ li.ui-timepicker-selected,
     width: auto;
   }
   input[type=text]:not([size]):not(.ew-page-no):not(.cke_dialog_ui_input_text):not(.form-control-plaintext),
-input[type=password]:not([size]) {
+  input[type=password]:not([size]) {
     min-width: 250px;
   }
   .ew-custom-select, .ew-custom-file {
@@ -1339,9 +1339,9 @@ input[type=password]:not([size]) {
     display: block;
   }
   .table-striped > tbody > tr:nth-child(odd),
-.table-striped > tbody > tr:nth-child(even),
-.table-striped > tbody > tr:nth-child(odd) > td,
-.table-striped > tbody > tr:nth-child(even) > td {
+  .table-striped > tbody > tr:nth-child(even),
+  .table-striped > tbody > tr:nth-child(odd) > td,
+  .table-striped > tbody > tr:nth-child(even) > td {
     background-color: transparent;
   }
   .ew-login-box .ew-recaptcha-normal, .ew-reset-pwd-box .ew-recaptcha-normal, .ew-change-pwd-box .ew-recaptcha-normal {
@@ -1612,8 +1612,8 @@ html[dir=rtl] .ew-crosstab-values {
 
 @media (min-width: 768px) {
   body.ew-layout-top-nav .content-wrapper,
-body.ew-layout-top-nav .main-footer,
-body.ew-layout-top-nav .main-header {
+  body.ew-layout-top-nav .main-footer,
+  body.ew-layout-top-nav .main-header {
     margin-left: 0 !important;
   }
 }

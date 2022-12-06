@@ -98,7 +98,14 @@ class SummaryStockCount extends DbTable
         $this->Location->Required = true; // Required field
         $this->Location->Sortable = false; // Allow sort
         $this->Location->UseFilter = true; // Table header filter
-        $this->Location->Lookup = new Lookup('Location', 'summary_stock_count', true, 'Location', ["Location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Location->Lookup = new Lookup('Location', 'summary_stock_count', true, 'Location', ["Location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Location->Lookup = new Lookup('Location', 'summary_stock_count', true, 'Location', ["Location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Location'] = &$this->Location;
 
         // Article
@@ -124,7 +131,14 @@ class SummaryStockCount extends DbTable
         $this->Article->Required = true; // Required field
         $this->Article->Sortable = false; // Allow sort
         $this->Article->UseFilter = true; // Table header filter
-        $this->Article->Lookup = new Lookup('Article', 'summary_stock_count', true, 'Article', ["Article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Article->Lookup = new Lookup('Article', 'summary_stock_count', true, 'Article', ["Article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Article->Lookup = new Lookup('Article', 'summary_stock_count', true, 'Article', ["Article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Article->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['Article'] = &$this->Article;
 
@@ -152,7 +166,14 @@ class SummaryStockCount extends DbTable
         $this->Total->Required = true; // Required field
         $this->Total->Sortable = false; // Allow sort
         $this->Total->UseFilter = true; // Table header filter
-        $this->Total->Lookup = new Lookup('Total', 'summary_stock_count', true, 'Total', ["Total","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Total->Lookup = new Lookup('Total', 'summary_stock_count', true, 'Total', ["Total","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Total->Lookup = new Lookup('Total', 'summary_stock_count', true, 'Total', ["Total","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Total->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['Total'] = &$this->Total;
 
@@ -178,7 +199,14 @@ class SummaryStockCount extends DbTable
         $this->User->InputTextType = "text";
         $this->User->Sortable = false; // Allow sort
         $this->User->UseFilter = true; // Table header filter
-        $this->User->Lookup = new Lookup('User', 'summary_stock_count', true, 'User', ["User","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->User->Lookup = new Lookup('User', 'summary_stock_count', true, 'User', ["User","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->User->Lookup = new Lookup('User', 'summary_stock_count', true, 'User', ["User","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['User'] = &$this->User;
 
         // Date Created
@@ -203,7 +231,14 @@ class SummaryStockCount extends DbTable
         $this->DateCreated->InputTextType = "text";
         $this->DateCreated->Sortable = false; // Allow sort
         $this->DateCreated->UseFilter = true; // Table header filter
-        $this->DateCreated->Lookup = new Lookup('Date Created', 'summary_stock_count', true, 'Date Created', ["Date Created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->DateCreated->Lookup = new Lookup('Date Created', 'summary_stock_count', true, 'Date Created', ["Date Created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->DateCreated->Lookup = new Lookup('Date Created', 'summary_stock_count', true, 'Date Created', ["Date Created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->DateCreated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['Date Created'] = &$this->DateCreated;
 

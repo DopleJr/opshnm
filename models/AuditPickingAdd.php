@@ -138,6 +138,9 @@ class AuditPickingAdd extends AuditPicking
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -222,18 +225,25 @@ class AuditPickingAdd extends AuditPicking
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -249,6 +259,11 @@ class AuditPickingAdd extends AuditPicking
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -387,9 +402,6 @@ class AuditPickingAdd extends AuditPicking
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -489,6 +501,7 @@ class AuditPickingAdd extends AuditPicking
         $this->id->Visible = false;
         $this->store_name->Visible = false;
         $this->store_code->Visible = false;
+        $this->line->Visible = false;
         $this->box_id->setVisibility();
         $this->type->Visible = false;
         $this->concept->Visible = false;
@@ -512,6 +525,7 @@ class AuditPickingAdd extends AuditPicking
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->line);
 
         // Load default values for add
         $this->loadDefaultValues();
@@ -729,6 +743,7 @@ class AuditPickingAdd extends AuditPicking
         $this->id->setDbValue($row['id']);
         $this->store_name->setDbValue($row['store_name']);
         $this->store_code->setDbValue($row['store_code']);
+        $this->line->setDbValue($row['line']);
         $this->box_id->setDbValue($row['box_id']);
         $this->type->setDbValue($row['type']);
         $this->concept->setDbValue($row['concept']);
@@ -745,6 +760,7 @@ class AuditPickingAdd extends AuditPicking
         $row['id'] = $this->id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
         $row['store_code'] = $this->store_code->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['box_id'] = $this->box_id->DefaultValue;
         $row['type'] = $this->type->DefaultValue;
         $row['concept'] = $this->concept->DefaultValue;
@@ -792,6 +808,9 @@ class AuditPickingAdd extends AuditPicking
         // store_code
         $this->store_code->RowCssClass = "row";
 
+        // line
+        $this->line->RowCssClass = "row";
+
         // box_id
         $this->box_id->RowCssClass = "row";
 
@@ -826,6 +845,14 @@ class AuditPickingAdd extends AuditPicking
             // store_code
             $this->store_code->ViewValue = $this->store_code->CurrentValue;
             $this->store_code->ViewCustomAttributes = "";
+
+            // line
+            if (strval($this->line->CurrentValue) != "") {
+                $this->line->ViewValue = $this->line->optionCaption($this->line->CurrentValue);
+            } else {
+                $this->line->ViewValue = null;
+            }
+            $this->line->ViewCustomAttributes = "";
 
             // box_id
             $this->box_id->ViewValue = $this->box_id->CurrentValue;
@@ -863,7 +890,7 @@ class AuditPickingAdd extends AuditPicking
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // box_id
             $this->box_id->setupEditAttributes();
-            $this->box_id->EditCustomAttributes = "";
+            $this->box_id->EditCustomAttributes = 'autofocus';
             if (!$this->box_id->Raw) {
                 $this->box_id->CurrentValue = HtmlDecode($this->box_id->CurrentValue);
             }
@@ -883,6 +910,11 @@ class AuditPickingAdd extends AuditPicking
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 
@@ -990,6 +1022,8 @@ class AuditPickingAdd extends AuditPicking
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_line":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

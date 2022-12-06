@@ -407,6 +407,7 @@ class StagingDelete extends Staging
         $this->picking_date->setVisibility();
         $this->date_created->setVisibility();
         $this->status->setVisibility();
+        $this->line->setVisibility();
         $this->users->setVisibility();
         $this->date_delivery->Visible = false;
         $this->date_updated->setVisibility();
@@ -606,6 +607,7 @@ class StagingDelete extends Staging
         $this->picking_date->setDbValue($row['picking_date']);
         $this->date_created->setDbValue($row['date_created']);
         $this->status->setDbValue($row['status']);
+        $this->line->setDbValue($row['line']);
         $this->users->setDbValue($row['users']);
         $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -627,6 +629,7 @@ class StagingDelete extends Staging
         $row['picking_date'] = $this->picking_date->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
@@ -680,6 +683,9 @@ class StagingDelete extends Staging
 
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
 
         // users
         $this->users->CellCssStyle = "white-space: nowrap;";
@@ -747,6 +753,10 @@ class StagingDelete extends Staging
                 $this->status->ViewValue = null;
             }
             $this->status->ViewCustomAttributes = "";
+
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
 
             // users
             $this->users->ViewValue = $this->users->CurrentValue;
@@ -821,6 +831,11 @@ class StagingDelete extends Staging
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
 
             // users
             $this->users->LinkCustomAttributes = "";

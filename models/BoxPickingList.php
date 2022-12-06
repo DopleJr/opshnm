@@ -632,9 +632,11 @@ class BoxPickingList extends BoxPicking
         $this->status->setVisibility();
         $this->users->setVisibility();
         $this->picking_date->setVisibility();
+        $this->line->setVisibility();
         $this->date_created->setVisibility();
-        $this->date_delivery->setVisibility();
         $this->date_updated->setVisibility();
+        $this->date_staging->setVisibility();
+        $this->date_delivery->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -978,6 +980,8 @@ class BoxPickingList extends BoxPicking
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->picking_date->AdvancedSearch->toJson(), ","); // Field picking_date
+        $filterList = Concat($filterList, $this->line->AdvancedSearch->toJson(), ","); // Field line
+        $filterList = Concat($filterList, $this->date_staging->AdvancedSearch->toJson(), ","); // Field date_staging
         $filterList = Concat($filterList, $this->date_delivery->AdvancedSearch->toJson(), ","); // Field date_delivery
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1027,6 +1031,22 @@ class BoxPickingList extends BoxPicking
         $this->picking_date->AdvancedSearch->SearchOperator2 = @$filter["w_picking_date"];
         $this->picking_date->AdvancedSearch->save();
 
+        // Field line
+        $this->line->AdvancedSearch->SearchValue = @$filter["x_line"];
+        $this->line->AdvancedSearch->SearchOperator = @$filter["z_line"];
+        $this->line->AdvancedSearch->SearchCondition = @$filter["v_line"];
+        $this->line->AdvancedSearch->SearchValue2 = @$filter["y_line"];
+        $this->line->AdvancedSearch->SearchOperator2 = @$filter["w_line"];
+        $this->line->AdvancedSearch->save();
+
+        // Field date_staging
+        $this->date_staging->AdvancedSearch->SearchValue = @$filter["x_date_staging"];
+        $this->date_staging->AdvancedSearch->SearchOperator = @$filter["z_date_staging"];
+        $this->date_staging->AdvancedSearch->SearchCondition = @$filter["v_date_staging"];
+        $this->date_staging->AdvancedSearch->SearchValue2 = @$filter["y_date_staging"];
+        $this->date_staging->AdvancedSearch->SearchOperator2 = @$filter["w_date_staging"];
+        $this->date_staging->AdvancedSearch->save();
+
         // Field date_delivery
         $this->date_delivery->AdvancedSearch->SearchValue = @$filter["x_date_delivery"];
         $this->date_delivery->AdvancedSearch->SearchOperator = @$filter["z_date_delivery"];
@@ -1055,9 +1075,11 @@ class BoxPickingList extends BoxPicking
         $this->buildSearchSql($where, $this->status, $default, true); // status
         $this->buildSearchSql($where, $this->users, $default, true); // users
         $this->buildSearchSql($where, $this->picking_date, $default, true); // picking_date
+        $this->buildSearchSql($where, $this->line, $default, true); // line
         $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
-        $this->buildSearchSql($where, $this->date_delivery, $default, true); // date_delivery
         $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
+        $this->buildSearchSql($where, $this->date_staging, $default, true); // date_staging
+        $this->buildSearchSql($where, $this->date_delivery, $default, true); // date_delivery
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1065,6 +1087,8 @@ class BoxPickingList extends BoxPicking
         }
         if (!$default && $this->Command == "search") {
             $this->picking_date->AdvancedSearch->save(); // picking_date
+            $this->line->AdvancedSearch->save(); // line
+            $this->date_staging->AdvancedSearch->save(); // date_staging
             $this->date_delivery->AdvancedSearch->save(); // date_delivery
         }
         return $where;
@@ -1153,9 +1177,11 @@ class BoxPickingList extends BoxPicking
         $searchFlds[] = &$this->status;
         $searchFlds[] = &$this->users;
         $searchFlds[] = &$this->picking_date;
+        $searchFlds[] = &$this->line;
         $searchFlds[] = &$this->date_created;
-        $searchFlds[] = &$this->date_delivery;
         $searchFlds[] = &$this->date_updated;
+        $searchFlds[] = &$this->date_staging;
+        $searchFlds[] = &$this->date_delivery;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1208,13 +1234,19 @@ class BoxPickingList extends BoxPicking
         if ($this->picking_date->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->line->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->date_created->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->date_delivery->AdvancedSearch->issetSession()) {
+        if ($this->date_updated->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->date_updated->AdvancedSearch->issetSession()) {
+        if ($this->date_staging->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->date_delivery->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1258,9 +1290,11 @@ class BoxPickingList extends BoxPicking
         $this->status->AdvancedSearch->unsetSession();
         $this->users->AdvancedSearch->unsetSession();
         $this->picking_date->AdvancedSearch->unsetSession();
+        $this->line->AdvancedSearch->unsetSession();
         $this->date_created->AdvancedSearch->unsetSession();
-        $this->date_delivery->AdvancedSearch->unsetSession();
         $this->date_updated->AdvancedSearch->unsetSession();
+        $this->date_staging->AdvancedSearch->unsetSession();
+        $this->date_delivery->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1281,9 +1315,11 @@ class BoxPickingList extends BoxPicking
         $this->status->AdvancedSearch->load();
         $this->users->AdvancedSearch->load();
         $this->picking_date->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
-        $this->date_delivery->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();
+        $this->date_staging->AdvancedSearch->load();
+        $this->date_delivery->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1311,9 +1347,11 @@ class BoxPickingList extends BoxPicking
             $this->updateSort($this->status); // status
             $this->updateSort($this->users); // users
             $this->updateSort($this->picking_date); // picking_date
+            $this->updateSort($this->line); // line
             $this->updateSort($this->date_created); // date_created
-            $this->updateSort($this->date_delivery); // date_delivery
             $this->updateSort($this->date_updated); // date_updated
+            $this->updateSort($this->date_staging); // date_staging
+            $this->updateSort($this->date_delivery); // date_delivery
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1348,9 +1386,11 @@ class BoxPickingList extends BoxPicking
                 $this->status->setSort("");
                 $this->users->setSort("");
                 $this->picking_date->setSort("");
+                $this->line->setSort("");
                 $this->date_created->setSort("");
-                $this->date_delivery->setSort("");
                 $this->date_updated->setSort("");
+                $this->date_staging->setSort("");
+                $this->date_delivery->setSort("");
             }
 
             // Reset start position
@@ -1553,9 +1593,11 @@ class BoxPickingList extends BoxPicking
             $option->add("status", $this->createColumnOption("status"));
             $option->add("users", $this->createColumnOption("users"));
             $option->add("picking_date", $this->createColumnOption("picking_date"));
+            $option->add("line", $this->createColumnOption("line"));
             $option->add("date_created", $this->createColumnOption("date_created"));
-            $option->add("date_delivery", $this->createColumnOption("date_delivery"));
             $option->add("date_updated", $this->createColumnOption("date_updated"));
+            $option->add("date_staging", $this->createColumnOption("date_staging"));
+            $option->add("date_delivery", $this->createColumnOption("date_delivery"));
         }
 
         // Set up options default
@@ -1810,6 +1852,14 @@ class BoxPickingList extends BoxPicking
             }
         }
 
+        // line
+        if ($this->line->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->line->AdvancedSearch->SearchValue != "" || $this->line->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // date_created
         if ($this->date_created->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1818,18 +1868,26 @@ class BoxPickingList extends BoxPicking
             }
         }
 
-        // date_delivery
-        if ($this->date_delivery->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->date_delivery->AdvancedSearch->SearchValue != "" || $this->date_delivery->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
         // date_updated
         if ($this->date_updated->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->date_updated->AdvancedSearch->SearchValue != "" || $this->date_updated->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // date_staging
+        if ($this->date_staging->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date_staging->AdvancedSearch->SearchValue != "" || $this->date_staging->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // date_delivery
+        if ($this->date_delivery->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date_delivery->AdvancedSearch->SearchValue != "" || $this->date_delivery->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -1931,9 +1989,11 @@ class BoxPickingList extends BoxPicking
         $this->status->setDbValue($row['status']);
         $this->users->setDbValue($row['users']);
         $this->picking_date->setDbValue($row['picking_date']);
+        $this->line->setDbValue($row['line']);
         $this->date_created->setDbValue($row['date_created']);
-        $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
+        $this->date_staging->setDbValue($row['date_staging']);
+        $this->date_delivery->setDbValue($row['date_delivery']);
     }
 
     // Return a row with default values
@@ -1950,9 +2010,11 @@ class BoxPickingList extends BoxPicking
         $row['status'] = $this->status->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['picking_date'] = $this->picking_date->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['date_staging'] = $this->date_staging->DefaultValue;
+        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         return $row;
     }
 
@@ -2020,14 +2082,20 @@ class BoxPickingList extends BoxPicking
         // picking_date
         $this->picking_date->CellCssStyle = "white-space: nowrap;";
 
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
+
         // date_created
         $this->date_created->CellCssStyle = "white-space: nowrap;";
 
-        // date_delivery
-        $this->date_delivery->CellCssStyle = "white-space: nowrap;";
-
         // date_updated
         $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // date_staging
+        $this->date_staging->CellCssStyle = "white-space: nowrap;";
+
+        // date_delivery
+        $this->date_delivery->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -2073,20 +2141,29 @@ class BoxPickingList extends BoxPicking
             $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
             $this->picking_date->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
-            // date_delivery
-            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
-            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
-            $this->date_delivery->ViewCustomAttributes = "";
-
             // date_updated
             $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
+
+            // date_staging
+            $this->date_staging->ViewValue = $this->date_staging->CurrentValue;
+            $this->date_staging->ViewValue = FormatDateTime($this->date_staging->ViewValue, $this->date_staging->formatPattern());
+            $this->date_staging->ViewCustomAttributes = "";
+
+            // date_delivery
+            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
+            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
+            $this->date_delivery->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -2138,20 +2215,30 @@ class BoxPickingList extends BoxPicking
             $this->picking_date->HrefValue = "";
             $this->picking_date->TooltipValue = "";
 
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
+
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
             $this->date_created->TooltipValue = "";
 
-            // date_delivery
-            $this->date_delivery->LinkCustomAttributes = "";
-            $this->date_delivery->HrefValue = "";
-            $this->date_delivery->TooltipValue = "";
-
             // date_updated
             $this->date_updated->LinkCustomAttributes = "";
             $this->date_updated->HrefValue = "";
             $this->date_updated->TooltipValue = "";
+
+            // date_staging
+            $this->date_staging->LinkCustomAttributes = "";
+            $this->date_staging->HrefValue = "";
+            $this->date_staging->TooltipValue = "";
+
+            // date_delivery
+            $this->date_delivery->LinkCustomAttributes = "";
+            $this->date_delivery->HrefValue = "";
+            $this->date_delivery->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
             $this->id->setupEditAttributes();
@@ -2235,6 +2322,14 @@ class BoxPickingList extends BoxPicking
             $this->picking_date->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->picking_date->AdvancedSearch->SearchValue2, $this->picking_date->formatPattern()), $this->picking_date->formatPattern()));
             $this->picking_date->PlaceHolder = RemoveHtml($this->picking_date->caption());
 
+            // line
+            if ($this->line->UseFilter && !EmptyValue($this->line->AdvancedSearch->SearchValue)) {
+                if (is_array($this->line->AdvancedSearch->SearchValue)) {
+                    $this->line->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->line->AdvancedSearch->SearchValue);
+                }
+                $this->line->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->line->AdvancedSearch->SearchValue);
+            }
+
             // date_created
             if ($this->date_created->UseFilter && !EmptyValue($this->date_created->AdvancedSearch->SearchValue)) {
                 if (is_array($this->date_created->AdvancedSearch->SearchValue)) {
@@ -2243,20 +2338,28 @@ class BoxPickingList extends BoxPicking
                 $this->date_created->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_created->AdvancedSearch->SearchValue);
             }
 
-            // date_delivery
-            if ($this->date_delivery->UseFilter && !EmptyValue($this->date_delivery->AdvancedSearch->SearchValue)) {
-                if (is_array($this->date_delivery->AdvancedSearch->SearchValue)) {
-                    $this->date_delivery->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_delivery->AdvancedSearch->SearchValue);
-                }
-                $this->date_delivery->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_delivery->AdvancedSearch->SearchValue);
-            }
-
             // date_updated
             if ($this->date_updated->UseFilter && !EmptyValue($this->date_updated->AdvancedSearch->SearchValue)) {
                 if (is_array($this->date_updated->AdvancedSearch->SearchValue)) {
                     $this->date_updated->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
                 }
                 $this->date_updated->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_updated->AdvancedSearch->SearchValue);
+            }
+
+            // date_staging
+            if ($this->date_staging->UseFilter && !EmptyValue($this->date_staging->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date_staging->AdvancedSearch->SearchValue)) {
+                    $this->date_staging->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_staging->AdvancedSearch->SearchValue);
+                }
+                $this->date_staging->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_staging->AdvancedSearch->SearchValue);
+            }
+
+            // date_delivery
+            if ($this->date_delivery->UseFilter && !EmptyValue($this->date_delivery->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date_delivery->AdvancedSearch->SearchValue)) {
+                    $this->date_delivery->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_delivery->AdvancedSearch->SearchValue);
+                }
+                $this->date_delivery->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_delivery->AdvancedSearch->SearchValue);
             }
         }
 
@@ -2624,6 +2727,8 @@ class BoxPickingList extends BoxPicking
     public function loadAdvancedSearch()
     {
         $this->picking_date->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
+        $this->date_staging->AdvancedSearch->load();
         $this->date_delivery->AdvancedSearch->load();
     }
 

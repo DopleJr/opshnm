@@ -637,6 +637,7 @@ class StagingList extends Staging
         $this->picking_date->setVisibility();
         $this->date_created->setVisibility();
         $this->status->setVisibility();
+        $this->line->setVisibility();
         $this->users->setVisibility();
         $this->date_delivery->Visible = false;
         $this->date_updated->setVisibility();
@@ -984,6 +985,7 @@ class StagingList extends Staging
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->picking_date->AdvancedSearch->toJson(), ","); // Field picking_date
+        $filterList = Concat($filterList, $this->line->AdvancedSearch->toJson(), ","); // Field line
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1031,6 +1033,14 @@ class StagingList extends Staging
         $this->picking_date->AdvancedSearch->SearchValue2 = @$filter["y_picking_date"];
         $this->picking_date->AdvancedSearch->SearchOperator2 = @$filter["w_picking_date"];
         $this->picking_date->AdvancedSearch->save();
+
+        // Field line
+        $this->line->AdvancedSearch->SearchValue = @$filter["x_line"];
+        $this->line->AdvancedSearch->SearchOperator = @$filter["z_line"];
+        $this->line->AdvancedSearch->SearchCondition = @$filter["v_line"];
+        $this->line->AdvancedSearch->SearchValue2 = @$filter["y_line"];
+        $this->line->AdvancedSearch->SearchOperator2 = @$filter["w_line"];
+        $this->line->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1055,6 +1065,7 @@ class StagingList extends Staging
         $this->buildSearchSql($where, $this->picking_date, $default, true); // picking_date
         $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
         $this->buildSearchSql($where, $this->status, $default, true); // status
+        $this->buildSearchSql($where, $this->line, $default, true); // line
         $this->buildSearchSql($where, $this->users, $default, true); // users
         $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
 
@@ -1064,6 +1075,7 @@ class StagingList extends Staging
         }
         if (!$default && $this->Command == "search") {
             $this->picking_date->AdvancedSearch->save(); // picking_date
+            $this->line->AdvancedSearch->save(); // line
         }
         return $where;
     }
@@ -1153,6 +1165,7 @@ class StagingList extends Staging
         $searchFlds[] = &$this->picking_date;
         $searchFlds[] = &$this->date_created;
         $searchFlds[] = &$this->status;
+        $searchFlds[] = &$this->line;
         $searchFlds[] = &$this->users;
         $searchFlds[] = &$this->date_updated;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
@@ -1216,6 +1229,9 @@ class StagingList extends Staging
         if ($this->status->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->line->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->users->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1266,6 +1282,7 @@ class StagingList extends Staging
         $this->picking_date->AdvancedSearch->unsetSession();
         $this->date_created->AdvancedSearch->unsetSession();
         $this->status->AdvancedSearch->unsetSession();
+        $this->line->AdvancedSearch->unsetSession();
         $this->users->AdvancedSearch->unsetSession();
         $this->date_updated->AdvancedSearch->unsetSession();
     }
@@ -1291,6 +1308,7 @@ class StagingList extends Staging
         $this->picking_date->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
         $this->status->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
         $this->users->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();
     }
@@ -1322,6 +1340,7 @@ class StagingList extends Staging
             $this->updateSort($this->picking_date); // picking_date
             $this->updateSort($this->date_created); // date_created
             $this->updateSort($this->status); // status
+            $this->updateSort($this->line); // line
             $this->updateSort($this->users); // users
             $this->updateSort($this->date_updated); // date_updated
             $this->setStartRecordNumber(1); // Reset start position
@@ -1360,6 +1379,7 @@ class StagingList extends Staging
                 $this->picking_date->setSort("");
                 $this->date_created->setSort("");
                 $this->status->setSort("");
+                $this->line->setSort("");
                 $this->users->setSort("");
                 $this->date_delivery->setSort("");
                 $this->date_updated->setSort("");
@@ -1552,6 +1572,7 @@ class StagingList extends Staging
             $option->add("picking_date", $this->createColumnOption("picking_date"));
             $option->add("date_created", $this->createColumnOption("date_created"));
             $option->add("status", $this->createColumnOption("status"));
+            $option->add("line", $this->createColumnOption("line"));
             $option->add("users", $this->createColumnOption("users"));
             $option->add("date_updated", $this->createColumnOption("date_updated"));
         }
@@ -1832,6 +1853,14 @@ class StagingList extends Staging
             }
         }
 
+        // line
+        if ($this->line->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->line->AdvancedSearch->SearchValue != "" || $this->line->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // users
         if ($this->users->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1947,6 +1976,7 @@ class StagingList extends Staging
         $this->picking_date->setDbValue($row['picking_date']);
         $this->date_created->setDbValue($row['date_created']);
         $this->status->setDbValue($row['status']);
+        $this->line->setDbValue($row['line']);
         $this->users->setDbValue($row['users']);
         $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
@@ -1968,6 +1998,7 @@ class StagingList extends Staging
         $row['picking_date'] = $this->picking_date->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
@@ -2044,6 +2075,9 @@ class StagingList extends Staging
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
 
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
+
         // users
         $this->users->CellCssStyle = "white-space: nowrap;";
 
@@ -2110,6 +2144,10 @@ class StagingList extends Staging
                 $this->status->ViewValue = null;
             }
             $this->status->ViewCustomAttributes = "";
+
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
 
             // users
             $this->users->ViewValue = $this->users->CurrentValue;
@@ -2184,6 +2222,11 @@ class StagingList extends Staging
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
 
             // users
             $this->users->LinkCustomAttributes = "";
@@ -2293,6 +2336,14 @@ class StagingList extends Staging
                     $this->status->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
                 }
                 $this->status->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+            }
+
+            // line
+            if ($this->line->UseFilter && !EmptyValue($this->line->AdvancedSearch->SearchValue)) {
+                if (is_array($this->line->AdvancedSearch->SearchValue)) {
+                    $this->line->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->line->AdvancedSearch->SearchValue);
+                }
+                $this->line->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->line->AdvancedSearch->SearchValue);
             }
 
             // users
@@ -2676,6 +2727,7 @@ class StagingList extends Staging
     public function loadAdvancedSearch()
     {
         $this->picking_date->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
     }
 
     // Get export HTML tag

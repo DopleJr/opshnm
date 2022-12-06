@@ -23,6 +23,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fjob_control_copy1list.lists.id = <?= $Page->id->toClientList($Page) ?>;
     fjob_control_copy1list.lists.creation_date = <?= $Page->creation_date->toClientList($Page) ?>;
     fjob_control_copy1list.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
+    fjob_control_copy1list.lists.concept = <?= $Page->concept->toClientList($Page) ?>;
     fjob_control_copy1list.lists.area = <?= $Page->area->toClientList($Page) ?>;
     fjob_control_copy1list.lists.aisle = <?= $Page->aisle->toClientList($Page) ?>;
     fjob_control_copy1list.lists.user = <?= $Page->user->toClientList($Page) ?>;
@@ -45,6 +46,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["id", [], fields.id.isInvalid],
         ["creation_date", [], fields.creation_date.isInvalid],
         ["store_id", [], fields.store_id.isInvalid],
+        ["concept", [], fields.concept.isInvalid],
         ["area", [], fields.area.isInvalid],
         ["aisle", [], fields.aisle.isInvalid],
         ["user", [], fields.user.isInvalid],
@@ -85,6 +87,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fjob_control_copy1srch.lists.id = <?= $Page->id->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.creation_date = <?= $Page->creation_date->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
+    fjob_control_copy1srch.lists.concept = <?= $Page->concept->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.area = <?= $Page->area->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.aisle = <?= $Page->aisle->toClientList($Page) ?>;
     fjob_control_copy1srch.lists.user = <?= $Page->user->toClientList($Page) ?>;
@@ -244,6 +247,43 @@ if (!$Page->store_id->UseFilter) {
                 ajax: { id: "x_store_id", form: "fjob_control_copy1srch", limit: 100, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.store_id.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+<?php
+if (!$Page->concept->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_concept" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->concept->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_concept"
+            name="x_concept[]"
+            class="form-control ew-select<?= $Page->concept->isInvalidClass() ?>"
+            data-select2-id="fjob_control_copy1srch_x_concept"
+            data-table="job_control_copy1"
+            data-field="x_concept"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->concept->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->concept->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->concept->getPlaceHolder()) ?>"
+            <?= $Page->concept->editAttributes() ?>>
+            <?= $Page->concept->selectOptionListHtml("x_concept", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->concept->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_control_copy1srch", function() {
+            var options = {
+                name: "x_concept",
+                selectId: "fjob_control_copy1srch_x_concept",
+                ajax: { id: "x_concept", form: "fjob_control_copy1srch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_control_copy1.fields.concept.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -619,6 +659,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->store_id->Visible) { // store_id ?>
         <th data-name="store_id" class="<?= $Page->store_id->headerCellClass() ?>"><div id="elh_job_control_copy1_store_id" class="job_control_copy1_store_id"><?= $Page->renderFieldHeader($Page->store_id) ?></div></th>
 <?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+        <th data-name="concept" class="<?= $Page->concept->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_concept" class="job_control_copy1_concept"><?= $Page->renderFieldHeader($Page->concept) ?></div></th>
+<?php } ?>
 <?php if ($Page->area->Visible) { // area ?>
         <th data-name="area" class="<?= $Page->area->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_job_control_copy1_area" class="job_control_copy1_area"><?= $Page->renderFieldHeader($Page->area) ?></div></th>
 <?php } ?>
@@ -739,6 +782,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->concept->Visible) { // concept ?>
+        <td data-name="concept"<?= $Page->concept->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_job_control_copy1_concept" class="el_job_control_copy1_concept">
+<span<?= $Page->concept->viewAttributes() ?>>
+<?= $Page->concept->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->area->Visible) { // area ?>
         <td data-name="area"<?= $Page->area->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_job_control_copy1_area" class="el_job_control_copy1_area">
@@ -848,7 +899,7 @@ loadjs.ready("load", function () {
         tableRefresh = setInterval(function () {
           $("table.ew-table > tbody").load(
             location.href + " table.ew-table > tbody tr");
-        }, 30000); // Change this value as appropriate to set the refresh period ... 1000 = 1 second
+        }, 20000); // Change this value as appropriate to set the refresh period ... 1000 = 1 second
       }
       refreshTable();
     });

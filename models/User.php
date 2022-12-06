@@ -75,6 +75,7 @@ class User extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -100,7 +101,14 @@ class User extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'user', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'user', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'user', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -126,7 +134,14 @@ class User extends DbTable
         $this->_username->InputTextType = "text";
         $this->_username->Required = true; // Required field
         $this->_username->UseFilter = true; // Table header filter
-        $this->_username->Lookup = new Lookup('username', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->_username->Lookup = new Lookup('username', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->_username->Lookup = new Lookup('username', 'user', true, 'username', ["username","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['username'] = &$this->_username;
 
         // password
@@ -154,7 +169,14 @@ class User extends DbTable
         }
         $this->_password->Required = true; // Required field
         $this->_password->UseFilter = true; // Table header filter
-        $this->_password->Lookup = new Lookup('password', 'user', true, 'password', ["password","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->_password->Lookup = new Lookup('password', 'user', true, 'password', ["password","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->_password->Lookup = new Lookup('password', 'user', true, 'password', ["password","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['password'] = &$this->_password;
 
         // email
@@ -180,7 +202,14 @@ class User extends DbTable
         $this->_email->Nullable = false; // NOT NULL field
         $this->_email->Required = true; // Required field
         $this->_email->UseFilter = true; // Table header filter
-        $this->_email->Lookup = new Lookup('email', 'user', true, 'email', ["email","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->_email->Lookup = new Lookup('email', 'user', true, 'email', ["email","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->_email->Lookup = new Lookup('email', 'user', true, 'email', ["email","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['email'] = &$this->_email;
 
         // ip_loggedin
@@ -204,7 +233,14 @@ class User extends DbTable
         );
         $this->ip_loggedin->InputTextType = "text";
         $this->ip_loggedin->UseFilter = true; // Table header filter
-        $this->ip_loggedin->Lookup = new Lookup('ip_loggedin', 'user', true, 'ip_loggedin', ["ip_loggedin","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->ip_loggedin->Lookup = new Lookup('ip_loggedin', 'user', true, 'ip_loggedin', ["ip_loggedin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->ip_loggedin->Lookup = new Lookup('ip_loggedin', 'user', true, 'ip_loggedin', ["ip_loggedin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['ip_loggedin'] = &$this->ip_loggedin;
 
         // role
@@ -230,7 +266,14 @@ class User extends DbTable
         $this->role->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->role->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->role->UseFilter = true; // Table header filter
-        $this->role->Lookup = new Lookup('role', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], ["x__userLevel"], [], [], ["userlevelid"], ["x__userLevel"], '', '', "`userlevelname`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->role->Lookup = new Lookup('role', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], ["x__userLevel"], [], [], ["userlevelid"], ["x__userLevel"], '', '', "`userlevelname`");
+                break;
+            default:
+                $this->role->Lookup = new Lookup('role', 'userlevels', true, 'userlevelname', ["userlevelname","","",""], [], ["x__userLevel"], [], [], ["userlevelid"], ["x__userLevel"], '', '', "`userlevelname`");
+                break;
+        }
         $this->Fields['role'] = &$this->role;
 
         // userLevel
@@ -256,7 +299,14 @@ class User extends DbTable
         $this->_userLevel->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->_userLevel->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->_userLevel->UseFilter = true; // Table header filter
-        $this->_userLevel->Lookup = new Lookup('userLevel', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], ["x_role"], [], ["userlevelname"], ["x_userlevelname"], ["userlevelname"], ["x_role"], '', '', "`userlevelid`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->_userLevel->Lookup = new Lookup('userLevel', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], ["x_role"], [], ["userlevelname"], ["x_userlevelname"], ["userlevelname"], ["x_role"], '', '', "`userlevelid`");
+                break;
+            default:
+                $this->_userLevel->Lookup = new Lookup('userLevel', 'userlevels', true, 'userlevelid', ["userlevelid","","",""], ["x_role"], [], ["userlevelname"], ["x_userlevelname"], ["userlevelname"], ["x_role"], '', '', "`userlevelid`");
+                break;
+        }
         $this->_userLevel->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['userLevel'] = &$this->_userLevel;
 
@@ -281,7 +331,14 @@ class User extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'user', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'user', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'user', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -306,7 +363,14 @@ class User extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'user', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'user', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'user', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", DateFormat(1), $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 

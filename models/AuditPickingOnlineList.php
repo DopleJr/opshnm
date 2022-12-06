@@ -454,6 +454,12 @@ class AuditPickingOnlineList extends AuditPickingOnline
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
             $this->id->Visible = false;
         }
+        if ($this->isAddOrEdit()) {
+            $this->date_update->Visible = false;
+        }
+        if ($this->isAddOrEdit()) {
+            $this->time_update->Visible = false;
+        }
     }
 
     // Lookup data
@@ -617,15 +623,15 @@ class AuditPickingOnlineList extends AuditPickingOnline
         // Setup export options
         $this->setupExportOptions();
         $this->id->setVisibility();
+        $this->scan->Visible = false;
         $this->box_code->setVisibility();
         $this->store_id->setVisibility();
         $this->store_name->setVisibility();
-        $this->scan->Visible = false;
-        $this->article->setVisibility();
-        $this->picked_qty->setVisibility();
+        $this->picked_qty->Visible = false;
         $this->scan_qty->Visible = false;
         $this->checker->setVisibility();
         $this->status->setVisibility();
+        $this->article->setVisibility();
         $this->date_update->setVisibility();
         $this->time_update->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -652,8 +658,6 @@ class AuditPickingOnlineList extends AuditPickingOnline
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->box_code);
-        $this->setupLookupOptions($this->store_id);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -705,14 +709,23 @@ class AuditPickingOnlineList extends AuditPickingOnline
 
             // Get default search criteria
             AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+            AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
 
             // Get basic search values
             $this->loadBasicSearchValues();
+
+            // Get and validate search values for advanced search
+            if (EmptyValue($this->UserAction)) { // Skip if user action
+                $this->loadSearchValues();
+            }
 
             // Process filter list
             if ($this->processFilterList()) {
                 $this->terminate();
                 return;
+            }
+            if (!$this->validateSearch()) {
+                // Nothing to do
             }
 
             // Restore search parms from Session if not searching / reset / export
@@ -729,6 +742,11 @@ class AuditPickingOnlineList extends AuditPickingOnline
             // Get basic search criteria
             if (!$this->hasInvalidFields()) {
                 $srchBasic = $this->basicSearchWhere();
+            }
+
+            // Get search criteria for advanced search
+            if (!$this->hasInvalidFields()) {
+                $srchAdvanced = $this->advancedSearchWhere();
             }
         }
 
@@ -747,6 +765,16 @@ class AuditPickingOnlineList extends AuditPickingOnline
             if ($this->BasicSearch->Keyword != "") {
                 $srchBasic = $this->basicSearchWhere();
             }
+
+            // Load advanced search from default
+            if ($this->loadAdvancedSearchDefault()) {
+                $srchAdvanced = $this->advancedSearchWhere();
+            }
+        }
+
+        // Restore search settings from Session
+        if (!$this->hasInvalidFields()) {
+            $this->loadAdvancedSearch();
         }
 
         // Build search criteria
@@ -933,6 +961,7 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->box_code->AdvancedSearch->toJson(), ","); // Field box_code
+        $filterList = Concat($filterList, $this->picked_qty->AdvancedSearch->toJson(), ","); // Field picked_qty
         $filterList = Concat($filterList, $this->scan_qty->AdvancedSearch->toJson(), ","); // Field scan_qty
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->time_update->AdvancedSearch->toJson(), ","); // Field time_update
@@ -984,6 +1013,14 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $this->box_code->AdvancedSearch->SearchOperator2 = @$filter["w_box_code"];
         $this->box_code->AdvancedSearch->save();
 
+        // Field picked_qty
+        $this->picked_qty->AdvancedSearch->SearchValue = @$filter["x_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchOperator = @$filter["z_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchCondition = @$filter["v_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchValue2 = @$filter["y_picked_qty"];
+        $this->picked_qty->AdvancedSearch->SearchOperator2 = @$filter["w_picked_qty"];
+        $this->picked_qty->AdvancedSearch->save();
+
         // Field scan_qty
         $this->scan_qty->AdvancedSearch->SearchValue = @$filter["x_scan_qty"];
         $this->scan_qty->AdvancedSearch->SearchOperator = @$filter["z_scan_qty"];
@@ -1011,6 +1048,104 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
 
+    // Advanced search WHERE clause based on QueryString
+    protected function advancedSearchWhere($default = false)
+    {
+        global $Security;
+        $where = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $this->buildSearchSql($where, $this->id, $default, true); // id
+        $this->buildSearchSql($where, $this->scan, $default, true); // scan
+        $this->buildSearchSql($where, $this->box_code, $default, true); // box_code
+        $this->buildSearchSql($where, $this->store_id, $default, true); // store_id
+        $this->buildSearchSql($where, $this->store_name, $default, true); // store_name
+        $this->buildSearchSql($where, $this->picked_qty, $default, true); // picked_qty
+        $this->buildSearchSql($where, $this->scan_qty, $default, true); // scan_qty
+        $this->buildSearchSql($where, $this->checker, $default, true); // checker
+        $this->buildSearchSql($where, $this->status, $default, true); // status
+        $this->buildSearchSql($where, $this->article, $default, true); // article
+        $this->buildSearchSql($where, $this->date_update, $default, true); // date_update
+        $this->buildSearchSql($where, $this->time_update, $default, true); // time_update
+
+        // Set up search parm
+        if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
+            $this->Command = "search";
+        }
+        if (!$default && $this->Command == "search") {
+            $this->box_code->AdvancedSearch->save(); // box_code
+            $this->picked_qty->AdvancedSearch->save(); // picked_qty
+            $this->scan_qty->AdvancedSearch->save(); // scan_qty
+            $this->status->AdvancedSearch->save(); // status
+            $this->time_update->AdvancedSearch->save(); // time_update
+        }
+        return $where;
+    }
+
+    // Build search SQL
+    protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
+    {
+        $fldParm = $fld->Param;
+        $fldVal = $default ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+        $fldOpr = $default ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+        $fldCond = $default ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+        $fldVal2 = $default ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+        $fldOpr2 = $default ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+        $wrk = "";
+        if (is_array($fldVal)) {
+            $fldVal = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal);
+        }
+        if (is_array($fldVal2)) {
+            $fldVal2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal2);
+        }
+        $fldOpr = strtoupper(trim($fldOpr ?? ""));
+        if ($fldOpr == "") {
+            $fldOpr = "=";
+        }
+        $fldOpr2 = strtoupper(trim($fldOpr2 ?? ""));
+        if ($fldOpr2 == "") {
+            $fldOpr2 = "=";
+        }
+        if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 && !$fld->UseFilter || !IsMultiSearchOperator($fldOpr)) {
+            $multiValue = false;
+        }
+        if ($multiValue) {
+            $wrk = $fldVal != "" ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+            $wrk2 = $fldVal2 != "" ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+            AddFilter($wrk, $wrk2, $fldCond);
+        } else {
+            $fldVal = $this->convertSearchValue($fld, $fldVal);
+            $fldVal2 = $this->convertSearchValue($fld, $fldVal2);
+            $wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+        }
+        if ($this->SearchOption == "AUTO" && in_array($this->BasicSearch->getType(), ["AND", "OR"])) {
+            $cond = $this->BasicSearch->getType();
+        } else {
+            $cond = SameText($this->SearchOption, "OR") ? "OR" : "AND";
+        }
+        AddFilter($where, $wrk, $cond);
+    }
+
+    // Convert search value
+    protected function convertSearchValue(&$fld, $fldVal)
+    {
+        if ($fldVal == Config("NULL_VALUE") || $fldVal == Config("NOT_NULL_VALUE")) {
+            return $fldVal;
+        }
+        $value = $fldVal;
+        if ($fld->isBoolean()) {
+            if ($fldVal != "") {
+                $value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
+            }
+        } elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
+            if ($fldVal != "") {
+                $value = UnFormatDateTime($fldVal, $fld->formatPattern());
+            }
+        }
+        return $value;
+    }
+
     // Return basic search WHERE clause based on search keyword and type
     protected function basicSearchWhere($default = false)
     {
@@ -1025,10 +1160,9 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $searchFlds[] = &$this->box_code;
         $searchFlds[] = &$this->store_id;
         $searchFlds[] = &$this->store_name;
-        $searchFlds[] = &$this->article;
-        $searchFlds[] = &$this->scan_qty;
         $searchFlds[] = &$this->checker;
         $searchFlds[] = &$this->status;
+        $searchFlds[] = &$this->article;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1054,6 +1188,42 @@ class AuditPickingOnlineList extends AuditPickingOnline
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
+        if ($this->id->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->scan->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->box_code->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->store_id->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->store_name->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->picked_qty->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->scan_qty->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->checker->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->status->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->article->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->date_update->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->time_update->AdvancedSearch->issetSession()) {
+            return true;
+        }
         return false;
     }
 
@@ -1066,6 +1236,9 @@ class AuditPickingOnlineList extends AuditPickingOnline
 
         // Clear basic search parameters
         $this->resetBasicSearchParms();
+
+        // Clear advanced search parameters
+        $this->resetAdvancedSearchParms();
     }
 
     // Load advanced search default values
@@ -1080,6 +1253,23 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $this->BasicSearch->unsetSession();
     }
 
+    // Clear all advanced search parameters
+    protected function resetAdvancedSearchParms()
+    {
+        $this->id->AdvancedSearch->unsetSession();
+        $this->scan->AdvancedSearch->unsetSession();
+        $this->box_code->AdvancedSearch->unsetSession();
+        $this->store_id->AdvancedSearch->unsetSession();
+        $this->store_name->AdvancedSearch->unsetSession();
+        $this->picked_qty->AdvancedSearch->unsetSession();
+        $this->scan_qty->AdvancedSearch->unsetSession();
+        $this->checker->AdvancedSearch->unsetSession();
+        $this->status->AdvancedSearch->unsetSession();
+        $this->article->AdvancedSearch->unsetSession();
+        $this->date_update->AdvancedSearch->unsetSession();
+        $this->time_update->AdvancedSearch->unsetSession();
+    }
+
     // Restore all search parameters
     protected function restoreSearchParms()
     {
@@ -1087,6 +1277,20 @@ class AuditPickingOnlineList extends AuditPickingOnline
 
         // Restore basic search values
         $this->BasicSearch->load();
+
+        // Restore advanced search values
+        $this->id->AdvancedSearch->load();
+        $this->scan->AdvancedSearch->load();
+        $this->box_code->AdvancedSearch->load();
+        $this->store_id->AdvancedSearch->load();
+        $this->store_name->AdvancedSearch->load();
+        $this->picked_qty->AdvancedSearch->load();
+        $this->scan_qty->AdvancedSearch->load();
+        $this->checker->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
+        $this->article->AdvancedSearch->load();
+        $this->date_update->AdvancedSearch->load();
+        $this->time_update->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1094,7 +1298,7 @@ class AuditPickingOnlineList extends AuditPickingOnline
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->box_code->Expression . " ASC" . ", " . $this->store_id->Expression . " ASC" . ", " . $this->date_update->Expression . " ASC" . ", " . $this->checker->Expression . " ASC"; // Set up default sort
+            $defaultSort = $this->date_update->Expression . " DESC" . ", " . $this->time_update->Expression . " DESC" . ", " . $this->checker->Expression . " ASC" . ", " . $this->box_code->Expression . " ASC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1108,10 +1312,9 @@ class AuditPickingOnlineList extends AuditPickingOnline
             $this->updateSort($this->box_code); // box_code
             $this->updateSort($this->store_id); // store_id
             $this->updateSort($this->store_name); // store_name
-            $this->updateSort($this->article); // article
-            $this->updateSort($this->picked_qty); // picked_qty
             $this->updateSort($this->checker); // checker
             $this->updateSort($this->status); // status
+            $this->updateSort($this->article); // article
             $this->updateSort($this->date_update); // date_update
             $this->updateSort($this->time_update); // time_update
             $this->setStartRecordNumber(1); // Reset start position
@@ -1139,15 +1342,15 @@ class AuditPickingOnlineList extends AuditPickingOnline
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
+                $this->scan->setSort("");
                 $this->box_code->setSort("");
                 $this->store_id->setSort("");
                 $this->store_name->setSort("");
-                $this->scan->setSort("");
-                $this->article->setSort("");
                 $this->picked_qty->setSort("");
                 $this->scan_qty->setSort("");
                 $this->checker->setSort("");
                 $this->status->setSort("");
+                $this->article->setSort("");
                 $this->date_update->setSort("");
                 $this->time_update->setSort("");
             }
@@ -1191,7 +1394,7 @@ class AuditPickingOnlineList extends AuditPickingOnline
 
         // "checkbox"
         $item = &$this->ListOptions->add("checkbox");
-        $item->Visible = false;
+        $item->Visible = $Security->canDelete();
         $item->OnLeft = true;
         $item->Header = "<div class=\"form-check\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"form-check-input\" data-ew-action=\"select-all-keys\"></div>";
         if ($item->OnLeft) {
@@ -1316,6 +1519,11 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $item->Visible = $this->AddUrl != "" && $Security->canAdd();
         $option = $options["action"];
 
+        // Add multi delete
+        $item = &$option->add("multidelete");
+        $item->Body = "<button type=\"button\" class=\"ew-action ew-multi-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteSelectedLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteSelectedLink")) . "\" form=\"faudit_picking_onlinelist\" data-ew-action=\"submit\" data-url=\"" . GetUrl($this->MultiDeleteUrl) . "\"data-data='{\"action\":\"show\"}'>" . $Language->phrase("DeleteSelectedLink") . "</button>";
+        $item->Visible = $Security->canDelete();
+
         // Show column list for column visibility
         if ($this->UseColumnVisibility) {
             $option = $this->OtherOptions["column"];
@@ -1326,10 +1534,9 @@ class AuditPickingOnlineList extends AuditPickingOnline
             $option->add("box_code", $this->createColumnOption("box_code"));
             $option->add("store_id", $this->createColumnOption("store_id"));
             $option->add("store_name", $this->createColumnOption("store_name"));
-            $option->add("article", $this->createColumnOption("article"));
-            $option->add("picked_qty", $this->createColumnOption("picked_qty"));
             $option->add("checker", $this->createColumnOption("checker"));
             $option->add("status", $this->createColumnOption("status"));
+            $option->add("article", $this->createColumnOption("article"));
             $option->add("date_update", $this->createColumnOption("date_update"));
             $option->add("time_update", $this->createColumnOption("time_update"));
         }
@@ -1508,6 +1715,110 @@ class AuditPickingOnlineList extends AuditPickingOnline
         $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
+    // Load search values for validation
+    protected function loadSearchValues()
+    {
+        // Load search values
+        $hasValue = false;
+
+        // id
+        if ($this->id->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->id->AdvancedSearch->SearchValue != "" || $this->id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // scan
+        if ($this->scan->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->scan->AdvancedSearch->SearchValue != "" || $this->scan->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // box_code
+        if ($this->box_code->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->box_code->AdvancedSearch->SearchValue != "" || $this->box_code->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // store_id
+        if ($this->store_id->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->store_id->AdvancedSearch->SearchValue != "" || $this->store_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // store_name
+        if ($this->store_name->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->store_name->AdvancedSearch->SearchValue != "" || $this->store_name->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // picked_qty
+        if ($this->picked_qty->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->picked_qty->AdvancedSearch->SearchValue != "" || $this->picked_qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // scan_qty
+        if ($this->scan_qty->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->scan_qty->AdvancedSearch->SearchValue != "" || $this->scan_qty->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // checker
+        if ($this->checker->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->checker->AdvancedSearch->SearchValue != "" || $this->checker->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // status
+        if ($this->status->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->status->AdvancedSearch->SearchValue != "" || $this->status->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // article
+        if ($this->article->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->article->AdvancedSearch->SearchValue != "" || $this->article->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // date_update
+        if ($this->date_update->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->date_update->AdvancedSearch->SearchValue != "" || $this->date_update->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // time_update
+        if ($this->time_update->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->time_update->AdvancedSearch->SearchValue != "" || $this->time_update->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+        return $hasValue;
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1594,15 +1905,15 @@ class AuditPickingOnlineList extends AuditPickingOnline
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->scan->setDbValue($row['scan']);
         $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
-        $this->scan->setDbValue($row['scan']);
-        $this->article->setDbValue($row['article']);
         $this->picked_qty->setDbValue($row['picked_qty']);
         $this->scan_qty->setDbValue($row['scan_qty']);
         $this->checker->setDbValue($row['checker']);
         $this->status->setDbValue($row['status']);
+        $this->article->setDbValue($row['article']);
         $this->date_update->setDbValue($row['date_update']);
         $this->time_update->setDbValue($row['time_update']);
     }
@@ -1612,15 +1923,15 @@ class AuditPickingOnlineList extends AuditPickingOnline
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['scan'] = $this->scan->DefaultValue;
         $row['box_code'] = $this->box_code->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
-        $row['scan'] = $this->scan->DefaultValue;
-        $row['article'] = $this->article->DefaultValue;
         $row['picked_qty'] = $this->picked_qty->DefaultValue;
         $row['scan_qty'] = $this->scan_qty->DefaultValue;
         $row['checker'] = $this->checker->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['article'] = $this->article->DefaultValue;
         $row['date_update'] = $this->date_update->DefaultValue;
         $row['time_update'] = $this->time_update->DefaultValue;
         return $row;
@@ -1663,6 +1974,9 @@ class AuditPickingOnlineList extends AuditPickingOnline
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
 
+        // scan
+        $this->scan->CellCssStyle = "white-space: nowrap;";
+
         // box_code
         $this->box_code->CellCssStyle = "white-space: nowrap;";
 
@@ -1672,22 +1986,20 @@ class AuditPickingOnlineList extends AuditPickingOnline
         // store_name
         $this->store_name->CellCssStyle = "white-space: nowrap;";
 
-        // scan
-        $this->scan->CellCssStyle = "white-space: nowrap;";
-
-        // article
-        $this->article->CellCssStyle = "white-space: nowrap;";
-
         // picked_qty
         $this->picked_qty->CellCssStyle = "white-space: nowrap;";
 
         // scan_qty
+        $this->scan_qty->CellCssStyle = "white-space: nowrap;";
 
         // checker
         $this->checker->CellCssStyle = "white-space: nowrap;";
 
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
+
+        // article
+        $this->article->CellCssStyle = "white-space: nowrap;";
 
         // date_update
         $this->date_update->CellCssStyle = "white-space: nowrap;";
@@ -1697,9 +2009,6 @@ class AuditPickingOnlineList extends AuditPickingOnline
         // Accumulate aggregate value
         if ($this->RowType != ROWTYPE_AGGREGATEINIT && $this->RowType != ROWTYPE_AGGREGATE && $this->RowType != ROWTYPE_PREVIEW_FIELD) {
             $this->article->Count++; // Increment count
-            if (is_numeric($this->picked_qty->CurrentValue)) {
-                $this->picked_qty->Total += $this->picked_qty->CurrentValue; // Accumulate total
-            }
         }
 
         // View row
@@ -1709,65 +2018,16 @@ class AuditPickingOnlineList extends AuditPickingOnline
             $this->id->ViewCustomAttributes = "";
 
             // box_code
-            $curVal = strval($this->box_code->CurrentValue);
-            if ($curVal != "") {
-                $this->box_code->ViewValue = $this->box_code->lookupCacheOption($curVal);
-                if ($this->box_code->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`box_code`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->box_code->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->box_code->Lookup->renderViewRow($rswrk[0]);
-                        $this->box_code->ViewValue = $this->box_code->displayValue($arwrk);
-                    } else {
-                        $this->box_code->ViewValue = $this->box_code->CurrentValue;
-                    }
-                }
-            } else {
-                $this->box_code->ViewValue = null;
-            }
+            $this->box_code->ViewValue = $this->box_code->CurrentValue;
             $this->box_code->ViewCustomAttributes = "";
 
             // store_id
-            $curVal = strval($this->store_id->CurrentValue);
-            if ($curVal != "") {
-                $this->store_id->ViewValue = $this->store_id->lookupCacheOption($curVal);
-                if ($this->store_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`store_id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->store_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->store_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->store_id->ViewValue = $this->store_id->displayValue($arwrk);
-                    } else {
-                        $this->store_id->ViewValue = $this->store_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->store_id->ViewValue = null;
-            }
+            $this->store_id->ViewValue = $this->store_id->CurrentValue;
             $this->store_id->ViewCustomAttributes = "";
 
             // store_name
             $this->store_name->ViewValue = $this->store_name->CurrentValue;
             $this->store_name->ViewCustomAttributes = "";
-
-            // article
-            $this->article->ViewValue = $this->article->CurrentValue;
-            $this->article->ViewCustomAttributes = "";
-
-            // picked_qty
-            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
-            $this->picked_qty->ViewCustomAttributes = "";
 
             // checker
             $this->checker->ViewValue = $this->checker->CurrentValue;
@@ -1776,6 +2036,10 @@ class AuditPickingOnlineList extends AuditPickingOnline
             // status
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
+
+            // article
+            $this->article->ViewValue = $this->article->CurrentValue;
+            $this->article->ViewCustomAttributes = "";
 
             // date_update
             $this->date_update->ViewValue = $this->date_update->CurrentValue;
@@ -1807,16 +2071,6 @@ class AuditPickingOnlineList extends AuditPickingOnline
             $this->store_name->HrefValue = "";
             $this->store_name->TooltipValue = "";
 
-            // article
-            $this->article->LinkCustomAttributes = "";
-            $this->article->HrefValue = "";
-            $this->article->TooltipValue = "";
-
-            // picked_qty
-            $this->picked_qty->LinkCustomAttributes = "";
-            $this->picked_qty->HrefValue = "";
-            $this->picked_qty->TooltipValue = "";
-
             // checker
             $this->checker->LinkCustomAttributes = "";
             $this->checker->HrefValue = "";
@@ -1827,6 +2081,11 @@ class AuditPickingOnlineList extends AuditPickingOnline
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
 
+            // article
+            $this->article->LinkCustomAttributes = "";
+            $this->article->HrefValue = "";
+            $this->article->TooltipValue = "";
+
             // date_update
             $this->date_update->LinkCustomAttributes = "";
             $this->date_update->HrefValue = "";
@@ -1836,25 +2095,121 @@ class AuditPickingOnlineList extends AuditPickingOnline
             $this->time_update->LinkCustomAttributes = "";
             $this->time_update->HrefValue = "";
             $this->time_update->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_SEARCH) {
+            // id
+            if ($this->id->UseFilter && !EmptyValue($this->id->AdvancedSearch->SearchValue)) {
+                if (is_array($this->id->AdvancedSearch->SearchValue)) {
+                    $this->id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
+                }
+                $this->id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->id->AdvancedSearch->SearchValue);
+            }
+
+            // box_code
+            if ($this->box_code->UseFilter && !EmptyValue($this->box_code->AdvancedSearch->SearchValue)) {
+                if (is_array($this->box_code->AdvancedSearch->SearchValue)) {
+                    $this->box_code->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_code->AdvancedSearch->SearchValue);
+                }
+                $this->box_code->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->box_code->AdvancedSearch->SearchValue);
+            }
+
+            // store_id
+            if ($this->store_id->UseFilter && !EmptyValue($this->store_id->AdvancedSearch->SearchValue)) {
+                if (is_array($this->store_id->AdvancedSearch->SearchValue)) {
+                    $this->store_id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
+                }
+                $this->store_id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
+            }
+
+            // store_name
+            if ($this->store_name->UseFilter && !EmptyValue($this->store_name->AdvancedSearch->SearchValue)) {
+                if (is_array($this->store_name->AdvancedSearch->SearchValue)) {
+                    $this->store_name->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_name->AdvancedSearch->SearchValue);
+                }
+                $this->store_name->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_name->AdvancedSearch->SearchValue);
+            }
+
+            // checker
+            if ($this->checker->UseFilter && !EmptyValue($this->checker->AdvancedSearch->SearchValue)) {
+                if (is_array($this->checker->AdvancedSearch->SearchValue)) {
+                    $this->checker->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->checker->AdvancedSearch->SearchValue);
+                }
+                $this->checker->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->checker->AdvancedSearch->SearchValue);
+            }
+
+            // status
+            if ($this->status->UseFilter && !EmptyValue($this->status->AdvancedSearch->SearchValue)) {
+                if (is_array($this->status->AdvancedSearch->SearchValue)) {
+                    $this->status->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+                }
+                $this->status->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
+            }
+
+            // article
+            if ($this->article->UseFilter && !EmptyValue($this->article->AdvancedSearch->SearchValue)) {
+                if (is_array($this->article->AdvancedSearch->SearchValue)) {
+                    $this->article->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->article->AdvancedSearch->SearchValue);
+                }
+                $this->article->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->article->AdvancedSearch->SearchValue);
+            }
+
+            // date_update
+            if ($this->date_update->UseFilter && !EmptyValue($this->date_update->AdvancedSearch->SearchValue)) {
+                if (is_array($this->date_update->AdvancedSearch->SearchValue)) {
+                    $this->date_update->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_update->AdvancedSearch->SearchValue);
+                }
+                $this->date_update->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->date_update->AdvancedSearch->SearchValue);
+            }
+
+            // time_update
+            if ($this->time_update->UseFilter && !EmptyValue($this->time_update->AdvancedSearch->SearchValue)) {
+                if (is_array($this->time_update->AdvancedSearch->SearchValue)) {
+                    $this->time_update->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->time_update->AdvancedSearch->SearchValue);
+                }
+                $this->time_update->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->time_update->AdvancedSearch->SearchValue);
+            }
         } elseif ($this->RowType == ROWTYPE_AGGREGATEINIT) { // Initialize aggregate row
                 $this->article->Count = 0; // Initialize count
-                    $this->picked_qty->Total = 0; // Initialize total
         } elseif ($this->RowType == ROWTYPE_AGGREGATE) { // Aggregate row
             $this->article->CurrentValue = $this->article->Count;
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
             $this->article->HrefValue = ""; // Clear href value
-            $this->picked_qty->CurrentValue = $this->picked_qty->Total;
-            $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
-            $this->picked_qty->ViewCustomAttributes = "";
-            $this->picked_qty->HrefValue = ""; // Clear href value
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
+    }
+
+    // Validate search
+    protected function validateSearch()
+    {
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+
+        // Return validate result
+        $validateSearch = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateSearch = $validateSearch && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateSearch;
+    }
+
+    // Load advanced search
+    public function loadAdvancedSearch()
+    {
+        $this->box_code->AdvancedSearch->load();
+        $this->picked_qty->AdvancedSearch->load();
+        $this->scan_qty->AdvancedSearch->load();
+        $this->status->AdvancedSearch->load();
+        $this->time_update->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -2125,10 +2480,6 @@ class AuditPickingOnlineList extends AuditPickingOnline
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_box_code":
-                    break;
-                case "x_store_id":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

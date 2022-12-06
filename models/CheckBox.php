@@ -34,6 +34,7 @@ class CheckBox extends DbTable
     public $box_code;
     public $store_id;
     public $store_name;
+    public $concept;
     public $article;
     public $size_desc;
     public $color_code;
@@ -101,7 +102,14 @@ class CheckBox extends DbTable
         );
         $this->box_code->InputTextType = "text";
         $this->box_code->UseFilter = true; // Table header filter
-        $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_code->Lookup = new Lookup('box_code', 'check_box', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_code'] = &$this->box_code;
 
         // store_id
@@ -125,7 +133,14 @@ class CheckBox extends DbTable
         );
         $this->store_id->InputTextType = "text";
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'check_box', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_id->Lookup = new Lookup('store_id', 'check_box', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_id->Lookup = new Lookup('store_id', 'check_box', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_id'] = &$this->store_id;
 
         // store_name
@@ -149,8 +164,46 @@ class CheckBox extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'check_box', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'check_box', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'check_box', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
+
+        // concept
+        $this->concept = new DbField(
+            'check_box',
+            'check_box',
+            'x_concept',
+            'concept',
+            '`concept`',
+            '`concept`',
+            200,
+            255,
+            -1,
+            false,
+            '`concept`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->concept->InputTextType = "text";
+        $this->concept->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'check_box', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'check_box', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['concept'] = &$this->concept;
 
         // article
         $this->article = new DbField(
@@ -173,7 +226,14 @@ class CheckBox extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'check_box', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // size_desc
@@ -197,7 +257,14 @@ class CheckBox extends DbTable
         );
         $this->size_desc->InputTextType = "text";
         $this->size_desc->UseFilter = true; // Table header filter
-        $this->size_desc->Lookup = new Lookup('size_desc', 'check_box', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_desc->Lookup = new Lookup('size_desc', 'check_box', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->size_desc->Lookup = new Lookup('size_desc', 'check_box', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['size_desc'] = &$this->size_desc;
 
         // color_code
@@ -221,7 +288,14 @@ class CheckBox extends DbTable
         );
         $this->color_code->InputTextType = "text";
         $this->color_code->UseFilter = true; // Table header filter
-        $this->color_code->Lookup = new Lookup('color_code', 'check_box', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_code->Lookup = new Lookup('color_code', 'check_box', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_code->Lookup = new Lookup('color_code', 'check_box', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_code'] = &$this->color_code;
 
         // picked_qty
@@ -245,7 +319,14 @@ class CheckBox extends DbTable
         );
         $this->picked_qty->InputTextType = "text";
         $this->picked_qty->UseFilter = true; // Table header filter
-        $this->picked_qty->Lookup = new Lookup('picked_qty', 'check_box', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'check_box', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'check_box', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picked_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['picked_qty'] = &$this->picked_qty;
 
@@ -270,7 +351,14 @@ class CheckBox extends DbTable
         );
         $this->variance_qty->InputTextType = "text";
         $this->variance_qty->UseFilter = true; // Table header filter
-        $this->variance_qty->Lookup = new Lookup('variance_qty', 'check_box', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->variance_qty->Lookup = new Lookup('variance_qty', 'check_box', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->variance_qty->Lookup = new Lookup('variance_qty', 'check_box', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->variance_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['variance_qty'] = &$this->variance_qty;
 
@@ -296,7 +384,14 @@ class CheckBox extends DbTable
         $this->confirmation_date->InputTextType = "text";
         $this->confirmation_date->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->confirmation_date->UseFilter = true; // Table header filter
-        $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'check_box', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'check_box', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'check_box', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->confirmation_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
         $this->Fields['confirmation_date'] = &$this->confirmation_date;
 
@@ -321,7 +416,14 @@ class CheckBox extends DbTable
         );
         $this->confirmation_time->InputTextType = "text";
         $this->confirmation_time->UseFilter = true; // Table header filter
-        $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'check_box', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'check_box', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'check_box', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->confirmation_time->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
         $this->Fields['confirmation_time'] = &$this->confirmation_time;
 
@@ -346,7 +448,14 @@ class CheckBox extends DbTable
         );
         $this->picker->InputTextType = "text";
         $this->picker->UseFilter = true; // Table header filter
-        $this->picker->Lookup = new Lookup('picker', 'check_box', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picker->Lookup = new Lookup('picker', 'check_box', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picker->Lookup = new Lookup('picker', 'check_box', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['picker'] = &$this->picker;
 
         // Add Doctrine Cache
@@ -776,6 +885,7 @@ class CheckBox extends DbTable
         $this->box_code->DbValue = $row['box_code'];
         $this->store_id->DbValue = $row['store_id'];
         $this->store_name->DbValue = $row['store_name'];
+        $this->concept->DbValue = $row['concept'];
         $this->article->DbValue = $row['article'];
         $this->size_desc->DbValue = $row['size_desc'];
         $this->color_code->DbValue = $row['color_code'];
@@ -1059,6 +1169,7 @@ class CheckBox extends DbTable
         $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
+        $this->concept->setDbValue($row['concept']);
         $this->article->setDbValue($row['article']);
         $this->size_desc->setDbValue($row['size_desc']);
         $this->color_code->setDbValue($row['color_code']);
@@ -1087,6 +1198,9 @@ class CheckBox extends DbTable
 
         // store_name
         $this->store_name->CellCssStyle = "white-space: nowrap;";
+
+        // concept
+        $this->concept->CellCssStyle = "white-space: nowrap;";
 
         // article
         $this->article->CellCssStyle = "white-space: nowrap;";
@@ -1123,6 +1237,10 @@ class CheckBox extends DbTable
         // store_name
         $this->store_name->ViewValue = $this->store_name->CurrentValue;
         $this->store_name->ViewCustomAttributes = "";
+
+        // concept
+        $this->concept->ViewValue = $this->concept->CurrentValue;
+        $this->concept->ViewCustomAttributes = "";
 
         // article
         $this->article->ViewValue = $this->article->CurrentValue;
@@ -1174,6 +1292,11 @@ class CheckBox extends DbTable
         $this->store_name->LinkCustomAttributes = "";
         $this->store_name->HrefValue = "";
         $this->store_name->TooltipValue = "";
+
+        // concept
+        $this->concept->LinkCustomAttributes = "";
+        $this->concept->HrefValue = "";
+        $this->concept->TooltipValue = "";
 
         // article
         $this->article->LinkCustomAttributes = "";
@@ -1256,6 +1379,15 @@ class CheckBox extends DbTable
         }
         $this->store_name->EditValue = $this->store_name->CurrentValue;
         $this->store_name->PlaceHolder = RemoveHtml($this->store_name->caption());
+
+        // concept
+        $this->concept->setupEditAttributes();
+        $this->concept->EditCustomAttributes = "";
+        if (!$this->concept->Raw) {
+            $this->concept->CurrentValue = HtmlDecode($this->concept->CurrentValue);
+        }
+        $this->concept->EditValue = $this->concept->CurrentValue;
+        $this->concept->PlaceHolder = RemoveHtml($this->concept->caption());
 
         // article
         $this->article->setupEditAttributes();
@@ -1376,6 +1508,7 @@ class CheckBox extends DbTable
                     $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->store_id);
                     $doc->exportCaption($this->store_name);
+                    $doc->exportCaption($this->concept);
                     $doc->exportCaption($this->article);
                     $doc->exportCaption($this->size_desc);
                     $doc->exportCaption($this->color_code);
@@ -1388,6 +1521,7 @@ class CheckBox extends DbTable
                     $doc->exportCaption($this->box_code);
                     $doc->exportCaption($this->store_id);
                     $doc->exportCaption($this->store_name);
+                    $doc->exportCaption($this->concept);
                     $doc->exportCaption($this->article);
                     $doc->exportCaption($this->size_desc);
                     $doc->exportCaption($this->color_code);
@@ -1429,6 +1563,7 @@ class CheckBox extends DbTable
                         $doc->exportField($this->box_code);
                         $doc->exportField($this->store_id);
                         $doc->exportField($this->store_name);
+                        $doc->exportField($this->concept);
                         $doc->exportField($this->article);
                         $doc->exportField($this->size_desc);
                         $doc->exportField($this->color_code);
@@ -1441,6 +1576,7 @@ class CheckBox extends DbTable
                         $doc->exportField($this->box_code);
                         $doc->exportField($this->store_id);
                         $doc->exportField($this->store_name);
+                        $doc->exportField($this->concept);
                         $doc->exportField($this->article);
                         $doc->exportField($this->size_desc);
                         $doc->exportField($this->color_code);
@@ -1472,6 +1608,7 @@ class CheckBox extends DbTable
                 $doc->exportAggregate($this->box_code, '');
                 $doc->exportAggregate($this->store_id, '');
                 $doc->exportAggregate($this->store_name, '');
+                $doc->exportAggregate($this->concept, '');
                 $doc->exportAggregate($this->article, 'COUNT');
                 $doc->exportAggregate($this->size_desc, '');
                 $doc->exportAggregate($this->color_code, '');

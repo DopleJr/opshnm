@@ -23,6 +23,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fcheck_boxlist.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
     fcheck_boxlist.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
     fcheck_boxlist.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
+    fcheck_boxlist.lists.concept = <?= $Page->concept->toClientList($Page) ?>;
     fcheck_boxlist.lists.article = <?= $Page->article->toClientList($Page) ?>;
     fcheck_boxlist.lists.size_desc = <?= $Page->size_desc->toClientList($Page) ?>;
     fcheck_boxlist.lists.color_code = <?= $Page->color_code->toClientList($Page) ?>;
@@ -46,6 +47,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["box_code", [], fields.box_code.isInvalid],
         ["store_id", [], fields.store_id.isInvalid],
         ["store_name", [], fields.store_name.isInvalid],
+        ["concept", [], fields.concept.isInvalid],
         ["article", [], fields.article.isInvalid],
         ["size_desc", [], fields.size_desc.isInvalid],
         ["color_code", [], fields.color_code.isInvalid],
@@ -88,6 +90,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fcheck_boxsrch.lists.box_code = <?= $Page->box_code->toClientList($Page) ?>;
     fcheck_boxsrch.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
     fcheck_boxsrch.lists.store_name = <?= $Page->store_name->toClientList($Page) ?>;
+    fcheck_boxsrch.lists.concept = <?= $Page->concept->toClientList($Page) ?>;
     fcheck_boxsrch.lists.article = <?= $Page->article->toClientList($Page) ?>;
     fcheck_boxsrch.lists.size_desc = <?= $Page->size_desc->toClientList($Page) ?>;
     fcheck_boxsrch.lists.color_code = <?= $Page->color_code->toClientList($Page) ?>;
@@ -247,6 +250,43 @@ if (!$Page->store_name->UseFilter) {
                 ajax: { id: "x_store_name", form: "fcheck_boxsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.check_box.fields.store_name.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+<?php
+if (!$Page->concept->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_concept" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->concept->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_concept"
+            name="x_concept[]"
+            class="form-control ew-select<?= $Page->concept->isInvalidClass() ?>"
+            data-select2-id="fcheck_boxsrch_x_concept"
+            data-table="check_box"
+            data-field="x_concept"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->concept->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->concept->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->concept->getPlaceHolder()) ?>"
+            <?= $Page->concept->editAttributes() ?>>
+            <?= $Page->concept->selectOptionListHtml("x_concept", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->concept->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fcheck_boxsrch", function() {
+            var options = {
+                name: "x_concept",
+                selectId: "fcheck_boxsrch_x_concept",
+                ajax: { id: "x_concept", form: "fcheck_boxsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.check_box.fields.concept.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -622,6 +662,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->store_name->Visible) { // store_name ?>
         <th data-name="store_name" class="<?= $Page->store_name->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_store_name" class="check_box_store_name"><?= $Page->renderFieldHeader($Page->store_name) ?></div></th>
 <?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+        <th data-name="concept" class="<?= $Page->concept->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_concept" class="check_box_concept"><?= $Page->renderFieldHeader($Page->concept) ?></div></th>
+<?php } ?>
 <?php if ($Page->article->Visible) { // article ?>
         <th data-name="article" class="<?= $Page->article->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_check_box_article" class="check_box_article"><?= $Page->renderFieldHeader($Page->article) ?></div></th>
 <?php } ?>
@@ -745,6 +788,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->concept->Visible) { // concept ?>
+        <td data-name="concept"<?= $Page->concept->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_check_box_concept" class="el_check_box_concept">
+<span<?= $Page->concept->viewAttributes() ?>>
+<?= $Page->concept->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->article->Visible) { // article ?>
         <td data-name="article"<?= $Page->article->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_check_box_article" class="el_check_box_article">
@@ -848,6 +899,10 @@ $Page->ListOptions->render("footer", "left");
     <?php } ?>
     <?php if ($Page->store_name->Visible) { // store_name ?>
         <td data-name="store_name" class="<?= $Page->store_name->footerCellClass() ?>"><span id="elf_check_box_store_name" class="check_box_store_name">
+        </span></td>
+    <?php } ?>
+    <?php if ($Page->concept->Visible) { // concept ?>
+        <td data-name="concept" class="<?= $Page->concept->footerCellClass() ?>"><span id="elf_check_box_concept" class="check_box_concept">
         </span></td>
     <?php } ?>
     <?php if ($Page->article->Visible) { // article ?>

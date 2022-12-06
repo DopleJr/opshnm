@@ -32,9 +32,13 @@ class Transferbin extends DbTable
 
     // Fields
     public $id;
-    public $FromBin;
-    public $ToBin;
+    public $from_bin;
+    public $ctn;
+    public $to_bin;
+    public $user;
     public $date_created;
+    public $date_updated;
+    public $time_updated;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -95,52 +99,152 @@ class Transferbin extends DbTable
         $this->id->InputTextType = "text";
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = false; // Allow sort
+        $this->id->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'transferbin', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'transferbin', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
-        // From Bin
-        $this->FromBin = new DbField(
+        // from_bin
+        $this->from_bin = new DbField(
             'transferbin',
             'transfer bin',
-            'x_FromBin',
-            'From Bin',
-            '`From Bin`',
-            '`From Bin`',
+            'x_from_bin',
+            'from_bin',
+            '`from_bin`',
+            '`from_bin`',
             200,
-            255,
+            15,
             -1,
             false,
-            '`From Bin`',
+            '`from_bin`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->FromBin->InputTextType = "text";
-        $this->Fields['From Bin'] = &$this->FromBin;
+        $this->from_bin->InputTextType = "text";
+        $this->from_bin->Nullable = false; // NOT NULL field
+        $this->from_bin->Required = true; // Required field
+        $this->from_bin->Sortable = false; // Allow sort
+        $this->from_bin->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->from_bin->Lookup = new Lookup('from_bin', 'transferbin', true, 'from_bin', ["from_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->from_bin->Lookup = new Lookup('from_bin', 'transferbin', true, 'from_bin', ["from_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['from_bin'] = &$this->from_bin;
 
-        // To Bin
-        $this->ToBin = new DbField(
+        // ctn
+        $this->ctn = new DbField(
             'transferbin',
             'transfer bin',
-            'x_ToBin',
-            'To Bin',
-            '`To Bin`',
-            '`To Bin`',
+            'x_ctn',
+            'ctn',
+            '`ctn`',
+            '`ctn`',
             200,
-            255,
+            4,
             -1,
             false,
-            '`To Bin`',
+            '`ctn`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->ToBin->InputTextType = "text";
-        $this->Fields['To Bin'] = &$this->ToBin;
+        $this->ctn->InputTextType = "text";
+        $this->ctn->Nullable = false; // NOT NULL field
+        $this->ctn->Required = true; // Required field
+        $this->ctn->Sortable = false; // Allow sort
+        $this->ctn->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->ctn->Lookup = new Lookup('ctn', 'transferbin', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->ctn->Lookup = new Lookup('ctn', 'transferbin', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['ctn'] = &$this->ctn;
+
+        // to_bin
+        $this->to_bin = new DbField(
+            'transferbin',
+            'transfer bin',
+            'x_to_bin',
+            'to_bin',
+            '`to_bin`',
+            '`to_bin`',
+            200,
+            15,
+            -1,
+            false,
+            '`to_bin`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->to_bin->InputTextType = "text";
+        $this->to_bin->Nullable = false; // NOT NULL field
+        $this->to_bin->Required = true; // Required field
+        $this->to_bin->Sortable = false; // Allow sort
+        $this->to_bin->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->to_bin->Lookup = new Lookup('to_bin', 'transferbin', true, 'to_bin', ["to_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->to_bin->Lookup = new Lookup('to_bin', 'transferbin', true, 'to_bin', ["to_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['to_bin'] = &$this->to_bin;
+
+        // user
+        $this->user = new DbField(
+            'transferbin',
+            'transfer bin',
+            'x_user',
+            'user',
+            '`user`',
+            '`user`',
+            200,
+            50,
+            -1,
+            false,
+            '`user`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->user->InputTextType = "text";
+        $this->user->Sortable = false; // Allow sort
+        $this->user->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'transferbin', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'transferbin', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['user'] = &$this->user;
 
         // date_created
         $this->date_created = new DbField(
@@ -162,8 +266,84 @@ class Transferbin extends DbTable
             'TEXT'
         );
         $this->date_created->InputTextType = "text";
+        $this->date_created->Sortable = false; // Allow sort
+        $this->date_created->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'transferbin', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'transferbin', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
+
+        // date_updated
+        $this->date_updated = new DbField(
+            'transferbin',
+            'transfer bin',
+            'x_date_updated',
+            'date_updated',
+            '`date_updated`',
+            CastDateFieldForLike("`date_updated`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_updated`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_updated->InputTextType = "text";
+        $this->date_updated->Sortable = false; // Allow sort
+        $this->date_updated->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'transferbin', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'transferbin', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_updated'] = &$this->date_updated;
+
+        // time_updated
+        $this->time_updated = new DbField(
+            'transferbin',
+            'transfer bin',
+            'x_time_updated',
+            'time_updated',
+            '`time_updated`',
+            CastDateFieldForLike("`time_updated`", 3, "DB"),
+            134,
+            10,
+            3,
+            false,
+            '`time_updated`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->time_updated->InputTextType = "text";
+        $this->time_updated->Sortable = false; // Allow sort
+        $this->time_updated->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->time_updated->Lookup = new Lookup('time_updated', 'transferbin', true, 'time_updated', ["time_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->time_updated->Lookup = new Lookup('time_updated', 'transferbin', true, 'time_updated', ["time_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->time_updated->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
+        $this->Fields['time_updated'] = &$this->time_updated;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -596,9 +776,13 @@ class Transferbin extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->FromBin->DbValue = $row['From Bin'];
-        $this->ToBin->DbValue = $row['To Bin'];
+        $this->from_bin->DbValue = $row['from_bin'];
+        $this->ctn->DbValue = $row['ctn'];
+        $this->to_bin->DbValue = $row['to_bin'];
+        $this->user->DbValue = $row['user'];
         $this->date_created->DbValue = $row['date_created'];
+        $this->date_updated->DbValue = $row['date_updated'];
+        $this->time_updated->DbValue = $row['time_updated'];
     }
 
     // Delete uploaded files
@@ -918,9 +1102,13 @@ class Transferbin extends DbTable
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->FromBin->setDbValue($row['From Bin']);
-        $this->ToBin->setDbValue($row['To Bin']);
+        $this->from_bin->setDbValue($row['from_bin']);
+        $this->ctn->setDbValue($row['ctn']);
+        $this->to_bin->setDbValue($row['to_bin']);
+        $this->user->setDbValue($row['user']);
         $this->date_created->setDbValue($row['date_created']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Render list row values
@@ -934,49 +1122,103 @@ class Transferbin extends DbTable
         // Common render codes
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
-        // From Bin
+        // from_bin
+        $this->from_bin->CellCssStyle = "white-space: nowrap;";
 
-        // To Bin
+        // ctn
+        $this->ctn->CellCssStyle = "white-space: nowrap;";
+
+        // to_bin
+        $this->to_bin->CellCssStyle = "white-space: nowrap;";
+
+        // user
+        $this->user->CellCssStyle = "white-space: nowrap;";
 
         // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
+
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // From Bin
-        $this->FromBin->ViewValue = $this->FromBin->CurrentValue;
-        $this->FromBin->ViewCustomAttributes = "";
+        // from_bin
+        $this->from_bin->ViewValue = $this->from_bin->CurrentValue;
+        $this->from_bin->ViewCustomAttributes = "";
 
-        // To Bin
-        $this->ToBin->ViewValue = $this->ToBin->CurrentValue;
-        $this->ToBin->ViewCustomAttributes = "";
+        // ctn
+        $this->ctn->ViewValue = $this->ctn->CurrentValue;
+        $this->ctn->ViewCustomAttributes = "";
+
+        // to_bin
+        $this->to_bin->ViewValue = $this->to_bin->CurrentValue;
+        $this->to_bin->ViewCustomAttributes = "";
+
+        // user
+        $this->user->ViewValue = $this->user->CurrentValue;
+        $this->user->ViewCustomAttributes = "";
 
         // date_created
         $this->date_created->ViewValue = $this->date_created->CurrentValue;
         $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
         $this->date_created->ViewCustomAttributes = "";
 
+        // date_updated
+        $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+        $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+        $this->date_updated->ViewCustomAttributes = "";
+
+        // time_updated
+        $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+        $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+        $this->time_updated->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // From Bin
-        $this->FromBin->LinkCustomAttributes = "";
-        $this->FromBin->HrefValue = "";
-        $this->FromBin->TooltipValue = "";
+        // from_bin
+        $this->from_bin->LinkCustomAttributes = "";
+        $this->from_bin->HrefValue = "";
+        $this->from_bin->TooltipValue = "";
 
-        // To Bin
-        $this->ToBin->LinkCustomAttributes = "";
-        $this->ToBin->HrefValue = "";
-        $this->ToBin->TooltipValue = "";
+        // ctn
+        $this->ctn->LinkCustomAttributes = "";
+        $this->ctn->HrefValue = "";
+        $this->ctn->TooltipValue = "";
+
+        // to_bin
+        $this->to_bin->LinkCustomAttributes = "";
+        $this->to_bin->HrefValue = "";
+        $this->to_bin->TooltipValue = "";
+
+        // user
+        $this->user->LinkCustomAttributes = "";
+        $this->user->HrefValue = "";
+        $this->user->TooltipValue = "";
 
         // date_created
         $this->date_created->LinkCustomAttributes = "";
         $this->date_created->HrefValue = "";
         $this->date_created->TooltipValue = "";
+
+        // date_updated
+        $this->date_updated->LinkCustomAttributes = "";
+        $this->date_updated->HrefValue = "";
+        $this->date_updated->TooltipValue = "";
+
+        // time_updated
+        $this->time_updated->LinkCustomAttributes = "";
+        $this->time_updated->HrefValue = "";
+        $this->time_updated->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -999,25 +1241,47 @@ class Transferbin extends DbTable
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // From Bin
-        $this->FromBin->setupEditAttributes();
-        $this->FromBin->EditCustomAttributes = "";
-        if (!$this->FromBin->Raw) {
-            $this->FromBin->CurrentValue = HtmlDecode($this->FromBin->CurrentValue);
+        // from_bin
+        $this->from_bin->setupEditAttributes();
+        $this->from_bin->EditCustomAttributes = "";
+        if (!$this->from_bin->Raw) {
+            $this->from_bin->CurrentValue = HtmlDecode($this->from_bin->CurrentValue);
         }
-        $this->FromBin->EditValue = $this->FromBin->CurrentValue;
-        $this->FromBin->PlaceHolder = RemoveHtml($this->FromBin->caption());
+        $this->from_bin->EditValue = $this->from_bin->CurrentValue;
+        $this->from_bin->PlaceHolder = RemoveHtml($this->from_bin->caption());
 
-        // To Bin
-        $this->ToBin->setupEditAttributes();
-        $this->ToBin->EditCustomAttributes = "";
-        if (!$this->ToBin->Raw) {
-            $this->ToBin->CurrentValue = HtmlDecode($this->ToBin->CurrentValue);
+        // ctn
+        $this->ctn->setupEditAttributes();
+        $this->ctn->EditCustomAttributes = "";
+        if (!$this->ctn->Raw) {
+            $this->ctn->CurrentValue = HtmlDecode($this->ctn->CurrentValue);
         }
-        $this->ToBin->EditValue = $this->ToBin->CurrentValue;
-        $this->ToBin->PlaceHolder = RemoveHtml($this->ToBin->caption());
+        $this->ctn->EditValue = $this->ctn->CurrentValue;
+        $this->ctn->PlaceHolder = RemoveHtml($this->ctn->caption());
+
+        // to_bin
+        $this->to_bin->setupEditAttributes();
+        $this->to_bin->EditCustomAttributes = "";
+        if (!$this->to_bin->Raw) {
+            $this->to_bin->CurrentValue = HtmlDecode($this->to_bin->CurrentValue);
+        }
+        $this->to_bin->EditValue = $this->to_bin->CurrentValue;
+        $this->to_bin->PlaceHolder = RemoveHtml($this->to_bin->caption());
+
+        // user
+        $this->user->setupEditAttributes();
+        $this->user->EditCustomAttributes = "";
+        if (!$this->user->Raw) {
+            $this->user->CurrentValue = HtmlDecode($this->user->CurrentValue);
+        }
+        $this->user->EditValue = $this->user->CurrentValue;
+        $this->user->PlaceHolder = RemoveHtml($this->user->caption());
 
         // date_created
+
+        // date_updated
+
+        // time_updated
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1048,14 +1312,22 @@ class Transferbin extends DbTable
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->FromBin);
-                    $doc->exportCaption($this->ToBin);
+                    $doc->exportCaption($this->from_bin);
+                    $doc->exportCaption($this->ctn);
+                    $doc->exportCaption($this->to_bin);
+                    $doc->exportCaption($this->user);
                     $doc->exportCaption($this->date_created);
+                    $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->time_updated);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->FromBin);
-                    $doc->exportCaption($this->ToBin);
+                    $doc->exportCaption($this->from_bin);
+                    $doc->exportCaption($this->ctn);
+                    $doc->exportCaption($this->to_bin);
+                    $doc->exportCaption($this->user);
                     $doc->exportCaption($this->date_created);
+                    $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->time_updated);
                 }
                 $doc->endExportRow();
             }
@@ -1086,14 +1358,22 @@ class Transferbin extends DbTable
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->FromBin);
-                        $doc->exportField($this->ToBin);
+                        $doc->exportField($this->from_bin);
+                        $doc->exportField($this->ctn);
+                        $doc->exportField($this->to_bin);
+                        $doc->exportField($this->user);
                         $doc->exportField($this->date_created);
+                        $doc->exportField($this->date_updated);
+                        $doc->exportField($this->time_updated);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->FromBin);
-                        $doc->exportField($this->ToBin);
+                        $doc->exportField($this->from_bin);
+                        $doc->exportField($this->ctn);
+                        $doc->exportField($this->to_bin);
+                        $doc->exportField($this->user);
                         $doc->exportField($this->date_created);
+                        $doc->exportField($this->date_updated);
+                        $doc->exportField($this->time_updated);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1164,7 +1444,23 @@ class Transferbin extends DbTable
     {
         // Enter your code here
         // To cancel, set return value to false
-        return true;
+            $_frombin  = $rsnew["from_bin"];
+            $_ctn  = $rsnew["ctn"];
+            $_to_bin  = $rsnew["to_bin"];
+            $currentDate = CurrentDate();
+            $currentUsername = CurrentUsername();
+            $compare1 = "SELECT count(*) FROM `transfer bin` WHERE `from_bin` =  '$_frombin' AND `ctn` = '$_ctn' AND `to_bin` = '$_to_bin' ";
+            $_compare1 = ExecuteScalar($compare1);
+            // update
+            $update  = "UPDATE `transfer bin` SET `date_created` = '$currentDate',`user` = '$currentUsername' ";
+            //
+            if($_compare1 == 0 ){
+            	$_update = ExecuteStatement($update);
+            	return true;	
+            }else if ($_compare1 !== 0 )
+            {
+            	return false;
+            }
     }
 
     // Row Inserted event

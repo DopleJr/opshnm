@@ -8,7 +8,7 @@ use Slim\Routing\RouteCollectorProxy;
 // Handle Routes
 return function (App $app) {
     // API
-    $app->map(['POST', 'OPTIONS'], '/' . Config("API_LOGIN_ACTION"), ApiController::class . ':login')->add(JwtMiddleware::class . ':create')->setName('api/' . Config("API_LOGIN_ACTION")); // login
+    $app->map(['GET', 'POST', 'OPTIONS'], '/' . Config("API_LOGIN_ACTION"), ApiController::class . ':login')->add(JwtMiddleware::class . ':create')->setName('api/' . Config("API_LOGIN_ACTION")); // login
     $app->map(['GET', 'OPTIONS'], '/' . Config("API_LIST_ACTION") . '[/{params:.*}]', ApiController::class)->add(ApiPermissionMiddleware::class)->add(new JwtMiddleware())->setName('api/' . Config("API_LIST_ACTION")); // list
     $app->map(['GET', 'OPTIONS'], '/' . Config("API_VIEW_ACTION") . '[/{params:.*}]', ApiController::class)->add(ApiPermissionMiddleware::class)->add(new JwtMiddleware())->setName('api/' . Config("API_VIEW_ACTION")); // view
     $app->map(['POST', 'OPTIONS'], '/' . Config("API_ADD_ACTION") . '[/{params:.*}]', ApiController::class)->add(ApiPermissionMiddleware::class)->add(new JwtMiddleware())->setName('api/' . Config("API_ADD_ACTION")); // add

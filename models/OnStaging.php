@@ -48,6 +48,7 @@ class OnStaging extends ReportTable
     public $status;
     public $users;
     public $date_updated;
+    public $line;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -129,7 +130,14 @@ class OnStaging extends ReportTable
         $this->week->InputTextType = "text";
         $this->week->IsCustom = true; // Custom field
         $this->week->UseFilter = true; // Table header filter
-        $this->week->Lookup = new Lookup('week', 'OnStaging', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->week->Lookup = new Lookup('week', 'OnStaging', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->week->Lookup = new Lookup('week', 'OnStaging', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->week->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['week'] = &$this->week;
 
@@ -155,7 +163,14 @@ class OnStaging extends ReportTable
         $this->aging->InputTextType = "text";
         $this->aging->IsCustom = true; // Custom field
         $this->aging->UseFilter = true; // Table header filter
-        $this->aging->Lookup = new Lookup('aging', 'OnStaging', true, 'aging', ["aging","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->aging->Lookup = new Lookup('aging', 'OnStaging', true, 'aging', ["aging","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->aging->Lookup = new Lookup('aging', 'OnStaging', true, 'aging', ["aging","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->aging->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->aging->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['aging'] = &$this->aging;
@@ -181,7 +196,14 @@ class OnStaging extends ReportTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'OnStaging', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'OnStaging', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'OnStaging', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->store_name->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['store_name'] = &$this->store_name;
 
@@ -206,7 +228,14 @@ class OnStaging extends ReportTable
         );
         $this->store_code->InputTextType = "text";
         $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'OnStaging', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'OnStaging', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'OnStaging', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->store_code->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['store_code'] = &$this->store_code;
 
@@ -231,7 +260,14 @@ class OnStaging extends ReportTable
         );
         $this->box_id->InputTextType = "text";
         $this->box_id->UseFilter = true; // Table header filter
-        $this->box_id->Lookup = new Lookup('box_id', 'OnStaging', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_id->Lookup = new Lookup('box_id', 'OnStaging', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_id->Lookup = new Lookup('box_id', 'OnStaging', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->box_id->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['box_id'] = &$this->box_id;
 
@@ -256,7 +292,14 @@ class OnStaging extends ReportTable
         );
         $this->type->InputTextType = "text";
         $this->type->UseFilter = true; // Table header filter
-        $this->type->Lookup = new Lookup('type', 'OnStaging', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->type->Lookup = new Lookup('type', 'OnStaging', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->type->Lookup = new Lookup('type', 'OnStaging', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->type->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['type'] = &$this->type;
 
@@ -281,7 +324,14 @@ class OnStaging extends ReportTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'OnStaging', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'OnStaging', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'OnStaging', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->concept->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['concept'] = &$this->concept;
 
@@ -306,7 +356,14 @@ class OnStaging extends ReportTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'OnStaging', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'OnStaging', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'OnStaging', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->quantity->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['quantity'] = &$this->quantity;
@@ -338,7 +395,14 @@ class OnStaging extends ReportTable
         $this->picking_date->GroupInterval = "0";
         $this->picking_date->GroupSql = "";
         $this->picking_date->UseFilter = true; // Table header filter
-        $this->picking_date->Lookup = new Lookup('picking_date', 'OnStaging', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picking_date->Lookup = new Lookup('picking_date', 'OnStaging', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picking_date->Lookup = new Lookup('picking_date', 'OnStaging', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->picking_date->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['picking_date'] = &$this->picking_date;
@@ -364,7 +428,14 @@ class OnStaging extends ReportTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'OnStaging', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'OnStaging', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'OnStaging', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->date_created->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['date_created'] = &$this->date_created;
@@ -390,7 +461,14 @@ class OnStaging extends ReportTable
         );
         $this->status->InputTextType = "text";
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'OnStaging', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'OnStaging', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'OnStaging', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->status->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['status'] = &$this->status;
 
@@ -415,7 +493,14 @@ class OnStaging extends ReportTable
         );
         $this->users->InputTextType = "text";
         $this->users->UseFilter = true; // Table header filter
-        $this->users->Lookup = new Lookup('users', 'OnStaging', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->users->Lookup = new Lookup('users', 'OnStaging', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->users->Lookup = new Lookup('users', 'OnStaging', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->users->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['users'] = &$this->users;
 
@@ -440,10 +525,40 @@ class OnStaging extends ReportTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'OnStaging', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'OnStaging', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'OnStaging', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->date_updated->SourceTableVar = 'monitor_staging_on_staging';
         $this->Fields['date_updated'] = &$this->date_updated;
+
+        // line
+        $this->line = new ReportField(
+            'OnStaging',
+            'On Staging',
+            'x_line',
+            'line',
+            '`line`',
+            '`line`',
+            200,
+            10,
+            -1,
+            false,
+            '`line`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->line->InputTextType = "text";
+        $this->line->SourceTableVar = 'monitor_staging_on_staging';
+        $this->Fields['line'] = &$this->line;
 
         // On Staging
         $this->OnStaging = new DbChart($this, 'OnStaging', 'On Staging', 'week', 'quantity', 1001, '', 0, 'COUNT', 600, 500);

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
- * Table class for bin to bin
+ * Table class for bin_to_bin
  */
-class Bintobin extends DbTable
+class BinToBin extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -31,8 +31,13 @@ class Bintobin extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $FromBin;
-    public $ToBin;
+    public $id;
+    public $from_bin;
+    public $ctn;
+    public $to_bin;
+    public $date_created;
+    public $date_updated;
+    public $time_updated;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -45,12 +50,12 @@ class Bintobin extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'bintobin';
-        $this->TableName = 'bin to bin';
+        $this->TableVar = 'bin_to_bin';
+        $this->TableName = 'bin_to_bin';
         $this->TableType = 'VIEW';
 
         // Update Table
-        $this->UpdateTable = "`bin to bin`";
+        $this->UpdateTable = "`bin_to_bin`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -71,49 +76,171 @@ class Bintobin extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // From Bin
-        $this->FromBin = new DbField(
-            'bintobin',
-            'bin to bin',
-            'x_FromBin',
-            'From Bin',
-            '`From Bin`',
-            '`From Bin`',
-            200,
-            255,
+        // id
+        $this->id = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_id',
+            'id',
+            '`id`',
+            '`id`',
+            3,
+            10,
             -1,
             false,
-            '`From Bin`',
+            '`id`',
             false,
             false,
             false,
             'FORMATTED TEXT',
-            'TEXT'
+            'NO'
         );
-        $this->FromBin->InputTextType = "text";
-        $this->Fields['From Bin'] = &$this->FromBin;
+        $this->id->InputTextType = "text";
+        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['id'] = &$this->id;
 
-        // To Bin
-        $this->ToBin = new DbField(
-            'bintobin',
-            'bin to bin',
-            'x_ToBin',
-            'To Bin',
-            '`To Bin`',
-            '`To Bin`',
+        // from_bin
+        $this->from_bin = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_from_bin',
+            'from_bin',
+            '`from_bin`',
+            '`from_bin`',
             200,
-            255,
+            15,
             -1,
             false,
-            '`To Bin`',
+            '`from_bin`',
             false,
             false,
             false,
             'FORMATTED TEXT',
             'TEXT'
         );
-        $this->ToBin->InputTextType = "text";
-        $this->Fields['To Bin'] = &$this->ToBin;
+        $this->from_bin->InputTextType = "text";
+        $this->from_bin->Nullable = false; // NOT NULL field
+        $this->from_bin->Required = true; // Required field
+        $this->Fields['from_bin'] = &$this->from_bin;
+
+        // ctn
+        $this->ctn = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_ctn',
+            'ctn',
+            '`ctn`',
+            '`ctn`',
+            200,
+            4,
+            -1,
+            false,
+            '`ctn`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->ctn->InputTextType = "text";
+        $this->ctn->Nullable = false; // NOT NULL field
+        $this->ctn->Required = true; // Required field
+        $this->Fields['ctn'] = &$this->ctn;
+
+        // to_bin
+        $this->to_bin = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_to_bin',
+            'to_bin',
+            '`to_bin`',
+            '`to_bin`',
+            200,
+            15,
+            -1,
+            false,
+            '`to_bin`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->to_bin->InputTextType = "text";
+        $this->to_bin->Nullable = false; // NOT NULL field
+        $this->to_bin->Required = true; // Required field
+        $this->Fields['to_bin'] = &$this->to_bin;
+
+        // date_created
+        $this->date_created = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_date_created',
+            'date_created',
+            '`date_created`',
+            CastDateFieldForLike("`date_created`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_created`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_created->InputTextType = "text";
+        $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_created'] = &$this->date_created;
+
+        // date_updated
+        $this->date_updated = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_date_updated',
+            'date_updated',
+            '`date_updated`',
+            CastDateFieldForLike("`date_updated`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_updated`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_updated->InputTextType = "text";
+        $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_updated'] = &$this->date_updated;
+
+        // time_updated
+        $this->time_updated = new DbField(
+            'bin_to_bin',
+            'bin_to_bin',
+            'x_time_updated',
+            'time_updated',
+            '`time_updated`',
+            CastDateFieldForLike("`time_updated`", 3, "DB"),
+            134,
+            10,
+            3,
+            false,
+            '`time_updated`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->time_updated->InputTextType = "text";
+        $this->time_updated->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
+        $this->Fields['time_updated'] = &$this->time_updated;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -173,7 +300,7 @@ class Bintobin extends DbTable
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`bin to bin`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`bin_to_bin`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -458,6 +585,9 @@ class Bintobin extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -517,6 +647,9 @@ class Bintobin extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
+            if (array_key_exists('id', $rs)) {
+                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -539,8 +672,13 @@ class Bintobin extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->FromBin->DbValue = $row['From Bin'];
-        $this->ToBin->DbValue = $row['To Bin'];
+        $this->id->DbValue = $row['id'];
+        $this->from_bin->DbValue = $row['from_bin'];
+        $this->ctn->DbValue = $row['ctn'];
+        $this->to_bin->DbValue = $row['to_bin'];
+        $this->date_created->DbValue = $row['date_created'];
+        $this->date_updated->DbValue = $row['date_updated'];
+        $this->time_updated->DbValue = $row['time_updated'];
     }
 
     // Delete uploaded files
@@ -552,13 +690,19 @@ class Bintobin extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "";
+        return "`id` = @id@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
+        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -567,7 +711,12 @@ class Bintobin extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 0) {
+        if (count($keys) == 1) {
+            if ($current) {
+                $this->id->CurrentValue = $keys[0];
+            } else {
+                $this->id->OldValue = $keys[0];
+            }
         }
     }
 
@@ -575,6 +724,19 @@ class Bintobin extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
+        if (is_array($row)) {
+            $val = array_key_exists('id', $row) ? $row['id'] : null;
+        } else {
+            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
         return $keyFilter;
     }
 
@@ -617,15 +779,15 @@ class Bintobin extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "BintobinView";
+                return "BinToBinView";
             case Config("API_ADD_ACTION"):
-                return "BintobinAdd";
+                return "BinToBinAdd";
             case Config("API_EDIT_ACTION"):
-                return "BintobinEdit";
+                return "BinToBinEdit";
             case Config("API_DELETE_ACTION"):
-                return "BintobinDelete";
+                return "BinToBinDelete";
             case Config("API_LIST_ACTION"):
-                return "BintobinList";
+                return "BinToBinList";
             default:
                 return "";
         }
@@ -702,6 +864,7 @@ class Bintobin extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
+        $json .= "\"id\":" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -712,6 +875,11 @@ class Bintobin extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
+        if ($this->id->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -769,12 +937,23 @@ class Bintobin extends DbTable
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
+            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+                $arKeys[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
+                $arKeys[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
                 $ar[] = $key;
             }
         }
@@ -789,6 +968,11 @@ class Bintobin extends DbTable
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
+            }
+            if ($setCurrent) {
+                $this->id->CurrentValue = $key;
+            } else {
+                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -813,8 +997,13 @@ class Bintobin extends DbTable
         } else {
             return;
         }
-        $this->FromBin->setDbValue($row['From Bin']);
-        $this->ToBin->setDbValue($row['To Bin']);
+        $this->id->setDbValue($row['id']);
+        $this->from_bin->setDbValue($row['from_bin']);
+        $this->ctn->setDbValue($row['ctn']);
+        $this->to_bin->setDbValue($row['to_bin']);
+        $this->date_created->setDbValue($row['date_created']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Render list row values
@@ -827,27 +1016,92 @@ class Bintobin extends DbTable
 
         // Common render codes
 
-        // From Bin
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
-        // To Bin
+        // from_bin
+        $this->from_bin->CellCssStyle = "white-space: nowrap;";
 
-        // From Bin
-        $this->FromBin->ViewValue = $this->FromBin->CurrentValue;
-        $this->FromBin->ViewCustomAttributes = "";
+        // ctn
+        $this->ctn->CellCssStyle = "white-space: nowrap;";
 
-        // To Bin
-        $this->ToBin->ViewValue = $this->ToBin->CurrentValue;
-        $this->ToBin->ViewCustomAttributes = "";
+        // to_bin
+        $this->to_bin->CellCssStyle = "white-space: nowrap;";
 
-        // From Bin
-        $this->FromBin->LinkCustomAttributes = "";
-        $this->FromBin->HrefValue = "";
-        $this->FromBin->TooltipValue = "";
+        // date_created
+        $this->date_created->CellCssStyle = "white-space: nowrap;";
 
-        // To Bin
-        $this->ToBin->LinkCustomAttributes = "";
-        $this->ToBin->HrefValue = "";
-        $this->ToBin->TooltipValue = "";
+        // date_updated
+        $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // time_updated
+        $this->time_updated->CellCssStyle = "white-space: nowrap;";
+
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
+
+        // from_bin
+        $this->from_bin->ViewValue = $this->from_bin->CurrentValue;
+        $this->from_bin->ViewCustomAttributes = "";
+
+        // ctn
+        $this->ctn->ViewValue = $this->ctn->CurrentValue;
+        $this->ctn->ViewCustomAttributes = "";
+
+        // to_bin
+        $this->to_bin->ViewValue = $this->to_bin->CurrentValue;
+        $this->to_bin->ViewCustomAttributes = "";
+
+        // date_created
+        $this->date_created->ViewValue = $this->date_created->CurrentValue;
+        $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
+        $this->date_created->ViewCustomAttributes = "";
+
+        // date_updated
+        $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+        $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+        $this->date_updated->ViewCustomAttributes = "";
+
+        // time_updated
+        $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+        $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+        $this->time_updated->ViewCustomAttributes = "";
+
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
+
+        // from_bin
+        $this->from_bin->LinkCustomAttributes = "";
+        $this->from_bin->HrefValue = "";
+        $this->from_bin->TooltipValue = "";
+
+        // ctn
+        $this->ctn->LinkCustomAttributes = "";
+        $this->ctn->HrefValue = "";
+        $this->ctn->TooltipValue = "";
+
+        // to_bin
+        $this->to_bin->LinkCustomAttributes = "";
+        $this->to_bin->HrefValue = "";
+        $this->to_bin->TooltipValue = "";
+
+        // date_created
+        $this->date_created->LinkCustomAttributes = "";
+        $this->date_created->HrefValue = "";
+        $this->date_created->TooltipValue = "";
+
+        // date_updated
+        $this->date_updated->LinkCustomAttributes = "";
+        $this->date_updated->HrefValue = "";
+        $this->date_updated->TooltipValue = "";
+
+        // time_updated
+        $this->time_updated->LinkCustomAttributes = "";
+        $this->time_updated->HrefValue = "";
+        $this->time_updated->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -864,23 +1118,44 @@ class Bintobin extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // From Bin
-        $this->FromBin->setupEditAttributes();
-        $this->FromBin->EditCustomAttributes = "";
-        if (!$this->FromBin->Raw) {
-            $this->FromBin->CurrentValue = HtmlDecode($this->FromBin->CurrentValue);
-        }
-        $this->FromBin->EditValue = $this->FromBin->CurrentValue;
-        $this->FromBin->PlaceHolder = RemoveHtml($this->FromBin->caption());
+        // id
+        $this->id->setupEditAttributes();
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
 
-        // To Bin
-        $this->ToBin->setupEditAttributes();
-        $this->ToBin->EditCustomAttributes = "";
-        if (!$this->ToBin->Raw) {
-            $this->ToBin->CurrentValue = HtmlDecode($this->ToBin->CurrentValue);
+        // from_bin
+        $this->from_bin->setupEditAttributes();
+        $this->from_bin->EditCustomAttributes = "";
+        if (!$this->from_bin->Raw) {
+            $this->from_bin->CurrentValue = HtmlDecode($this->from_bin->CurrentValue);
         }
-        $this->ToBin->EditValue = $this->ToBin->CurrentValue;
-        $this->ToBin->PlaceHolder = RemoveHtml($this->ToBin->caption());
+        $this->from_bin->EditValue = $this->from_bin->CurrentValue;
+        $this->from_bin->PlaceHolder = RemoveHtml($this->from_bin->caption());
+
+        // ctn
+        $this->ctn->setupEditAttributes();
+        $this->ctn->EditCustomAttributes = "";
+        if (!$this->ctn->Raw) {
+            $this->ctn->CurrentValue = HtmlDecode($this->ctn->CurrentValue);
+        }
+        $this->ctn->EditValue = $this->ctn->CurrentValue;
+        $this->ctn->PlaceHolder = RemoveHtml($this->ctn->caption());
+
+        // to_bin
+        $this->to_bin->setupEditAttributes();
+        $this->to_bin->EditCustomAttributes = "";
+        if (!$this->to_bin->Raw) {
+            $this->to_bin->CurrentValue = HtmlDecode($this->to_bin->CurrentValue);
+        }
+        $this->to_bin->EditValue = $this->to_bin->CurrentValue;
+        $this->to_bin->PlaceHolder = RemoveHtml($this->to_bin->caption());
+
+        // date_created
+
+        // date_updated
+
+        // time_updated
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -910,11 +1185,21 @@ class Bintobin extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->FromBin);
-                    $doc->exportCaption($this->ToBin);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->from_bin);
+                    $doc->exportCaption($this->ctn);
+                    $doc->exportCaption($this->to_bin);
+                    $doc->exportCaption($this->date_created);
+                    $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->time_updated);
                 } else {
-                    $doc->exportCaption($this->FromBin);
-                    $doc->exportCaption($this->ToBin);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->from_bin);
+                    $doc->exportCaption($this->ctn);
+                    $doc->exportCaption($this->to_bin);
+                    $doc->exportCaption($this->date_created);
+                    $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->time_updated);
                 }
                 $doc->endExportRow();
             }
@@ -944,11 +1229,21 @@ class Bintobin extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->FromBin);
-                        $doc->exportField($this->ToBin);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->from_bin);
+                        $doc->exportField($this->ctn);
+                        $doc->exportField($this->to_bin);
+                        $doc->exportField($this->date_created);
+                        $doc->exportField($this->date_updated);
+                        $doc->exportField($this->time_updated);
                     } else {
-                        $doc->exportField($this->FromBin);
-                        $doc->exportField($this->ToBin);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->from_bin);
+                        $doc->exportField($this->ctn);
+                        $doc->exportField($this->to_bin);
+                        $doc->exportField($this->date_created);
+                        $doc->exportField($this->date_updated);
+                        $doc->exportField($this->time_updated);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1117,6 +1412,21 @@ class Bintobin extends DbTable
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        $_status = "Staging";
+        $_line1 = "Minggu";
+        $currentDate = CurrentDate();
+        $currentTime = CurrentTime();
+        $_id = ($this->id->ViewValue);
+        $_frombin = ($this->from_bin->ViewValue);
+        $_ctn = ($this->ctn->ViewValue);
+        $_to_bin = ($this->to_bin->ViewValue);
+        $_user = CurrentUserName();
+        //Update Putaway Staging
+        $result = ExecuteStatement("UPDATE `transfer bin` SET
+        `date_updated` = '$currentDate',
+        `time_updated` = '$currentTime',
+        `user` = '$_user'
+        WHERE `id` = '$_id' ");
     }
 
     // User ID Filtering event

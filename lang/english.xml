@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/9/30">
+<ew-language version="18.12.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/12/1">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -962,20 +962,35 @@
   <project>
     <phrase id="bodytitle" value="OPS HNM" />
     <phrase id="footertext" value="Copyright Gofur" />
+    <menu id="958">
+      <phrase id="menutext" value="Inbound Excess" />
+    </menu>
     <menu id="108">
       <phrase id="menutext" value="Dashboard" />
+    </menu>
+    <menu id="872">
+      <phrase id="menutext" value="Vas" />
+    </menu>
+    <menu id="792">
+      <phrase id="menutext" value="Checking" />
+    </menu>
+    <menu id="791">
+      <phrase id="menutext" value="Vas Validation" />
     </menu>
     <menu id="671">
       <phrase id="menutext" value="Stock Count" />
     </menu>
-    <menu id="545">
-      <phrase id="menutext" value="Stock Count" />
+    <menu id="673">
+      <phrase id="menutext" value="Stock Count Monitor" />
     </menu>
     <menu id="607">
       <phrase id="menutext" value="Data Stock Count" />
     </menu>
     <menu id="608">
       <phrase id="menutext" value="Summary Stock Count" />
+    </menu>
+    <menu id="672">
+      <phrase id="menutext" value="Active Stock" />
     </menu>
     <menu id="62">
       <phrase id="menutext" value="KPI" />
@@ -989,9 +1004,6 @@
     <menu id="65">
       <phrase id="menutext" value="Empty Box" />
     </menu>
-    <menu id="222">
-      <phrase id="menutext" value="On Staging" />
-    </menu>
     <menu id="477">
       <phrase id="menutext" value="Inbound" />
     </menu>
@@ -1004,8 +1016,20 @@
     <menu id="367">
       <phrase id="menutext" value="Online" />
     </menu>
+    <menu id="317">
+      <phrase id="menutext" value="Job Control Picking Online" />
+    </menu>
+    <menu id="956">
+      <phrase id="menutext" value="Picking Online" />
+    </menu>
     <menu id="318">
       <phrase id="menutext" value="Picking Online" />
+    </menu>
+    <menu id="316">
+      <phrase id="menutext" value="Data Picking Online" />
+    </menu>
+    <menu id="481">
+      <phrase id="menutext" value="Productivty Online" />
     </menu>
     <menu id="369">
       <phrase id="menutext" value="Box Result" />
@@ -1013,20 +1037,47 @@
     <menu id="482">
       <phrase id="menutext" value="Check Box" />
     </menu>
-    <menu id="481">
-      <phrase id="menutext" value="Productivty Online" />
+    <menu id="954">
+      <phrase id="menutext" value="Audit Picking Online" />
     </menu>
-    <menu id="317">
-      <phrase id="menutext" value="Job Control Picking Online" />
-    </menu>
-    <menu id="316">
-      <phrase id="menutext" value="Data Picking Online" />
+    <menu id="955">
+      <phrase id="menutext" value="Scan Audit" />
     </menu>
     <menu id="483">
       <phrase id="menutext" value="Audit Picking Online" />
     </menu>
+    <menu id="957">
+      <phrase id="menutext" value="Box Picking Online" />
+    </menu>
     <menu id="43">
       <phrase id="menutext" value="Mezzanine" />
+    </menu>
+    <menu id="782">
+      <phrase id="menutext" value="Putaway Staging" />
+    </menu>
+    <menu id="739">
+      <phrase id="menutext" value="Staging Senin" />
+    </menu>
+    <menu id="783">
+      <phrase id="menutext" value="Staging Selasa" />
+    </menu>
+    <menu id="784">
+      <phrase id="menutext" value="Staging Rabu" />
+    </menu>
+    <menu id="785">
+      <phrase id="menutext" value="Staging Kamis" />
+    </menu>
+    <menu id="786">
+      <phrase id="menutext" value="Staging Jumat" />
+    </menu>
+    <menu id="787">
+      <phrase id="menutext" value="Staging Sabtu" />
+    </menu>
+    <menu id="788">
+      <phrase id="menutext" value="Staging Minggu" />
+    </menu>
+    <menu id="790">
+      <phrase id="menutext" value="Staging Opening" />
     </menu>
     <menu id="64">
       <phrase id="menutext" value="Monitor Audit Picking" />
@@ -1039,9 +1090,6 @@
     </menu>
     <menu id="25">
       <phrase id="menutext" value="Print Label" />
-    </menu>
-    <menu id="26">
-      <phrase id="menutext" value="Store" />
     </menu>
     <menu id="22">
       <phrase id="menutext" value="Outbound" />
@@ -1069,9 +1117,6 @@
     </menu>
     <menu id="23">
       <phrase id="menutext" value="Inventory" />
-    </menu>
-    <menu id="269">
-      <phrase id="menutext" value="Job Control" />
     </menu>
     <menu id="153">
       <phrase id="menutext" value="Monitor Cycle Count" />
@@ -1103,7 +1148,7 @@
     <menu id="267">
       <phrase id="menutext" value="Transfer Bin" />
     </menu>
-    <menu id="24">
+    <menu id="789">
       <phrase id="menutext" value="Bin To Bin Box" />
     </menu>
     <menu id="268">
@@ -1127,18 +1172,6 @@
     <menu id="227">
       <phrase id="menutext" value="Data Finding Shortpick" />
     </menu>
-    <menu id="224">
-      <phrase id="menutext" value="Locations" />
-    </menu>
-    <menu id="85">
-      <phrase id="menutext" value="Master Article Stock" />
-    </menu>
-    <menu id="226">
-      <phrase id="menutext" value="Master Article All" />
-    </menu>
-    <menu id="225">
-      <phrase id="menutext" value="Mb51" />
-    </menu>
     <menu id="544">
       <phrase id="menutext" value="User Management" />
     </menu>
@@ -1151,11 +1184,38 @@
     <menu id="485">
       <phrase id="menutext" value="User Levels" />
     </menu>
+    <menu id="738">
+      <phrase id="menutext" value="Misc" />
+    </menu>
+    <menu id="224">
+      <phrase id="menutext" value="Locations" />
+    </menu>
+    <menu id="26">
+      <phrase id="menutext" value="Store" />
+    </menu>
+    <menu id="85">
+      <phrase id="menutext" value="Master Article Stock" />
+    </menu>
+    <menu id="226">
+      <phrase id="menutext" value="Master Article All" />
+    </menu>
+    <menu id="225">
+      <phrase id="menutext" value="Mb51" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Logs" />
     </menu>
     <menu id="223">
       <phrase id="menutext" value="Outbound" />
+    </menu>
+    <menu id="269">
+      <phrase id="menutext" value="Job Control" />
+    </menu>
+    <menu id="222">
+      <phrase id="menutext" value="On Staging" />
+    </menu>
+    <menu id="545">
+      <phrase id="menutext" value="Stock Count" />
     </menu>
     <table id="auditstaging">
       <phrase id="tblcaption" value="Audit Staging" />
@@ -1389,6 +1449,9 @@
         <phrase id="fldtagvalue2" value="Unmatch" />
         <phrase id="fldtagcaption2" value="Unmatch" />
       </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
       <field id="users">
         <phrase id="fldcaption" value="Users" />
       </field>
@@ -1404,14 +1467,26 @@
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
-      <field id="frombin">
+      <field id="from_bin">
         <phrase id="fldcaption" value="From Bin" />
       </field>
-      <field id="tobin">
+      <field id="ctn">
+        <phrase id="fldcaption" value="CTN" />
+      </field>
+      <field id="to_bin">
         <phrase id="fldcaption" value="To Bin" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
       </field>
       <field id="date_created">
         <phrase id="fldcaption" value="Date Created" />
+      </field>
+      <field id="date_updated">
+        <phrase id="fldcaption" value="Date Updated" />
+      </field>
+      <field id="time_updated">
+        <phrase id="fldcaption" value="Time Updated" />
       </field>
     </table>
     <table id="user">
@@ -1450,15 +1525,6 @@
       </field>
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
-      </field>
-    </table>
-    <table id="bintobin">
-      <phrase id="tblcaption" value="Bin To Bin Box" />
-      <field id="frombin">
-        <phrase id="fldcaption" value="From Bin" />
-      </field>
-      <field id="tobin">
-        <phrase id="fldcaption" value="To Bin" />
       </field>
     </table>
     <table id="print_label">
@@ -1546,14 +1612,20 @@
       <field id="picking_date">
         <phrase id="fldcaption" value="Picking Date" />
       </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
       <field id="date_created">
         <phrase id="fldcaption" value="Date Created" />
       </field>
-      <field id="date_delivery">
-        <phrase id="fldcaption" value="Date Delivery" />
-      </field>
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+      <field id="date_delivery">
+        <phrase id="fldcaption" value="Date Delivery" />
       </field>
     </table>
     <table id="audit_picking">
@@ -1566,6 +1638,23 @@
       </field>
       <field id="store_code">
         <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+        <phrase id="fldtagvalue1" value="Senin" />
+        <phrase id="fldtagcaption1" value="Senin" />
+        <phrase id="fldtagvalue2" value="Selasa" />
+        <phrase id="fldtagcaption2" value="Selasa" />
+        <phrase id="fldtagvalue3" value="Rabu" />
+        <phrase id="fldtagcaption3" value="Rabu" />
+        <phrase id="fldtagvalue4" value="Kamis" />
+        <phrase id="fldtagcaption4" value="Kamis" />
+        <phrase id="fldtagvalue5" value="Jumat" />
+        <phrase id="fldtagcaption5" value="Jumat" />
+        <phrase id="fldtagvalue6" value="Sabtu" />
+        <phrase id="fldtagcaption6" value="Sabtu" />
+        <phrase id="fldtagvalue7" value="Minggu" />
+        <phrase id="fldtagcaption7" value="Minggu" />
       </field>
       <field id="box_id">
         <phrase id="fldcaption" value="Box ID" />
@@ -1952,6 +2041,9 @@
       <field id="status">
         <phrase id="fldcaption" value="Status" />
       </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
       <field id="users">
         <phrase id="fldcaption" value="Users" />
       </field>
@@ -2052,6 +2144,9 @@
       </field>
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="line" />
       </field>
     </table>
     <table id="outbound">
@@ -2277,20 +2372,35 @@
       <field id="article">
         <phrase id="fldcaption" value="Article" />
       </field>
+      <field id="description">
+        <phrase id="fldcaption" value="Description" />
+      </field>
       <field id="destination_location">
         <phrase id="fldcaption" value="Destination" />
       </field>
       <field id="su">
         <phrase id="fldcaption" value="SU" />
       </field>
+      <field id="qty">
+        <phrase id="fldcaption" value="Qty" />
+      </field>
+      <field id="actual">
+        <phrase id="fldcaption" value="Actual" />
+      </field>
       <field id="user">
         <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
       </field>
       <field id="date_upload">
         <phrase id="fldcaption" value="Date Upload" />
       </field>
       <field id="date_confirmation">
         <phrase id="fldcaption" value="Date Confirmation" />
+      </field>
+      <field id="time_confirmation">
+        <phrase id="fldcaption" value="Time Confirmation" />
       </field>
     </table>
     <table id="bin_to_bin_piece">
@@ -2310,6 +2420,9 @@
       <field id="article">
         <phrase id="fldcaption" value="Article" />
       </field>
+      <field id="description">
+        <phrase id="fldcaption" value="Description" />
+      </field>
       <field id="scan_article">
         <phrase id="fldcaption" value="Scan Article" />
       </field>
@@ -2319,11 +2432,23 @@
       <field id="su">
         <phrase id="fldcaption" value="SU" />
       </field>
+      <field id="qty">
+        <phrase id="fldcaption" value="Qty" />
+      </field>
+      <field id="actual">
+        <phrase id="fldcaption" value="Actual" />
+      </field>
       <field id="user">
         <phrase id="fldcaption" value="User" />
       </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
       <field id="date_confirmation">
-        <phrase id="fldcaption" value="date confirmation" />
+        <phrase id="fldcaption" value="Date Confirmation" />
+      </field>
+      <field id="time_confirmation">
+        <phrase id="fldcaption" value="Time Confirmation" />
       </field>
     </table>
     <table id="job_control">
@@ -2356,6 +2481,12 @@
       </field>
       <field id="date_updated">
         <phrase id="fldcaption" value="Date Updated" />
+      </field>
+      <field id="sdsds">
+        <phrase id="fldcaption" value="sdsds" />
+      </field>
+      <field id="ddd">
+        <phrase id="fldcaption" value="ddd" />
       </field>
     </table>
     <table id="shortpick_by_area">
@@ -2558,6 +2689,9 @@
       </field>
       <field id="store_id">
         <phrase id="fldcaption" value="Store ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
       </field>
       <field id="area">
         <phrase id="fldcaption" value="Area" />
@@ -2865,6 +2999,9 @@
       <field id="store_name">
         <phrase id="fldcaption" value="Store Name" />
       </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
       <field id="article">
         <phrase id="fldcaption" value="Article" />
       </field>
@@ -2893,7 +3030,10 @@
     <table id="audit_picking_online">
       <phrase id="tblcaption" value="Audit Picking Online" />
       <field id="id">
-        <phrase id="fldcaption" value="id" />
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="scan">
+        <phrase id="fldcaption" value="Scan" />
       </field>
       <field id="box_code">
         <phrase id="fldcaption" value="Box Code" />
@@ -2903,12 +3043,6 @@
       </field>
       <field id="store_name">
         <phrase id="fldcaption" value="Store Name" />
-      </field>
-      <field id="scan">
-        <phrase id="fldcaption" value="Scan" />
-      </field>
-      <field id="article">
-        <phrase id="fldcaption" value="Article" />
       </field>
       <field id="picked_qty">
         <phrase id="fldcaption" value="Picked Qty" />
@@ -2920,7 +3054,10 @@
         <phrase id="fldcaption" value="Checker" />
       </field>
       <field id="status">
-        <phrase id="fldcaption" value="status" />
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="article">
+        <phrase id="fldcaption" value="Article" />
       </field>
       <field id="date_update">
         <phrase id="fldcaption" value="Date Update" />
@@ -2998,6 +3135,575 @@
       </field>
       <field id="datecreated">
         <phrase id="fldcaption" value="Date Created" />
+      </field>
+    </table>
+    <table id="active_stock">
+      <phrase id="tblcaption" value="Active Stock" />
+      <field id="aisle">
+        <phrase id="fldcaption" value="Aisle" />
+      </field>
+      <field id="active_bin">
+        <phrase id="fldcaption" value="Active Bin" />
+      </field>
+      <field id="total_stock">
+        <phrase id="fldcaption" value="Total Stock" />
+      </field>
+    </table>
+    <table id="stock_count_monitor">
+      <phrase id="tblcaption" value="Stock Count Monitor" />
+      <field id="aisle">
+        <phrase id="fldcaption" value="Aisle" />
+      </field>
+      <field id="counted_location">
+        <phrase id="fldcaption" value="Counted Loc" />
+      </field>
+      <field id="counted_pcs">
+        <phrase id="fldcaption" value="Counted Pcs" />
+      </field>
+      <field id="progress">
+        <phrase id="fldcaption" value="Progress" />
+      </field>
+      <field id="total_stock">
+        <phrase id="fldcaption" value="Total Stock" />
+      </field>
+    </table>
+    <table id="putaway_staging">
+      <phrase id="tblcaption" value="Staging Senin" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="putaway_staging2">
+      <phrase id="tblcaption" value="Staging Selasa" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="putaway_staging3">
+      <phrase id="tblcaption" value="Staging Rabu" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="putaway_staging4">
+      <phrase id="tblcaption" value="Staging Kamis" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="putaway_staging5">
+      <phrase id="tblcaption" value="Staging Jumat" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="putaway_staging6">
+      <phrase id="tblcaption" value="Staging Sabtu" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="putaway_staging7">
+      <phrase id="tblcaption" value="Staging Minggu" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="bin_to_bin">
+      <phrase id="tblcaption" value="Bin To Bin Box" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="from_bin">
+        <phrase id="fldcaption" value="From Bin" />
+      </field>
+      <field id="ctn">
+        <phrase id="fldcaption" value="Ctn" />
+      </field>
+      <field id="to_bin">
+        <phrase id="fldcaption" value="To Bin" />
+      </field>
+      <field id="date_created">
+        <phrase id="fldcaption" value="Date Created" />
+      </field>
+      <field id="date_updated">
+        <phrase id="fldcaption" value="Date Updated" />
+      </field>
+      <field id="time_updated">
+        <phrase id="fldcaption" value="Time Updated" />
+      </field>
+    </table>
+    <table id="putaway_opening">
+      <phrase id="tblcaption" value="Staging Opening" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="quantity">
+        <phrase id="fldcaption" value="Quantity" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+    </table>
+    <table id="vas_validation">
+      <phrase id="tblcaption" value="Vas Validation" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="order">
+        <phrase id="fldcaption" value="Order" />
+      </field>
+      <field id="po">
+        <phrase id="fldcaption" value="PO" />
+      </field>
+      <field id="sap_art">
+        <phrase id="fldcaption" value="SAP ART" />
+      </field>
+      <field id="sub_index">
+        <phrase id="fldcaption" value="Sub Index" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="ctn">
+        <phrase id="fldcaption" value="Ctn" />
+      </field>
+      <field id="season2">
+        <phrase id="fldcaption" value="Season" />
+      </field>
+      <field id="qty_oss">
+        <phrase id="fldcaption" value="Qty OSS" />
+      </field>
+      <field id="shipment">
+        <phrase id="fldcaption" value="Shipment" />
+      </field>
+      <field id="aju">
+        <phrase id="fldcaption" value="AJU" />
+      </field>
+      <field id="actual_price">
+        <phrase id="fldcaption" value="Actual Price" />
+      </field>
+      <field id="price_foto">
+        <phrase id="fldcaption" value="Price Foto" />
+      </field>
+      <field id="snow">
+        <phrase id="fldcaption" value="Snow" />
+      </field>
+      <field id="remarks">
+        <phrase id="fldcaption" value="Remarks" />
+      </field>
+      <field id="date_upload">
+        <phrase id="fldcaption" value="Date Upload" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="date_update">
+        <phrase id="fldcaption" value="Date Update" />
+      </field>
+      <field id="time_update">
+        <phrase id="fldcaption" value="Time Update" />
+      </field>
+    </table>
+    <table id="checking_vas">
+      <phrase id="tblcaption" value="Checking" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="filter_shipment">
+        <phrase id="fldcaption" value="Filter Shipment" />
+      </field>
+      <field id="order">
+        <phrase id="fldcaption" value="Order" />
+        <phrase id="fldtagvalue1" value="" />
+        <phrase id="fldtagcaption1" value="" />
+      </field>
+      <field id="po">
+        <phrase id="fldcaption" value="PO" />
+      </field>
+      <field id="sap_art">
+        <phrase id="fldcaption" value="SAP ART" />
+      </field>
+      <field id="sub_index">
+        <phrase id="fldcaption" value="Sub Index" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="ctn">
+        <phrase id="fldcaption" value="Ctn" />
+      </field>
+      <field id="season2">
+        <phrase id="fldcaption" value="Season" />
+      </field>
+      <field id="qty_oss">
+        <phrase id="fldcaption" value="Qty OSS" />
+      </field>
+      <field id="shipment">
+        <phrase id="fldcaption" value="Shipment" />
+      </field>
+      <field id="aju">
+        <phrase id="fldcaption" value="AJU" />
+      </field>
+      <field id="snow">
+        <phrase id="fldcaption" value="Snow" />
+      </field>
+      <field id="actual_price">
+        <phrase id="fldcaption" value="Actual Price" />
+      </field>
+      <field id="price_foto">
+        <phrase id="fldcaption" value="Price Foto" />
+      </field>
+      <field id="remarks">
+        <phrase id="fldcaption" value="Remarks" />
+      </field>
+      <field id="date_upload">
+        <phrase id="fldcaption" value="Date Upload" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="date_update">
+        <phrase id="fldcaption" value="Date Update" />
+      </field>
+      <field id="time_update">
+        <phrase id="fldcaption" value="Time Update" />
+      </field>
+    </table>
+    <table id="box_picking_online">
+      <phrase id="tblcaption" value="Box Picking Online" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="box_id">
+        <phrase id="fldcaption" value="Box ID" />
+      </field>
+      <field id="store_code">
+        <phrase id="fldcaption" value="Store Code" />
+      </field>
+      <field id="store_name">
+        <phrase id="fldcaption" value="Store Name" />
+      </field>
+      <field id="type">
+        <phrase id="fldcaption" value="Type" />
+      </field>
+      <field id="concept">
+        <phrase id="fldcaption" value="Concept" />
+      </field>
+      <field id="picked_qty">
+        <phrase id="fldcaption" value="Picked Qty" />
+      </field>
+      <field id="scan_qty">
+        <phrase id="fldcaption" value="Scan Qty" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="picking_date">
+        <phrase id="fldcaption" value="Picking Date" />
+      </field>
+      <field id="line">
+        <phrase id="fldcaption" value="Line" />
+      </field>
+      <field id="date_created">
+        <phrase id="fldcaption" value="Date Created" />
+      </field>
+      <field id="date_delivery">
+        <phrase id="fldcaption" value="Date Delivery" />
+      </field>
+      <field id="date_staging">
+        <phrase id="fldcaption" value="Date Staging" />
+      </field>
+      <field id="date_updated">
+        <phrase id="fldcaption" value="Date Updated" />
+      </field>
+    </table>
+    <table id="inbound_excess">
+      <phrase id="tblcaption" value="Inbound Excess" />
+      <field id="total_scanned">
+        <phrase id="fldcaption" value="Total Scanned" />
+      </field>
+      <field id="sscc">
+        <phrase id="fldcaption" value="SSCC" />
+      </field>
+      <field id="pallet_id">
+        <phrase id="fldcaption" value="Pallet ID" />
+      </field>
+      <field id="users">
+        <phrase id="fldcaption" value="Users" />
+      </field>
+      <field id="date_update">
+        <phrase id="fldcaption" value="Date Update" />
+      </field>
+      <field id="time_update">
+        <phrase id="fldcaption" value="Time Update" />
       </field>
     </table>
   </project>

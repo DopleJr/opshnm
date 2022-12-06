@@ -634,6 +634,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->picking_date->setVisibility();
         $this->date_created->setVisibility();
         $this->status->setVisibility();
+        $this->line->setVisibility();
         $this->users->setVisibility();
         $this->date_updated->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -966,6 +967,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $filterList = Concat($filterList, $this->aging->AdvancedSearch->toJson(), ","); // Field aging
         $filterList = Concat($filterList, $this->box_id->AdvancedSearch->toJson(), ","); // Field box_id
         $filterList = Concat($filterList, $this->picking_date->AdvancedSearch->toJson(), ","); // Field picking_date
+        $filterList = Concat($filterList, $this->line->AdvancedSearch->toJson(), ","); // Field line
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1037,6 +1039,14 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->picking_date->AdvancedSearch->SearchValue2 = @$filter["y_picking_date"];
         $this->picking_date->AdvancedSearch->SearchOperator2 = @$filter["w_picking_date"];
         $this->picking_date->AdvancedSearch->save();
+
+        // Field line
+        $this->line->AdvancedSearch->SearchValue = @$filter["x_line"];
+        $this->line->AdvancedSearch->SearchOperator = @$filter["z_line"];
+        $this->line->AdvancedSearch->SearchCondition = @$filter["v_line"];
+        $this->line->AdvancedSearch->SearchValue2 = @$filter["y_line"];
+        $this->line->AdvancedSearch->SearchOperator2 = @$filter["w_line"];
+        $this->line->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1060,6 +1070,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->buildSearchSql($where, $this->picking_date, $default, true); // picking_date
         $this->buildSearchSql($where, $this->date_created, $default, true); // date_created
         $this->buildSearchSql($where, $this->status, $default, true); // status
+        $this->buildSearchSql($where, $this->line, $default, false); // line
         $this->buildSearchSql($where, $this->users, $default, true); // users
         $this->buildSearchSql($where, $this->date_updated, $default, true); // date_updated
 
@@ -1072,6 +1083,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
             $this->aging->AdvancedSearch->save(); // aging
             $this->box_id->AdvancedSearch->save(); // box_id
             $this->picking_date->AdvancedSearch->save(); // picking_date
+            $this->line->AdvancedSearch->save(); // line
         }
         return $where;
     }
@@ -1161,6 +1173,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $searchFlds[] = &$this->picking_date;
         $searchFlds[] = &$this->date_created;
         $searchFlds[] = &$this->status;
+        $searchFlds[] = &$this->line;
         $searchFlds[] = &$this->users;
         $searchFlds[] = &$this->date_updated;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
@@ -1221,6 +1234,9 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         if ($this->status->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->line->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->users->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1270,6 +1286,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->picking_date->AdvancedSearch->unsetSession();
         $this->date_created->AdvancedSearch->unsetSession();
         $this->status->AdvancedSearch->unsetSession();
+        $this->line->AdvancedSearch->unsetSession();
         $this->users->AdvancedSearch->unsetSession();
         $this->date_updated->AdvancedSearch->unsetSession();
     }
@@ -1294,6 +1311,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->picking_date->AdvancedSearch->load();
         $this->date_created->AdvancedSearch->load();
         $this->status->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
         $this->users->AdvancedSearch->load();
         $this->date_updated->AdvancedSearch->load();
     }
@@ -1324,6 +1342,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
             $this->updateSort($this->picking_date); // picking_date
             $this->updateSort($this->date_created); // date_created
             $this->updateSort($this->status); // status
+            $this->updateSort($this->line); // line
             $this->updateSort($this->users); // users
             $this->updateSort($this->date_updated); // date_updated
             $this->setStartRecordNumber(1); // Reset start position
@@ -1362,6 +1381,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
                 $this->picking_date->setSort("");
                 $this->date_created->setSort("");
                 $this->status->setSort("");
+                $this->line->setSort("");
                 $this->users->setSort("");
                 $this->date_updated->setSort("");
             }
@@ -1511,6 +1531,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
             $option->add("picking_date", $this->createColumnOption("picking_date"));
             $option->add("date_created", $this->createColumnOption("date_created"));
             $option->add("status", $this->createColumnOption("status"));
+            $option->add("line", $this->createColumnOption("line"));
             $option->add("users", $this->createColumnOption("users"));
             $option->add("date_updated", $this->createColumnOption("date_updated"));
         }
@@ -1783,6 +1804,14 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
             }
         }
 
+        // line
+        if ($this->line->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->line->AdvancedSearch->SearchValue != "" || $this->line->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // users
         if ($this->users->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1898,6 +1927,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->picking_date->setDbValue($row['picking_date']);
         $this->date_created->setDbValue($row['date_created']);
         $this->status->setDbValue($row['status']);
+        $this->line->setDbValue($row['line']);
         $this->users->setDbValue($row['users']);
         $this->date_updated->setDbValue($row['date_updated']);
     }
@@ -1918,6 +1948,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $row['picking_date'] = $this->picking_date->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
         return $row;
@@ -1993,6 +2024,8 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         // status
         $this->status->CellCssStyle = "white-space: nowrap;";
 
+        // line
+
         // users
         $this->users->CellCssStyle = "white-space: nowrap;";
 
@@ -2048,6 +2081,10 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
             // status
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
+
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
 
             // users
             $this->users->ViewValue = $this->users->CurrentValue;
@@ -2112,6 +2149,11 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
 
             // users
             $this->users->LinkCustomAttributes = "";
@@ -2215,6 +2257,15 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
                 $this->status->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->status->AdvancedSearch->SearchValue);
             }
 
+            // line
+            $this->line->setupEditAttributes();
+            $this->line->EditCustomAttributes = "";
+            if (!$this->line->Raw) {
+                $this->line->AdvancedSearch->SearchValue = HtmlDecode($this->line->AdvancedSearch->SearchValue);
+            }
+            $this->line->EditValue = HtmlEncode($this->line->AdvancedSearch->SearchValue);
+            $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
             // users
             if ($this->users->UseFilter && !EmptyValue($this->users->AdvancedSearch->SearchValue)) {
                 if (is_array($this->users->AdvancedSearch->SearchValue)) {
@@ -2265,6 +2316,7 @@ class MonitorStagingOnStagingList extends MonitorStagingOnStaging
         $this->aging->AdvancedSearch->load();
         $this->box_id->AdvancedSearch->load();
         $this->picking_date->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
     }
 
     // Get export HTML tag

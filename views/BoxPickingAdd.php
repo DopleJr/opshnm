@@ -27,7 +27,8 @@ loadjs.ready(["wrapper", "head"], function () {
         ["concept", [fields.concept.visible && fields.concept.required ? ew.Validators.required(fields.concept.caption) : null], fields.concept.isInvalid],
         ["quantity", [fields.quantity.visible && fields.quantity.required ? ew.Validators.required(fields.quantity.caption) : null, ew.Validators.integer], fields.quantity.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["users", [fields.users.visible && fields.users.required ? ew.Validators.required(fields.users.caption) : null], fields.users.isInvalid]
+        ["users", [fields.users.visible && fields.users.required ? ew.Validators.required(fields.users.caption) : null], fields.users.isInvalid],
+        ["line", [fields.line.visible && fields.line.required ? ew.Validators.required(fields.line.caption) : null], fields.line.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -154,6 +155,18 @@ $Page->showMessage();
 <input type="<?= $Page->users->getInputTextType() ?>" name="x_users" id="x_users" data-table="box_picking" data-field="x_users" value="<?= $Page->users->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->users->getPlaceHolder()) ?>"<?= $Page->users->editAttributes() ?> aria-describedby="x_users_help">
 <?= $Page->users->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->users->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <div id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <label id="elh_box_picking_line" for="x_line" class="<?= $Page->LeftColumnClass ?>"><?= $Page->line->caption() ?><?= $Page->line->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->line->cellAttributes() ?>>
+<span id="el_box_picking_line">
+<input type="<?= $Page->line->getInputTextType() ?>" name="x_line" id="x_line" data-table="box_picking" data-field="x_line" value="<?= $Page->line->EditValue ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"<?= $Page->line->editAttributes() ?> aria-describedby="x_line_help">
+<?= $Page->line->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->line->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

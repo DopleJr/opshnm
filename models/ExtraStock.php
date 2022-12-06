@@ -134,7 +134,14 @@ class ExtraStock extends DbTable
         $this->week->InputTextType = "text";
         $this->week->IsCustom = true; // Custom field
         $this->week->UseFilter = true; // Table header filter
-        $this->week->Lookup = new Lookup('week', 'extra_stock', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->week->Lookup = new Lookup('week', 'extra_stock', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->week->Lookup = new Lookup('week', 'extra_stock', true, 'week', ["week","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['week'] = &$this->week;
 
         // art6
@@ -159,7 +166,14 @@ class ExtraStock extends DbTable
         $this->art6->InputTextType = "text";
         $this->art6->IsCustom = true; // Custom field
         $this->art6->UseFilter = true; // Table header filter
-        $this->art6->Lookup = new Lookup('art6', 'extra_stock', true, 'art6', ["art6","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->art6->Lookup = new Lookup('art6', 'extra_stock', true, 'art6', ["art6","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->art6->Lookup = new Lookup('art6', 'extra_stock', true, 'art6', ["art6","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['art6'] = &$this->art6;
 
         // art9
@@ -184,7 +198,14 @@ class ExtraStock extends DbTable
         $this->art9->InputTextType = "text";
         $this->art9->IsCustom = true; // Custom field
         $this->art9->UseFilter = true; // Table header filter
-        $this->art9->Lookup = new Lookup('art9', 'extra_stock', true, 'art9', ["art9","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->art9->Lookup = new Lookup('art9', 'extra_stock', true, 'art9', ["art9","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->art9->Lookup = new Lookup('art9', 'extra_stock', true, 'art9', ["art9","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['art9'] = &$this->art9;
 
         // art11
@@ -209,7 +230,14 @@ class ExtraStock extends DbTable
         $this->art11->InputTextType = "text";
         $this->art11->IsCustom = true; // Custom field
         $this->art11->UseFilter = true; // Table header filter
-        $this->art11->Lookup = new Lookup('art11', 'extra_stock', true, 'art11', ["art11","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->art11->Lookup = new Lookup('art11', 'extra_stock', true, 'art11', ["art11","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->art11->Lookup = new Lookup('art11', 'extra_stock', true, 'art11', ["art11","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['art11'] = &$this->art11;
 
         // article
@@ -233,7 +261,14 @@ class ExtraStock extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'master_article', true, 'article', ["article","","",""], [], ["x_size_desc","x_color_desc","x_season"], [], [], ["season","size_desc","color_desc"], ["x_season","x_size_desc","x_color_desc"], '', '', "`article`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'master_article', true, 'article', ["article","","",""], [], ["x_size_desc","x_color_desc","x_season"], [], [], ["season","size_desc","color_desc"], ["x_season","x_size_desc","x_color_desc"], '', '', "`article`");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'master_article', true, 'article', ["article","","",""], [], ["x_size_desc","x_color_desc","x_season"], [], [], ["season","size_desc","color_desc"], ["x_season","x_size_desc","x_color_desc"], '', '', "`article`");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // location
@@ -257,7 +292,14 @@ class ExtraStock extends DbTable
         );
         $this->location->InputTextType = "text";
         $this->location->UseFilter = true; // Table header filter
-        $this->location->Lookup = new Lookup('location', 'extra_stock', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->location->Lookup = new Lookup('location', 'extra_stock', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->location->Lookup = new Lookup('location', 'extra_stock', true, 'location', ["location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['location'] = &$this->location;
 
         // ctn
@@ -281,7 +323,14 @@ class ExtraStock extends DbTable
         );
         $this->ctn->InputTextType = "text";
         $this->ctn->UseFilter = true; // Table header filter
-        $this->ctn->Lookup = new Lookup('ctn', 'extra_stock', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->ctn->Lookup = new Lookup('ctn', 'extra_stock', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->ctn->Lookup = new Lookup('ctn', 'extra_stock', true, 'ctn', ["ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['ctn'] = &$this->ctn;
 
         // quantity
@@ -305,7 +354,14 @@ class ExtraStock extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'extra_stock', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'extra_stock', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'extra_stock', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['quantity'] = &$this->quantity;
 
@@ -330,7 +386,14 @@ class ExtraStock extends DbTable
         );
         $this->description->InputTextType = "text";
         $this->description->UseFilter = true; // Table header filter
-        $this->description->Lookup = new Lookup('description', 'extra_stock', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->description->Lookup = new Lookup('description', 'extra_stock', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->description->Lookup = new Lookup('description', 'extra_stock', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['description'] = &$this->description;
 
         // size_desc
@@ -354,7 +417,14 @@ class ExtraStock extends DbTable
         );
         $this->size_desc->InputTextType = "text";
         $this->size_desc->UseFilter = true; // Table header filter
-        $this->size_desc->Lookup = new Lookup('size_desc', 'master_article', true, 'article', ["size_desc","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`size_desc`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_desc->Lookup = new Lookup('size_desc', 'master_article', true, 'article', ["size_desc","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`size_desc`");
+                break;
+            default:
+                $this->size_desc->Lookup = new Lookup('size_desc', 'master_article', true, 'article', ["size_desc","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`size_desc`");
+                break;
+        }
         $this->Fields['size_desc'] = &$this->size_desc;
 
         // color_code
@@ -378,7 +448,14 @@ class ExtraStock extends DbTable
         );
         $this->color_code->InputTextType = "text";
         $this->color_code->UseFilter = true; // Table header filter
-        $this->color_code->Lookup = new Lookup('color_code', 'extra_stock', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_code->Lookup = new Lookup('color_code', 'extra_stock', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_code->Lookup = new Lookup('color_code', 'extra_stock', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_code'] = &$this->color_code;
 
         // color_desc
@@ -402,7 +479,14 @@ class ExtraStock extends DbTable
         );
         $this->color_desc->InputTextType = "text";
         $this->color_desc->UseFilter = true; // Table header filter
-        $this->color_desc->Lookup = new Lookup('color_desc', 'master_article', true, 'article', ["color_desc","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`color_desc`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_desc->Lookup = new Lookup('color_desc', 'master_article', true, 'article', ["color_desc","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`color_desc`");
+                break;
+            default:
+                $this->color_desc->Lookup = new Lookup('color_desc', 'master_article', true, 'article', ["color_desc","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`color_desc`");
+                break;
+        }
         $this->Fields['color_desc'] = &$this->color_desc;
 
         // season
@@ -426,7 +510,14 @@ class ExtraStock extends DbTable
         );
         $this->season->InputTextType = "text";
         $this->season->UseFilter = true; // Table header filter
-        $this->season->Lookup = new Lookup('season', 'master_article', true, 'article', ["season","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`season`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->season->Lookup = new Lookup('season', 'master_article', true, 'article', ["season","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`season`");
+                break;
+            default:
+                $this->season->Lookup = new Lookup('season', 'master_article', true, 'article', ["season","","",""], ["x_article"], [], ["article"], ["x_article"], [], [], '', '', "`season`");
+                break;
+        }
         $this->Fields['season'] = &$this->season;
 
         // no_box
@@ -450,7 +541,14 @@ class ExtraStock extends DbTable
         );
         $this->no_box->InputTextType = "text";
         $this->no_box->UseFilter = true; // Table header filter
-        $this->no_box->Lookup = new Lookup('no_box', 'extra_stock', true, 'no_box', ["no_box","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->no_box->Lookup = new Lookup('no_box', 'extra_stock', true, 'no_box', ["no_box","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->no_box->Lookup = new Lookup('no_box', 'extra_stock', true, 'no_box', ["no_box","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['no_box'] = &$this->no_box;
 
         // location_2nd
@@ -474,7 +572,14 @@ class ExtraStock extends DbTable
         );
         $this->location_2nd->InputTextType = "text";
         $this->location_2nd->UseFilter = true; // Table header filter
-        $this->location_2nd->Lookup = new Lookup('location_2nd', 'extra_stock', true, 'location_2nd', ["location_2nd","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->location_2nd->Lookup = new Lookup('location_2nd', 'extra_stock', true, 'location_2nd', ["location_2nd","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->location_2nd->Lookup = new Lookup('location_2nd', 'extra_stock', true, 'location_2nd', ["location_2nd","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['location_2nd'] = &$this->location_2nd;
 
         // date_created
@@ -498,7 +603,14 @@ class ExtraStock extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'extra_stock', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'extra_stock', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'extra_stock', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
 
@@ -523,7 +635,14 @@ class ExtraStock extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'extra_stock', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'extra_stock', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'extra_stock', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
 

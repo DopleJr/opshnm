@@ -509,6 +509,7 @@ class JobControlCopy1Add extends JobControlCopy1
         $this->id->Visible = false;
         $this->creation_date->setVisibility();
         $this->store_id->setVisibility();
+        $this->concept->setVisibility();
         $this->area->setVisibility();
         $this->aisle->setVisibility();
         $this->user->setVisibility();
@@ -535,6 +536,7 @@ class JobControlCopy1Add extends JobControlCopy1
         // Set up lookup cache
         $this->setupLookupOptions($this->creation_date);
         $this->setupLookupOptions($this->store_id);
+        $this->setupLookupOptions($this->concept);
         $this->setupLookupOptions($this->area);
         $this->setupLookupOptions($this->aisle);
         $this->setupLookupOptions($this->user);
@@ -710,6 +712,16 @@ class JobControlCopy1Add extends JobControlCopy1
             }
         }
 
+        // Check field name 'concept' first before field var 'x_concept'
+        $val = $CurrentForm->hasValue("concept") ? $CurrentForm->getValue("concept") : $CurrentForm->getValue("x_concept");
+        if (!$this->concept->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->concept->Visible = false; // Disable update for API request
+            } else {
+                $this->concept->setFormValue($val);
+            }
+        }
+
         // Check field name 'area' first before field var 'x_area'
         $val = $CurrentForm->hasValue("area") ? $CurrentForm->getValue("area") : $CurrentForm->getValue("x_area");
         if (!$this->area->IsDetailKey) {
@@ -803,6 +815,7 @@ class JobControlCopy1Add extends JobControlCopy1
         $this->creation_date->CurrentValue = $this->creation_date->FormValue;
         $this->creation_date->CurrentValue = UnFormatDateTime($this->creation_date->CurrentValue, $this->creation_date->formatPattern());
         $this->store_id->CurrentValue = $this->store_id->FormValue;
+        $this->concept->CurrentValue = $this->concept->FormValue;
         $this->area->CurrentValue = $this->area->FormValue;
         $this->aisle->CurrentValue = $this->aisle->FormValue;
         $this->user->CurrentValue = $this->user->FormValue;
@@ -865,6 +878,7 @@ class JobControlCopy1Add extends JobControlCopy1
         $this->id->setDbValue($row['id']);
         $this->creation_date->setDbValue($row['creation_date']);
         $this->store_id->setDbValue($row['store_id']);
+        $this->concept->setDbValue($row['concept']);
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
@@ -882,6 +896,7 @@ class JobControlCopy1Add extends JobControlCopy1
         $row['id'] = $this->id->DefaultValue;
         $row['creation_date'] = $this->creation_date->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
+        $row['concept'] = $this->concept->DefaultValue;
         $row['area'] = $this->area->DefaultValue;
         $row['aisle'] = $this->aisle->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
@@ -929,6 +944,9 @@ class JobControlCopy1Add extends JobControlCopy1
 
         // store_id
         $this->store_id->RowCssClass = "row";
+
+        // concept
+        $this->concept->RowCssClass = "row";
 
         // area
         $this->area->RowCssClass = "row";
@@ -1025,6 +1043,30 @@ class JobControlCopy1Add extends JobControlCopy1
                 $this->store_id->ViewValue = null;
             }
             $this->store_id->ViewCustomAttributes = "";
+
+            // concept
+            $curVal = strval($this->concept->CurrentValue);
+            if ($curVal != "") {
+                $this->concept->ViewValue = $this->concept->lookupCacheOption($curVal);
+                if ($this->concept->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`concept`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->concept->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->concept->Lookup->renderViewRow($rswrk[0]);
+                        $this->concept->ViewValue = $this->concept->displayValue($arwrk);
+                    } else {
+                        $this->concept->ViewValue = $this->concept->CurrentValue;
+                    }
+                }
+            } else {
+                $this->concept->ViewValue = null;
+            }
+            $this->concept->ViewCustomAttributes = "";
 
             // area
             $curVal = strval($this->area->CurrentValue);
@@ -1150,6 +1192,10 @@ class JobControlCopy1Add extends JobControlCopy1
             $this->store_id->LinkCustomAttributes = "";
             $this->store_id->HrefValue = "";
 
+            // concept
+            $this->concept->LinkCustomAttributes = "";
+            $this->concept->HrefValue = "";
+
             // area
             $this->area->LinkCustomAttributes = "";
             $this->area->HrefValue = "";
@@ -1254,6 +1300,34 @@ class JobControlCopy1Add extends JobControlCopy1
                 $this->store_id->EditValue = $arwrk;
             }
             $this->store_id->PlaceHolder = RemoveHtml($this->store_id->caption());
+
+            // concept
+            $this->concept->setupEditAttributes();
+            $this->concept->EditCustomAttributes = "";
+            $curVal = trim(strval($this->concept->CurrentValue));
+            if ($curVal != "") {
+                $this->concept->ViewValue = $this->concept->lookupCacheOption($curVal);
+            } else {
+                $this->concept->ViewValue = $this->concept->Lookup !== null && is_array($this->concept->lookupOptions()) ? $curVal : null;
+            }
+            if ($this->concept->ViewValue !== null) { // Load from cache
+                $this->concept->EditValue = array_values($this->concept->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`concept`" . SearchString("=", $this->concept->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->concept->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCacheImpl($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->concept->EditValue = $arwrk;
+            }
+            $this->concept->PlaceHolder = RemoveHtml($this->concept->caption());
 
             // area
             $this->area->setupEditAttributes();
@@ -1395,6 +1469,10 @@ class JobControlCopy1Add extends JobControlCopy1
             $this->store_id->LinkCustomAttributes = "";
             $this->store_id->HrefValue = "";
 
+            // concept
+            $this->concept->LinkCustomAttributes = "";
+            $this->concept->HrefValue = "";
+
             // area
             $this->area->LinkCustomAttributes = "";
             $this->area->HrefValue = "";
@@ -1460,6 +1538,11 @@ class JobControlCopy1Add extends JobControlCopy1
         if ($this->store_id->Required) {
             if ($this->store_id->FormValue == "") {
                 $this->store_id->addErrorMessage(str_replace("%s", $this->store_id->caption(), $this->store_id->RequiredErrorMessage));
+            }
+        }
+        if ($this->concept->Required) {
+            if (!$this->concept->IsDetailKey && EmptyValue($this->concept->FormValue)) {
+                $this->concept->addErrorMessage(str_replace("%s", $this->concept->caption(), $this->concept->RequiredErrorMessage));
             }
         }
         if ($this->area->Required) {
@@ -1531,6 +1614,9 @@ class JobControlCopy1Add extends JobControlCopy1
 
         // store_id
         $this->store_id->setDbValueDef($rsnew, $this->store_id->CurrentValue, null, false);
+
+        // concept
+        $this->concept->setDbValueDef($rsnew, $this->concept->CurrentValue, null, false);
 
         // area
         $this->area->setDbValueDef($rsnew, $this->area->CurrentValue, null, false);
@@ -1633,6 +1719,8 @@ class JobControlCopy1Add extends JobControlCopy1
                         return "`picker` is Null  ";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_concept":
                     break;
                 case "x_area":
                     $lookupFilter = function () {

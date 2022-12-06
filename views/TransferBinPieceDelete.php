@@ -53,20 +53,35 @@ $Page->showMessage();
 <?php if ($Page->article->Visible) { // article ?>
         <th class="<?= $Page->article->headerCellClass() ?>"><span id="elh_transfer_bin_piece_article" class="transfer_bin_piece_article"><?= $Page->article->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->description->Visible) { // description ?>
+        <th class="<?= $Page->description->headerCellClass() ?>"><span id="elh_transfer_bin_piece_description" class="transfer_bin_piece_description"><?= $Page->description->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->destination_location->Visible) { // destination_location ?>
         <th class="<?= $Page->destination_location->headerCellClass() ?>"><span id="elh_transfer_bin_piece_destination_location" class="transfer_bin_piece_destination_location"><?= $Page->destination_location->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->su->Visible) { // su ?>
         <th class="<?= $Page->su->headerCellClass() ?>"><span id="elh_transfer_bin_piece_su" class="transfer_bin_piece_su"><?= $Page->su->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->qty->Visible) { // qty ?>
+        <th class="<?= $Page->qty->headerCellClass() ?>"><span id="elh_transfer_bin_piece_qty" class="transfer_bin_piece_qty"><?= $Page->qty->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->actual->Visible) { // actual ?>
+        <th class="<?= $Page->actual->headerCellClass() ?>"><span id="elh_transfer_bin_piece_actual" class="transfer_bin_piece_actual"><?= $Page->actual->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
         <th class="<?= $Page->user->headerCellClass() ?>"><span id="elh_transfer_bin_piece_user" class="transfer_bin_piece_user"><?= $Page->user->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_transfer_bin_piece_status" class="transfer_bin_piece_status"><?= $Page->status->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->date_upload->Visible) { // date_upload ?>
         <th class="<?= $Page->date_upload->headerCellClass() ?>"><span id="elh_transfer_bin_piece_date_upload" class="transfer_bin_piece_date_upload"><?= $Page->date_upload->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->date_confirmation->Visible) { // date_confirmation ?>
         <th class="<?= $Page->date_confirmation->headerCellClass() ?>"><span id="elh_transfer_bin_piece_date_confirmation" class="transfer_bin_piece_date_confirmation"><?= $Page->date_confirmation->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->time_confirmation->Visible) { // time_confirmation ?>
+        <th class="<?= $Page->time_confirmation->headerCellClass() ?>"><span id="elh_transfer_bin_piece_time_confirmation" class="transfer_bin_piece_time_confirmation"><?= $Page->time_confirmation->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -113,6 +128,14 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->description->Visible) { // description ?>
+        <td<?= $Page->description->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transfer_bin_piece_description" class="el_transfer_bin_piece_description">
+<span<?= $Page->description->viewAttributes() ?>>
+<?= $Page->description->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->destination_location->Visible) { // destination_location ?>
         <td<?= $Page->destination_location->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_transfer_bin_piece_destination_location" class="el_transfer_bin_piece_destination_location">
@@ -129,11 +152,35 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->qty->Visible) { // qty ?>
+        <td<?= $Page->qty->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transfer_bin_piece_qty" class="el_transfer_bin_piece_qty">
+<span<?= $Page->qty->viewAttributes() ?>>
+<?= $Page->qty->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->actual->Visible) { // actual ?>
+        <td<?= $Page->actual->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transfer_bin_piece_actual" class="el_transfer_bin_piece_actual">
+<span<?= $Page->actual->viewAttributes() ?>>
+<?= $Page->actual->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->user->Visible) { // user ?>
         <td<?= $Page->user->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_transfer_bin_piece_user" class="el_transfer_bin_piece_user">
 <span<?= $Page->user->viewAttributes() ?>>
 <?= $Page->user->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <td<?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transfer_bin_piece_status" class="el_transfer_bin_piece_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -150,6 +197,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_transfer_bin_piece_date_confirmation" class="el_transfer_bin_piece_date_confirmation">
 <span<?= $Page->date_confirmation->viewAttributes() ?>>
 <?= $Page->date_confirmation->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->time_confirmation->Visible) { // time_confirmation ?>
+        <td<?= $Page->time_confirmation->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transfer_bin_piece_time_confirmation" class="el_transfer_bin_piece_time_confirmation">
+<span<?= $Page->time_confirmation->viewAttributes() ?>>
+<?= $Page->time_confirmation->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

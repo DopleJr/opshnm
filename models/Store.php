@@ -119,7 +119,14 @@ class Store extends DbTable
         );
         $this->store_code->InputTextType = "text";
         $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'store', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'store', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'store', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_code'] = &$this->store_code;
 
         // store_name
@@ -143,7 +150,14 @@ class Store extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // totes
@@ -169,7 +183,14 @@ class Store extends DbTable
         $this->totes->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->totes->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->totes->UseFilter = true; // Table header filter
-        $this->totes->Lookup = new Lookup('totes', 'store', true, 'totes', ["totes","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->totes->Lookup = new Lookup('totes', 'store', true, 'totes', ["totes","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->totes->Lookup = new Lookup('totes', 'store', true, 'totes', ["totes","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->totes->OptionCount = 2;
         $this->Fields['totes'] = &$this->totes;
 

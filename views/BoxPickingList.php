@@ -29,9 +29,11 @@ loadjs.ready(["wrapper", "head"], function () {
     fbox_pickinglist.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fbox_pickinglist.lists.users = <?= $Page->users->toClientList($Page) ?>;
     fbox_pickinglist.lists.picking_date = <?= $Page->picking_date->toClientList($Page) ?>;
+    fbox_pickinglist.lists.line = <?= $Page->line->toClientList($Page) ?>;
     fbox_pickinglist.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
-    fbox_pickinglist.lists.date_delivery = <?= $Page->date_delivery->toClientList($Page) ?>;
     fbox_pickinglist.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
+    fbox_pickinglist.lists.date_staging = <?= $Page->date_staging->toClientList($Page) ?>;
+    fbox_pickinglist.lists.date_delivery = <?= $Page->date_delivery->toClientList($Page) ?>;
     loadjs.done("fbox_pickinglist");
 });
 var fbox_pickingsrch, currentSearchForm, currentAdvancedSearchForm;
@@ -55,9 +57,11 @@ loadjs.ready(["wrapper", "head"], function () {
         ["users", [], fields.users.isInvalid],
         ["picking_date", [], fields.picking_date.isInvalid],
         ["y_picking_date", [ew.Validators.between], false],
+        ["line", [], fields.line.isInvalid],
         ["date_created", [], fields.date_created.isInvalid],
-        ["date_delivery", [], fields.date_delivery.isInvalid],
-        ["date_updated", [], fields.date_updated.isInvalid]
+        ["date_updated", [], fields.date_updated.isInvalid],
+        ["date_staging", [], fields.date_staging.isInvalid],
+        ["date_delivery", [], fields.date_delivery.isInvalid]
     ]);
 
     // Validate form
@@ -97,9 +101,11 @@ loadjs.ready(["wrapper", "head"], function () {
     fbox_pickingsrch.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fbox_pickingsrch.lists.users = <?= $Page->users->toClientList($Page) ?>;
     fbox_pickingsrch.lists.picking_date = <?= $Page->picking_date->toClientList($Page) ?>;
+    fbox_pickingsrch.lists.line = <?= $Page->line->toClientList($Page) ?>;
     fbox_pickingsrch.lists.date_created = <?= $Page->date_created->toClientList($Page) ?>;
-    fbox_pickingsrch.lists.date_delivery = <?= $Page->date_delivery->toClientList($Page) ?>;
     fbox_pickingsrch.lists.date_updated = <?= $Page->date_updated->toClientList($Page) ?>;
+    fbox_pickingsrch.lists.date_staging = <?= $Page->date_staging->toClientList($Page) ?>;
+    fbox_pickingsrch.lists.date_delivery = <?= $Page->date_delivery->toClientList($Page) ?>;
 
     // Filters
     fbox_pickingsrch.filterList = <?= $Page->getFilterList() ?>;
@@ -478,6 +484,43 @@ if (!$Page->picking_date->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+<?php
+if (!$Page->line->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_line" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->line->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_line"
+            name="x_line[]"
+            class="form-control ew-select<?= $Page->line->isInvalidClass() ?>"
+            data-select2-id="fbox_pickingsrch_x_line"
+            data-table="box_picking"
+            data-field="x_line"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->line->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->line->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"
+            <?= $Page->line->editAttributes() ?>>
+            <?= $Page->line->selectOptionListHtml("x_line", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->line->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fbox_pickingsrch", function() {
+            var options = {
+                name: "x_line",
+                selectId: "fbox_pickingsrch_x_line",
+                ajax: { id: "x_line", form: "fbox_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.box_picking.fields.line.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
 <?php
 if (!$Page->date_created->UseFilter) {
@@ -515,43 +558,6 @@ if (!$Page->date_created->UseFilter) {
         </script>
     </div><!-- /.col-sm-auto -->
 <?php } ?>
-<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
-<?php
-if (!$Page->date_delivery->UseFilter) {
-    $Page->SearchColumnCount++;
-}
-?>
-    <div id="xs_date_delivery" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_delivery->UseFilter ? " ew-filter-field" : "" ?>">
-        <select
-            id="x_date_delivery"
-            name="x_date_delivery[]"
-            class="form-control ew-select<?= $Page->date_delivery->isInvalidClass() ?>"
-            data-select2-id="fbox_pickingsrch_x_date_delivery"
-            data-table="box_picking"
-            data-field="x_date_delivery"
-            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_delivery->caption())) ?>"
-            data-filter="true"
-            multiple
-            size="1"
-            data-value-separator="<?= $Page->date_delivery->displayValueSeparatorAttribute() ?>"
-            data-placeholder="<?= HtmlEncode($Page->date_delivery->getPlaceHolder()) ?>"
-            <?= $Page->date_delivery->editAttributes() ?>>
-            <?= $Page->date_delivery->selectOptionListHtml("x_date_delivery", true) ?>
-        </select>
-        <div class="invalid-feedback"><?= $Page->date_delivery->getErrorMessage(false) ?></div>
-        <script>
-        loadjs.ready("fbox_pickingsrch", function() {
-            var options = {
-                name: "x_date_delivery",
-                selectId: "fbox_pickingsrch_x_date_delivery",
-                ajax: { id: "x_date_delivery", form: "fbox_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
-            };
-            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.box_picking.fields.date_delivery.filterOptions);
-            ew.createFilter(options);
-        });
-        </script>
-    </div><!-- /.col-sm-auto -->
-<?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
 <?php
 if (!$Page->date_updated->UseFilter) {
@@ -584,6 +590,80 @@ if (!$Page->date_updated->UseFilter) {
                 ajax: { id: "x_date_updated", form: "fbox_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
             };
             options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.box_picking.fields.date_updated.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+<?php
+if (!$Page->date_staging->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date_staging" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_staging->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date_staging"
+            name="x_date_staging[]"
+            class="form-control ew-select<?= $Page->date_staging->isInvalidClass() ?>"
+            data-select2-id="fbox_pickingsrch_x_date_staging"
+            data-table="box_picking"
+            data-field="x_date_staging"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_staging->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date_staging->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date_staging->getPlaceHolder()) ?>"
+            <?= $Page->date_staging->editAttributes() ?>>
+            <?= $Page->date_staging->selectOptionListHtml("x_date_staging", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date_staging->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fbox_pickingsrch", function() {
+            var options = {
+                name: "x_date_staging",
+                selectId: "fbox_pickingsrch_x_date_staging",
+                ajax: { id: "x_date_staging", form: "fbox_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.box_picking.fields.date_staging.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
+<?php
+if (!$Page->date_delivery->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_date_delivery" class="col-sm-auto d-sm-flex mb-3 px-0 pe-sm-2<?= $Page->date_delivery->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_date_delivery"
+            name="x_date_delivery[]"
+            class="form-control ew-select<?= $Page->date_delivery->isInvalidClass() ?>"
+            data-select2-id="fbox_pickingsrch_x_date_delivery"
+            data-table="box_picking"
+            data-field="x_date_delivery"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->date_delivery->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->date_delivery->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->date_delivery->getPlaceHolder()) ?>"
+            <?= $Page->date_delivery->editAttributes() ?>>
+            <?= $Page->date_delivery->selectOptionListHtml("x_date_delivery", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->date_delivery->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fbox_pickingsrch", function() {
+            var options = {
+                name: "x_date_delivery",
+                selectId: "fbox_pickingsrch_x_date_delivery",
+                ajax: { id: "x_date_delivery", form: "fbox_pickingsrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.box_picking.fields.date_delivery.filterOptions);
             ew.createFilter(options);
         });
         </script>
@@ -684,14 +764,20 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->picking_date->Visible) { // picking_date ?>
         <th data-name="picking_date" class="<?= $Page->picking_date->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_picking_date" class="box_picking_picking_date"><?= $Page->renderFieldHeader($Page->picking_date) ?></div></th>
 <?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+        <th data-name="line" class="<?= $Page->line->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_line" class="box_picking_line"><?= $Page->renderFieldHeader($Page->line) ?></div></th>
+<?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <th data-name="date_created" class="<?= $Page->date_created->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_date_created" class="box_picking_date_created"><?= $Page->renderFieldHeader($Page->date_created) ?></div></th>
 <?php } ?>
-<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
-        <th data-name="date_delivery" class="<?= $Page->date_delivery->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_date_delivery" class="box_picking_date_delivery"><?= $Page->renderFieldHeader($Page->date_delivery) ?></div></th>
-<?php } ?>
 <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <th data-name="date_updated" class="<?= $Page->date_updated->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_date_updated" class="box_picking_date_updated"><?= $Page->renderFieldHeader($Page->date_updated) ?></div></th>
+<?php } ?>
+<?php if ($Page->date_staging->Visible) { // date_staging ?>
+        <th data-name="date_staging" class="<?= $Page->date_staging->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_date_staging" class="box_picking_date_staging"><?= $Page->renderFieldHeader($Page->date_staging) ?></div></th>
+<?php } ?>
+<?php if ($Page->date_delivery->Visible) { // date_delivery ?>
+        <th data-name="date_delivery" class="<?= $Page->date_delivery->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_box_picking_date_delivery" class="box_picking_date_delivery"><?= $Page->renderFieldHeader($Page->date_delivery) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -848,6 +934,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->line->Visible) { // line ?>
+        <td data-name="line"<?= $Page->line->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_box_picking_line" class="el_box_picking_line">
+<span<?= $Page->line->viewAttributes() ?>>
+<?= $Page->line->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->date_created->Visible) { // date_created ?>
         <td data-name="date_created"<?= $Page->date_created->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_box_picking_date_created" class="el_box_picking_date_created">
@@ -856,19 +950,27 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->date_delivery->Visible) { // date_delivery ?>
-        <td data-name="date_delivery"<?= $Page->date_delivery->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_box_picking_date_delivery" class="el_box_picking_date_delivery">
-<span<?= $Page->date_delivery->viewAttributes() ?>>
-<?= $Page->date_delivery->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->date_updated->Visible) { // date_updated ?>
         <td data-name="date_updated"<?= $Page->date_updated->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_box_picking_date_updated" class="el_box_picking_date_updated">
 <span<?= $Page->date_updated->viewAttributes() ?>>
 <?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->date_staging->Visible) { // date_staging ?>
+        <td data-name="date_staging"<?= $Page->date_staging->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_box_picking_date_staging" class="el_box_picking_date_staging">
+<span<?= $Page->date_staging->viewAttributes() ?>>
+<?= $Page->date_staging->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->date_delivery->Visible) { // date_delivery ?>
+        <td data-name="date_delivery"<?= $Page->date_delivery->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_box_picking_date_delivery" class="el_box_picking_date_delivery">
+<span<?= $Page->date_delivery->viewAttributes() ?>>
+<?= $Page->date_delivery->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

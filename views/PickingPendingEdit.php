@@ -44,7 +44,7 @@ loadjs.ready(["wrapper", "head"], function () {
         ["target_qty", [fields.target_qty.visible && fields.target_qty.required ? ew.Validators.required(fields.target_qty.caption) : null], fields.target_qty.isInvalid],
         ["picked_qty", [fields.picked_qty.visible && fields.picked_qty.required ? ew.Validators.required(fields.picked_qty.caption) : null, ew.Validators.integer], fields.picked_qty.isInvalid],
         ["variance_qty", [fields.variance_qty.visible && fields.variance_qty.required ? ew.Validators.required(fields.variance_qty.caption) : null, ew.Validators.integer], fields.variance_qty.isInvalid],
-        ["confirmation_date", [fields.confirmation_date.visible && fields.confirmation_date.required ? ew.Validators.required(fields.confirmation_date.caption) : null, ew.Validators.datetime(fields.confirmation_date.clientFormatPattern)], fields.confirmation_date.isInvalid],
+        ["confirmation_date", [fields.confirmation_date.visible && fields.confirmation_date.required ? ew.Validators.required(fields.confirmation_date.caption) : null], fields.confirmation_date.isInvalid],
         ["confirmation_time", [fields.confirmation_time.visible && fields.confirmation_time.required ? ew.Validators.required(fields.confirmation_time.caption) : null, ew.Validators.time(fields.confirmation_time.clientFormatPattern)], fields.confirmation_time.isInvalid],
         ["box_code", [fields.box_code.visible && fields.box_code.required ? ew.Validators.required(fields.box_code.caption) : null], fields.box_code.isInvalid],
         ["box_type", [fields.box_type.visible && fields.box_type.required ? ew.Validators.required(fields.box_type.caption) : null], fields.box_type.isInvalid],
@@ -409,9 +409,9 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
         <label id="elh_picking_pending_concept" for="x_concept" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_concept"><?= $Page->concept->caption() ?><?= $Page->concept->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->concept->cellAttributes() ?>>
 <template id="tpx_picking_pending_concept"><span id="el_picking_pending_concept">
-<input type="<?= $Page->concept->getInputTextType() ?>" name="x_concept" id="x_concept" data-table="picking_pending" data-field="x_concept" value="<?= $Page->concept->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->concept->getPlaceHolder()) ?>"<?= $Page->concept->editAttributes() ?> aria-describedby="x_concept_help">
-<?= $Page->concept->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->concept->getErrorMessage() ?></div>
+<span<?= $Page->concept->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->concept->getDisplayValue($Page->concept->EditValue))) ?>"></span>
+<input type="hidden" data-table="picking_pending" data-field="x_concept" data-hidden="1" name="x_concept" id="x_concept" value="<?= HtmlEncode($Page->concept->CurrentValue) ?>">
 </span></template>
 </div></div>
     </div>
@@ -457,37 +457,9 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
         <label id="elh_picking_pending_confirmation_date" for="x_confirmation_date" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_confirmation_date"><?= $Page->confirmation_date->caption() ?><?= $Page->confirmation_date->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->confirmation_date->cellAttributes() ?>>
 <template id="tpx_picking_pending_confirmation_date"><span id="el_picking_pending_confirmation_date">
-<input type="<?= $Page->confirmation_date->getInputTextType() ?>" name="x_confirmation_date" id="x_confirmation_date" data-table="picking_pending" data-field="x_confirmation_date" value="<?= $Page->confirmation_date->EditValue ?>" placeholder="<?= HtmlEncode($Page->confirmation_date->getPlaceHolder()) ?>"<?= $Page->confirmation_date->editAttributes() ?> aria-describedby="x_confirmation_date_help">
-<?= $Page->confirmation_date->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->confirmation_date->getErrorMessage() ?></div>
-<?php if (!$Page->confirmation_date->ReadOnly && !$Page->confirmation_date->Disabled && !isset($Page->confirmation_date->EditAttrs["readonly"]) && !isset($Page->confirmation_date->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
-    let format = "<?= DateFormat(0) ?>",
-        options = {
-            localization: {
-                locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem()
-            },
-            display: {
-                icons: {
-                    previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
-                    next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
-                },
-                components: {
-                    hours: !!format.match(/h/i),
-                    minutes: !!format.match(/m/),
-                    seconds: !!format.match(/s/i),
-                    useTwentyfourHour: !!format.match(/H/)
-                }
-            },
-            meta: {
-                format
-            }
-        };
-    ew.createDateTimePicker("fpicking_pendingedit", "x_confirmation_date", ew.deepAssign({"useCurrent":false}, options));
-});
-</script>
-<?php } ?>
+<span<?= $Page->confirmation_date->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->confirmation_date->getDisplayValue($Page->confirmation_date->EditValue))) ?>"></span>
+<input type="hidden" data-table="picking_pending" data-field="x_confirmation_date" data-hidden="1" name="x_confirmation_date" id="x_confirmation_date" value="<?= HtmlEncode($Page->confirmation_date->CurrentValue) ?>">
 </span></template>
 </div></div>
     </div>
@@ -551,17 +523,11 @@ loadjs.ready(["fpicking_pendingedit", "datetimepicker"], function () {
     <div id="r_picker"<?= $Page->picker->rowAttributes() ?>>
         <label id="elh_picking_pending_picker" for="x_picker" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_picking_pending_picker"><?= $Page->picker->caption() ?><?= $Page->picker->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->picker->cellAttributes() ?>>
-<?php if (!$Security->isAdmin() && $Security->isLoggedIn() && !$Page->userIDAllow("edit")) { // Non system admin ?>
+<template id="tpx_picking_pending_picker"><span id="el_picking_pending_picker">
 <span<?= $Page->picker->viewAttributes() ?>>
 <input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->picker->getDisplayValue($Page->picker->EditValue))) ?>"></span>
 <input type="hidden" data-table="picking_pending" data-field="x_picker" data-hidden="1" name="x_picker" id="x_picker" value="<?= HtmlEncode($Page->picker->CurrentValue) ?>">
-<?php } else { ?>
-<template id="tpx_picking_pending_picker"><span id="el_picking_pending_picker">
-<input type="<?= $Page->picker->getInputTextType() ?>" name="x_picker" id="x_picker" data-table="picking_pending" data-field="x_picker" value="<?= $Page->picker->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->picker->getPlaceHolder()) ?>"<?= $Page->picker->editAttributes() ?> aria-describedby="x_picker_help">
-<?= $Page->picker->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->picker->getErrorMessage() ?></div>
 </span></template>
-<?php } ?>
 </div></div>
     </div>
 <?php } ?>
@@ -988,6 +954,10 @@ $("#x_pick_quantity").change(function () {
             <div id="r_store_name" class="formbuilder-item" >
                  <label for="x_scan_article" class="col-sm-2 col-form-label"><?= $Page->store_name->caption() ?></label>
                   <div class="col-sm-10"><slot class="ew-slot" name="tpx_picking_pending_store_id"></slot><slot class="ew-slot" name="tpx_picking_pending_store_name"></slot></div>
+            </div>
+            <div id="r_concept" class="formbuilder-item" >
+                 <label for="x_concept" class="col-sm-2 col-form-label"><?= $Page->concept->caption() ?></label>
+                  <div class="col-sm-10"><slot class="ew-slot" name="tpx_picking_pending_concept"></slot></div>
             </div>
             <div id="r_picked_qty" class="formbuilder-item" >
                  <label for="x_picked_qty" class="col-sm-2 col-form-label"><?= $Page->picked_qty->caption() ?></label>

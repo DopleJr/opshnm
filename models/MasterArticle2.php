@@ -125,7 +125,14 @@ class MasterArticle2 extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'master_article2', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'master_article2', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'master_article2', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // description
@@ -149,7 +156,14 @@ class MasterArticle2 extends DbTable
         );
         $this->description->InputTextType = "text";
         $this->description->UseFilter = true; // Table header filter
-        $this->description->Lookup = new Lookup('description', 'master_article2', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->description->Lookup = new Lookup('description', 'master_article2', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->description->Lookup = new Lookup('description', 'master_article2', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['description'] = &$this->description;
 
         // gtin
@@ -173,7 +187,14 @@ class MasterArticle2 extends DbTable
         );
         $this->gtin->InputTextType = "text";
         $this->gtin->UseFilter = true; // Table header filter
-        $this->gtin->Lookup = new Lookup('gtin', 'master_article2', true, 'gtin', ["gtin","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->gtin->Lookup = new Lookup('gtin', 'master_article2', true, 'gtin', ["gtin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->gtin->Lookup = new Lookup('gtin', 'master_article2', true, 'gtin', ["gtin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['gtin'] = &$this->gtin;
 
         // color_code
@@ -197,7 +218,14 @@ class MasterArticle2 extends DbTable
         );
         $this->color_code->InputTextType = "text";
         $this->color_code->UseFilter = true; // Table header filter
-        $this->color_code->Lookup = new Lookup('color_code', 'master_article2', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_code->Lookup = new Lookup('color_code', 'master_article2', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_code->Lookup = new Lookup('color_code', 'master_article2', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_code'] = &$this->color_code;
 
         // color_desc
@@ -221,7 +249,14 @@ class MasterArticle2 extends DbTable
         );
         $this->color_desc->InputTextType = "text";
         $this->color_desc->UseFilter = true; // Table header filter
-        $this->color_desc->Lookup = new Lookup('color_desc', 'master_article2', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_desc->Lookup = new Lookup('color_desc', 'master_article2', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_desc->Lookup = new Lookup('color_desc', 'master_article2', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_desc'] = &$this->color_desc;
 
         // size_code
@@ -245,7 +280,14 @@ class MasterArticle2 extends DbTable
         );
         $this->size_code->InputTextType = "text";
         $this->size_code->UseFilter = true; // Table header filter
-        $this->size_code->Lookup = new Lookup('size_code', 'master_article2', true, 'size_code', ["size_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_code->Lookup = new Lookup('size_code', 'master_article2', true, 'size_code', ["size_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->size_code->Lookup = new Lookup('size_code', 'master_article2', true, 'size_code', ["size_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['size_code'] = &$this->size_code;
 
         // size_desc
@@ -269,7 +311,14 @@ class MasterArticle2 extends DbTable
         );
         $this->size_desc->InputTextType = "text";
         $this->size_desc->UseFilter = true; // Table header filter
-        $this->size_desc->Lookup = new Lookup('size_desc', 'master_article2', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_desc->Lookup = new Lookup('size_desc', 'master_article2', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->size_desc->Lookup = new Lookup('size_desc', 'master_article2', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['size_desc'] = &$this->size_desc;
 
         // season
@@ -293,7 +342,14 @@ class MasterArticle2 extends DbTable
         );
         $this->season->InputTextType = "text";
         $this->season->UseFilter = true; // Table header filter
-        $this->season->Lookup = new Lookup('season', 'master_article2', true, 'season', ["season","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->season->Lookup = new Lookup('season', 'master_article2', true, 'season', ["season","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->season->Lookup = new Lookup('season', 'master_article2', true, 'season', ["season","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['season'] = &$this->season;
 
         // price
@@ -317,7 +373,14 @@ class MasterArticle2 extends DbTable
         );
         $this->price->InputTextType = "text";
         $this->price->UseFilter = true; // Table header filter
-        $this->price->Lookup = new Lookup('price', 'master_article2', true, 'price', ["price","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->price->Lookup = new Lookup('price', 'master_article2', true, 'price', ["price","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->price->Lookup = new Lookup('price', 'master_article2', true, 'price', ["price","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->price->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['price'] = &$this->price;
 

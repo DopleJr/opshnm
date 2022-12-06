@@ -47,14 +47,26 @@ $Page->showMessage();
 <?php if ($Page->id->Visible) { // id ?>
         <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_transferbin_id" class="transferbin_id"><?= $Page->id->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->FromBin->Visible) { // From Bin ?>
-        <th class="<?= $Page->FromBin->headerCellClass() ?>"><span id="elh_transferbin_FromBin" class="transferbin_FromBin"><?= $Page->FromBin->caption() ?></span></th>
+<?php if ($Page->from_bin->Visible) { // from_bin ?>
+        <th class="<?= $Page->from_bin->headerCellClass() ?>"><span id="elh_transferbin_from_bin" class="transferbin_from_bin"><?= $Page->from_bin->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->ToBin->Visible) { // To Bin ?>
-        <th class="<?= $Page->ToBin->headerCellClass() ?>"><span id="elh_transferbin_ToBin" class="transferbin_ToBin"><?= $Page->ToBin->caption() ?></span></th>
+<?php if ($Page->ctn->Visible) { // ctn ?>
+        <th class="<?= $Page->ctn->headerCellClass() ?>"><span id="elh_transferbin_ctn" class="transferbin_ctn"><?= $Page->ctn->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->to_bin->Visible) { // to_bin ?>
+        <th class="<?= $Page->to_bin->headerCellClass() ?>"><span id="elh_transferbin_to_bin" class="transferbin_to_bin"><?= $Page->to_bin->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+        <th class="<?= $Page->user->headerCellClass() ?>"><span id="elh_transferbin_user" class="transferbin_user"><?= $Page->user->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->date_created->Visible) { // date_created ?>
         <th class="<?= $Page->date_created->headerCellClass() ?>"><span id="elh_transferbin_date_created" class="transferbin_date_created"><?= $Page->date_created->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <th class="<?= $Page->date_updated->headerCellClass() ?>"><span id="elh_transferbin_date_updated" class="transferbin_date_updated"><?= $Page->date_updated->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <th class="<?= $Page->time_updated->headerCellClass() ?>"><span id="elh_transferbin_time_updated" class="transferbin_time_updated"><?= $Page->time_updated->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -85,19 +97,35 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->FromBin->Visible) { // From Bin ?>
-        <td<?= $Page->FromBin->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_transferbin_FromBin" class="el_transferbin_FromBin">
-<span<?= $Page->FromBin->viewAttributes() ?>>
-<?= $Page->FromBin->getViewValue() ?></span>
+<?php if ($Page->from_bin->Visible) { // from_bin ?>
+        <td<?= $Page->from_bin->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_from_bin" class="el_transferbin_from_bin">
+<span<?= $Page->from_bin->viewAttributes() ?>>
+<?= $Page->from_bin->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->ToBin->Visible) { // To Bin ?>
-        <td<?= $Page->ToBin->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_transferbin_ToBin" class="el_transferbin_ToBin">
-<span<?= $Page->ToBin->viewAttributes() ?>>
-<?= $Page->ToBin->getViewValue() ?></span>
+<?php if ($Page->ctn->Visible) { // ctn ?>
+        <td<?= $Page->ctn->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_ctn" class="el_transferbin_ctn">
+<span<?= $Page->ctn->viewAttributes() ?>>
+<?= $Page->ctn->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->to_bin->Visible) { // to_bin ?>
+        <td<?= $Page->to_bin->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_to_bin" class="el_transferbin_to_bin">
+<span<?= $Page->to_bin->viewAttributes() ?>>
+<?= $Page->to_bin->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+        <td<?= $Page->user->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_user" class="el_transferbin_user">
+<span<?= $Page->user->viewAttributes() ?>>
+<?= $Page->user->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -106,6 +134,22 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_transferbin_date_created" class="el_transferbin_date_created">
 <span<?= $Page->date_created->viewAttributes() ?>>
 <?= $Page->date_created->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->date_updated->Visible) { // date_updated ?>
+        <td<?= $Page->date_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_date_updated" class="el_transferbin_date_updated">
+<span<?= $Page->date_updated->viewAttributes() ?>>
+<?= $Page->date_updated->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->time_updated->Visible) { // time_updated ?>
+        <td<?= $Page->time_updated->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_transferbin_time_updated" class="el_transferbin_time_updated">
+<span<?= $Page->time_updated->viewAttributes() ?>>
+<?= $Page->time_updated->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

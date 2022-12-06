@@ -135,15 +135,6 @@ return function (App $app) {
         }
     );
 
-    // bintobin
-    $app->map(["GET","POST","OPTIONS"], '/bintobinlist', BintobinController::class . ':list')->add(PermissionMiddleware::class)->setName('bintobinlist-bintobin-list'); // list
-    $app->group(
-        '/bintobin',
-        function (RouteCollectorProxy $group) {
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '', BintobinController::class . ':list')->add(PermissionMiddleware::class)->setName('bintobin/list-bintobin-list-2'); // list
-        }
-    );
-
     // print_label
     $app->map(["GET","POST","OPTIONS"], '/printlabellist[/{id}]', PrintLabelController::class . ':list')->add(PermissionMiddleware::class)->setName('printlabellist-print_label-list'); // list
     $app->map(["GET","POST","OPTIONS"], '/printlabeladd[/{id}]', PrintLabelController::class . ':add')->add(PermissionMiddleware::class)->setName('printlabeladd-print_label-add'); // add
@@ -579,6 +570,7 @@ return function (App $app) {
     $app->map(["GET","POST","OPTIONS"], '/auditpickingonlineadd[/{id}]', AuditPickingOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('auditpickingonlineadd-audit_picking_online-add'); // add
     $app->map(["GET","POST","OPTIONS"], '/auditpickingonlineview[/{id}]', AuditPickingOnlineController::class . ':view')->add(PermissionMiddleware::class)->setName('auditpickingonlineview-audit_picking_online-view'); // view
     $app->map(["GET","POST","OPTIONS"], '/auditpickingonlineedit[/{id}]', AuditPickingOnlineController::class . ':edit')->add(PermissionMiddleware::class)->setName('auditpickingonlineedit-audit_picking_online-edit'); // edit
+    $app->map(["GET","POST","OPTIONS"], '/auditpickingonlinedelete[/{id}]', AuditPickingOnlineController::class . ':delete')->add(PermissionMiddleware::class)->setName('auditpickingonlinedelete-audit_picking_online-delete'); // delete
     $app->group(
         '/audit_picking_online',
         function (RouteCollectorProxy $group) {
@@ -586,6 +578,7 @@ return function (App $app) {
             $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('audit_picking_online/add-audit_picking_online-add-2'); // add
             $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':view')->add(PermissionMiddleware::class)->setName('audit_picking_online/view-audit_picking_online-view-2'); // view
             $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':edit')->add(PermissionMiddleware::class)->setName('audit_picking_online/edit-audit_picking_online-edit-2'); // edit
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{id}]', AuditPickingOnlineController::class . ':delete')->add(PermissionMiddleware::class)->setName('audit_picking_online/delete-audit_picking_online-delete-2'); // delete
         }
     );
 
@@ -650,6 +643,183 @@ return function (App $app) {
         function (RouteCollectorProxy $group) {
             $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '', SummaryStockCountController::class . ':list')->add(PermissionMiddleware::class)->setName('summary_stock_count/list-summary_stock_count-list-2'); // list
             $group->map(["GET","POST","OPTIONS"], '/' . Config("SEARCH_ACTION") . '', SummaryStockCountController::class . ':search')->add(PermissionMiddleware::class)->setName('summary_stock_count/search-summary_stock_count-search-2'); // search
+        }
+    );
+
+    // active_stock
+    $app->map(["GET","POST","OPTIONS"], '/activestocklist[/{aisle:.*}]', ActiveStockController::class . ':list')->add(PermissionMiddleware::class)->setName('activestocklist-active_stock-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/activestockview[/{aisle:.*}]', ActiveStockController::class . ':view')->add(PermissionMiddleware::class)->setName('activestockview-active_stock-view'); // view
+    $app->group(
+        '/active_stock',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{aisle:.*}]', ActiveStockController::class . ':list')->add(PermissionMiddleware::class)->setName('active_stock/list-active_stock-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{aisle:.*}]', ActiveStockController::class . ':view')->add(PermissionMiddleware::class)->setName('active_stock/view-active_stock-view-2'); // view
+        }
+    );
+
+    // stock_count_monitor
+    $app->map(["GET","POST","OPTIONS"], '/stockcountmonitorlist', StockCountMonitorController::class . ':list')->add(PermissionMiddleware::class)->setName('stockcountmonitorlist-stock_count_monitor-list'); // list
+    $app->group(
+        '/stock_count_monitor',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '', StockCountMonitorController::class . ':list')->add(PermissionMiddleware::class)->setName('stock_count_monitor/list-stock_count_monitor-list-2'); // list
+        }
+    );
+
+    // putaway_staging
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaginglist[/{id}]', PutawayStagingController::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaginglist-putaway_staging-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystagingedit[/{id}]', PutawayStagingController::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystagingedit-putaway_staging-edit'); // edit
+    $app->group(
+        '/putaway_staging',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStagingController::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging/list-putaway_staging-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStagingController::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging/edit-putaway_staging-edit-2'); // edit
+        }
+    );
+
+    // putaway_staging2
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging2list[/{id}]', PutawayStaging2Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaging2list-putaway_staging2-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging2edit[/{id}]', PutawayStaging2Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystaging2edit-putaway_staging2-edit'); // edit
+    $app->group(
+        '/putaway_staging2',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStaging2Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging2/list-putaway_staging2-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStaging2Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging2/edit-putaway_staging2-edit-2'); // edit
+        }
+    );
+
+    // putaway_staging3
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging3list[/{id}]', PutawayStaging3Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaging3list-putaway_staging3-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging3edit[/{id}]', PutawayStaging3Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystaging3edit-putaway_staging3-edit'); // edit
+    $app->group(
+        '/putaway_staging3',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStaging3Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging3/list-putaway_staging3-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStaging3Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging3/edit-putaway_staging3-edit-2'); // edit
+        }
+    );
+
+    // putaway_staging4
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging4list[/{id}]', PutawayStaging4Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaging4list-putaway_staging4-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging4edit[/{id}]', PutawayStaging4Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystaging4edit-putaway_staging4-edit'); // edit
+    $app->group(
+        '/putaway_staging4',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStaging4Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging4/list-putaway_staging4-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStaging4Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging4/edit-putaway_staging4-edit-2'); // edit
+        }
+    );
+
+    // putaway_staging5
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging5list[/{id}]', PutawayStaging5Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaging5list-putaway_staging5-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging5edit[/{id}]', PutawayStaging5Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystaging5edit-putaway_staging5-edit'); // edit
+    $app->group(
+        '/putaway_staging5',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStaging5Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging5/list-putaway_staging5-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStaging5Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging5/edit-putaway_staging5-edit-2'); // edit
+        }
+    );
+
+    // putaway_staging6
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging6list[/{id}]', PutawayStaging6Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaging6list-putaway_staging6-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging6edit[/{id}]', PutawayStaging6Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystaging6edit-putaway_staging6-edit'); // edit
+    $app->group(
+        '/putaway_staging6',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStaging6Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging6/list-putaway_staging6-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStaging6Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging6/edit-putaway_staging6-edit-2'); // edit
+        }
+    );
+
+    // putaway_staging7
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging7list[/{id}]', PutawayStaging7Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putawaystaging7list-putaway_staging7-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawaystaging7edit[/{id}]', PutawayStaging7Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putawaystaging7edit-putaway_staging7-edit'); // edit
+    $app->group(
+        '/putaway_staging7',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayStaging7Controller::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_staging7/list-putaway_staging7-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayStaging7Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_staging7/edit-putaway_staging7-edit-2'); // edit
+        }
+    );
+
+    // bin_to_bin
+    $app->map(["GET","POST","OPTIONS"], '/bintobinlist[/{id}]', BinToBinController::class . ':list')->add(PermissionMiddleware::class)->setName('bintobinlist-bin_to_bin-list'); // list
+    $app->group(
+        '/bin_to_bin',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', BinToBinController::class . ':list')->add(PermissionMiddleware::class)->setName('bin_to_bin/list-bin_to_bin-list-2'); // list
+        }
+    );
+
+    // putaway_opening
+    $app->map(["GET","POST","OPTIONS"], '/putawayopeninglist[/{id}]', PutawayOpeningController::class . ':list')->add(PermissionMiddleware::class)->setName('putawayopeninglist-putaway_opening-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/putawayopeningedit[/{id}]', PutawayOpeningController::class . ':edit')->add(PermissionMiddleware::class)->setName('putawayopeningedit-putaway_opening-edit'); // edit
+    $app->group(
+        '/putaway_opening',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', PutawayOpeningController::class . ':list')->add(PermissionMiddleware::class)->setName('putaway_opening/list-putaway_opening-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', PutawayOpeningController::class . ':edit')->add(PermissionMiddleware::class)->setName('putaway_opening/edit-putaway_opening-edit-2'); // edit
+        }
+    );
+
+    // vas_validation
+    $app->map(["GET","POST","OPTIONS"], '/vasvalidationlist[/{id}]', VasValidationController::class . ':list')->add(PermissionMiddleware::class)->setName('vasvalidationlist-vas_validation-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/vasvalidationadd[/{id}]', VasValidationController::class . ':add')->add(PermissionMiddleware::class)->setName('vasvalidationadd-vas_validation-add'); // add
+    $app->map(["GET","POST","OPTIONS"], '/vasvalidationview[/{id}]', VasValidationController::class . ':view')->add(PermissionMiddleware::class)->setName('vasvalidationview-vas_validation-view'); // view
+    $app->map(["GET","POST","OPTIONS"], '/vasvalidationedit[/{id}]', VasValidationController::class . ':edit')->add(PermissionMiddleware::class)->setName('vasvalidationedit-vas_validation-edit'); // edit
+    $app->map(["GET","POST","OPTIONS"], '/vasvalidationdelete[/{id}]', VasValidationController::class . ':delete')->add(PermissionMiddleware::class)->setName('vasvalidationdelete-vas_validation-delete'); // delete
+    $app->group(
+        '/vas_validation',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', VasValidationController::class . ':list')->add(PermissionMiddleware::class)->setName('vas_validation/list-vas_validation-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', VasValidationController::class . ':add')->add(PermissionMiddleware::class)->setName('vas_validation/add-vas_validation-add-2'); // add
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', VasValidationController::class . ':view')->add(PermissionMiddleware::class)->setName('vas_validation/view-vas_validation-view-2'); // view
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', VasValidationController::class . ':edit')->add(PermissionMiddleware::class)->setName('vas_validation/edit-vas_validation-edit-2'); // edit
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{id}]', VasValidationController::class . ':delete')->add(PermissionMiddleware::class)->setName('vas_validation/delete-vas_validation-delete-2'); // delete
+        }
+    );
+
+    // checking_vas
+    $app->map(["GET","POST","OPTIONS"], '/checkingvaslist[/{id}]', CheckingVasController::class . ':list')->add(PermissionMiddleware::class)->setName('checkingvaslist-checking_vas-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/checkingvasadd[/{id}]', CheckingVasController::class . ':add')->add(PermissionMiddleware::class)->setName('checkingvasadd-checking_vas-add'); // add
+    $app->group(
+        '/checking_vas',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{id}]', CheckingVasController::class . ':list')->add(PermissionMiddleware::class)->setName('checking_vas/list-checking_vas-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', CheckingVasController::class . ':add')->add(PermissionMiddleware::class)->setName('checking_vas/add-checking_vas-add-2'); // add
+        }
+    );
+
+    // box_picking_online
+    $app->map(["GET","POST","OPTIONS"], '/boxpickingonlinelist[/{box_id:.*}]', BoxPickingOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('boxpickingonlinelist-box_picking_online-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/boxpickingonlineadd[/{box_id:.*}]', BoxPickingOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('boxpickingonlineadd-box_picking_online-add'); // add
+    $app->map(["GET","POST","OPTIONS"], '/boxpickingonlineview[/{box_id:.*}]', BoxPickingOnlineController::class . ':view')->add(PermissionMiddleware::class)->setName('boxpickingonlineview-box_picking_online-view'); // view
+    $app->map(["GET","POST","OPTIONS"], '/boxpickingonlineedit[/{box_id:.*}]', BoxPickingOnlineController::class . ':edit')->add(PermissionMiddleware::class)->setName('boxpickingonlineedit-box_picking_online-edit'); // edit
+    $app->map(["GET","POST","OPTIONS"], '/boxpickingonlinedelete[/{box_id:.*}]', BoxPickingOnlineController::class . ':delete')->add(PermissionMiddleware::class)->setName('boxpickingonlinedelete-box_picking_online-delete'); // delete
+    $app->group(
+        '/box_picking_online',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{box_id:.*}]', BoxPickingOnlineController::class . ':list')->add(PermissionMiddleware::class)->setName('box_picking_online/list-box_picking_online-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{box_id:.*}]', BoxPickingOnlineController::class . ':add')->add(PermissionMiddleware::class)->setName('box_picking_online/add-box_picking_online-add-2'); // add
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{box_id:.*}]', BoxPickingOnlineController::class . ':view')->add(PermissionMiddleware::class)->setName('box_picking_online/view-box_picking_online-view-2'); // view
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{box_id:.*}]', BoxPickingOnlineController::class . ':edit')->add(PermissionMiddleware::class)->setName('box_picking_online/edit-box_picking_online-edit-2'); // edit
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{box_id:.*}]', BoxPickingOnlineController::class . ':delete')->add(PermissionMiddleware::class)->setName('box_picking_online/delete-box_picking_online-delete-2'); // delete
+        }
+    );
+
+    // inbound_excess
+    $app->map(["GET","POST","OPTIONS"], '/inboundexcesslist[/{sscc:.*}]', InboundExcessController::class . ':list')->add(PermissionMiddleware::class)->setName('inboundexcesslist-inbound_excess-list'); // list
+    $app->map(["GET","POST","OPTIONS"], '/inboundexcessadd[/{sscc:.*}]', InboundExcessController::class . ':add')->add(PermissionMiddleware::class)->setName('inboundexcessadd-inbound_excess-add'); // add
+    $app->map(["GET","POST","OPTIONS"], '/inboundexcessedit[/{sscc:.*}]', InboundExcessController::class . ':edit')->add(PermissionMiddleware::class)->setName('inboundexcessedit-inbound_excess-edit'); // edit
+    $app->map(["GET","POST","OPTIONS"], '/inboundexcessdelete[/{sscc:.*}]', InboundExcessController::class . ':delete')->add(PermissionMiddleware::class)->setName('inboundexcessdelete-inbound_excess-delete'); // delete
+    $app->group(
+        '/inbound_excess',
+        function (RouteCollectorProxy $group) {
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("LIST_ACTION") . '[/{sscc:.*}]', InboundExcessController::class . ':list')->add(PermissionMiddleware::class)->setName('inbound_excess/list-inbound_excess-list-2'); // list
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{sscc:.*}]', InboundExcessController::class . ':add')->add(PermissionMiddleware::class)->setName('inbound_excess/add-inbound_excess-add-2'); // add
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{sscc:.*}]', InboundExcessController::class . ':edit')->add(PermissionMiddleware::class)->setName('inbound_excess/edit-inbound_excess-edit-2'); // edit
+            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{sscc:.*}]', InboundExcessController::class . ':delete')->add(PermissionMiddleware::class)->setName('inbound_excess/delete-inbound_excess-delete-2'); // delete
         }
     );
 

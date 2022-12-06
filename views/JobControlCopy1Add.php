@@ -22,6 +22,7 @@ loadjs.ready(["wrapper", "head"], function () {
     fjob_control_copy1add.addFields([
         ["creation_date", [fields.creation_date.visible && fields.creation_date.required ? ew.Validators.required(fields.creation_date.caption) : null], fields.creation_date.isInvalid],
         ["store_id", [fields.store_id.visible && fields.store_id.required ? ew.Validators.required(fields.store_id.caption) : null], fields.store_id.isInvalid],
+        ["concept", [fields.concept.visible && fields.concept.required ? ew.Validators.required(fields.concept.caption) : null], fields.concept.isInvalid],
         ["area", [fields.area.visible && fields.area.required ? ew.Validators.required(fields.area.caption) : null], fields.area.isInvalid],
         ["aisle", [fields.aisle.visible && fields.aisle.required ? ew.Validators.required(fields.aisle.caption) : null], fields.aisle.isInvalid],
         ["user", [fields.user.visible && fields.user.required ? ew.Validators.required(fields.user.caption) : null], fields.user.isInvalid],
@@ -44,6 +45,7 @@ loadjs.ready(["wrapper", "head"], function () {
     // Dynamic selection lists
     fjob_control_copy1add.lists.creation_date = <?= $Page->creation_date->toClientList($Page) ?>;
     fjob_control_copy1add.lists.store_id = <?= $Page->store_id->toClientList($Page) ?>;
+    fjob_control_copy1add.lists.concept = <?= $Page->concept->toClientList($Page) ?>;
     fjob_control_copy1add.lists.area = <?= $Page->area->toClientList($Page) ?>;
     fjob_control_copy1add.lists.aisle = <?= $Page->aisle->toClientList($Page) ?>;
     fjob_control_copy1add.lists.user = <?= $Page->user->toClientList($Page) ?>;
@@ -147,6 +149,46 @@ loadjs.ready("fjob_control_copy1add", function() {
     }
     options.minimumResultsForSearch = Infinity;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.job_control_copy1.fields.store_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->concept->Visible) { // concept ?>
+    <div id="r_concept"<?= $Page->concept->rowAttributes() ?>>
+        <label id="elh_job_control_copy1_concept" for="x_concept" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_job_control_copy1_concept"><?= $Page->concept->caption() ?><?= $Page->concept->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->concept->cellAttributes() ?>>
+<template id="tpx_job_control_copy1_concept"><span id="el_job_control_copy1_concept">
+<?php $Page->concept->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_concept"
+        name="x_concept"
+        class="form-select ew-select<?= $Page->concept->isInvalidClass() ?>"
+        data-select2-id="fjob_control_copy1add_x_concept"
+        data-table="job_control_copy1"
+        data-field="x_concept"
+        data-value-separator="<?= $Page->concept->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->concept->getPlaceHolder()) ?>"
+        <?= $Page->concept->editAttributes() ?>>
+        <?= $Page->concept->selectOptionListHtml("x_concept") ?>
+    </select>
+    <?= $Page->concept->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->concept->getErrorMessage() ?></div>
+<?= $Page->concept->Lookup->getParamTag($Page, "p_x_concept") ?>
+<script>
+loadjs.ready("fjob_control_copy1add", function() {
+    var options = { name: "x_concept", selectId: "fjob_control_copy1add_x_concept" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fjob_control_copy1add.lists.concept.lookupOptions.length) {
+        options.data = { id: "x_concept", form: "fjob_control_copy1add" };
+    } else {
+        options.ajax = { id: "x_concept", form: "fjob_control_copy1add", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.job_control_copy1.fields.concept.selectOptions);
     ew.createSelect(options);
 });
 </script>
@@ -402,6 +444,10 @@ $(document).ready(function(){
     <div id="r_store_id" class="mb-3 row">
         <label for="x_store_id" class="col-sm-2 col-form-label"><?= $Page->store_id->caption() ?></label>
         <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_copy1_store_id"></slot></div>
+    </div>
+    <div id="r_concept" class="mb-3 row">
+        <label for="x_concept" class="col-sm-2 col-form-label"><?= $Page->concept->caption() ?></label>
+        <div class="col-sm-10"><slot class="ew-slot" name="tpx_job_control_copy1_concept"></slot></div>
     </div>
     <div id="r_area" class="mb-3 row">
         <label for="x_area" class="col-sm-2 col-form-label"><?= $Page->area->caption() ?></label>

@@ -499,15 +499,15 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
+        $this->scan->setVisibility();
         $this->box_code->setVisibility();
         $this->store_id->setVisibility();
         $this->store_name->setVisibility();
-        $this->scan->setVisibility();
-        $this->article->setVisibility();
         $this->picked_qty->setVisibility();
         $this->scan_qty->setVisibility();
         $this->checker->setVisibility();
         $this->status->setVisibility();
+        $this->article->setVisibility();
         $this->date_update->setVisibility();
         $this->time_update->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -526,8 +526,6 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->box_code);
-        $this->setupLookupOptions($this->store_id);
 
         // Load default values for add
         $this->loadDefaultValues();
@@ -665,12 +663,8 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
     // Load default values
     protected function loadDefaultValues()
     {
-        $this->box_code->DefaultValue = LastBoxCode();
-        $this->box_code->OldValue = $this->box_code->DefaultValue;
-        $this->store_id->DefaultValue = LastStoreID();
-        $this->store_id->OldValue = $this->store_id->DefaultValue;
-        $this->store_name->DefaultValue = LastStoreName();
-        $this->store_name->OldValue = $this->store_name->DefaultValue;
+        $this->checker->DefaultValue = CurrentUsername();
+        $this->checker->OldValue = $this->checker->DefaultValue;
         $this->date_update->DefaultValue = CurrentDate();
         $this->date_update->OldValue = $this->date_update->DefaultValue;
         $this->time_update->DefaultValue = CurrentTime();
@@ -683,6 +677,16 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // Load from form
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
+
+        // Check field name 'scan' first before field var 'x_scan'
+        $val = $CurrentForm->hasValue("scan") ? $CurrentForm->getValue("scan") : $CurrentForm->getValue("x_scan");
+        if (!$this->scan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->scan->Visible = false; // Disable update for API request
+            } else {
+                $this->scan->setFormValue($val);
+            }
+        }
 
         // Check field name 'box_code' first before field var 'x_box_code'
         $val = $CurrentForm->hasValue("box_code") ? $CurrentForm->getValue("box_code") : $CurrentForm->getValue("x_box_code");
@@ -714,33 +718,13 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             }
         }
 
-        // Check field name 'scan' first before field var 'x_scan'
-        $val = $CurrentForm->hasValue("scan") ? $CurrentForm->getValue("scan") : $CurrentForm->getValue("x_scan");
-        if (!$this->scan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->scan->Visible = false; // Disable update for API request
-            } else {
-                $this->scan->setFormValue($val);
-            }
-        }
-
-        // Check field name 'article' first before field var 'x_article'
-        $val = $CurrentForm->hasValue("article") ? $CurrentForm->getValue("article") : $CurrentForm->getValue("x_article");
-        if (!$this->article->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->article->Visible = false; // Disable update for API request
-            } else {
-                $this->article->setFormValue($val);
-            }
-        }
-
         // Check field name 'picked_qty' first before field var 'x_picked_qty'
         $val = $CurrentForm->hasValue("picked_qty") ? $CurrentForm->getValue("picked_qty") : $CurrentForm->getValue("x_picked_qty");
         if (!$this->picked_qty->IsDetailKey) {
             if (IsApi() && $val === null) {
                 $this->picked_qty->Visible = false; // Disable update for API request
             } else {
-                $this->picked_qty->setFormValue($val, true, $validate);
+                $this->picked_qty->setFormValue($val);
             }
         }
 
@@ -774,13 +758,23 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             }
         }
 
+        // Check field name 'article' first before field var 'x_article'
+        $val = $CurrentForm->hasValue("article") ? $CurrentForm->getValue("article") : $CurrentForm->getValue("x_article");
+        if (!$this->article->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->article->Visible = false; // Disable update for API request
+            } else {
+                $this->article->setFormValue($val);
+            }
+        }
+
         // Check field name 'date_update' first before field var 'x_date_update'
         $val = $CurrentForm->hasValue("date_update") ? $CurrentForm->getValue("date_update") : $CurrentForm->getValue("x_date_update");
         if (!$this->date_update->IsDetailKey) {
             if (IsApi() && $val === null) {
                 $this->date_update->Visible = false; // Disable update for API request
             } else {
-                $this->date_update->setFormValue($val, true, $validate);
+                $this->date_update->setFormValue($val);
             }
             $this->date_update->CurrentValue = UnFormatDateTime($this->date_update->CurrentValue, $this->date_update->formatPattern());
         }
@@ -791,7 +785,7 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             if (IsApi() && $val === null) {
                 $this->time_update->Visible = false; // Disable update for API request
             } else {
-                $this->time_update->setFormValue($val, true, $validate);
+                $this->time_update->setFormValue($val);
             }
             $this->time_update->CurrentValue = UnFormatDateTime($this->time_update->CurrentValue, $this->time_update->formatPattern());
         }
@@ -804,15 +798,15 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->scan->CurrentValue = $this->scan->FormValue;
         $this->box_code->CurrentValue = $this->box_code->FormValue;
         $this->store_id->CurrentValue = $this->store_id->FormValue;
         $this->store_name->CurrentValue = $this->store_name->FormValue;
-        $this->scan->CurrentValue = $this->scan->FormValue;
-        $this->article->CurrentValue = $this->article->FormValue;
         $this->picked_qty->CurrentValue = $this->picked_qty->FormValue;
         $this->scan_qty->CurrentValue = $this->scan_qty->FormValue;
         $this->checker->CurrentValue = $this->checker->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
+        $this->article->CurrentValue = $this->article->FormValue;
         $this->date_update->CurrentValue = $this->date_update->FormValue;
         $this->date_update->CurrentValue = UnFormatDateTime($this->date_update->CurrentValue, $this->date_update->formatPattern());
         $this->time_update->CurrentValue = $this->time_update->FormValue;
@@ -867,15 +861,15 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->scan->setDbValue($row['scan']);
         $this->box_code->setDbValue($row['box_code']);
         $this->store_id->setDbValue($row['store_id']);
         $this->store_name->setDbValue($row['store_name']);
-        $this->scan->setDbValue($row['scan']);
-        $this->article->setDbValue($row['article']);
         $this->picked_qty->setDbValue($row['picked_qty']);
         $this->scan_qty->setDbValue($row['scan_qty']);
         $this->checker->setDbValue($row['checker']);
         $this->status->setDbValue($row['status']);
+        $this->article->setDbValue($row['article']);
         $this->date_update->setDbValue($row['date_update']);
         $this->time_update->setDbValue($row['time_update']);
     }
@@ -885,15 +879,15 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['scan'] = $this->scan->DefaultValue;
         $row['box_code'] = $this->box_code->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
-        $row['scan'] = $this->scan->DefaultValue;
-        $row['article'] = $this->article->DefaultValue;
         $row['picked_qty'] = $this->picked_qty->DefaultValue;
         $row['scan_qty'] = $this->scan_qty->DefaultValue;
         $row['checker'] = $this->checker->DefaultValue;
         $row['status'] = $this->status->DefaultValue;
+        $row['article'] = $this->article->DefaultValue;
         $row['date_update'] = $this->date_update->DefaultValue;
         $row['time_update'] = $this->time_update->DefaultValue;
         return $row;
@@ -930,6 +924,9 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // id
         $this->id->RowCssClass = "row";
 
+        // scan
+        $this->scan->RowCssClass = "row";
+
         // box_code
         $this->box_code->RowCssClass = "row";
 
@@ -938,12 +935,6 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
 
         // store_name
         $this->store_name->RowCssClass = "row";
-
-        // scan
-        $this->scan->RowCssClass = "row";
-
-        // article
-        $this->article->RowCssClass = "row";
 
         // picked_qty
         $this->picked_qty->RowCssClass = "row";
@@ -957,6 +948,9 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // status
         $this->status->RowCssClass = "row";
 
+        // article
+        $this->article->RowCssClass = "row";
+
         // date_update
         $this->date_update->RowCssClass = "row";
 
@@ -969,69 +963,24 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
+            // scan
+            $this->scan->ViewValue = $this->scan->CurrentValue;
+            $this->scan->ViewCustomAttributes = "";
+
             // box_code
-            $curVal = strval($this->box_code->CurrentValue);
-            if ($curVal != "") {
-                $this->box_code->ViewValue = $this->box_code->lookupCacheOption($curVal);
-                if ($this->box_code->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`box_code`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->box_code->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->box_code->Lookup->renderViewRow($rswrk[0]);
-                        $this->box_code->ViewValue = $this->box_code->displayValue($arwrk);
-                    } else {
-                        $this->box_code->ViewValue = $this->box_code->CurrentValue;
-                    }
-                }
-            } else {
-                $this->box_code->ViewValue = null;
-            }
+            $this->box_code->ViewValue = $this->box_code->CurrentValue;
             $this->box_code->ViewCustomAttributes = "";
 
             // store_id
-            $curVal = strval($this->store_id->CurrentValue);
-            if ($curVal != "") {
-                $this->store_id->ViewValue = $this->store_id->lookupCacheOption($curVal);
-                if ($this->store_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`store_id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->store_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCacheImpl($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->store_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->store_id->ViewValue = $this->store_id->displayValue($arwrk);
-                    } else {
-                        $this->store_id->ViewValue = $this->store_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->store_id->ViewValue = null;
-            }
+            $this->store_id->ViewValue = $this->store_id->CurrentValue;
             $this->store_id->ViewCustomAttributes = "";
 
             // store_name
             $this->store_name->ViewValue = $this->store_name->CurrentValue;
             $this->store_name->ViewCustomAttributes = "";
 
-            // scan
-            $this->scan->ViewValue = $this->scan->CurrentValue;
-            $this->scan->ViewCustomAttributes = "";
-
-            // article
-            $this->article->ViewValue = $this->article->CurrentValue;
-            $this->article->ViewCustomAttributes = "";
-
             // picked_qty
             $this->picked_qty->ViewValue = $this->picked_qty->CurrentValue;
-            $this->picked_qty->ViewValue = FormatNumber($this->picked_qty->ViewValue, $this->picked_qty->formatPattern());
             $this->picked_qty->ViewCustomAttributes = "";
 
             // scan_qty
@@ -1046,6 +995,10 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
 
+            // article
+            $this->article->ViewValue = $this->article->CurrentValue;
+            $this->article->ViewCustomAttributes = "";
+
             // date_update
             $this->date_update->ViewValue = $this->date_update->CurrentValue;
             $this->date_update->ViewValue = FormatDateTime($this->date_update->ViewValue, $this->date_update->formatPattern());
@@ -1055,6 +1008,10 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->time_update->ViewValue = $this->time_update->CurrentValue;
             $this->time_update->ViewValue = FormatDateTime($this->time_update->ViewValue, $this->time_update->formatPattern());
             $this->time_update->ViewCustomAttributes = "";
+
+            // scan
+            $this->scan->LinkCustomAttributes = "";
+            $this->scan->HrefValue = "";
 
             // box_code
             $this->box_code->LinkCustomAttributes = "";
@@ -1067,14 +1024,6 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             // store_name
             $this->store_name->LinkCustomAttributes = "";
             $this->store_name->HrefValue = "";
-
-            // scan
-            $this->scan->LinkCustomAttributes = "";
-            $this->scan->HrefValue = "";
-
-            // article
-            $this->article->LinkCustomAttributes = "";
-            $this->article->HrefValue = "";
 
             // picked_qty
             $this->picked_qty->LinkCustomAttributes = "";
@@ -1092,6 +1041,10 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
 
+            // article
+            $this->article->LinkCustomAttributes = "";
+            $this->article->HrefValue = "";
+
             // date_update
             $this->date_update->LinkCustomAttributes = "";
             $this->date_update->HrefValue = "";
@@ -1100,60 +1053,31 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->time_update->LinkCustomAttributes = "";
             $this->time_update->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // scan
+            $this->scan->setupEditAttributes();
+            $this->scan->EditCustomAttributes = 'autofocus';
+            if (!$this->scan->Raw) {
+                $this->scan->CurrentValue = HtmlDecode($this->scan->CurrentValue);
+            }
+            $this->scan->EditValue = HtmlEncode($this->scan->CurrentValue);
+            $this->scan->PlaceHolder = RemoveHtml($this->scan->caption());
+
             // box_code
             $this->box_code->setupEditAttributes();
             $this->box_code->EditCustomAttributes = "";
-            $curVal = trim(strval($this->box_code->CurrentValue));
-            if ($curVal != "") {
-                $this->box_code->ViewValue = $this->box_code->lookupCacheOption($curVal);
-            } else {
-                $this->box_code->ViewValue = $this->box_code->Lookup !== null && is_array($this->box_code->lookupOptions()) ? $curVal : null;
+            if (!$this->box_code->Raw) {
+                $this->box_code->CurrentValue = HtmlDecode($this->box_code->CurrentValue);
             }
-            if ($this->box_code->ViewValue !== null) { // Load from cache
-                $this->box_code->EditValue = array_values($this->box_code->lookupOptions());
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`box_code`" . SearchString("=", $this->box_code->CurrentValue, DATATYPE_STRING, "");
-                }
-                $sqlWrk = $this->box_code->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->box_code->EditValue = $arwrk;
-            }
+            $this->box_code->EditValue = HtmlEncode($this->box_code->CurrentValue);
             $this->box_code->PlaceHolder = RemoveHtml($this->box_code->caption());
 
             // store_id
             $this->store_id->setupEditAttributes();
-            $this->store_id->EditCustomAttributes = "";
-            $curVal = trim(strval($this->store_id->CurrentValue));
-            if ($curVal != "") {
-                $this->store_id->ViewValue = $this->store_id->lookupCacheOption($curVal);
-            } else {
-                $this->store_id->ViewValue = $this->store_id->Lookup !== null && is_array($this->store_id->lookupOptions()) ? $curVal : null;
+            $this->store_id->EditCustomAttributes = 'readonly';
+            if (!$this->store_id->Raw) {
+                $this->store_id->CurrentValue = HtmlDecode($this->store_id->CurrentValue);
             }
-            if ($this->store_id->ViewValue !== null) { // Load from cache
-                $this->store_id->EditValue = array_values($this->store_id->lookupOptions());
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`store_id`" . SearchString("=", $this->store_id->CurrentValue, DATATYPE_STRING, "");
-                }
-                $sqlWrk = $this->store_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCacheImpl($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->store_id->EditValue = $arwrk;
-            }
+            $this->store_id->EditValue = HtmlEncode($this->store_id->CurrentValue);
             $this->store_id->PlaceHolder = RemoveHtml($this->store_id->caption());
 
             // store_name
@@ -1165,32 +1089,14 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->store_name->EditValue = HtmlEncode($this->store_name->CurrentValue);
             $this->store_name->PlaceHolder = RemoveHtml($this->store_name->caption());
 
-            // scan
-            $this->scan->setupEditAttributes();
-            $this->scan->EditCustomAttributes = 'autofocus';
-            if (!$this->scan->Raw) {
-                $this->scan->CurrentValue = HtmlDecode($this->scan->CurrentValue);
-            }
-            $this->scan->EditValue = HtmlEncode($this->scan->CurrentValue);
-            $this->scan->PlaceHolder = RemoveHtml($this->scan->caption());
-
-            // article
-            $this->article->setupEditAttributes();
-            $this->article->EditCustomAttributes = 'readonly';
-            if (!$this->article->Raw) {
-                $this->article->CurrentValue = HtmlDecode($this->article->CurrentValue);
-            }
-            $this->article->EditValue = HtmlEncode($this->article->CurrentValue);
-            $this->article->PlaceHolder = RemoveHtml($this->article->caption());
-
             // picked_qty
             $this->picked_qty->setupEditAttributes();
             $this->picked_qty->EditCustomAttributes = 'readonly';
+            if (!$this->picked_qty->Raw) {
+                $this->picked_qty->CurrentValue = HtmlDecode($this->picked_qty->CurrentValue);
+            }
             $this->picked_qty->EditValue = HtmlEncode($this->picked_qty->CurrentValue);
             $this->picked_qty->PlaceHolder = RemoveHtml($this->picked_qty->caption());
-            if (strval($this->picked_qty->EditValue) != "" && is_numeric($this->picked_qty->EditValue)) {
-                $this->picked_qty->EditValue = FormatNumber($this->picked_qty->EditValue, null);
-            }
 
             // scan_qty
             $this->scan_qty->setupEditAttributes();
@@ -1219,19 +1125,24 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+            // article
+            $this->article->setupEditAttributes();
+            $this->article->EditCustomAttributes = 'readonly';
+            if (!$this->article->Raw) {
+                $this->article->CurrentValue = HtmlDecode($this->article->CurrentValue);
+            }
+            $this->article->EditValue = HtmlEncode($this->article->CurrentValue);
+            $this->article->PlaceHolder = RemoveHtml($this->article->caption());
+
             // date_update
-            $this->date_update->setupEditAttributes();
-            $this->date_update->EditCustomAttributes = 'readonly';
-            $this->date_update->EditValue = HtmlEncode(FormatDateTime($this->date_update->CurrentValue, $this->date_update->formatPattern()));
-            $this->date_update->PlaceHolder = RemoveHtml($this->date_update->caption());
 
             // time_update
-            $this->time_update->setupEditAttributes();
-            $this->time_update->EditCustomAttributes = 'readonly';
-            $this->time_update->EditValue = HtmlEncode(FormatDateTime($this->time_update->CurrentValue, $this->time_update->formatPattern()));
-            $this->time_update->PlaceHolder = RemoveHtml($this->time_update->caption());
 
             // Add refer script
+
+            // scan
+            $this->scan->LinkCustomAttributes = "";
+            $this->scan->HrefValue = "";
 
             // box_code
             $this->box_code->LinkCustomAttributes = "";
@@ -1244,14 +1155,6 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             // store_name
             $this->store_name->LinkCustomAttributes = "";
             $this->store_name->HrefValue = "";
-
-            // scan
-            $this->scan->LinkCustomAttributes = "";
-            $this->scan->HrefValue = "";
-
-            // article
-            $this->article->LinkCustomAttributes = "";
-            $this->article->HrefValue = "";
 
             // picked_qty
             $this->picked_qty->LinkCustomAttributes = "";
@@ -1268,6 +1171,10 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
+
+            // article
+            $this->article->LinkCustomAttributes = "";
+            $this->article->HrefValue = "";
 
             // date_update
             $this->date_update->LinkCustomAttributes = "";
@@ -1302,6 +1209,11 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
             return true;
         }
         $validateForm = true;
+        if ($this->scan->Required) {
+            if (!$this->scan->IsDetailKey && EmptyValue($this->scan->FormValue)) {
+                $this->scan->addErrorMessage(str_replace("%s", $this->scan->caption(), $this->scan->RequiredErrorMessage));
+            }
+        }
         if ($this->box_code->Required) {
             if (!$this->box_code->IsDetailKey && EmptyValue($this->box_code->FormValue)) {
                 $this->box_code->addErrorMessage(str_replace("%s", $this->box_code->caption(), $this->box_code->RequiredErrorMessage));
@@ -1317,23 +1229,10 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
                 $this->store_name->addErrorMessage(str_replace("%s", $this->store_name->caption(), $this->store_name->RequiredErrorMessage));
             }
         }
-        if ($this->scan->Required) {
-            if (!$this->scan->IsDetailKey && EmptyValue($this->scan->FormValue)) {
-                $this->scan->addErrorMessage(str_replace("%s", $this->scan->caption(), $this->scan->RequiredErrorMessage));
-            }
-        }
-        if ($this->article->Required) {
-            if (!$this->article->IsDetailKey && EmptyValue($this->article->FormValue)) {
-                $this->article->addErrorMessage(str_replace("%s", $this->article->caption(), $this->article->RequiredErrorMessage));
-            }
-        }
         if ($this->picked_qty->Required) {
             if (!$this->picked_qty->IsDetailKey && EmptyValue($this->picked_qty->FormValue)) {
                 $this->picked_qty->addErrorMessage(str_replace("%s", $this->picked_qty->caption(), $this->picked_qty->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->picked_qty->FormValue)) {
-            $this->picked_qty->addErrorMessage($this->picked_qty->getErrorMessage(false));
         }
         if ($this->scan_qty->Required) {
             if (!$this->scan_qty->IsDetailKey && EmptyValue($this->scan_qty->FormValue)) {
@@ -1350,21 +1249,20 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
+        if ($this->article->Required) {
+            if (!$this->article->IsDetailKey && EmptyValue($this->article->FormValue)) {
+                $this->article->addErrorMessage(str_replace("%s", $this->article->caption(), $this->article->RequiredErrorMessage));
+            }
+        }
         if ($this->date_update->Required) {
             if (!$this->date_update->IsDetailKey && EmptyValue($this->date_update->FormValue)) {
                 $this->date_update->addErrorMessage(str_replace("%s", $this->date_update->caption(), $this->date_update->RequiredErrorMessage));
             }
         }
-        if (!CheckDate($this->date_update->FormValue, $this->date_update->formatPattern())) {
-            $this->date_update->addErrorMessage($this->date_update->getErrorMessage(false));
-        }
         if ($this->time_update->Required) {
             if (!$this->time_update->IsDetailKey && EmptyValue($this->time_update->FormValue)) {
                 $this->time_update->addErrorMessage(str_replace("%s", $this->time_update->caption(), $this->time_update->RequiredErrorMessage));
             }
-        }
-        if (!CheckDate($this->time_update->FormValue, $this->time_update->formatPattern())) {
-            $this->time_update->addErrorMessage($this->time_update->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1387,6 +1285,9 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // Set new row
         $rsnew = [];
 
+        // scan
+        $this->scan->setDbValueDef($rsnew, $this->scan->CurrentValue, "", false);
+
         // box_code
         $this->box_code->setDbValueDef($rsnew, $this->box_code->CurrentValue, "", false);
 
@@ -1396,14 +1297,8 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // store_name
         $this->store_name->setDbValueDef($rsnew, $this->store_name->CurrentValue, "", false);
 
-        // scan
-        $this->scan->setDbValueDef($rsnew, $this->scan->CurrentValue, "", false);
-
-        // article
-        $this->article->setDbValueDef($rsnew, $this->article->CurrentValue, "", false);
-
         // picked_qty
-        $this->picked_qty->setDbValueDef($rsnew, $this->picked_qty->CurrentValue, 0, false);
+        $this->picked_qty->setDbValueDef($rsnew, $this->picked_qty->CurrentValue, "", false);
 
         // scan_qty
         $this->scan_qty->setDbValueDef($rsnew, $this->scan_qty->CurrentValue, "", false);
@@ -1414,11 +1309,16 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
 
+        // article
+        $this->article->setDbValueDef($rsnew, $this->article->CurrentValue, "", false);
+
         // date_update
-        $this->date_update->setDbValueDef($rsnew, UnFormatDateTime($this->date_update->CurrentValue, $this->date_update->formatPattern()), CurrentDate(), false);
+        $this->date_update->CurrentValue = CurrentDate();
+        $this->date_update->setDbValueDef($rsnew, $this->date_update->CurrentValue, CurrentDate());
 
         // time_update
-        $this->time_update->setDbValueDef($rsnew, UnFormatDateTime($this->time_update->CurrentValue, $this->time_update->formatPattern()), CurrentDate(), false);
+        $this->time_update->CurrentValue = CurrentTime();
+        $this->time_update->setDbValueDef($rsnew, $this->time_update->CurrentValue, CurrentTime());
 
         // Update current values
         $this->setCurrentValues($rsnew);
@@ -1485,10 +1385,6 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_box_code":
-                    break;
-                case "x_store_id":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -1518,6 +1414,12 @@ class AuditPickingOnlineAdd extends AuditPickingOnline
     public function pageLoad()
     {
         //Log("Page Load");
+        SetClientVar("LastBoxCode",LastBoxCode() );
+        SetClientVar("LastStoreID",LastStoreID() );
+        SetClientVar("LastStoreName",LastStoreName() );
+        SetClientVar("QtyBox",QtyBox() );
+        SetClientVar("GetOrder",GetOrder() );
+        SetClientVar("QtyScan",QtyScan() );
     }
 
     // Page Unload event

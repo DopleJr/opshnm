@@ -496,9 +496,11 @@ class BoxPickingAdd extends BoxPicking
         $this->status->setVisibility();
         $this->users->setVisibility();
         $this->picking_date->Visible = false;
+        $this->line->setVisibility();
         $this->date_created->Visible = false;
-        $this->date_delivery->Visible = false;
         $this->date_updated->Visible = false;
+        $this->date_staging->Visible = false;
+        $this->date_delivery->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -741,6 +743,16 @@ class BoxPickingAdd extends BoxPicking
             }
         }
 
+        // Check field name 'line' first before field var 'x_line'
+        $val = $CurrentForm->hasValue("line") ? $CurrentForm->getValue("line") : $CurrentForm->getValue("x_line");
+        if (!$this->line->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->line->Visible = false; // Disable update for API request
+            } else {
+                $this->line->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -757,6 +769,7 @@ class BoxPickingAdd extends BoxPicking
         $this->quantity->CurrentValue = $this->quantity->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->users->CurrentValue = $this->users->FormValue;
+        $this->line->CurrentValue = $this->line->FormValue;
     }
 
     /**
@@ -816,9 +829,11 @@ class BoxPickingAdd extends BoxPicking
         $this->status->setDbValue($row['status']);
         $this->users->setDbValue($row['users']);
         $this->picking_date->setDbValue($row['picking_date']);
+        $this->line->setDbValue($row['line']);
         $this->date_created->setDbValue($row['date_created']);
-        $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
+        $this->date_staging->setDbValue($row['date_staging']);
+        $this->date_delivery->setDbValue($row['date_delivery']);
     }
 
     // Return a row with default values
@@ -835,9 +850,11 @@ class BoxPickingAdd extends BoxPicking
         $row['status'] = $this->status->DefaultValue;
         $row['users'] = $this->users->DefaultValue;
         $row['picking_date'] = $this->picking_date->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
-        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['date_staging'] = $this->date_staging->DefaultValue;
+        $row['date_delivery'] = $this->date_delivery->DefaultValue;
         return $row;
     }
 
@@ -899,14 +916,20 @@ class BoxPickingAdd extends BoxPicking
         // picking_date
         $this->picking_date->RowCssClass = "row";
 
+        // line
+        $this->line->RowCssClass = "row";
+
         // date_created
         $this->date_created->RowCssClass = "row";
 
-        // date_delivery
-        $this->date_delivery->RowCssClass = "row";
-
         // date_updated
         $this->date_updated->RowCssClass = "row";
+
+        // date_staging
+        $this->date_staging->RowCssClass = "row";
+
+        // date_delivery
+        $this->date_delivery->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -952,20 +975,29 @@ class BoxPickingAdd extends BoxPicking
             $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
             $this->picking_date->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->ViewCustomAttributes = "";
+
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
-            // date_delivery
-            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
-            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
-            $this->date_delivery->ViewCustomAttributes = "";
-
             // date_updated
             $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
             $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
             $this->date_updated->ViewCustomAttributes = "";
+
+            // date_staging
+            $this->date_staging->ViewValue = $this->date_staging->CurrentValue;
+            $this->date_staging->ViewValue = FormatDateTime($this->date_staging->ViewValue, $this->date_staging->formatPattern());
+            $this->date_staging->ViewCustomAttributes = "";
+
+            // date_delivery
+            $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
+            $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
+            $this->date_delivery->ViewCustomAttributes = "";
 
             // store_name
             $this->store_name->LinkCustomAttributes = "";
@@ -998,6 +1030,10 @@ class BoxPickingAdd extends BoxPicking
             // users
             $this->users->LinkCustomAttributes = "";
             $this->users->HrefValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // store_name
             $this->store_name->setupEditAttributes();
@@ -1071,6 +1107,15 @@ class BoxPickingAdd extends BoxPicking
             $this->users->EditValue = HtmlEncode($this->users->CurrentValue);
             $this->users->PlaceHolder = RemoveHtml($this->users->caption());
 
+            // line
+            $this->line->setupEditAttributes();
+            $this->line->EditCustomAttributes = "";
+            if (!$this->line->Raw) {
+                $this->line->CurrentValue = HtmlDecode($this->line->CurrentValue);
+            }
+            $this->line->EditValue = HtmlEncode($this->line->CurrentValue);
+            $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
             // Add refer script
 
             // store_name
@@ -1104,6 +1149,10 @@ class BoxPickingAdd extends BoxPicking
             // users
             $this->users->LinkCustomAttributes = "";
             $this->users->HrefValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1168,6 +1217,11 @@ class BoxPickingAdd extends BoxPicking
                 $this->users->addErrorMessage(str_replace("%s", $this->users->caption(), $this->users->RequiredErrorMessage));
             }
         }
+        if ($this->line->Required) {
+            if (!$this->line->IsDetailKey && EmptyValue($this->line->FormValue)) {
+                $this->line->addErrorMessage(str_replace("%s", $this->line->caption(), $this->line->RequiredErrorMessage));
+            }
+        }
 
         // Return validate result
         $validateForm = $validateForm && !$this->hasInvalidFields();
@@ -1212,6 +1266,9 @@ class BoxPickingAdd extends BoxPicking
 
         // users
         $this->users->setDbValueDef($rsnew, $this->users->CurrentValue, null, false);
+
+        // line
+        $this->line->setDbValueDef($rsnew, $this->line->CurrentValue, null, false);
 
         // Update current values
         $this->setCurrentValues($rsnew);

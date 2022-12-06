@@ -460,6 +460,7 @@ class OnStagingSummary extends OnStaging
 
         // Set field visibility for detail fields
         $this->quantity->setVisibility();
+        $this->line->setVisibility();
 
         // Set up groups per page dynamically
         $this->setupDisplayGroups();
@@ -627,6 +628,7 @@ class OnStagingSummary extends OnStaging
         $data["status"] = $record['status'];
         $data["users"] = $record['users'];
         $data["date_updated"] = $record['date_updated'];
+        $data["line"] = $record['line'];
         $this->Rows[] = $data;
         $this->id->setDbValue($record['id']);
         $this->week->setDbValue($record['week']);
@@ -642,6 +644,7 @@ class OnStagingSummary extends OnStaging
         $this->status->setDbValue($record['status']);
         $this->users->setDbValue($record['users']);
         $this->date_updated->setDbValue($record['date_updated']);
+        $this->line->setDbValue($record['line']);
     }
 
     // Render row
@@ -683,6 +686,7 @@ class OnStagingSummary extends OnStaging
             if ($rsagg) {
                 $this->quantity->Count = $this->TotalCount;
                 $this->quantity->SumValue = $rsagg["sum_quantity"];
+                $this->line->Count = $this->TotalCount;
                 $hasSummary = true;
             }
 
@@ -703,6 +707,8 @@ class OnStagingSummary extends OnStaging
 
         // quantity
         $this->quantity->CellCssStyle = "white-space: nowrap;";
+
+        // line
         if ($this->RowType == ROWTYPE_SEARCH) {
             // quantity
             if ($this->quantity->UseFilter && !EmptyValue($this->quantity->AdvancedSearch->SearchValue)) {
@@ -747,6 +753,9 @@ class OnStagingSummary extends OnStaging
 
             // quantity
             $this->quantity->HrefValue = "";
+
+            // line
+            $this->line->HrefValue = "";
         } else {
             if ($this->RowTotalType == ROWTOTAL_GROUP && $this->RowTotalSubType == ROWTOTAL_HEADER) {
                 $this->RowAttrs["data-group"] = $this->picking_date->groupValue(); // Set up group attribute
@@ -772,6 +781,11 @@ class OnStagingSummary extends OnStaging
             $this->quantity->CellCssClass = ($this->RecordCount % 2 != 1 ? "ew-table-alt-row" : "");
             $this->quantity->ViewCustomAttributes = "";
 
+            // line
+            $this->line->ViewValue = $this->line->CurrentValue;
+            $this->line->CellCssClass = ($this->RecordCount % 2 != 1 ? "ew-table-alt-row" : "");
+            $this->line->ViewCustomAttributes = "";
+
             // picking_date
             $this->picking_date->LinkCustomAttributes = "";
             $this->picking_date->HrefValue = "";
@@ -781,6 +795,11 @@ class OnStagingSummary extends OnStaging
             $this->quantity->LinkCustomAttributes = "";
             $this->quantity->HrefValue = "";
             $this->quantity->TooltipValue = "";
+
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
         }
 
         // Call Cell_Rendered event
@@ -820,6 +839,15 @@ class OnStagingSummary extends OnStaging
             $hrefValue = &$this->quantity->HrefValue;
             $linkAttrs = &$this->quantity->LinkAttrs;
             $this->cellRendered($this->quantity, $currentValue, $viewValue, $viewAttrs, $cellAttrs, $hrefValue, $linkAttrs);
+
+            // line
+            $currentValue = $this->line->CurrentValue;
+            $viewValue = &$this->line->ViewValue;
+            $viewAttrs = &$this->line->ViewAttrs;
+            $cellAttrs = &$this->line->CellAttrs;
+            $hrefValue = &$this->line->HrefValue;
+            $linkAttrs = &$this->line->LinkAttrs;
+            $this->cellRendered($this->line, $currentValue, $viewValue, $viewAttrs, $cellAttrs, $hrefValue, $linkAttrs);
         }
 
         // Call Row_Rendered event
@@ -876,6 +904,9 @@ class OnStagingSummary extends OnStaging
             $this->GroupColumnCount += 1;
         }
         if ($this->quantity->Visible) {
+            $this->DetailColumnCount += 1;
+        }
+        if ($this->line->Visible) {
             $this->DetailColumnCount += 1;
         }
     }
@@ -1160,6 +1191,7 @@ class OnStagingSummary extends OnStaging
             $this->setStartGroup(1);
             $this->quantity->setSort("");
             $this->picking_date->setSort("");
+            $this->line->setSort("");
 
         // Check for an Order parameter
         } elseif ($orderBy != "") {
@@ -1167,6 +1199,7 @@ class OnStagingSummary extends OnStaging
             $this->CurrentOrderType = $orderType;
             $this->updateSort($this->quantity); // quantity
             $this->updateSort($this->picking_date); // picking_date
+            $this->updateSort($this->line); // line
             $sortSql = $this->sortSql();
             $this->setOrderBy($sortSql);
             $this->setStartGroup(1);

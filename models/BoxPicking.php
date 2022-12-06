@@ -41,9 +41,11 @@ class BoxPicking extends DbTable
     public $status;
     public $users;
     public $picking_date;
+    public $line;
     public $date_created;
-    public $date_delivery;
     public $date_updated;
+    public $date_staging;
+    public $date_delivery;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -128,7 +130,14 @@ class BoxPicking extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'box_picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'box_picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'box_picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // store_code
@@ -152,7 +161,14 @@ class BoxPicking extends DbTable
         );
         $this->store_code->InputTextType = "text";
         $this->store_code->UseFilter = true; // Table header filter
-        $this->store_code->Lookup = new Lookup('store_code', 'box_picking', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'box_picking', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'box_picking', true, 'store_code', ["store_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_code'] = &$this->store_code;
 
         // box_id
@@ -176,7 +192,14 @@ class BoxPicking extends DbTable
         );
         $this->box_id->InputTextType = "text";
         $this->box_id->UseFilter = true; // Table header filter
-        $this->box_id->Lookup = new Lookup('box_id', 'box_picking', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_id->Lookup = new Lookup('box_id', 'box_picking', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_id->Lookup = new Lookup('box_id', 'box_picking', true, 'box_id', ["box_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_id'] = &$this->box_id;
 
         // type
@@ -200,7 +223,14 @@ class BoxPicking extends DbTable
         );
         $this->type->InputTextType = "text";
         $this->type->UseFilter = true; // Table header filter
-        $this->type->Lookup = new Lookup('type', 'box_picking', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->type->Lookup = new Lookup('type', 'box_picking', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->type->Lookup = new Lookup('type', 'box_picking', true, 'type', ["type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['type'] = &$this->type;
 
         // concept
@@ -224,7 +254,14 @@ class BoxPicking extends DbTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'box_picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'box_picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'box_picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['concept'] = &$this->concept;
 
         // quantity
@@ -248,7 +285,14 @@ class BoxPicking extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'box_picking', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'box_picking', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'box_picking', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['quantity'] = &$this->quantity;
 
@@ -273,7 +317,14 @@ class BoxPicking extends DbTable
         );
         $this->status->InputTextType = "text";
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'box_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'box_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'box_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['status'] = &$this->status;
 
         // users
@@ -297,7 +348,14 @@ class BoxPicking extends DbTable
         );
         $this->users->InputTextType = "text";
         $this->users->UseFilter = true; // Table header filter
-        $this->users->Lookup = new Lookup('users', 'box_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->users->Lookup = new Lookup('users', 'box_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->users->Lookup = new Lookup('users', 'box_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['users'] = &$this->users;
 
         // picking_date
@@ -321,9 +379,47 @@ class BoxPicking extends DbTable
         );
         $this->picking_date->InputTextType = "text";
         $this->picking_date->UseFilter = true; // Table header filter
-        $this->picking_date->Lookup = new Lookup('picking_date', 'box_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picking_date->Lookup = new Lookup('picking_date', 'box_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picking_date->Lookup = new Lookup('picking_date', 'box_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['picking_date'] = &$this->picking_date;
+
+        // line
+        $this->line = new DbField(
+            'box_picking',
+            'box_picking',
+            'x_line',
+            'line',
+            '`line`',
+            '`line`',
+            200,
+            10,
+            -1,
+            false,
+            '`line`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->line->InputTextType = "text";
+        $this->line->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->line->Lookup = new Lookup('line', 'box_picking', true, 'line', ["line","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->line->Lookup = new Lookup('line', 'box_picking', true, 'line', ["line","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['line'] = &$this->line;
 
         // date_created
         $this->date_created = new DbField(
@@ -346,34 +442,16 @@ class BoxPicking extends DbTable
         );
         $this->date_created->InputTextType = "text";
         $this->date_created->UseFilter = true; // Table header filter
-        $this->date_created->Lookup = new Lookup('date_created', 'box_picking', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_created->Lookup = new Lookup('date_created', 'box_picking', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_created->Lookup = new Lookup('date_created', 'box_picking', true, 'date_created', ["date_created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_created->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_created'] = &$this->date_created;
-
-        // date_delivery
-        $this->date_delivery = new DbField(
-            'box_picking',
-            'box_picking',
-            'x_date_delivery',
-            'date_delivery',
-            '`date_delivery`',
-            CastDateFieldForLike("`date_delivery`", 0, "DB"),
-            133,
-            10,
-            0,
-            false,
-            '`date_delivery`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->date_delivery->InputTextType = "text";
-        $this->date_delivery->UseFilter = true; // Table header filter
-        $this->date_delivery->Lookup = new Lookup('date_delivery', 'box_picking', true, 'date_delivery', ["date_delivery","","",""], [], [], [], [], [], [], '', '', "");
-        $this->date_delivery->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->Fields['date_delivery'] = &$this->date_delivery;
 
         // date_updated
         $this->date_updated = new DbField(
@@ -396,9 +474,80 @@ class BoxPicking extends DbTable
         );
         $this->date_updated->InputTextType = "text";
         $this->date_updated->UseFilter = true; // Table header filter
-        $this->date_updated->Lookup = new Lookup('date_updated', 'box_picking', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_updated->Lookup = new Lookup('date_updated', 'box_picking', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_updated->Lookup = new Lookup('date_updated', 'box_picking', true, 'date_updated', ["date_updated","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_updated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_updated'] = &$this->date_updated;
+
+        // date_staging
+        $this->date_staging = new DbField(
+            'box_picking',
+            'box_picking',
+            'x_date_staging',
+            'date_staging',
+            '`date_staging`',
+            CastDateFieldForLike("`date_staging`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_staging`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_staging->InputTextType = "text";
+        $this->date_staging->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_staging->Lookup = new Lookup('date_staging', 'box_picking', true, 'date_staging', ["date_staging","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_staging->Lookup = new Lookup('date_staging', 'box_picking', true, 'date_staging', ["date_staging","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->date_staging->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_staging'] = &$this->date_staging;
+
+        // date_delivery
+        $this->date_delivery = new DbField(
+            'box_picking',
+            'box_picking',
+            'x_date_delivery',
+            'date_delivery',
+            '`date_delivery`',
+            CastDateFieldForLike("`date_delivery`", 0, "DB"),
+            133,
+            10,
+            0,
+            false,
+            '`date_delivery`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->date_delivery->InputTextType = "text";
+        $this->date_delivery->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_delivery->Lookup = new Lookup('date_delivery', 'box_picking', true, 'date_delivery', ["date_delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_delivery->Lookup = new Lookup('date_delivery', 'box_picking', true, 'date_delivery', ["date_delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->date_delivery->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Fields['date_delivery'] = &$this->date_delivery;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -840,9 +989,11 @@ class BoxPicking extends DbTable
         $this->status->DbValue = $row['status'];
         $this->users->DbValue = $row['users'];
         $this->picking_date->DbValue = $row['picking_date'];
+        $this->line->DbValue = $row['line'];
         $this->date_created->DbValue = $row['date_created'];
-        $this->date_delivery->DbValue = $row['date_delivery'];
         $this->date_updated->DbValue = $row['date_updated'];
+        $this->date_staging->DbValue = $row['date_staging'];
+        $this->date_delivery->DbValue = $row['date_delivery'];
     }
 
     // Delete uploaded files
@@ -1171,9 +1322,11 @@ class BoxPicking extends DbTable
         $this->status->setDbValue($row['status']);
         $this->users->setDbValue($row['users']);
         $this->picking_date->setDbValue($row['picking_date']);
+        $this->line->setDbValue($row['line']);
         $this->date_created->setDbValue($row['date_created']);
-        $this->date_delivery->setDbValue($row['date_delivery']);
         $this->date_updated->setDbValue($row['date_updated']);
+        $this->date_staging->setDbValue($row['date_staging']);
+        $this->date_delivery->setDbValue($row['date_delivery']);
     }
 
     // Render list row values
@@ -1216,14 +1369,20 @@ class BoxPicking extends DbTable
         // picking_date
         $this->picking_date->CellCssStyle = "white-space: nowrap;";
 
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
+
         // date_created
         $this->date_created->CellCssStyle = "white-space: nowrap;";
 
-        // date_delivery
-        $this->date_delivery->CellCssStyle = "white-space: nowrap;";
-
         // date_updated
         $this->date_updated->CellCssStyle = "white-space: nowrap;";
+
+        // date_staging
+        $this->date_staging->CellCssStyle = "white-space: nowrap;";
+
+        // date_delivery
+        $this->date_delivery->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1267,20 +1426,29 @@ class BoxPicking extends DbTable
         $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
         $this->picking_date->ViewCustomAttributes = "";
 
+        // line
+        $this->line->ViewValue = $this->line->CurrentValue;
+        $this->line->ViewCustomAttributes = "";
+
         // date_created
         $this->date_created->ViewValue = $this->date_created->CurrentValue;
         $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
         $this->date_created->ViewCustomAttributes = "";
 
-        // date_delivery
-        $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
-        $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
-        $this->date_delivery->ViewCustomAttributes = "";
-
         // date_updated
         $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
         $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
         $this->date_updated->ViewCustomAttributes = "";
+
+        // date_staging
+        $this->date_staging->ViewValue = $this->date_staging->CurrentValue;
+        $this->date_staging->ViewValue = FormatDateTime($this->date_staging->ViewValue, $this->date_staging->formatPattern());
+        $this->date_staging->ViewCustomAttributes = "";
+
+        // date_delivery
+        $this->date_delivery->ViewValue = $this->date_delivery->CurrentValue;
+        $this->date_delivery->ViewValue = FormatDateTime($this->date_delivery->ViewValue, $this->date_delivery->formatPattern());
+        $this->date_delivery->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1332,20 +1500,30 @@ class BoxPicking extends DbTable
         $this->picking_date->HrefValue = "";
         $this->picking_date->TooltipValue = "";
 
+        // line
+        $this->line->LinkCustomAttributes = "";
+        $this->line->HrefValue = "";
+        $this->line->TooltipValue = "";
+
         // date_created
         $this->date_created->LinkCustomAttributes = "";
         $this->date_created->HrefValue = "";
         $this->date_created->TooltipValue = "";
 
-        // date_delivery
-        $this->date_delivery->LinkCustomAttributes = "";
-        $this->date_delivery->HrefValue = "";
-        $this->date_delivery->TooltipValue = "";
-
         // date_updated
         $this->date_updated->LinkCustomAttributes = "";
         $this->date_updated->HrefValue = "";
         $this->date_updated->TooltipValue = "";
+
+        // date_staging
+        $this->date_staging->LinkCustomAttributes = "";
+        $this->date_staging->HrefValue = "";
+        $this->date_staging->TooltipValue = "";
+
+        // date_delivery
+        $this->date_delivery->LinkCustomAttributes = "";
+        $this->date_delivery->HrefValue = "";
+        $this->date_delivery->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1446,19 +1624,34 @@ class BoxPicking extends DbTable
         $this->picking_date->EditValue = FormatDateTime($this->picking_date->CurrentValue, $this->picking_date->formatPattern());
         $this->picking_date->PlaceHolder = RemoveHtml($this->picking_date->caption());
 
+        // line
+        $this->line->setupEditAttributes();
+        $this->line->EditCustomAttributes = "";
+        if (!$this->line->Raw) {
+            $this->line->CurrentValue = HtmlDecode($this->line->CurrentValue);
+        }
+        $this->line->EditValue = $this->line->CurrentValue;
+        $this->line->PlaceHolder = RemoveHtml($this->line->caption());
+
         // date_created
         $this->date_created->setupEditAttributes();
         $this->date_created->EditCustomAttributes = "";
         $this->date_created->EditValue = FormatDateTime($this->date_created->CurrentValue, $this->date_created->formatPattern());
         $this->date_created->PlaceHolder = RemoveHtml($this->date_created->caption());
 
+        // date_updated
+
+        // date_staging
+        $this->date_staging->setupEditAttributes();
+        $this->date_staging->EditCustomAttributes = "";
+        $this->date_staging->EditValue = FormatDateTime($this->date_staging->CurrentValue, $this->date_staging->formatPattern());
+        $this->date_staging->PlaceHolder = RemoveHtml($this->date_staging->caption());
+
         // date_delivery
         $this->date_delivery->setupEditAttributes();
         $this->date_delivery->EditCustomAttributes = "";
         $this->date_delivery->EditValue = FormatDateTime($this->date_delivery->CurrentValue, $this->date_delivery->formatPattern());
         $this->date_delivery->PlaceHolder = RemoveHtml($this->date_delivery->caption());
-
-        // date_updated
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1498,9 +1691,11 @@ class BoxPicking extends DbTable
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->users);
                     $doc->exportCaption($this->picking_date);
+                    $doc->exportCaption($this->line);
                     $doc->exportCaption($this->date_created);
-                    $doc->exportCaption($this->date_delivery);
                     $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->date_staging);
+                    $doc->exportCaption($this->date_delivery);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->store_name);
@@ -1512,9 +1707,11 @@ class BoxPicking extends DbTable
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->users);
                     $doc->exportCaption($this->picking_date);
+                    $doc->exportCaption($this->line);
                     $doc->exportCaption($this->date_created);
-                    $doc->exportCaption($this->date_delivery);
                     $doc->exportCaption($this->date_updated);
+                    $doc->exportCaption($this->date_staging);
+                    $doc->exportCaption($this->date_delivery);
                 }
                 $doc->endExportRow();
             }
@@ -1554,9 +1751,11 @@ class BoxPicking extends DbTable
                         $doc->exportField($this->status);
                         $doc->exportField($this->users);
                         $doc->exportField($this->picking_date);
+                        $doc->exportField($this->line);
                         $doc->exportField($this->date_created);
-                        $doc->exportField($this->date_delivery);
                         $doc->exportField($this->date_updated);
+                        $doc->exportField($this->date_staging);
+                        $doc->exportField($this->date_delivery);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->store_name);
@@ -1568,9 +1767,11 @@ class BoxPicking extends DbTable
                         $doc->exportField($this->status);
                         $doc->exportField($this->users);
                         $doc->exportField($this->picking_date);
+                        $doc->exportField($this->line);
                         $doc->exportField($this->date_created);
-                        $doc->exportField($this->date_delivery);
                         $doc->exportField($this->date_updated);
+                        $doc->exportField($this->date_staging);
+                        $doc->exportField($this->date_delivery);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1647,15 +1848,11 @@ class BoxPicking extends DbTable
             $currentDate2 = CurrentDate();
             $compare1 = "SELECT count(`box_id`) FROM box_picking WHERE `box_id` =  '$_box_id' AND `store_code` = '$_store_code' AND `concept` = '$_concept' ";
             $_compare1 = ExecuteScalar($compare1);
-
-            //$_result_true  = "DELETE FROM staging WHERE  id = '$_id' ";
             if($_compare1 == 0 ){
-            //ExecuteStatement($_result_true);
             	//console.log('cek_dobel');
             	return true;	
             }
-            if($_compare1 >= 0 ){
-            //ExecuteStatement($_result_true);
+            if($_compare1 <> 0 ){
             	//console.log('cek_dobel');
             	return false;	
             }
@@ -1665,36 +1862,96 @@ class BoxPicking extends DbTable
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $_id  = $rsnew["id"];
-        $_id2  = $rsnew["id"];
-        $_box_id  = $rsnew["box_id"];
-        $_store_code  = $rsnew["store_code"];
-        $_concept  = $rsnew["concept"];
-        $_status1  = 'Unmatch';
-        $_status2  = 'Match';
-        $_status3  = 'Scanned';
-        $currentDate = CurrentDate();
-        $currentDate2 = CurrentDate();
-        $compare1 = "SELECT count(`box_id`) FROM `box_picking` WHERE `box_id` =  '$_box_id' AND `store_name` = '$_store_code' AND `concept` = '$_concept' ";
-        $_compare1 = ExecuteScalar($compare1);
-        $compare2 = "SELECT count(`box_id`) FROM `box_picking` WHERE `box_id` =  '$_box_id' AND `status` = '$_status3' AND `store_code` is null ";
-        $_compare2 = ExecuteScalar($compare2);
-        $_result_true  = "DELETE FROM box_picking WHERE  id = '$_id' ";
-        $_result_true1  = "DELETE FROM box_picking WHERE  `box_id` =  '$_box_id' AND `status` = '$_status3' AND `store_name` is null ";
-        $_result_false  = "UPDATE box_picking SET `status` = '$_status2', `date_created` = '$currentDate2' , `date_updated` = '$currentDate2' WHERE `id` =  '$_id' ";
-        $_result_false2  = "UPDATE box_picking SET `status` = '$_status1', `date_created` = '$currentDate2' , `date_updated` = '$currentDate2'  WHERE `id` =  '$_id' ";
-        if($_compare1 >= 2 ){
-        ExecuteStatement($_result_true);
-        	//console.log('statement1');
-        }
-        elseif($_compare2 == 1  ){
-        ExecuteStatement($_result_true1);
-        ExecuteStatement($_result_false);
-        	//console.log('statement2');
-        }
-        else{
-        ExecuteStatement($_result_false2);
-        }
+        	$_id  = $rsnew["id"];
+            $_id2  = $rsnew["id"];
+            $_box_id  = $rsnew["box_id"];
+            $_store_code  = $rsnew["store_code"];
+            $_concept  = $rsnew["concept"];
+            $_line  = $rsnew["line"];
+            $_status1  = 'Unmatch';
+            $_status2  = 'Match';
+            $_status3  = 'Scanned';
+            $_status4  = 'Staging';
+            $currentDate = CurrentDate();
+            $currentDate2 = CurrentDate();
+            //cek double upload
+            $compare1 = "SELECT count(`box_id`) FROM `box_picking`
+            WHERE `box_id` =  '$_box_id'
+            AND `store_name` = '$_store_code'
+            AND `concept` = '$_concept' ";
+            $_compare1 = ExecuteScalar($compare1);
+            //------------
+            //fresh upload
+            $compare2 = "SELECT count(`box_id`) FROM `box_picking`
+            WHERE `box_id` =  '$_box_id'
+            AND `status` = '$_status3'
+            AND `store_code` IS NULL
+            AND `line` IS NULL ";
+            $_compare2 = ExecuteScalar($compare2);
+            //------------
+            //double cek putaway vs scan
+            $compare3 = "SELECT count(`box_id`) FROM `box_picking`
+            WHERE `box_id` =  '$_box_id'
+            AND `status` = '$_status4'
+            AND `store_code` IS NULL ";
+            $_compare3 = ExecuteScalar($compare3);
+            $_result_compare1  = "DELETE FROM box_picking
+            WHERE
+            	`id` = '$_id' ";
+            $_result_compare2  = "DELETE FROM box_picking
+            WHERE
+            	`box_id` =  '$_box_id'
+            	AND `status` = '$_status3'
+            	AND `store_name` is null ";
+            $_result2_compare2  = "UPDATE box_picking
+            SET
+            	`status` = '$_status2',
+            	`date_created` = '$currentDate2' ,
+            	`date_updated` = '$currentDate2'
+            	WHERE `id` =  '$_id' ";
+            $_result_compare4  = "SELECT `line` FROM `box_picking`
+            WHERE
+            	`box_id` =  '$_box_id'
+            	AND `status` = '$_status4'
+            	AND `store_code` IS NULL ";
+            $_result_line =	ExecuteScalar($_result_compare4);
+            $_result2_compare3  = "UPDATE box_picking
+            SET
+            	`status` = '$_status4',
+            	`line` = '$_result_line',
+            	`date_created` = '$currentDate2' ,
+            	`date_updated` = '$currentDate2'
+            	WHERE
+            		`id` =  '$_id' ";
+            $_result_compare3  = "DELETE FROM box_picking
+            WHERE
+            	`box_id` =  '$_box_id'
+            	AND `status` = '$_status4'
+            	AND `store_name` is null ";
+            $_result_false2  = "UPDATE box_picking
+            SET
+            	`status` = '$_status1',
+            	`date_created` = '$currentDate2' ,
+            	`date_updated` = '$currentDate2'
+            	WHERE
+            		`id` =  '$_id' ";
+            if($_compare1 >= 2 ){
+            ExecuteStatement($_result_compare1);
+            	//console.log('statement1');
+            }
+            elseif($_compare2 == 1  ){
+            ExecuteStatement($_result_compare2);
+            ExecuteStatement($_result2_compare2);
+            	//console.log('statement2');
+            }
+            elseif($_compare3 == 1  ){
+            ExecuteStatement($_result2_compare3);
+            ExecuteStatement($_result_compare3);
+            	//console.log('statement2');
+            }
+            else{
+            ExecuteStatement($_result_false2);
+            }
     }
 
     // Row Updating event
@@ -1800,6 +2057,11 @@ class BoxPicking extends DbTable
                 $this->status->ViewAttrs["style"] = "
                 color: aliceblue;
                 background-color: orange
+                ";}
+         elseif ($this->status->ViewValue == "Staging") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: blue
                 ";}
          if ($this->Export <> "") {
          //$this->box_id->ViewValue = "'" .$this->box_id->ViewValue;

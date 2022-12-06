@@ -96,7 +96,14 @@ class MonitorCycleCountOffline extends DbTable
         );
         $this->Location->InputTextType = "text";
         $this->Location->UseFilter = true; // Table header filter
-        $this->Location->Lookup = new Lookup('Location', 'monitor_cycle_count_offline', true, 'Location', ["Location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Location->Lookup = new Lookup('Location', 'monitor_cycle_count_offline', true, 'Location', ["Location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Location->Lookup = new Lookup('Location', 'monitor_cycle_count_offline', true, 'Location', ["Location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Location'] = &$this->Location;
 
         // Ctn
@@ -120,7 +127,14 @@ class MonitorCycleCountOffline extends DbTable
         );
         $this->Ctn->InputTextType = "text";
         $this->Ctn->UseFilter = true; // Table header filter
-        $this->Ctn->Lookup = new Lookup('Ctn', 'monitor_cycle_count_offline', true, 'Ctn', ["Ctn","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->Ctn->Lookup = new Lookup('Ctn', 'monitor_cycle_count_offline', true, 'Ctn', ["Ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->Ctn->Lookup = new Lookup('Ctn', 'monitor_cycle_count_offline', true, 'Ctn', ["Ctn","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Ctn'] = &$this->Ctn;
 
         // Short Article
@@ -144,7 +158,14 @@ class MonitorCycleCountOffline extends DbTable
         );
         $this->ShortArticle->InputTextType = "text";
         $this->ShortArticle->UseFilter = true; // Table header filter
-        $this->ShortArticle->Lookup = new Lookup('Short Article', 'monitor_cycle_count_offline', true, 'Short Article', ["Short Article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->ShortArticle->Lookup = new Lookup('Short Article', 'monitor_cycle_count_offline', true, 'Short Article', ["Short Article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->ShortArticle->Lookup = new Lookup('Short Article', 'monitor_cycle_count_offline', true, 'Short Article', ["Short Article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['Short Article'] = &$this->ShortArticle;
 
         // Total
@@ -192,7 +213,14 @@ class MonitorCycleCountOffline extends DbTable
         );
         $this->User->InputTextType = "text";
         $this->User->UseFilter = true; // Table header filter
-        $this->User->Lookup = new Lookup('User', 'monitor_cycle_count_offline', true, 'User', ["User","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->User->Lookup = new Lookup('User', 'monitor_cycle_count_offline', true, 'User', ["User","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->User->Lookup = new Lookup('User', 'monitor_cycle_count_offline', true, 'User', ["User","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['User'] = &$this->User;
 
         // Date Created
@@ -216,7 +244,14 @@ class MonitorCycleCountOffline extends DbTable
         );
         $this->DateCreated->InputTextType = "text";
         $this->DateCreated->UseFilter = true; // Table header filter
-        $this->DateCreated->Lookup = new Lookup('Date Created', 'monitor_cycle_count_offline', true, 'Date Created', ["Date Created","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->DateCreated->Lookup = new Lookup('Date Created', 'monitor_cycle_count_offline', true, 'Date Created', ["Date Created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->DateCreated->Lookup = new Lookup('Date Created', 'monitor_cycle_count_offline', true, 'Date Created', ["Date Created","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->DateCreated->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->DateCreated->AdvancedSearch->SearchValueDefault = date("Y-m-d");
         $this->DateCreated->AdvancedSearch->SearchValue2Default = date("Y-m-d");

@@ -34,11 +34,16 @@ class TransferBinPiece extends DbTable
     public $id;
     public $source_location;
     public $article;
+    public $description;
     public $destination_location;
     public $su;
+    public $qty;
+    public $actual;
     public $user;
+    public $status;
     public $date_upload;
     public $date_confirmation;
+    public $time_confirmation;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -99,6 +104,7 @@ class TransferBinPiece extends DbTable
         $this->id->InputTextType = "text";
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -122,8 +128,16 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->source_location->InputTextType = "text";
+        $this->source_location->Sortable = false; // Allow sort
         $this->source_location->UseFilter = true; // Table header filter
-        $this->source_location->Lookup = new Lookup('source_location', 'transfer_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->source_location->Lookup = new Lookup('source_location', 'transfer_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->source_location->Lookup = new Lookup('source_location', 'transfer_bin_piece', true, 'source_location', ["source_location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['source_location'] = &$this->source_location;
 
         // article
@@ -146,9 +160,49 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->article->InputTextType = "text";
+        $this->article->Sortable = false; // Allow sort
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'transfer_bin_piece', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'transfer_bin_piece', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'transfer_bin_piece', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
+
+        // description
+        $this->description = new DbField(
+            'transfer_bin_piece',
+            'transfer_bin_piece',
+            'x_description',
+            'description',
+            '`description`',
+            '`description`',
+            200,
+            255,
+            -1,
+            false,
+            '`description`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->description->InputTextType = "text";
+        $this->description->Sortable = false; // Allow sort
+        $this->description->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->description->Lookup = new Lookup('description', 'transfer_bin_piece', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->description->Lookup = new Lookup('description', 'transfer_bin_piece', true, 'description', ["description","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['description'] = &$this->description;
 
         // destination_location
         $this->destination_location = new DbField(
@@ -170,8 +224,16 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->destination_location->InputTextType = "text";
+        $this->destination_location->Sortable = false; // Allow sort
         $this->destination_location->UseFilter = true; // Table header filter
-        $this->destination_location->Lookup = new Lookup('destination_location', 'transfer_bin_piece', true, 'destination_location', ["destination_location","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->destination_location->Lookup = new Lookup('destination_location', 'transfer_bin_piece', true, 'destination_location', ["destination_location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->destination_location->Lookup = new Lookup('destination_location', 'transfer_bin_piece', true, 'destination_location', ["destination_location","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['destination_location'] = &$this->destination_location;
 
         // su
@@ -194,9 +256,83 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->su->InputTextType = "text";
+        $this->su->Sortable = false; // Allow sort
         $this->su->UseFilter = true; // Table header filter
-        $this->su->Lookup = new Lookup('su', 'transfer_bin_piece', true, 'su', ["su","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->su->Lookup = new Lookup('su', 'transfer_bin_piece', true, 'su', ["su","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->su->Lookup = new Lookup('su', 'transfer_bin_piece', true, 'su', ["su","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['su'] = &$this->su;
+
+        // qty
+        $this->qty = new DbField(
+            'transfer_bin_piece',
+            'transfer_bin_piece',
+            'x_qty',
+            'qty',
+            '`qty`',
+            '`qty`',
+            3,
+            11,
+            -1,
+            false,
+            '`qty`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->qty->InputTextType = "text";
+        $this->qty->Sortable = false; // Allow sort
+        $this->qty->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->qty->Lookup = new Lookup('qty', 'transfer_bin_piece', true, 'qty', ["qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->qty->Lookup = new Lookup('qty', 'transfer_bin_piece', true, 'qty', ["qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['qty'] = &$this->qty;
+
+        // actual
+        $this->actual = new DbField(
+            'transfer_bin_piece',
+            'transfer_bin_piece',
+            'x_actual',
+            'actual',
+            '`actual`',
+            '`actual`',
+            3,
+            11,
+            -1,
+            false,
+            '`actual`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->actual->InputTextType = "text";
+        $this->actual->Sortable = false; // Allow sort
+        $this->actual->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->actual->Lookup = new Lookup('actual', 'transfer_bin_piece', true, 'actual', ["actual","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->actual->Lookup = new Lookup('actual', 'transfer_bin_piece', true, 'actual', ["actual","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->actual->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['actual'] = &$this->actual;
 
         // user
         $this->user = new DbField(
@@ -218,9 +354,49 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->user->InputTextType = "text";
+        $this->user->Sortable = false; // Allow sort
         $this->user->UseFilter = true; // Table header filter
-        $this->user->Lookup = new Lookup('user', 'transfer_bin_piece', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->user->Lookup = new Lookup('user', 'transfer_bin_piece', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->user->Lookup = new Lookup('user', 'transfer_bin_piece', true, 'user', ["user","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['user'] = &$this->user;
+
+        // status
+        $this->status = new DbField(
+            'transfer_bin_piece',
+            'transfer_bin_piece',
+            'x_status',
+            'status',
+            '`status`',
+            '`status`',
+            200,
+            255,
+            -1,
+            false,
+            '`status`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->status->InputTextType = "text";
+        $this->status->Sortable = false; // Allow sort
+        $this->status->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'transfer_bin_piece', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'transfer_bin_piece', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->Fields['status'] = &$this->status;
 
         // date_upload
         $this->date_upload = new DbField(
@@ -242,8 +418,16 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->date_upload->InputTextType = "text";
+        $this->date_upload->Sortable = false; // Allow sort
         $this->date_upload->UseFilter = true; // Table header filter
-        $this->date_upload->Lookup = new Lookup('date_upload', 'transfer_bin_piece', true, 'date_upload', ["date_upload","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_upload->Lookup = new Lookup('date_upload', 'transfer_bin_piece', true, 'date_upload', ["date_upload","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_upload->Lookup = new Lookup('date_upload', 'transfer_bin_piece', true, 'date_upload', ["date_upload","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_upload->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_upload'] = &$this->date_upload;
 
@@ -254,10 +438,10 @@ class TransferBinPiece extends DbTable
             'x_date_confirmation',
             'date_confirmation',
             '`date_confirmation`',
-            CastDateFieldForLike("`date_confirmation`", 1, "DB"),
-            135,
-            19,
-            1,
+            CastDateFieldForLike("`date_confirmation`", 2, "DB"),
+            133,
+            10,
+            2,
             false,
             '`date_confirmation`',
             false,
@@ -267,10 +451,51 @@ class TransferBinPiece extends DbTable
             'TEXT'
         );
         $this->date_confirmation->InputTextType = "text";
+        $this->date_confirmation->Sortable = false; // Allow sort
         $this->date_confirmation->UseFilter = true; // Table header filter
-        $this->date_confirmation->Lookup = new Lookup('date_confirmation', 'transfer_bin_piece', true, 'date_confirmation', ["date_confirmation","","",""], [], [], [], [], [], [], '', '', "");
-        $this->date_confirmation->DefaultErrorMessage = str_replace("%s", DateFormat(1), $Language->phrase("IncorrectDate"));
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_confirmation->Lookup = new Lookup('date_confirmation', 'transfer_bin_piece', true, 'date_confirmation', ["date_confirmation","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_confirmation->Lookup = new Lookup('date_confirmation', 'transfer_bin_piece', true, 'date_confirmation', ["date_confirmation","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->date_confirmation->DefaultErrorMessage = str_replace("%s", DateFormat(2), $Language->phrase("IncorrectDate"));
         $this->Fields['date_confirmation'] = &$this->date_confirmation;
+
+        // time_confirmation
+        $this->time_confirmation = new DbField(
+            'transfer_bin_piece',
+            'transfer_bin_piece',
+            'x_time_confirmation',
+            'time_confirmation',
+            '`time_confirmation`',
+            CastDateFieldForLike("`time_confirmation`", 3, "DB"),
+            134,
+            10,
+            3,
+            false,
+            '`time_confirmation`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->time_confirmation->InputTextType = "text";
+        $this->time_confirmation->Sortable = false; // Allow sort
+        $this->time_confirmation->UseFilter = true; // Table header filter
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->time_confirmation->Lookup = new Lookup('time_confirmation', 'transfer_bin_piece', true, 'time_confirmation', ["time_confirmation","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->time_confirmation->Lookup = new Lookup('time_confirmation', 'transfer_bin_piece', true, 'time_confirmation', ["time_confirmation","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
+        $this->time_confirmation->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
+        $this->Fields['time_confirmation'] = &$this->time_confirmation;
 
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
@@ -726,11 +951,16 @@ class TransferBinPiece extends DbTable
         $this->id->DbValue = $row['id'];
         $this->source_location->DbValue = $row['source_location'];
         $this->article->DbValue = $row['article'];
+        $this->description->DbValue = $row['description'];
         $this->destination_location->DbValue = $row['destination_location'];
         $this->su->DbValue = $row['su'];
+        $this->qty->DbValue = $row['qty'];
+        $this->actual->DbValue = $row['actual'];
         $this->user->DbValue = $row['user'];
+        $this->status->DbValue = $row['status'];
         $this->date_upload->DbValue = $row['date_upload'];
         $this->date_confirmation->DbValue = $row['date_confirmation'];
+        $this->time_confirmation->DbValue = $row['time_confirmation'];
     }
 
     // Delete uploaded files
@@ -1052,11 +1282,16 @@ class TransferBinPiece extends DbTable
         $this->id->setDbValue($row['id']);
         $this->source_location->setDbValue($row['source_location']);
         $this->article->setDbValue($row['article']);
+        $this->description->setDbValue($row['description']);
         $this->destination_location->setDbValue($row['destination_location']);
         $this->su->setDbValue($row['su']);
+        $this->qty->setDbValue($row['qty']);
+        $this->actual->setDbValue($row['actual']);
         $this->user->setDbValue($row['user']);
+        $this->status->setDbValue($row['status']);
         $this->date_upload->setDbValue($row['date_upload']);
         $this->date_confirmation->setDbValue($row['date_confirmation']);
+        $this->time_confirmation->setDbValue($row['time_confirmation']);
     }
 
     // Render list row values
@@ -1078,20 +1313,35 @@ class TransferBinPiece extends DbTable
         // article
         $this->article->CellCssStyle = "white-space: nowrap;";
 
+        // description
+        $this->description->CellCssStyle = "white-space: nowrap;";
+
         // destination_location
         $this->destination_location->CellCssStyle = "white-space: nowrap;";
 
         // su
         $this->su->CellCssStyle = "white-space: nowrap;";
 
+        // qty
+        $this->qty->CellCssStyle = "white-space: nowrap;";
+
+        // actual
+        $this->actual->CellCssStyle = "white-space: nowrap;";
+
         // user
         $this->user->CellCssStyle = "white-space: nowrap;";
+
+        // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // date_upload
         $this->date_upload->CellCssStyle = "white-space: nowrap;";
 
         // date_confirmation
         $this->date_confirmation->CellCssStyle = "white-space: nowrap;";
+
+        // time_confirmation
+        $this->time_confirmation->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1106,6 +1356,10 @@ class TransferBinPiece extends DbTable
         $this->article->ViewValue = $this->article->CurrentValue;
         $this->article->ViewCustomAttributes = "";
 
+        // description
+        $this->description->ViewValue = $this->description->CurrentValue;
+        $this->description->ViewCustomAttributes = "";
+
         // destination_location
         $this->destination_location->ViewValue = $this->destination_location->CurrentValue;
         $this->destination_location->ViewCustomAttributes = "";
@@ -1114,9 +1368,23 @@ class TransferBinPiece extends DbTable
         $this->su->ViewValue = $this->su->CurrentValue;
         $this->su->ViewCustomAttributes = "";
 
+        // qty
+        $this->qty->ViewValue = $this->qty->CurrentValue;
+        $this->qty->ViewValue = FormatNumber($this->qty->ViewValue, $this->qty->formatPattern());
+        $this->qty->ViewCustomAttributes = "";
+
+        // actual
+        $this->actual->ViewValue = $this->actual->CurrentValue;
+        $this->actual->ViewValue = FormatNumber($this->actual->ViewValue, $this->actual->formatPattern());
+        $this->actual->ViewCustomAttributes = "";
+
         // user
         $this->user->ViewValue = $this->user->CurrentValue;
         $this->user->ViewCustomAttributes = "";
+
+        // status
+        $this->status->ViewValue = $this->status->CurrentValue;
+        $this->status->ViewCustomAttributes = "";
 
         // date_upload
         $this->date_upload->ViewValue = $this->date_upload->CurrentValue;
@@ -1127,6 +1395,11 @@ class TransferBinPiece extends DbTable
         $this->date_confirmation->ViewValue = $this->date_confirmation->CurrentValue;
         $this->date_confirmation->ViewValue = FormatDateTime($this->date_confirmation->ViewValue, $this->date_confirmation->formatPattern());
         $this->date_confirmation->ViewCustomAttributes = "";
+
+        // time_confirmation
+        $this->time_confirmation->ViewValue = $this->time_confirmation->CurrentValue;
+        $this->time_confirmation->ViewValue = FormatDateTime($this->time_confirmation->ViewValue, $this->time_confirmation->formatPattern());
+        $this->time_confirmation->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1143,6 +1416,11 @@ class TransferBinPiece extends DbTable
         $this->article->HrefValue = "";
         $this->article->TooltipValue = "";
 
+        // description
+        $this->description->LinkCustomAttributes = "";
+        $this->description->HrefValue = "";
+        $this->description->TooltipValue = "";
+
         // destination_location
         $this->destination_location->LinkCustomAttributes = "";
         $this->destination_location->HrefValue = "";
@@ -1153,10 +1431,25 @@ class TransferBinPiece extends DbTable
         $this->su->HrefValue = "";
         $this->su->TooltipValue = "";
 
+        // qty
+        $this->qty->LinkCustomAttributes = "";
+        $this->qty->HrefValue = "";
+        $this->qty->TooltipValue = "";
+
+        // actual
+        $this->actual->LinkCustomAttributes = "";
+        $this->actual->HrefValue = "";
+        $this->actual->TooltipValue = "";
+
         // user
         $this->user->LinkCustomAttributes = "";
         $this->user->HrefValue = "";
         $this->user->TooltipValue = "";
+
+        // status
+        $this->status->LinkCustomAttributes = "";
+        $this->status->HrefValue = "";
+        $this->status->TooltipValue = "";
 
         // date_upload
         $this->date_upload->LinkCustomAttributes = "";
@@ -1167,6 +1460,11 @@ class TransferBinPiece extends DbTable
         $this->date_confirmation->LinkCustomAttributes = "";
         $this->date_confirmation->HrefValue = "";
         $this->date_confirmation->TooltipValue = "";
+
+        // time_confirmation
+        $this->time_confirmation->LinkCustomAttributes = "";
+        $this->time_confirmation->HrefValue = "";
+        $this->time_confirmation->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1208,6 +1506,15 @@ class TransferBinPiece extends DbTable
         $this->article->EditValue = $this->article->CurrentValue;
         $this->article->PlaceHolder = RemoveHtml($this->article->caption());
 
+        // description
+        $this->description->setupEditAttributes();
+        $this->description->EditCustomAttributes = "";
+        if (!$this->description->Raw) {
+            $this->description->CurrentValue = HtmlDecode($this->description->CurrentValue);
+        }
+        $this->description->EditValue = $this->description->CurrentValue;
+        $this->description->PlaceHolder = RemoveHtml($this->description->caption());
+
         // destination_location
         $this->destination_location->setupEditAttributes();
         $this->destination_location->EditCustomAttributes = "";
@@ -1226,6 +1533,24 @@ class TransferBinPiece extends DbTable
         $this->su->EditValue = $this->su->CurrentValue;
         $this->su->PlaceHolder = RemoveHtml($this->su->caption());
 
+        // qty
+        $this->qty->setupEditAttributes();
+        $this->qty->EditCustomAttributes = "";
+        $this->qty->EditValue = $this->qty->CurrentValue;
+        $this->qty->PlaceHolder = RemoveHtml($this->qty->caption());
+        if (strval($this->qty->EditValue) != "" && is_numeric($this->qty->EditValue)) {
+            $this->qty->EditValue = FormatNumber($this->qty->EditValue, null);
+        }
+
+        // actual
+        $this->actual->setupEditAttributes();
+        $this->actual->EditCustomAttributes = "";
+        $this->actual->EditValue = $this->actual->CurrentValue;
+        $this->actual->PlaceHolder = RemoveHtml($this->actual->caption());
+        if (strval($this->actual->EditValue) != "" && is_numeric($this->actual->EditValue)) {
+            $this->actual->EditValue = FormatNumber($this->actual->EditValue, null);
+        }
+
         // user
         $this->user->setupEditAttributes();
         $this->user->EditCustomAttributes = "";
@@ -1234,6 +1559,15 @@ class TransferBinPiece extends DbTable
         }
         $this->user->EditValue = $this->user->CurrentValue;
         $this->user->PlaceHolder = RemoveHtml($this->user->caption());
+
+        // status
+        $this->status->setupEditAttributes();
+        $this->status->EditCustomAttributes = "";
+        if (!$this->status->Raw) {
+            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+        }
+        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // date_upload
         $this->date_upload->setupEditAttributes();
@@ -1246,6 +1580,12 @@ class TransferBinPiece extends DbTable
         $this->date_confirmation->EditCustomAttributes = "";
         $this->date_confirmation->EditValue = FormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern());
         $this->date_confirmation->PlaceHolder = RemoveHtml($this->date_confirmation->caption());
+
+        // time_confirmation
+        $this->time_confirmation->setupEditAttributes();
+        $this->time_confirmation->EditCustomAttributes = "";
+        $this->time_confirmation->EditValue = FormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern());
+        $this->time_confirmation->PlaceHolder = RemoveHtml($this->time_confirmation->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1278,20 +1618,30 @@ class TransferBinPiece extends DbTable
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->source_location);
                     $doc->exportCaption($this->article);
+                    $doc->exportCaption($this->description);
                     $doc->exportCaption($this->destination_location);
                     $doc->exportCaption($this->su);
+                    $doc->exportCaption($this->qty);
+                    $doc->exportCaption($this->actual);
                     $doc->exportCaption($this->user);
+                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_upload);
                     $doc->exportCaption($this->date_confirmation);
+                    $doc->exportCaption($this->time_confirmation);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->source_location);
                     $doc->exportCaption($this->article);
+                    $doc->exportCaption($this->description);
                     $doc->exportCaption($this->destination_location);
                     $doc->exportCaption($this->su);
+                    $doc->exportCaption($this->qty);
+                    $doc->exportCaption($this->actual);
                     $doc->exportCaption($this->user);
+                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->date_upload);
                     $doc->exportCaption($this->date_confirmation);
+                    $doc->exportCaption($this->time_confirmation);
                 }
                 $doc->endExportRow();
             }
@@ -1324,20 +1674,30 @@ class TransferBinPiece extends DbTable
                         $doc->exportField($this->id);
                         $doc->exportField($this->source_location);
                         $doc->exportField($this->article);
+                        $doc->exportField($this->description);
                         $doc->exportField($this->destination_location);
                         $doc->exportField($this->su);
+                        $doc->exportField($this->qty);
+                        $doc->exportField($this->actual);
                         $doc->exportField($this->user);
+                        $doc->exportField($this->status);
                         $doc->exportField($this->date_upload);
                         $doc->exportField($this->date_confirmation);
+                        $doc->exportField($this->time_confirmation);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->source_location);
                         $doc->exportField($this->article);
+                        $doc->exportField($this->description);
                         $doc->exportField($this->destination_location);
                         $doc->exportField($this->su);
+                        $doc->exportField($this->qty);
+                        $doc->exportField($this->actual);
                         $doc->exportField($this->user);
+                        $doc->exportField($this->status);
                         $doc->exportField($this->date_upload);
                         $doc->exportField($this->date_confirmation);
+                        $doc->exportField($this->time_confirmation);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1415,6 +1775,12 @@ class TransferBinPiece extends DbTable
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        $currentDate = CurrentDate();
+        $_id = $rsnew["id"];
+        $_upload = $rsnew["date_upload"];
+        $_status = "Progress"; 
+        $sql4 = "UPDATE `transfer_bin_piece` SET `status` = '$_status',`date_upload` = '$currentDate' WHERE `id` = '$_id' ";
+        $result = ExecuteStatement($sql4);
     }
 
     // Row Updating event
@@ -1506,6 +1872,25 @@ class TransferBinPiece extends DbTable
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        if ($this->status->ViewValue == "Complete"){ 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: green
+                ";}
+         elseif ($this->status->ViewValue == "Progress") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: grey
+                ";}
+         elseif ($this->status->ViewValue == "Incomplete") { 
+                $this->status->ViewAttrs["style"] = "
+                color: aliceblue;
+                background-color: orange
+                ";}
+         if ($this->Export <> "") {
+         //$this->box_id->ViewValue = "'" .$this->box_id->ViewValue;
+         $this->article->ViewValue = "=\"" . $this->article->ViewValue . "\"";
+         }
     }
 
     // User ID Filtering event

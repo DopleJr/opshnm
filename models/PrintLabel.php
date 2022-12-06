@@ -149,7 +149,14 @@ class PrintLabel extends DbTable
         $this->priority->InputTextType = "text";
         $this->priority->Nullable = false; // NOT NULL field
         $this->priority->Required = true; // Required field
-        $this->priority->Lookup = new Lookup('priority', 'print_label', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->priority->Lookup = new Lookup('priority', 'print_label', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->priority->Lookup = new Lookup('priority', 'print_label', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->priority->OptionCount = 2;
         $this->Fields['priority'] = &$this->priority;
 
@@ -177,7 +184,14 @@ class PrintLabel extends DbTable
         $this->store_code->Required = true; // Required field
         $this->store_code->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->store_code->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->store_code->Lookup = new Lookup('store_code', 'store', false, 'store_code', ["store_code","store_name","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code`', '', "CONCAT(COALESCE(`store_code`, ''),'" . ValueSeparator(1, $this->store_code) . "',COALESCE(`store_name`,''))");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_code->Lookup = new Lookup('store_code', 'store', false, 'store_code', ["store_code","store_name","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code`', '', "CONCAT(COALESCE(`store_code`, ''),'" . ValueSeparator(1, $this->store_code) . "',COALESCE(`store_name`,''))");
+                break;
+            default:
+                $this->store_code->Lookup = new Lookup('store_code', 'store', false, 'store_code', ["store_code","store_name","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code`', '', "CONCAT(COALESCE(`store_code`, ''),'" . ValueSeparator(1, $this->store_code) . "',COALESCE(`store_name`,''))");
+                break;
+        }
         $this->Fields['store_code'] = &$this->store_code;
 
         // store_name

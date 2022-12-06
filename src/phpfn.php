@@ -2110,8 +2110,7 @@ function AddFilter(&$filter, $newfilter, $cond = "AND")
         return;
     }
     if (trim($filter ?? "") != "") {
-        $filter = AddBracketsForFilter(AddBracketsForFilter($filter, $cond) .
-            " " . $cond . " " . AddBracketsForFilter($newfilter, $cond), $cond);
+        $filter = AddBracketsForFilter($filter, $cond) . " " . $cond . " " . AddBracketsForFilter($newfilter, $cond);
     } else {
         $filter = $newfilter;
     }
@@ -2127,7 +2126,12 @@ function AddFilter(&$filter, $newfilter, $cond = "AND")
 function AddBracketsForFilter($filter, $cond = "AND")
 {
     if (trim($filter ?? "") != "") {
-        if (preg_match('/\sOR\s/i', $filter) && SameText($cond, "AND") && !preg_match('/^\(.+\)$/', $filter)) {
+        $filterWrk = $filter;
+        $pattern = '/\([^()]+?\)/';
+        while (preg_match($pattern, $filterWrk)) { // Remove nested brackets (...)
+            $filterWrk = preg_replace($pattern, "", $filterWrk);
+        }
+        if (preg_match('/\sOR\s/i', $filterWrk) && SameText($cond, "AND")) {
             $filter = "(" . $filter . ")";
         }
     }

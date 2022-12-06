@@ -1600,6 +1600,7 @@ class PickingPendingList extends PickingPending
         $searchFlds[] = &$this->source_storage_type;
         $searchFlds[] = &$this->source_storage_bin;
         $searchFlds[] = &$this->carton_number;
+        $searchFlds[] = &$this->creation_date;
         $searchFlds[] = &$this->gr_number;
         $searchFlds[] = &$this->delivery;
         $searchFlds[] = &$this->store_id;
@@ -1610,6 +1611,7 @@ class PickingPendingList extends PickingPending
         $searchFlds[] = &$this->color_code;
         $searchFlds[] = &$this->color_desc;
         $searchFlds[] = &$this->concept;
+        $searchFlds[] = &$this->confirmation_date;
         $searchFlds[] = &$this->box_code;
         $searchFlds[] = &$this->box_type;
         $searchFlds[] = &$this->picker;

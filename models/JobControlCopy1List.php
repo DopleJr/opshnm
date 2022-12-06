@@ -630,6 +630,7 @@ class JobControlCopy1List extends JobControlCopy1
         $this->id->setVisibility();
         $this->creation_date->setVisibility();
         $this->store_id->setVisibility();
+        $this->concept->setVisibility();
         $this->area->setVisibility();
         $this->aisle->setVisibility();
         $this->user->setVisibility();
@@ -664,6 +665,7 @@ class JobControlCopy1List extends JobControlCopy1
         // Set up lookup cache
         $this->setupLookupOptions($this->creation_date);
         $this->setupLookupOptions($this->store_id);
+        $this->setupLookupOptions($this->concept);
         $this->setupLookupOptions($this->area);
         $this->setupLookupOptions($this->aisle);
         $this->setupLookupOptions($this->user);
@@ -980,6 +982,7 @@ class JobControlCopy1List extends JobControlCopy1
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->creation_date->AdvancedSearch->toJson(), ","); // Field creation_date
         $filterList = Concat($filterList, $this->store_id->AdvancedSearch->toJson(), ","); // Field store_id
+        $filterList = Concat($filterList, $this->concept->AdvancedSearch->toJson(), ","); // Field concept
         $filterList = Concat($filterList, $this->area->AdvancedSearch->toJson(), ","); // Field area
         $filterList = Concat($filterList, $this->aisle->AdvancedSearch->toJson(), ","); // Field aisle
         $filterList = Concat($filterList, $this->user->AdvancedSearch->toJson(), ","); // Field user
@@ -1051,6 +1054,14 @@ class JobControlCopy1List extends JobControlCopy1
         $this->store_id->AdvancedSearch->SearchValue2 = @$filter["y_store_id"];
         $this->store_id->AdvancedSearch->SearchOperator2 = @$filter["w_store_id"];
         $this->store_id->AdvancedSearch->save();
+
+        // Field concept
+        $this->concept->AdvancedSearch->SearchValue = @$filter["x_concept"];
+        $this->concept->AdvancedSearch->SearchOperator = @$filter["z_concept"];
+        $this->concept->AdvancedSearch->SearchCondition = @$filter["v_concept"];
+        $this->concept->AdvancedSearch->SearchValue2 = @$filter["y_concept"];
+        $this->concept->AdvancedSearch->SearchOperator2 = @$filter["w_concept"];
+        $this->concept->AdvancedSearch->save();
 
         // Field area
         $this->area->AdvancedSearch->SearchValue = @$filter["x_area"];
@@ -1130,6 +1141,7 @@ class JobControlCopy1List extends JobControlCopy1
         $this->buildSearchSql($where, $this->id, $default, true); // id
         $this->buildSearchSql($where, $this->creation_date, $default, true); // creation_date
         $this->buildSearchSql($where, $this->store_id, $default, true); // store_id
+        $this->buildSearchSql($where, $this->concept, $default, true); // concept
         $this->buildSearchSql($where, $this->area, $default, true); // area
         $this->buildSearchSql($where, $this->aisle, $default, true); // aisle
         $this->buildSearchSql($where, $this->user, $default, true); // user
@@ -1147,6 +1159,7 @@ class JobControlCopy1List extends JobControlCopy1
             $this->id->AdvancedSearch->save(); // id
             $this->creation_date->AdvancedSearch->save(); // creation_date
             $this->store_id->AdvancedSearch->save(); // store_id
+            $this->concept->AdvancedSearch->save(); // concept
             $this->area->AdvancedSearch->save(); // area
             $this->aisle->AdvancedSearch->save(); // aisle
             $this->user->AdvancedSearch->save(); // user
@@ -1234,6 +1247,7 @@ class JobControlCopy1List extends JobControlCopy1
         // Fields to search
         $searchFlds = [];
         $searchFlds[] = &$this->store_id;
+        $searchFlds[] = &$this->concept;
         $searchFlds[] = &$this->area;
         $searchFlds[] = &$this->aisle;
         $searchFlds[] = &$this->user;
@@ -1272,6 +1286,9 @@ class JobControlCopy1List extends JobControlCopy1
             return true;
         }
         if ($this->store_id->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->concept->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->area->AdvancedSearch->issetSession()) {
@@ -1333,6 +1350,7 @@ class JobControlCopy1List extends JobControlCopy1
         $this->id->AdvancedSearch->unsetSession();
         $this->creation_date->AdvancedSearch->unsetSession();
         $this->store_id->AdvancedSearch->unsetSession();
+        $this->concept->AdvancedSearch->unsetSession();
         $this->area->AdvancedSearch->unsetSession();
         $this->aisle->AdvancedSearch->unsetSession();
         $this->user->AdvancedSearch->unsetSession();
@@ -1355,6 +1373,7 @@ class JobControlCopy1List extends JobControlCopy1
         $this->id->AdvancedSearch->load();
         $this->creation_date->AdvancedSearch->load();
         $this->store_id->AdvancedSearch->load();
+        $this->concept->AdvancedSearch->load();
         $this->area->AdvancedSearch->load();
         $this->aisle->AdvancedSearch->load();
         $this->user->AdvancedSearch->load();
@@ -1370,7 +1389,7 @@ class JobControlCopy1List extends JobControlCopy1
     {
         // Load default Sorting Order
         if ($this->Command != "json") {
-            $defaultSort = $this->status->Expression . " DESC" . ", " . $this->date_created->Expression . " DESC" . ", " . $this->picked_qty->Expression . " DESC" . ", " . $this->id->Expression . " DESC"; // Set up default sort
+            $defaultSort = $this->status->Expression . " DESC" . ", " . $this->creation_date->Expression . " DESC" . ", " . $this->picked_qty->Expression . " DESC" . ", " . $this->id->Expression . " DESC"; // Set up default sort
             if ($this->getSessionOrderBy() == "" && $defaultSort != "") {
                 $this->setSessionOrderBy($defaultSort);
             }
@@ -1383,6 +1402,7 @@ class JobControlCopy1List extends JobControlCopy1
             $this->updateSort($this->id); // id
             $this->updateSort($this->creation_date); // creation_date
             $this->updateSort($this->store_id); // store_id
+            $this->updateSort($this->concept); // concept
             $this->updateSort($this->area); // area
             $this->updateSort($this->aisle); // aisle
             $this->updateSort($this->user); // user
@@ -1417,6 +1437,7 @@ class JobControlCopy1List extends JobControlCopy1
                 $this->id->setSort("");
                 $this->creation_date->setSort("");
                 $this->store_id->setSort("");
+                $this->concept->setSort("");
                 $this->area->setSort("");
                 $this->aisle->setSort("");
                 $this->user->setSort("");
@@ -1594,6 +1615,7 @@ class JobControlCopy1List extends JobControlCopy1
             $option->add("id", $this->createColumnOption("id"));
             $option->add("creation_date", $this->createColumnOption("creation_date"));
             $option->add("store_id", $this->createColumnOption("store_id"));
+            $option->add("concept", $this->createColumnOption("concept"));
             $option->add("area", $this->createColumnOption("area"));
             $option->add("aisle", $this->createColumnOption("aisle"));
             $option->add("user", $this->createColumnOption("user"));
@@ -1813,6 +1835,14 @@ class JobControlCopy1List extends JobControlCopy1
             $this->store_id->AdvancedSearch->SearchValue2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue2);
         }
 
+        // concept
+        if ($this->concept->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->concept->AdvancedSearch->SearchValue != "" || $this->concept->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // area
         if ($this->area->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1973,6 +2003,7 @@ class JobControlCopy1List extends JobControlCopy1
         $this->id->setDbValue($row['id']);
         $this->creation_date->setDbValue($row['creation_date']);
         $this->store_id->setDbValue($row['store_id']);
+        $this->concept->setDbValue($row['concept']);
         $this->area->setDbValue($row['area']);
         $this->aisle->setDbValue($row['aisle']);
         $this->user->setDbValue($row['user']);
@@ -1990,6 +2021,7 @@ class JobControlCopy1List extends JobControlCopy1
         $row['id'] = $this->id->DefaultValue;
         $row['creation_date'] = $this->creation_date->DefaultValue;
         $row['store_id'] = $this->store_id->DefaultValue;
+        $row['concept'] = $this->concept->DefaultValue;
         $row['area'] = $this->area->DefaultValue;
         $row['aisle'] = $this->aisle->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
@@ -2042,6 +2074,9 @@ class JobControlCopy1List extends JobControlCopy1
         $this->creation_date->CellCssStyle = "white-space: nowrap;";
 
         // store_id
+
+        // concept
+        $this->concept->CellCssStyle = "white-space: nowrap;";
 
         // area
         $this->area->CellCssStyle = "white-space: nowrap;";
@@ -2137,6 +2172,30 @@ class JobControlCopy1List extends JobControlCopy1
                 $this->store_id->ViewValue = null;
             }
             $this->store_id->ViewCustomAttributes = "";
+
+            // concept
+            $curVal = strval($this->concept->CurrentValue);
+            if ($curVal != "") {
+                $this->concept->ViewValue = $this->concept->lookupCacheOption($curVal);
+                if ($this->concept->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`concept`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->concept->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCacheImpl($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->concept->Lookup->renderViewRow($rswrk[0]);
+                        $this->concept->ViewValue = $this->concept->displayValue($arwrk);
+                    } else {
+                        $this->concept->ViewValue = $this->concept->CurrentValue;
+                    }
+                }
+            } else {
+                $this->concept->ViewValue = null;
+            }
+            $this->concept->ViewCustomAttributes = "";
 
             // area
             $curVal = strval($this->area->CurrentValue);
@@ -2269,6 +2328,11 @@ class JobControlCopy1List extends JobControlCopy1
             $this->store_id->HrefValue = "";
             $this->store_id->TooltipValue = "";
 
+            // concept
+            $this->concept->LinkCustomAttributes = "";
+            $this->concept->HrefValue = "";
+            $this->concept->TooltipValue = "";
+
             // area
             $this->area->LinkCustomAttributes = "";
             $this->area->HrefValue = "";
@@ -2326,6 +2390,14 @@ class JobControlCopy1List extends JobControlCopy1
                     $this->store_id->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
                 }
                 $this->store_id->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->store_id->AdvancedSearch->SearchValue);
+            }
+
+            // concept
+            if ($this->concept->UseFilter && !EmptyValue($this->concept->AdvancedSearch->SearchValue)) {
+                if (is_array($this->concept->AdvancedSearch->SearchValue)) {
+                    $this->concept->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->concept->AdvancedSearch->SearchValue);
+                }
+                $this->concept->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->concept->AdvancedSearch->SearchValue);
             }
 
             // area
@@ -2417,6 +2489,7 @@ class JobControlCopy1List extends JobControlCopy1
         $this->id->AdvancedSearch->load();
         $this->creation_date->AdvancedSearch->load();
         $this->store_id->AdvancedSearch->load();
+        $this->concept->AdvancedSearch->load();
         $this->area->AdvancedSearch->load();
         $this->aisle->AdvancedSearch->load();
         $this->user->AdvancedSearch->load();
@@ -2706,6 +2779,8 @@ class JobControlCopy1List extends JobControlCopy1
                         return "`picker` is Null  ";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_concept":
                     break;
                 case "x_area":
                     $lookupFilter = function () {

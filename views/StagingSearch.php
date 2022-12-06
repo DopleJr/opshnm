@@ -25,7 +25,8 @@ loadjs.ready(["wrapper", "head"], function () {
     var fields = currentTable.fields;
     fstagingsearch.addFields([
         ["picking_date", [ew.Validators.datetime(fields.picking_date.clientFormatPattern)], fields.picking_date.isInvalid],
-        ["y_picking_date", [ew.Validators.between], false]
+        ["y_picking_date", [ew.Validators.between], false],
+        ["line", [], fields.line.isInvalid]
     ]);
 
     // Validate form
@@ -151,6 +152,24 @@ loadjs.ready(["fstagingsearch", "datetimepicker"], function () {
 });
 </script>
 <?php } ?>
+</span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($Page->line->Visible) { // line ?>
+    <div id="r_line"<?= $Page->line->rowAttributes() ?>>
+        <label for="x_line" class="<?= $Page->LeftColumnClass ?>"><span id="elh_staging_line"><?= $Page->line->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_line" id="z_line" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>">
+            <div<?= $Page->line->cellAttributes() ?>>
+            <span id="el_staging_line" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->line->getInputTextType() ?>" name="x_line" id="x_line" data-table="staging" data-field="x_line" value="<?= $Page->line->EditValue ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->line->getPlaceHolder()) ?>"<?= $Page->line->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->line->getErrorMessage(false) ?></div>
 </span>
             </div>
         </div>

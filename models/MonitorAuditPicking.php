@@ -96,7 +96,14 @@ class MonitorAuditPicking extends DbTable
         );
         $this->picking_date->InputTextType = "text";
         $this->picking_date->UseFilter = true; // Table header filter
-        $this->picking_date->Lookup = new Lookup('picking_date', 'monitor_audit_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picking_date->Lookup = new Lookup('picking_date', 'monitor_audit_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picking_date->Lookup = new Lookup('picking_date', 'monitor_audit_picking', true, 'picking_date', ["picking_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picking_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['picking_date'] = &$this->picking_date;
 
@@ -121,7 +128,14 @@ class MonitorAuditPicking extends DbTable
         );
         $this->users->InputTextType = "text";
         $this->users->UseFilter = true; // Table header filter
-        $this->users->Lookup = new Lookup('users', 'monitor_audit_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->users->Lookup = new Lookup('users', 'monitor_audit_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->users->Lookup = new Lookup('users', 'monitor_audit_picking', true, 'users', ["users","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['users'] = &$this->users;
 
         // Pending
@@ -216,7 +230,14 @@ class MonitorAuditPicking extends DbTable
         $this->status->InputTextType = "text";
         $this->status->IsCustom = true; // Custom field
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'monitor_audit_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'monitor_audit_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'monitor_audit_picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['status'] = &$this->status;
 
         // Add Doctrine Cache

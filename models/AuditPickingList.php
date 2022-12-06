@@ -619,6 +619,7 @@ class AuditPickingList extends AuditPicking
         $this->id->Visible = false;
         $this->store_name->Visible = false;
         $this->store_code->Visible = false;
+        $this->line->setVisibility();
         $this->box_id->setVisibility();
         $this->type->Visible = false;
         $this->concept->Visible = false;
@@ -650,6 +651,7 @@ class AuditPickingList extends AuditPicking
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->line);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -955,6 +957,7 @@ class AuditPickingList extends AuditPicking
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->store_name->AdvancedSearch->toJson(), ","); // Field store_name
         $filterList = Concat($filterList, $this->store_code->AdvancedSearch->toJson(), ","); // Field store_code
+        $filterList = Concat($filterList, $this->line->AdvancedSearch->toJson(), ","); // Field line
         $filterList = Concat($filterList, $this->box_id->AdvancedSearch->toJson(), ","); // Field box_id
         $filterList = Concat($filterList, $this->type->AdvancedSearch->toJson(), ","); // Field type
         $filterList = Concat($filterList, $this->concept->AdvancedSearch->toJson(), ","); // Field concept
@@ -1026,6 +1029,14 @@ class AuditPickingList extends AuditPicking
         $this->store_code->AdvancedSearch->SearchOperator2 = @$filter["w_store_code"];
         $this->store_code->AdvancedSearch->save();
 
+        // Field line
+        $this->line->AdvancedSearch->SearchValue = @$filter["x_line"];
+        $this->line->AdvancedSearch->SearchOperator = @$filter["z_line"];
+        $this->line->AdvancedSearch->SearchCondition = @$filter["v_line"];
+        $this->line->AdvancedSearch->SearchValue2 = @$filter["y_line"];
+        $this->line->AdvancedSearch->SearchOperator2 = @$filter["w_line"];
+        $this->line->AdvancedSearch->save();
+
         // Field box_id
         $this->box_id->AdvancedSearch->SearchValue = @$filter["x_box_id"];
         $this->box_id->AdvancedSearch->SearchOperator = @$filter["z_box_id"];
@@ -1096,6 +1107,7 @@ class AuditPickingList extends AuditPicking
         $this->buildSearchSql($where, $this->id, $default, false); // id
         $this->buildSearchSql($where, $this->store_name, $default, true); // store_name
         $this->buildSearchSql($where, $this->store_code, $default, true); // store_code
+        $this->buildSearchSql($where, $this->line, $default, true); // line
         $this->buildSearchSql($where, $this->box_id, $default, true); // box_id
         $this->buildSearchSql($where, $this->type, $default, true); // type
         $this->buildSearchSql($where, $this->concept, $default, true); // concept
@@ -1112,6 +1124,7 @@ class AuditPickingList extends AuditPicking
             $this->id->AdvancedSearch->save(); // id
             $this->store_name->AdvancedSearch->save(); // store_name
             $this->store_code->AdvancedSearch->save(); // store_code
+            $this->line->AdvancedSearch->save(); // line
             $this->box_id->AdvancedSearch->save(); // box_id
             $this->type->AdvancedSearch->save(); // type
             $this->concept->AdvancedSearch->save(); // concept
@@ -1199,6 +1212,7 @@ class AuditPickingList extends AuditPicking
         $searchFlds = [];
         $searchFlds[] = &$this->store_name;
         $searchFlds[] = &$this->store_code;
+        $searchFlds[] = &$this->line;
         $searchFlds[] = &$this->box_id;
         $searchFlds[] = &$this->type;
         $searchFlds[] = &$this->concept;
@@ -1238,6 +1252,9 @@ class AuditPickingList extends AuditPicking
             return true;
         }
         if ($this->store_code->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->line->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->box_id->AdvancedSearch->issetSession()) {
@@ -1296,6 +1313,7 @@ class AuditPickingList extends AuditPicking
         $this->id->AdvancedSearch->unsetSession();
         $this->store_name->AdvancedSearch->unsetSession();
         $this->store_code->AdvancedSearch->unsetSession();
+        $this->line->AdvancedSearch->unsetSession();
         $this->box_id->AdvancedSearch->unsetSession();
         $this->type->AdvancedSearch->unsetSession();
         $this->concept->AdvancedSearch->unsetSession();
@@ -1317,6 +1335,7 @@ class AuditPickingList extends AuditPicking
         $this->id->AdvancedSearch->load();
         $this->store_name->AdvancedSearch->load();
         $this->store_code->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
         $this->box_id->AdvancedSearch->load();
         $this->type->AdvancedSearch->load();
         $this->concept->AdvancedSearch->load();
@@ -1341,6 +1360,7 @@ class AuditPickingList extends AuditPicking
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->line); // line
             $this->updateSort($this->box_id); // box_id
             $this->updateSort($this->status); // status
             $this->updateSort($this->users); // users
@@ -1372,6 +1392,7 @@ class AuditPickingList extends AuditPicking
                 $this->id->setSort("");
                 $this->store_name->setSort("");
                 $this->store_code->setSort("");
+                $this->line->setSort("");
                 $this->box_id->setSort("");
                 $this->type->setSort("");
                 $this->concept->setSort("");
@@ -1522,6 +1543,7 @@ class AuditPickingList extends AuditPicking
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
+            $option->add("line", $this->createColumnOption("line"));
             $option->add("box_id", $this->createColumnOption("box_id"));
             $option->add("status", $this->createColumnOption("status"));
             $option->add("users", $this->createColumnOption("users"));
@@ -1732,6 +1754,14 @@ class AuditPickingList extends AuditPicking
             }
         }
 
+        // line
+        if ($this->line->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->line->AdvancedSearch->SearchValue != "" || $this->line->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // box_id
         if ($this->box_id->AdvancedSearch->get()) {
             $hasValue = true;
@@ -1878,6 +1908,7 @@ class AuditPickingList extends AuditPicking
         $this->id->setDbValue($row['id']);
         $this->store_name->setDbValue($row['store_name']);
         $this->store_code->setDbValue($row['store_code']);
+        $this->line->setDbValue($row['line']);
         $this->box_id->setDbValue($row['box_id']);
         $this->type->setDbValue($row['type']);
         $this->concept->setDbValue($row['concept']);
@@ -1894,6 +1925,7 @@ class AuditPickingList extends AuditPicking
         $row['id'] = $this->id->DefaultValue;
         $row['store_name'] = $this->store_name->DefaultValue;
         $row['store_code'] = $this->store_code->DefaultValue;
+        $row['line'] = $this->line->DefaultValue;
         $row['box_id'] = $this->box_id->DefaultValue;
         $row['type'] = $this->type->DefaultValue;
         $row['concept'] = $this->concept->DefaultValue;
@@ -1947,6 +1979,9 @@ class AuditPickingList extends AuditPicking
         // store_code
         $this->store_code->CellCssStyle = "white-space: nowrap;";
 
+        // line
+        $this->line->CellCssStyle = "white-space: nowrap;";
+
         // box_id
         $this->box_id->CellCssStyle = "white-space: nowrap;";
 
@@ -1982,6 +2017,14 @@ class AuditPickingList extends AuditPicking
             $this->store_code->ViewValue = $this->store_code->CurrentValue;
             $this->store_code->ViewCustomAttributes = "";
 
+            // line
+            if (strval($this->line->CurrentValue) != "") {
+                $this->line->ViewValue = $this->line->optionCaption($this->line->CurrentValue);
+            } else {
+                $this->line->ViewValue = null;
+            }
+            $this->line->ViewCustomAttributes = "";
+
             // box_id
             $this->box_id->ViewValue = $this->box_id->CurrentValue;
             $this->box_id->ViewCustomAttributes = "";
@@ -2012,6 +2055,11 @@ class AuditPickingList extends AuditPicking
             $this->picking_date->ViewValue = FormatDateTime($this->picking_date->ViewValue, $this->picking_date->formatPattern());
             $this->picking_date->ViewCustomAttributes = "";
 
+            // line
+            $this->line->LinkCustomAttributes = "";
+            $this->line->HrefValue = "";
+            $this->line->TooltipValue = "";
+
             // box_id
             $this->box_id->LinkCustomAttributes = "";
             $this->box_id->HrefValue = "";
@@ -2032,6 +2080,14 @@ class AuditPickingList extends AuditPicking
             $this->picking_date->HrefValue = "";
             $this->picking_date->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
+            // line
+            if ($this->line->UseFilter && !EmptyValue($this->line->AdvancedSearch->SearchValue)) {
+                if (is_array($this->line->AdvancedSearch->SearchValue)) {
+                    $this->line->AdvancedSearch->SearchValue = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->line->AdvancedSearch->SearchValue);
+                }
+                $this->line->EditValue = explode(Config("MULTIPLE_OPTION_SEPARATOR"), $this->line->AdvancedSearch->SearchValue);
+            }
+
             // box_id
             if ($this->box_id->UseFilter && !EmptyValue($this->box_id->AdvancedSearch->SearchValue)) {
                 if (is_array($this->box_id->AdvancedSearch->SearchValue)) {
@@ -2097,6 +2153,7 @@ class AuditPickingList extends AuditPicking
         $this->id->AdvancedSearch->load();
         $this->store_name->AdvancedSearch->load();
         $this->store_code->AdvancedSearch->load();
+        $this->line->AdvancedSearch->load();
         $this->box_id->AdvancedSearch->load();
         $this->type->AdvancedSearch->load();
         $this->concept->AdvancedSearch->load();
@@ -2374,6 +2431,8 @@ class AuditPickingList extends AuditPicking
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_line":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

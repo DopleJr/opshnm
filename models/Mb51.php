@@ -99,7 +99,14 @@ class Mb51 extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'mb51', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'mb51', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'mb51', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -124,7 +131,14 @@ class Mb51 extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'mb51', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'mb51', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'mb51', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // quantity
@@ -148,7 +162,14 @@ class Mb51 extends DbTable
         );
         $this->quantity->InputTextType = "text";
         $this->quantity->UseFilter = true; // Table header filter
-        $this->quantity->Lookup = new Lookup('quantity', 'mb51', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->quantity->Lookup = new Lookup('quantity', 'mb51', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->quantity->Lookup = new Lookup('quantity', 'mb51', true, 'quantity', ["quantity","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->quantity->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['quantity'] = &$this->quantity;
 
@@ -173,7 +194,14 @@ class Mb51 extends DbTable
         );
         $this->reference->InputTextType = "text";
         $this->reference->UseFilter = true; // Table header filter
-        $this->reference->Lookup = new Lookup('reference', 'mb51', true, 'reference', ["reference","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->reference->Lookup = new Lookup('reference', 'mb51', true, 'reference', ["reference","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->reference->Lookup = new Lookup('reference', 'mb51', true, 'reference', ["reference","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['reference'] = &$this->reference;
 
         // rcvsite
@@ -197,7 +225,14 @@ class Mb51 extends DbTable
         );
         $this->rcvsite->InputTextType = "text";
         $this->rcvsite->UseFilter = true; // Table header filter
-        $this->rcvsite->Lookup = new Lookup('rcvsite', 'mb51', true, 'rcvsite', ["rcvsite","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->rcvsite->Lookup = new Lookup('rcvsite', 'mb51', true, 'rcvsite', ["rcvsite","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->rcvsite->Lookup = new Lookup('rcvsite', 'mb51', true, 'rcvsite', ["rcvsite","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['rcvsite'] = &$this->rcvsite;
 
         // do_type
@@ -221,7 +256,14 @@ class Mb51 extends DbTable
         );
         $this->do_type->InputTextType = "text";
         $this->do_type->UseFilter = true; // Table header filter
-        $this->do_type->Lookup = new Lookup('do_type', 'mb51', true, 'do_type', ["do_type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->do_type->Lookup = new Lookup('do_type', 'mb51', true, 'do_type', ["do_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->do_type->Lookup = new Lookup('do_type', 'mb51', true, 'do_type', ["do_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['do_type'] = &$this->do_type;
 
         // concept
@@ -245,7 +287,14 @@ class Mb51 extends DbTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'mb51', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'mb51', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'mb51', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['concept'] = &$this->concept;
 
         // Add Doctrine Cache

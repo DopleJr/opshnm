@@ -21,9 +21,13 @@ loadjs.ready(["wrapper", "head"], function () {
     var fields = currentTable.fields;
     ftransferbinedit.addFields([
         ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
-        ["FromBin", [fields.FromBin.visible && fields.FromBin.required ? ew.Validators.required(fields.FromBin.caption) : null], fields.FromBin.isInvalid],
-        ["ToBin", [fields.ToBin.visible && fields.ToBin.required ? ew.Validators.required(fields.ToBin.caption) : null], fields.ToBin.isInvalid],
-        ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null], fields.date_created.isInvalid]
+        ["from_bin", [fields.from_bin.visible && fields.from_bin.required ? ew.Validators.required(fields.from_bin.caption) : null], fields.from_bin.isInvalid],
+        ["ctn", [fields.ctn.visible && fields.ctn.required ? ew.Validators.required(fields.ctn.caption) : null], fields.ctn.isInvalid],
+        ["to_bin", [fields.to_bin.visible && fields.to_bin.required ? ew.Validators.required(fields.to_bin.caption) : null], fields.to_bin.isInvalid],
+        ["user", [fields.user.visible && fields.user.required ? ew.Validators.required(fields.user.caption) : null], fields.user.isInvalid],
+        ["date_created", [fields.date_created.visible && fields.date_created.required ? ew.Validators.required(fields.date_created.caption) : null], fields.date_created.isInvalid],
+        ["date_updated", [fields.date_updated.visible && fields.date_updated.required ? ew.Validators.required(fields.date_updated.caption) : null], fields.date_updated.isInvalid],
+        ["time_updated", [fields.time_updated.visible && fields.time_updated.required ? ew.Validators.required(fields.time_updated.caption) : null], fields.time_updated.isInvalid]
     ]);
 
     // Form_CustomValidate
@@ -70,26 +74,50 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->FromBin->Visible) { // From Bin ?>
-    <div id="r_FromBin"<?= $Page->FromBin->rowAttributes() ?>>
-        <label id="elh_transferbin_FromBin" for="x_FromBin" class="<?= $Page->LeftColumnClass ?>"><?= $Page->FromBin->caption() ?><?= $Page->FromBin->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->FromBin->cellAttributes() ?>>
-<span id="el_transferbin_FromBin">
-<input type="<?= $Page->FromBin->getInputTextType() ?>" name="x_FromBin" id="x_FromBin" data-table="transferbin" data-field="x_FromBin" value="<?= $Page->FromBin->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->FromBin->getPlaceHolder()) ?>"<?= $Page->FromBin->editAttributes() ?> aria-describedby="x_FromBin_help">
-<?= $Page->FromBin->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->FromBin->getErrorMessage() ?></div>
+<?php if ($Page->from_bin->Visible) { // from_bin ?>
+    <div id="r_from_bin"<?= $Page->from_bin->rowAttributes() ?>>
+        <label id="elh_transferbin_from_bin" for="x_from_bin" class="<?= $Page->LeftColumnClass ?>"><?= $Page->from_bin->caption() ?><?= $Page->from_bin->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->from_bin->cellAttributes() ?>>
+<span id="el_transferbin_from_bin">
+<input type="<?= $Page->from_bin->getInputTextType() ?>" name="x_from_bin" id="x_from_bin" data-table="transferbin" data-field="x_from_bin" value="<?= $Page->from_bin->EditValue ?>" size="30" maxlength="15" placeholder="<?= HtmlEncode($Page->from_bin->getPlaceHolder()) ?>"<?= $Page->from_bin->editAttributes() ?> aria-describedby="x_from_bin_help">
+<?= $Page->from_bin->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->from_bin->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->ToBin->Visible) { // To Bin ?>
-    <div id="r_ToBin"<?= $Page->ToBin->rowAttributes() ?>>
-        <label id="elh_transferbin_ToBin" for="x_ToBin" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ToBin->caption() ?><?= $Page->ToBin->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->ToBin->cellAttributes() ?>>
-<span id="el_transferbin_ToBin">
-<input type="<?= $Page->ToBin->getInputTextType() ?>" name="x_ToBin" id="x_ToBin" data-table="transferbin" data-field="x_ToBin" value="<?= $Page->ToBin->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->ToBin->getPlaceHolder()) ?>"<?= $Page->ToBin->editAttributes() ?> aria-describedby="x_ToBin_help">
-<?= $Page->ToBin->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->ToBin->getErrorMessage() ?></div>
+<?php if ($Page->ctn->Visible) { // ctn ?>
+    <div id="r_ctn"<?= $Page->ctn->rowAttributes() ?>>
+        <label id="elh_transferbin_ctn" for="x_ctn" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ctn->caption() ?><?= $Page->ctn->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->ctn->cellAttributes() ?>>
+<span id="el_transferbin_ctn">
+<input type="<?= $Page->ctn->getInputTextType() ?>" name="x_ctn" id="x_ctn" data-table="transferbin" data-field="x_ctn" value="<?= $Page->ctn->EditValue ?>" size="30" maxlength="4" placeholder="<?= HtmlEncode($Page->ctn->getPlaceHolder()) ?>"<?= $Page->ctn->editAttributes() ?> aria-describedby="x_ctn_help">
+<?= $Page->ctn->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ctn->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->to_bin->Visible) { // to_bin ?>
+    <div id="r_to_bin"<?= $Page->to_bin->rowAttributes() ?>>
+        <label id="elh_transferbin_to_bin" for="x_to_bin" class="<?= $Page->LeftColumnClass ?>"><?= $Page->to_bin->caption() ?><?= $Page->to_bin->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->to_bin->cellAttributes() ?>>
+<span id="el_transferbin_to_bin">
+<input type="<?= $Page->to_bin->getInputTextType() ?>" name="x_to_bin" id="x_to_bin" data-table="transferbin" data-field="x_to_bin" value="<?= $Page->to_bin->EditValue ?>" size="30" maxlength="15" placeholder="<?= HtmlEncode($Page->to_bin->getPlaceHolder()) ?>"<?= $Page->to_bin->editAttributes() ?> aria-describedby="x_to_bin_help">
+<?= $Page->to_bin->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->to_bin->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->user->Visible) { // user ?>
+    <div id="r_user"<?= $Page->user->rowAttributes() ?>>
+        <label id="elh_transferbin_user" for="x_user" class="<?= $Page->LeftColumnClass ?>"><?= $Page->user->caption() ?><?= $Page->user->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->user->cellAttributes() ?>>
+<span id="el_transferbin_user">
+<input type="<?= $Page->user->getInputTextType() ?>" name="x_user" id="x_user" data-table="transferbin" data-field="x_user" value="<?= $Page->user->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->user->getPlaceHolder()) ?>"<?= $Page->user->editAttributes() ?> aria-describedby="x_user_help">
+<?= $Page->user->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->user->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

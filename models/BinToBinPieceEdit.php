@@ -508,11 +508,16 @@ class BinToBinPieceEdit extends BinToBinPiece
         $this->source_location->setVisibility();
         $this->scan_location->setVisibility();
         $this->article->setVisibility();
+        $this->description->setVisibility();
         $this->scan_article->setVisibility();
         $this->destination_location->setVisibility();
         $this->su->setVisibility();
+        $this->qty->setVisibility();
+        $this->actual->setVisibility();
         $this->user->setVisibility();
+        $this->status->setVisibility();
         $this->date_confirmation->setVisibility();
+        $this->time_confirmation->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -806,6 +811,16 @@ class BinToBinPieceEdit extends BinToBinPiece
             }
         }
 
+        // Check field name 'description' first before field var 'x_description'
+        $val = $CurrentForm->hasValue("description") ? $CurrentForm->getValue("description") : $CurrentForm->getValue("x_description");
+        if (!$this->description->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->description->Visible = false; // Disable update for API request
+            } else {
+                $this->description->setFormValue($val);
+            }
+        }
+
         // Check field name 'scan_article' first before field var 'x_scan_article'
         $val = $CurrentForm->hasValue("scan_article") ? $CurrentForm->getValue("scan_article") : $CurrentForm->getValue("x_scan_article");
         if (!$this->scan_article->IsDetailKey) {
@@ -832,7 +847,27 @@ class BinToBinPieceEdit extends BinToBinPiece
             if (IsApi() && $val === null) {
                 $this->su->Visible = false; // Disable update for API request
             } else {
-                $this->su->setFormValue($val);
+                $this->su->setFormValue($val, true, $validate);
+            }
+        }
+
+        // Check field name 'qty' first before field var 'x_qty'
+        $val = $CurrentForm->hasValue("qty") ? $CurrentForm->getValue("qty") : $CurrentForm->getValue("x_qty");
+        if (!$this->qty->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->qty->Visible = false; // Disable update for API request
+            } else {
+                $this->qty->setFormValue($val, true, $validate);
+            }
+        }
+
+        // Check field name 'actual' first before field var 'x_actual'
+        $val = $CurrentForm->hasValue("actual") ? $CurrentForm->getValue("actual") : $CurrentForm->getValue("x_actual");
+        if (!$this->actual->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->actual->Visible = false; // Disable update for API request
+            } else {
+                $this->actual->setFormValue($val, true, $validate);
             }
         }
 
@@ -846,6 +881,16 @@ class BinToBinPieceEdit extends BinToBinPiece
             }
         }
 
+        // Check field name 'status' first before field var 'x_status'
+        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
+        if (!$this->status->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->status->Visible = false; // Disable update for API request
+            } else {
+                $this->status->setFormValue($val);
+            }
+        }
+
         // Check field name 'date_confirmation' first before field var 'x_date_confirmation'
         $val = $CurrentForm->hasValue("date_confirmation") ? $CurrentForm->getValue("date_confirmation") : $CurrentForm->getValue("x_date_confirmation");
         if (!$this->date_confirmation->IsDetailKey) {
@@ -855,6 +900,17 @@ class BinToBinPieceEdit extends BinToBinPiece
                 $this->date_confirmation->setFormValue($val);
             }
             $this->date_confirmation->CurrentValue = UnFormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern());
+        }
+
+        // Check field name 'time_confirmation' first before field var 'x_time_confirmation'
+        $val = $CurrentForm->hasValue("time_confirmation") ? $CurrentForm->getValue("time_confirmation") : $CurrentForm->getValue("x_time_confirmation");
+        if (!$this->time_confirmation->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->time_confirmation->Visible = false; // Disable update for API request
+            } else {
+                $this->time_confirmation->setFormValue($val);
+            }
+            $this->time_confirmation->CurrentValue = UnFormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern());
         }
     }
 
@@ -868,12 +924,18 @@ class BinToBinPieceEdit extends BinToBinPiece
         $this->source_location->CurrentValue = $this->source_location->FormValue;
         $this->scan_location->CurrentValue = $this->scan_location->FormValue;
         $this->article->CurrentValue = $this->article->FormValue;
+        $this->description->CurrentValue = $this->description->FormValue;
         $this->scan_article->CurrentValue = $this->scan_article->FormValue;
         $this->destination_location->CurrentValue = $this->destination_location->FormValue;
         $this->su->CurrentValue = $this->su->FormValue;
+        $this->qty->CurrentValue = $this->qty->FormValue;
+        $this->actual->CurrentValue = $this->actual->FormValue;
         $this->user->CurrentValue = $this->user->FormValue;
+        $this->status->CurrentValue = $this->status->FormValue;
         $this->date_confirmation->CurrentValue = $this->date_confirmation->FormValue;
         $this->date_confirmation->CurrentValue = UnFormatDateTime($this->date_confirmation->CurrentValue, $this->date_confirmation->formatPattern());
+        $this->time_confirmation->CurrentValue = $this->time_confirmation->FormValue;
+        $this->time_confirmation->CurrentValue = UnFormatDateTime($this->time_confirmation->CurrentValue, $this->time_confirmation->formatPattern());
     }
 
     // Load recordset
@@ -975,11 +1037,16 @@ class BinToBinPieceEdit extends BinToBinPiece
         $this->source_location->setDbValue($row['source_location']);
         $this->scan_location->setDbValue($row['scan_location']);
         $this->article->setDbValue($row['article']);
+        $this->description->setDbValue($row['description']);
         $this->scan_article->setDbValue($row['scan_article']);
         $this->destination_location->setDbValue($row['destination_location']);
         $this->su->setDbValue($row['su']);
+        $this->qty->setDbValue($row['qty']);
+        $this->actual->setDbValue($row['actual']);
         $this->user->setDbValue($row['user']);
+        $this->status->setDbValue($row['status']);
         $this->date_confirmation->setDbValue($row['date_confirmation']);
+        $this->time_confirmation->setDbValue($row['time_confirmation']);
     }
 
     // Return a row with default values
@@ -991,11 +1058,16 @@ class BinToBinPieceEdit extends BinToBinPiece
         $row['source_location'] = $this->source_location->DefaultValue;
         $row['scan_location'] = $this->scan_location->DefaultValue;
         $row['article'] = $this->article->DefaultValue;
+        $row['description'] = $this->description->DefaultValue;
         $row['scan_article'] = $this->scan_article->DefaultValue;
         $row['destination_location'] = $this->destination_location->DefaultValue;
         $row['su'] = $this->su->DefaultValue;
+        $row['qty'] = $this->qty->DefaultValue;
+        $row['actual'] = $this->actual->DefaultValue;
         $row['user'] = $this->user->DefaultValue;
+        $row['status'] = $this->status->DefaultValue;
         $row['date_confirmation'] = $this->date_confirmation->DefaultValue;
+        $row['time_confirmation'] = $this->time_confirmation->DefaultValue;
         return $row;
     }
 
@@ -1042,6 +1114,9 @@ class BinToBinPieceEdit extends BinToBinPiece
         // article
         $this->article->RowCssClass = "row";
 
+        // description
+        $this->description->RowCssClass = "row";
+
         // scan_article
         $this->scan_article->RowCssClass = "row";
 
@@ -1051,11 +1126,23 @@ class BinToBinPieceEdit extends BinToBinPiece
         // su
         $this->su->RowCssClass = "row";
 
+        // qty
+        $this->qty->RowCssClass = "row";
+
+        // actual
+        $this->actual->RowCssClass = "row";
+
         // user
         $this->user->RowCssClass = "row";
 
+        // status
+        $this->status->RowCssClass = "row";
+
         // date_confirmation
         $this->date_confirmation->RowCssClass = "row";
+
+        // time_confirmation
+        $this->time_confirmation->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1080,6 +1167,10 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->article->ViewValue = $this->article->CurrentValue;
             $this->article->ViewCustomAttributes = "";
 
+            // description
+            $this->description->ViewValue = $this->description->CurrentValue;
+            $this->description->ViewCustomAttributes = "";
+
             // scan_article
             $this->scan_article->ViewValue = $this->scan_article->CurrentValue;
             $this->scan_article->ViewCustomAttributes = "";
@@ -1092,14 +1183,33 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->su->ViewValue = $this->su->CurrentValue;
             $this->su->ViewCustomAttributes = "";
 
+            // qty
+            $this->qty->ViewValue = $this->qty->CurrentValue;
+            $this->qty->ViewValue = FormatNumber($this->qty->ViewValue, $this->qty->formatPattern());
+            $this->qty->ViewCustomAttributes = "";
+
+            // actual
+            $this->actual->ViewValue = $this->actual->CurrentValue;
+            $this->actual->ViewValue = FormatNumber($this->actual->ViewValue, $this->actual->formatPattern());
+            $this->actual->ViewCustomAttributes = "";
+
             // user
             $this->user->ViewValue = $this->user->CurrentValue;
             $this->user->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
 
             // date_confirmation
             $this->date_confirmation->ViewValue = $this->date_confirmation->CurrentValue;
             $this->date_confirmation->ViewValue = FormatDateTime($this->date_confirmation->ViewValue, $this->date_confirmation->formatPattern());
             $this->date_confirmation->ViewCustomAttributes = "";
+
+            // time_confirmation
+            $this->time_confirmation->ViewValue = $this->time_confirmation->CurrentValue;
+            $this->time_confirmation->ViewValue = FormatDateTime($this->time_confirmation->ViewValue, $this->time_confirmation->formatPattern());
+            $this->time_confirmation->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1121,6 +1231,10 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->article->LinkCustomAttributes = "";
             $this->article->HrefValue = "";
 
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+
             // scan_article
             $this->scan_article->LinkCustomAttributes = "";
             $this->scan_article->HrefValue = "";
@@ -1133,13 +1247,29 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->su->LinkCustomAttributes = "";
             $this->su->HrefValue = "";
 
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
 
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+
             // date_confirmation
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -1180,6 +1310,15 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->article->EditValue = HtmlEncode($this->article->CurrentValue);
             $this->article->PlaceHolder = RemoveHtml($this->article->caption());
 
+            // description
+            $this->description->setupEditAttributes();
+            $this->description->EditCustomAttributes = 'readonly';
+            if (!$this->description->Raw) {
+                $this->description->CurrentValue = HtmlDecode($this->description->CurrentValue);
+            }
+            $this->description->EditValue = HtmlEncode($this->description->CurrentValue);
+            $this->description->PlaceHolder = RemoveHtml($this->description->caption());
+
             // scan_article
             $this->scan_article->setupEditAttributes();
             $this->scan_article->EditCustomAttributes = "";
@@ -1207,6 +1346,24 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->su->EditValue = HtmlEncode($this->su->CurrentValue);
             $this->su->PlaceHolder = RemoveHtml($this->su->caption());
 
+            // qty
+            $this->qty->setupEditAttributes();
+            $this->qty->EditCustomAttributes = 'readonly';
+            $this->qty->EditValue = HtmlEncode($this->qty->CurrentValue);
+            $this->qty->PlaceHolder = RemoveHtml($this->qty->caption());
+            if (strval($this->qty->EditValue) != "" && is_numeric($this->qty->EditValue)) {
+                $this->qty->EditValue = FormatNumber($this->qty->EditValue, null);
+            }
+
+            // actual
+            $this->actual->setupEditAttributes();
+            $this->actual->EditCustomAttributes = 'readonly';
+            $this->actual->EditValue = HtmlEncode($this->actual->CurrentValue);
+            $this->actual->PlaceHolder = RemoveHtml($this->actual->caption());
+            if (strval($this->actual->EditValue) != "" && is_numeric($this->actual->EditValue)) {
+                $this->actual->EditValue = FormatNumber($this->actual->EditValue, null);
+            }
+
             // user
             $this->user->setupEditAttributes();
             $this->user->EditCustomAttributes = 'readonly';
@@ -1222,7 +1379,18 @@ class BinToBinPieceEdit extends BinToBinPiece
                 $this->user->PlaceHolder = RemoveHtml($this->user->caption());
             }
 
+            // status
+            $this->status->setupEditAttributes();
+            $this->status->EditCustomAttributes = "";
+            if (!$this->status->Raw) {
+                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+            }
+            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
             // date_confirmation
+
+            // time_confirmation
 
             // Edit refer script
 
@@ -1246,6 +1414,10 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->article->LinkCustomAttributes = "";
             $this->article->HrefValue = "";
 
+            // description
+            $this->description->LinkCustomAttributes = "";
+            $this->description->HrefValue = "";
+
             // scan_article
             $this->scan_article->LinkCustomAttributes = "";
             $this->scan_article->HrefValue = "";
@@ -1258,13 +1430,29 @@ class BinToBinPieceEdit extends BinToBinPiece
             $this->su->LinkCustomAttributes = "";
             $this->su->HrefValue = "";
 
+            // qty
+            $this->qty->LinkCustomAttributes = "";
+            $this->qty->HrefValue = "";
+
+            // actual
+            $this->actual->LinkCustomAttributes = "";
+            $this->actual->HrefValue = "";
+
             // user
             $this->user->LinkCustomAttributes = "";
             $this->user->HrefValue = "";
 
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+
             // date_confirmation
             $this->date_confirmation->LinkCustomAttributes = "";
             $this->date_confirmation->HrefValue = "";
+
+            // time_confirmation
+            $this->time_confirmation->LinkCustomAttributes = "";
+            $this->time_confirmation->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1319,6 +1507,11 @@ class BinToBinPieceEdit extends BinToBinPiece
                 $this->article->addErrorMessage(str_replace("%s", $this->article->caption(), $this->article->RequiredErrorMessage));
             }
         }
+        if ($this->description->Required) {
+            if (!$this->description->IsDetailKey && EmptyValue($this->description->FormValue)) {
+                $this->description->addErrorMessage(str_replace("%s", $this->description->caption(), $this->description->RequiredErrorMessage));
+            }
+        }
         if ($this->scan_article->Required) {
             if (!$this->scan_article->IsDetailKey && EmptyValue($this->scan_article->FormValue)) {
                 $this->scan_article->addErrorMessage(str_replace("%s", $this->scan_article->caption(), $this->scan_article->RequiredErrorMessage));
@@ -1334,14 +1527,43 @@ class BinToBinPieceEdit extends BinToBinPiece
                 $this->su->addErrorMessage(str_replace("%s", $this->su->caption(), $this->su->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->su->FormValue)) {
+            $this->su->addErrorMessage($this->su->getErrorMessage(false));
+        }
+        if ($this->qty->Required) {
+            if (!$this->qty->IsDetailKey && EmptyValue($this->qty->FormValue)) {
+                $this->qty->addErrorMessage(str_replace("%s", $this->qty->caption(), $this->qty->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->qty->FormValue)) {
+            $this->qty->addErrorMessage($this->qty->getErrorMessage(false));
+        }
+        if ($this->actual->Required) {
+            if (!$this->actual->IsDetailKey && EmptyValue($this->actual->FormValue)) {
+                $this->actual->addErrorMessage(str_replace("%s", $this->actual->caption(), $this->actual->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->actual->FormValue)) {
+            $this->actual->addErrorMessage($this->actual->getErrorMessage(false));
+        }
         if ($this->user->Required) {
             if (!$this->user->IsDetailKey && EmptyValue($this->user->FormValue)) {
                 $this->user->addErrorMessage(str_replace("%s", $this->user->caption(), $this->user->RequiredErrorMessage));
             }
         }
+        if ($this->status->Required) {
+            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
+                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
+            }
+        }
         if ($this->date_confirmation->Required) {
             if (!$this->date_confirmation->IsDetailKey && EmptyValue($this->date_confirmation->FormValue)) {
                 $this->date_confirmation->addErrorMessage(str_replace("%s", $this->date_confirmation->caption(), $this->date_confirmation->RequiredErrorMessage));
+            }
+        }
+        if ($this->time_confirmation->Required) {
+            if (!$this->time_confirmation->IsDetailKey && EmptyValue($this->time_confirmation->FormValue)) {
+                $this->time_confirmation->addErrorMessage(str_replace("%s", $this->time_confirmation->caption(), $this->time_confirmation->RequiredErrorMessage));
             }
         }
 
@@ -1392,6 +1614,9 @@ class BinToBinPieceEdit extends BinToBinPiece
         // article
         $this->article->setDbValueDef($rsnew, $this->article->CurrentValue, null, $this->article->ReadOnly);
 
+        // description
+        $this->description->setDbValueDef($rsnew, $this->description->CurrentValue, null, $this->description->ReadOnly);
+
         // scan_article
         $this->scan_article->setDbValueDef($rsnew, $this->scan_article->CurrentValue, "", $this->scan_article->ReadOnly);
 
@@ -1401,12 +1626,25 @@ class BinToBinPieceEdit extends BinToBinPiece
         // su
         $this->su->setDbValueDef($rsnew, $this->su->CurrentValue, null, $this->su->ReadOnly);
 
+        // qty
+        $this->qty->setDbValueDef($rsnew, $this->qty->CurrentValue, null, $this->qty->ReadOnly);
+
+        // actual
+        $this->actual->setDbValueDef($rsnew, $this->actual->CurrentValue, null, $this->actual->ReadOnly);
+
         // user
         $this->user->setDbValueDef($rsnew, $this->user->CurrentValue, null, $this->user->ReadOnly);
 
+        // status
+        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
+
         // date_confirmation
-        $this->date_confirmation->CurrentValue = CurrentDateTime();
+        $this->date_confirmation->CurrentValue = CurrentDate();
         $this->date_confirmation->setDbValueDef($rsnew, $this->date_confirmation->CurrentValue, null);
+
+        // time_confirmation
+        $this->time_confirmation->CurrentValue = CurrentTime();
+        $this->time_confirmation->setDbValueDef($rsnew, $this->time_confirmation->CurrentValue, null);
 
         // Update current values
         $this->setCurrentValues($rsnew);

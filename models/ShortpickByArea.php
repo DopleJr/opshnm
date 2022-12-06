@@ -99,7 +99,14 @@ class ShortpickByArea extends DbTable
         );
         $this->area->InputTextType = "text";
         $this->area->UseFilter = true; // Table header filter
-        $this->area->Lookup = new Lookup('area', 'shortpick_by_area', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->area->Lookup = new Lookup('area', 'shortpick_by_area', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->area->Lookup = new Lookup('area', 'shortpick_by_area', true, 'area', ["area","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['area'] = &$this->area;
 
         // Add Doctrine Cache

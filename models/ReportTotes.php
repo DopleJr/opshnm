@@ -101,7 +101,14 @@ class ReportTotes extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'report_totes', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'report_totes', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'report_totes', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -128,7 +135,14 @@ class ReportTotes extends DbTable
         $this->store_id->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->store_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'store', true, 'store_code', ["store_code","","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code` ASC', '', "`store_code`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_id->Lookup = new Lookup('store_id', 'store', true, 'store_code', ["store_code","","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code` ASC', '', "`store_code`");
+                break;
+            default:
+                $this->store_id->Lookup = new Lookup('store_id', 'store', true, 'store_code', ["store_code","","",""], [], ["x_store_name"], [], [], ["store_name"], ["x_store_name"], '`store_code` ASC', '', "`store_code`");
+                break;
+        }
         $this->Fields['store_id'] = &$this->store_id;
 
         // store_name
@@ -154,7 +168,14 @@ class ReportTotes extends DbTable
         $this->store_name->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->store_name->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_name', ["store_name","","",""], ["x_store_id"], [], ["store_code"], ["x_store_code"], [], [], '', '', "`store_name`");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_name', ["store_name","","",""], ["x_store_id"], [], ["store_code"], ["x_store_code"], [], [], '', '', "`store_name`");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'store', true, 'store_name', ["store_name","","",""], ["x_store_id"], [], ["store_code"], ["x_store_code"], [], [], '', '', "`store_name`");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // out
@@ -178,7 +199,14 @@ class ReportTotes extends DbTable
         );
         $this->out->InputTextType = "text";
         $this->out->UseFilter = true; // Table header filter
-        $this->out->Lookup = new Lookup('out', 'report_totes', true, 'out', ["out","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->out->Lookup = new Lookup('out', 'report_totes', true, 'out', ["out","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->out->Lookup = new Lookup('out', 'report_totes', true, 'out', ["out","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->out->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['out'] = &$this->out;
 
@@ -203,7 +231,14 @@ class ReportTotes extends DbTable
         );
         $this->in->InputTextType = "text";
         $this->in->UseFilter = true; // Table header filter
-        $this->in->Lookup = new Lookup('in', 'report_totes', true, 'in', ["in","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->in->Lookup = new Lookup('in', 'report_totes', true, 'in', ["in","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->in->Lookup = new Lookup('in', 'report_totes', true, 'in', ["in","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->in->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['in'] = &$this->in;
 
@@ -228,7 +263,14 @@ class ReportTotes extends DbTable
         );
         $this->diff->InputTextType = "text";
         $this->diff->UseFilter = true; // Table header filter
-        $this->diff->Lookup = new Lookup('diff', 'report_totes', true, 'diff', ["diff","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->diff->Lookup = new Lookup('diff', 'report_totes', true, 'diff', ["diff","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->diff->Lookup = new Lookup('diff', 'report_totes', true, 'diff', ["diff","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->diff->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['diff'] = &$this->diff;
 
@@ -253,7 +295,14 @@ class ReportTotes extends DbTable
         );
         $this->remarks->InputTextType = "text";
         $this->remarks->UseFilter = true; // Table header filter
-        $this->remarks->Lookup = new Lookup('remarks', 'report_totes', true, 'remarks', ["remarks","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->remarks->Lookup = new Lookup('remarks', 'report_totes', true, 'remarks', ["remarks","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->remarks->Lookup = new Lookup('remarks', 'report_totes', true, 'remarks', ["remarks","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['remarks'] = &$this->remarks;
 
         // date_out
@@ -277,7 +326,14 @@ class ReportTotes extends DbTable
         );
         $this->date_out->InputTextType = "text";
         $this->date_out->UseFilter = true; // Table header filter
-        $this->date_out->Lookup = new Lookup('date_out', 'report_totes', true, 'date_out', ["date_out","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_out->Lookup = new Lookup('date_out', 'report_totes', true, 'date_out', ["date_out","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_out->Lookup = new Lookup('date_out', 'report_totes', true, 'date_out', ["date_out","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_out->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_out'] = &$this->date_out;
 
@@ -302,7 +358,14 @@ class ReportTotes extends DbTable
         );
         $this->date_in->InputTextType = "text";
         $this->date_in->UseFilter = true; // Table header filter
-        $this->date_in->Lookup = new Lookup('date_in', 'report_totes', true, 'date_in', ["date_in","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->date_in->Lookup = new Lookup('date_in', 'report_totes', true, 'date_in', ["date_in","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->date_in->Lookup = new Lookup('date_in', 'report_totes', true, 'date_in', ["date_in","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->date_in->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->Fields['date_in'] = &$this->date_in;
 

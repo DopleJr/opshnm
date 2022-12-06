@@ -521,9 +521,13 @@ class TransferbinView extends Transferbin
         $this->UseLayout = $this->UseLayout && ConvertToBool(Param("layout", true));
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->FromBin->setVisibility();
-        $this->ToBin->setVisibility();
+        $this->from_bin->setVisibility();
+        $this->ctn->setVisibility();
+        $this->to_bin->setVisibility();
+        $this->user->setVisibility();
         $this->date_created->setVisibility();
+        $this->date_updated->setVisibility();
+        $this->time_updated->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -742,9 +746,13 @@ class TransferbinView extends Transferbin
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->FromBin->setDbValue($row['From Bin']);
-        $this->ToBin->setDbValue($row['To Bin']);
+        $this->from_bin->setDbValue($row['from_bin']);
+        $this->ctn->setDbValue($row['ctn']);
+        $this->to_bin->setDbValue($row['to_bin']);
+        $this->user->setDbValue($row['user']);
         $this->date_created->setDbValue($row['date_created']);
+        $this->date_updated->setDbValue($row['date_updated']);
+        $this->time_updated->setDbValue($row['time_updated']);
     }
 
     // Return a row with default values
@@ -752,9 +760,13 @@ class TransferbinView extends Transferbin
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['From Bin'] = $this->FromBin->DefaultValue;
-        $row['To Bin'] = $this->ToBin->DefaultValue;
+        $row['from_bin'] = $this->from_bin->DefaultValue;
+        $row['ctn'] = $this->ctn->DefaultValue;
+        $row['to_bin'] = $this->to_bin->DefaultValue;
+        $row['user'] = $this->user->DefaultValue;
         $row['date_created'] = $this->date_created->DefaultValue;
+        $row['date_updated'] = $this->date_updated->DefaultValue;
+        $row['time_updated'] = $this->time_updated->DefaultValue;
         return $row;
     }
 
@@ -778,11 +790,19 @@ class TransferbinView extends Transferbin
 
         // id
 
-        // From Bin
+        // from_bin
 
-        // To Bin
+        // ctn
+
+        // to_bin
+
+        // user
 
         // date_created
+
+        // date_updated
+
+        // time_updated
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -790,38 +810,76 @@ class TransferbinView extends Transferbin
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // From Bin
-            $this->FromBin->ViewValue = $this->FromBin->CurrentValue;
-            $this->FromBin->ViewCustomAttributes = "";
+            // from_bin
+            $this->from_bin->ViewValue = $this->from_bin->CurrentValue;
+            $this->from_bin->ViewCustomAttributes = "";
 
-            // To Bin
-            $this->ToBin->ViewValue = $this->ToBin->CurrentValue;
-            $this->ToBin->ViewCustomAttributes = "";
+            // ctn
+            $this->ctn->ViewValue = $this->ctn->CurrentValue;
+            $this->ctn->ViewCustomAttributes = "";
+
+            // to_bin
+            $this->to_bin->ViewValue = $this->to_bin->CurrentValue;
+            $this->to_bin->ViewCustomAttributes = "";
+
+            // user
+            $this->user->ViewValue = $this->user->CurrentValue;
+            $this->user->ViewCustomAttributes = "";
 
             // date_created
             $this->date_created->ViewValue = $this->date_created->CurrentValue;
             $this->date_created->ViewValue = FormatDateTime($this->date_created->ViewValue, $this->date_created->formatPattern());
             $this->date_created->ViewCustomAttributes = "";
 
+            // date_updated
+            $this->date_updated->ViewValue = $this->date_updated->CurrentValue;
+            $this->date_updated->ViewValue = FormatDateTime($this->date_updated->ViewValue, $this->date_updated->formatPattern());
+            $this->date_updated->ViewCustomAttributes = "";
+
+            // time_updated
+            $this->time_updated->ViewValue = $this->time_updated->CurrentValue;
+            $this->time_updated->ViewValue = FormatDateTime($this->time_updated->ViewValue, $this->time_updated->formatPattern());
+            $this->time_updated->ViewCustomAttributes = "";
+
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
             $this->id->TooltipValue = "";
 
-            // From Bin
-            $this->FromBin->LinkCustomAttributes = "";
-            $this->FromBin->HrefValue = "";
-            $this->FromBin->TooltipValue = "";
+            // from_bin
+            $this->from_bin->LinkCustomAttributes = "";
+            $this->from_bin->HrefValue = "";
+            $this->from_bin->TooltipValue = "";
 
-            // To Bin
-            $this->ToBin->LinkCustomAttributes = "";
-            $this->ToBin->HrefValue = "";
-            $this->ToBin->TooltipValue = "";
+            // ctn
+            $this->ctn->LinkCustomAttributes = "";
+            $this->ctn->HrefValue = "";
+            $this->ctn->TooltipValue = "";
+
+            // to_bin
+            $this->to_bin->LinkCustomAttributes = "";
+            $this->to_bin->HrefValue = "";
+            $this->to_bin->TooltipValue = "";
+
+            // user
+            $this->user->LinkCustomAttributes = "";
+            $this->user->HrefValue = "";
+            $this->user->TooltipValue = "";
 
             // date_created
             $this->date_created->LinkCustomAttributes = "";
             $this->date_created->HrefValue = "";
             $this->date_created->TooltipValue = "";
+
+            // date_updated
+            $this->date_updated->LinkCustomAttributes = "";
+            $this->date_updated->HrefValue = "";
+            $this->date_updated->TooltipValue = "";
+
+            // time_updated
+            $this->time_updated->LinkCustomAttributes = "";
+            $this->time_updated->HrefValue = "";
+            $this->time_updated->TooltipValue = "";
         }
 
         // Call Row Rendered event

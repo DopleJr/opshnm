@@ -132,7 +132,14 @@ class Picking extends DbTable
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->UseFilter = true; // Table header filter
-        $this->id->Lookup = new Lookup('id', 'picking', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->id->Lookup = new Lookup('id', 'picking', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->id->Lookup = new Lookup('id', 'picking', true, 'id', ["id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['id'] = &$this->id;
 
@@ -157,7 +164,14 @@ class Picking extends DbTable
         );
         $this->po_no->InputTextType = "text";
         $this->po_no->UseFilter = true; // Table header filter
-        $this->po_no->Lookup = new Lookup('po_no', 'picking', true, 'po_no', ["po_no","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->po_no->Lookup = new Lookup('po_no', 'picking', true, 'po_no', ["po_no","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->po_no->Lookup = new Lookup('po_no', 'picking', true, 'po_no', ["po_no","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['po_no'] = &$this->po_no;
 
         // to_no
@@ -181,7 +195,14 @@ class Picking extends DbTable
         );
         $this->to_no->InputTextType = "text";
         $this->to_no->UseFilter = true; // Table header filter
-        $this->to_no->Lookup = new Lookup('to_no', 'picking', true, 'to_no', ["to_no","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->to_no->Lookup = new Lookup('to_no', 'picking', true, 'to_no', ["to_no","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->to_no->Lookup = new Lookup('to_no', 'picking', true, 'to_no', ["to_no","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['to_no'] = &$this->to_no;
 
         // to_order_item
@@ -205,7 +226,14 @@ class Picking extends DbTable
         );
         $this->to_order_item->InputTextType = "text";
         $this->to_order_item->UseFilter = true; // Table header filter
-        $this->to_order_item->Lookup = new Lookup('to_order_item', 'picking', true, 'to_order_item', ["to_order_item","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->to_order_item->Lookup = new Lookup('to_order_item', 'picking', true, 'to_order_item', ["to_order_item","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->to_order_item->Lookup = new Lookup('to_order_item', 'picking', true, 'to_order_item', ["to_order_item","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['to_order_item'] = &$this->to_order_item;
 
         // to_priority
@@ -229,7 +257,14 @@ class Picking extends DbTable
         );
         $this->to_priority->InputTextType = "text";
         $this->to_priority->UseFilter = true; // Table header filter
-        $this->to_priority->Lookup = new Lookup('to_priority', 'picking', true, 'to_priority', ["to_priority","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->to_priority->Lookup = new Lookup('to_priority', 'picking', true, 'to_priority', ["to_priority","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->to_priority->Lookup = new Lookup('to_priority', 'picking', true, 'to_priority', ["to_priority","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['to_priority'] = &$this->to_priority;
 
         // to_priority_code
@@ -253,7 +288,14 @@ class Picking extends DbTable
         );
         $this->to_priority_code->InputTextType = "text";
         $this->to_priority_code->UseFilter = true; // Table header filter
-        $this->to_priority_code->Lookup = new Lookup('to_priority_code', 'picking', true, 'to_priority_code', ["to_priority_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->to_priority_code->Lookup = new Lookup('to_priority_code', 'picking', true, 'to_priority_code', ["to_priority_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->to_priority_code->Lookup = new Lookup('to_priority_code', 'picking', true, 'to_priority_code', ["to_priority_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['to_priority_code'] = &$this->to_priority_code;
 
         // source_storage_type
@@ -278,7 +320,14 @@ class Picking extends DbTable
         $this->source_storage_type->InputTextType = "text";
         $this->source_storage_type->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->source_storage_type->UseFilter = true; // Table header filter
-        $this->source_storage_type->Lookup = new Lookup('source_storage_type', 'picking', true, 'source_storage_type', ["source_storage_type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->source_storage_type->Lookup = new Lookup('source_storage_type', 'picking', true, 'source_storage_type', ["source_storage_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->source_storage_type->Lookup = new Lookup('source_storage_type', 'picking', true, 'source_storage_type', ["source_storage_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['source_storage_type'] = &$this->source_storage_type;
 
         // source_storage_bin
@@ -302,7 +351,14 @@ class Picking extends DbTable
         );
         $this->source_storage_bin->InputTextType = "text";
         $this->source_storage_bin->UseFilter = true; // Table header filter
-        $this->source_storage_bin->Lookup = new Lookup('source_storage_bin', 'picking', true, 'source_storage_bin', ["source_storage_bin","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->source_storage_bin->Lookup = new Lookup('source_storage_bin', 'picking', true, 'source_storage_bin', ["source_storage_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->source_storage_bin->Lookup = new Lookup('source_storage_bin', 'picking', true, 'source_storage_bin', ["source_storage_bin","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['source_storage_bin'] = &$this->source_storage_bin;
 
         // carton_number
@@ -326,7 +382,14 @@ class Picking extends DbTable
         );
         $this->carton_number->InputTextType = "text";
         $this->carton_number->UseFilter = true; // Table header filter
-        $this->carton_number->Lookup = new Lookup('carton_number', 'picking', true, 'carton_number', ["carton_number","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->carton_number->Lookup = new Lookup('carton_number', 'picking', true, 'carton_number', ["carton_number","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->carton_number->Lookup = new Lookup('carton_number', 'picking', true, 'carton_number', ["carton_number","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['carton_number'] = &$this->carton_number;
 
         // creation_date
@@ -351,7 +414,14 @@ class Picking extends DbTable
         $this->creation_date->InputTextType = "text";
         $this->creation_date->FormatPattern = "MM/dd/yyyy"; // Format pattern
         $this->creation_date->UseFilter = true; // Table header filter
-        $this->creation_date->Lookup = new Lookup('creation_date', 'picking', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->creation_date->Lookup = new Lookup('creation_date', 'picking', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->creation_date->Lookup = new Lookup('creation_date', 'picking', true, 'creation_date', ["creation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->creation_date->DefaultErrorMessage = str_replace("%s", "MM/dd/yyyy", $Language->phrase("IncorrectDate"));
         $this->Fields['creation_date'] = &$this->creation_date;
 
@@ -376,7 +446,14 @@ class Picking extends DbTable
         );
         $this->gr_number->InputTextType = "text";
         $this->gr_number->UseFilter = true; // Table header filter
-        $this->gr_number->Lookup = new Lookup('gr_number', 'picking', true, 'gr_number', ["gr_number","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->gr_number->Lookup = new Lookup('gr_number', 'picking', true, 'gr_number', ["gr_number","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->gr_number->Lookup = new Lookup('gr_number', 'picking', true, 'gr_number', ["gr_number","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['gr_number'] = &$this->gr_number;
 
         // gr_date
@@ -401,7 +478,14 @@ class Picking extends DbTable
         $this->gr_date->InputTextType = "text";
         $this->gr_date->FormatPattern = "MM/dd/yyyy"; // Format pattern
         $this->gr_date->UseFilter = true; // Table header filter
-        $this->gr_date->Lookup = new Lookup('gr_date', 'picking', true, 'gr_date', ["gr_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->gr_date->Lookup = new Lookup('gr_date', 'picking', true, 'gr_date', ["gr_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->gr_date->Lookup = new Lookup('gr_date', 'picking', true, 'gr_date', ["gr_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->gr_date->DefaultErrorMessage = str_replace("%s", "MM/dd/yyyy", $Language->phrase("IncorrectDate"));
         $this->Fields['gr_date'] = &$this->gr_date;
 
@@ -426,7 +510,14 @@ class Picking extends DbTable
         );
         $this->delivery->InputTextType = "text";
         $this->delivery->UseFilter = true; // Table header filter
-        $this->delivery->Lookup = new Lookup('delivery', 'picking', true, 'delivery', ["delivery","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->delivery->Lookup = new Lookup('delivery', 'picking', true, 'delivery', ["delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->delivery->Lookup = new Lookup('delivery', 'picking', true, 'delivery', ["delivery","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['delivery'] = &$this->delivery;
 
         // store_id
@@ -450,7 +541,14 @@ class Picking extends DbTable
         );
         $this->store_id->InputTextType = "text";
         $this->store_id->UseFilter = true; // Table header filter
-        $this->store_id->Lookup = new Lookup('store_id', 'picking', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_id->Lookup = new Lookup('store_id', 'picking', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_id->Lookup = new Lookup('store_id', 'picking', true, 'store_id', ["store_id","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_id'] = &$this->store_id;
 
         // store_name
@@ -474,7 +572,14 @@ class Picking extends DbTable
         );
         $this->store_name->InputTextType = "text";
         $this->store_name->UseFilter = true; // Table header filter
-        $this->store_name->Lookup = new Lookup('store_name', 'picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->store_name->Lookup = new Lookup('store_name', 'picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->store_name->Lookup = new Lookup('store_name', 'picking', true, 'store_name', ["store_name","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['store_name'] = &$this->store_name;
 
         // article
@@ -498,7 +603,14 @@ class Picking extends DbTable
         );
         $this->article->InputTextType = "text";
         $this->article->UseFilter = true; // Table header filter
-        $this->article->Lookup = new Lookup('article', 'picking', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->article->Lookup = new Lookup('article', 'picking', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->article->Lookup = new Lookup('article', 'picking', true, 'article', ["article","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['article'] = &$this->article;
 
         // size_code
@@ -522,7 +634,14 @@ class Picking extends DbTable
         );
         $this->size_code->InputTextType = "text";
         $this->size_code->UseFilter = true; // Table header filter
-        $this->size_code->Lookup = new Lookup('size_code', 'picking', true, 'size_code', ["size_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_code->Lookup = new Lookup('size_code', 'picking', true, 'size_code', ["size_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->size_code->Lookup = new Lookup('size_code', 'picking', true, 'size_code', ["size_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['size_code'] = &$this->size_code;
 
         // size_desc
@@ -546,7 +665,14 @@ class Picking extends DbTable
         );
         $this->size_desc->InputTextType = "text";
         $this->size_desc->UseFilter = true; // Table header filter
-        $this->size_desc->Lookup = new Lookup('size_desc', 'picking', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->size_desc->Lookup = new Lookup('size_desc', 'picking', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->size_desc->Lookup = new Lookup('size_desc', 'picking', true, 'size_desc', ["size_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['size_desc'] = &$this->size_desc;
 
         // color_code
@@ -570,7 +696,14 @@ class Picking extends DbTable
         );
         $this->color_code->InputTextType = "text";
         $this->color_code->UseFilter = true; // Table header filter
-        $this->color_code->Lookup = new Lookup('color_code', 'picking', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_code->Lookup = new Lookup('color_code', 'picking', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_code->Lookup = new Lookup('color_code', 'picking', true, 'color_code', ["color_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_code'] = &$this->color_code;
 
         // color_desc
@@ -594,7 +727,14 @@ class Picking extends DbTable
         );
         $this->color_desc->InputTextType = "text";
         $this->color_desc->UseFilter = true; // Table header filter
-        $this->color_desc->Lookup = new Lookup('color_desc', 'picking', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->color_desc->Lookup = new Lookup('color_desc', 'picking', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->color_desc->Lookup = new Lookup('color_desc', 'picking', true, 'color_desc', ["color_desc","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['color_desc'] = &$this->color_desc;
 
         // concept
@@ -618,7 +758,14 @@ class Picking extends DbTable
         );
         $this->concept->InputTextType = "text";
         $this->concept->UseFilter = true; // Table header filter
-        $this->concept->Lookup = new Lookup('concept', 'picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->concept->Lookup = new Lookup('concept', 'picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->concept->Lookup = new Lookup('concept', 'picking', true, 'concept', ["concept","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['concept'] = &$this->concept;
 
         // target_qty
@@ -642,7 +789,14 @@ class Picking extends DbTable
         );
         $this->target_qty->InputTextType = "text";
         $this->target_qty->UseFilter = true; // Table header filter
-        $this->target_qty->Lookup = new Lookup('target_qty', 'picking', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->target_qty->Lookup = new Lookup('target_qty', 'picking', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->target_qty->Lookup = new Lookup('target_qty', 'picking', true, 'target_qty', ["target_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->target_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['target_qty'] = &$this->target_qty;
 
@@ -667,7 +821,14 @@ class Picking extends DbTable
         );
         $this->picked_qty->InputTextType = "text";
         $this->picked_qty->UseFilter = true; // Table header filter
-        $this->picked_qty->Lookup = new Lookup('picked_qty', 'picking', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'picking', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picked_qty->Lookup = new Lookup('picked_qty', 'picking', true, 'picked_qty', ["picked_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->picked_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['picked_qty'] = &$this->picked_qty;
 
@@ -692,7 +853,14 @@ class Picking extends DbTable
         );
         $this->variance_qty->InputTextType = "text";
         $this->variance_qty->UseFilter = true; // Table header filter
-        $this->variance_qty->Lookup = new Lookup('variance_qty', 'picking', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->variance_qty->Lookup = new Lookup('variance_qty', 'picking', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->variance_qty->Lookup = new Lookup('variance_qty', 'picking', true, 'variance_qty', ["variance_qty","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->variance_qty->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['variance_qty'] = &$this->variance_qty;
 
@@ -718,7 +886,14 @@ class Picking extends DbTable
         $this->confirmation_date->InputTextType = "text";
         $this->confirmation_date->FormatPattern = "yyyyMMdd"; // Format pattern
         $this->confirmation_date->UseFilter = true; // Table header filter
-        $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'picking', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'picking', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->confirmation_date->Lookup = new Lookup('confirmation_date', 'picking', true, 'confirmation_date', ["confirmation_date","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->confirmation_date->DefaultErrorMessage = str_replace("%s", "yyyyMMdd", $Language->phrase("IncorrectDate"));
         $this->Fields['confirmation_date'] = &$this->confirmation_date;
 
@@ -743,7 +918,14 @@ class Picking extends DbTable
         );
         $this->confirmation_time->InputTextType = "text";
         $this->confirmation_time->UseFilter = true; // Table header filter
-        $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'picking', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'picking', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->confirmation_time->Lookup = new Lookup('confirmation_time', 'picking', true, 'confirmation_time', ["confirmation_time","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->confirmation_time->DefaultErrorMessage = str_replace("%s", DateFormat(3), $Language->phrase("IncorrectTime"));
         $this->Fields['confirmation_time'] = &$this->confirmation_time;
 
@@ -768,7 +950,14 @@ class Picking extends DbTable
         );
         $this->box_code->InputTextType = "text";
         $this->box_code->UseFilter = true; // Table header filter
-        $this->box_code->Lookup = new Lookup('box_code', 'picking', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_code->Lookup = new Lookup('box_code', 'picking', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_code->Lookup = new Lookup('box_code', 'picking', true, 'box_code', ["box_code","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_code'] = &$this->box_code;
 
         // box_type
@@ -792,7 +981,14 @@ class Picking extends DbTable
         );
         $this->box_type->InputTextType = "text";
         $this->box_type->UseFilter = true; // Table header filter
-        $this->box_type->Lookup = new Lookup('box_type', 'picking', true, 'box_type', ["box_type","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->box_type->Lookup = new Lookup('box_type', 'picking', true, 'box_type', ["box_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->box_type->Lookup = new Lookup('box_type', 'picking', true, 'box_type', ["box_type","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['box_type'] = &$this->box_type;
 
         // picker
@@ -816,7 +1012,14 @@ class Picking extends DbTable
         );
         $this->picker->InputTextType = "text";
         $this->picker->UseFilter = true; // Table header filter
-        $this->picker->Lookup = new Lookup('picker', 'picking', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->picker->Lookup = new Lookup('picker', 'picking', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->picker->Lookup = new Lookup('picker', 'picking', true, 'picker', ["picker","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['picker'] = &$this->picker;
 
         // status
@@ -842,7 +1045,14 @@ class Picking extends DbTable
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->UseFilter = true; // Table header filter
-        $this->status->Lookup = new Lookup('status', 'picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->status->Lookup = new Lookup('status', 'picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'picking', true, 'status', ["status","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->status->OptionCount = 3;
         $this->Fields['status'] = &$this->status;
 
@@ -867,7 +1077,14 @@ class Picking extends DbTable
         );
         $this->remarks->InputTextType = "text";
         $this->remarks->UseFilter = true; // Table header filter
-        $this->remarks->Lookup = new Lookup('remarks', 'picking', true, 'remarks', ["remarks","","",""], [], [], [], [], [], [], '', '', "");
+        switch ($CurrentLanguage) {
+            case "en-US":
+                $this->remarks->Lookup = new Lookup('remarks', 'picking', true, 'remarks', ["remarks","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+            default:
+                $this->remarks->Lookup = new Lookup('remarks', 'picking', true, 'remarks', ["remarks","","",""], [], [], [], [], [], [], '', '', "");
+                break;
+        }
         $this->Fields['remarks'] = &$this->remarks;
 
         // aisle
@@ -1054,8 +1271,8 @@ class Picking extends DbTable
         }
     }
 
-    // Multiple column sort
-    public function updateSort(&$fld, $ctrl)
+    // Single column sort
+    public function updateSort(&$fld)
     {
         if ($this->CurrentOrder == $fld->Name) {
             $sortField = $fld->Expression;
@@ -1065,29 +1282,8 @@ class Picking extends DbTable
             } else {
                 $curSort = $lastSort;
             }
-            $lastOrderBy = in_array($lastSort, ["ASC", "DESC"]) ? $sortField . " " . $lastSort : "";
-            $curOrderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
-            if ($ctrl) {
-                $orderBy = $this->getSessionOrderBy();
-                $arOrderBy = !empty($orderBy) ? explode(", ", $orderBy) : [];
-                if ($lastOrderBy != "" && in_array($lastOrderBy, $arOrderBy)) {
-                    foreach ($arOrderBy as $key => $val) {
-                        if ($val == $lastOrderBy) {
-                            if ($curOrderBy == "") {
-                                unset($arOrderBy[$key]);
-                            } else {
-                                $arOrderBy[$key] = $curOrderBy;
-                            }
-                        }
-                    }
-                } elseif ($curOrderBy != "") {
-                    $arOrderBy[] = $curOrderBy;
-                }
-                $orderBy = implode(", ", $arOrderBy);
-                $this->setSessionOrderBy($orderBy); // Save to Session
-            } else {
-                $this->setSessionOrderBy($curOrderBy); // Save to Session
-            }
+            $orderBy = in_array($curSort, ["ASC", "DESC"]) ? $sortField . " " . $curSort : "";
+            $this->setSessionOrderBy($orderBy); // Save to Session
         }
     }
 
@@ -1735,7 +1931,7 @@ class Picking extends DbTable
         $attrs = "";
         if ($fld->Sortable) {
             $sortUrl = $this->sortUrl($fld);
-            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="2"';
+            $attrs = ' role="button" data-sort-url="' . $sortUrl . '" data-sort-type="1"';
         }
         $html = '<div class="ew-table-header-caption"' . $attrs . '>' . $fld->caption() . '</div>';
         if ($sortUrl) {
